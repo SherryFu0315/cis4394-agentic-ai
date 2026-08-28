@@ -4,7 +4,7 @@
 
 Generative AI is evolving into **agentic AI** — systems that reason, plan, adapt, and collaborate in complex environments. This undergraduate course at Georgia State University's J. Mack Robinson College of Business teaches the foundations *and* the practice: from the agent loop and tool use to evaluation, safety, governance, and deployment, ending in an individual capstone agent.
 
-Taught by **Dr. Xinyu Fu** ([xfu11@gsu.edu](mailto:xfu11@gsu.edu)), Computer Information Systems, Robinson College of Business.
+Taught by **Dr. Xinyu Fu** ([faculty profile](https://robinson.gsu.edu/profile/xinyu-fu/) · [personal site](https://sherryfu0315.github.io/) · [xfu11@gsu.edu](mailto:xfu11@gsu.edu)), Computer Information Systems, Robinson College of Business. The course is offered within [PATH — Pathways for AI Training & Hiring](https://path.mit.edu/), a national initiative led by MIT RAISE and Georgia State University ([about PATH](https://sherryfu0315.github.io/cis4394-agentic-ai/path.html)).
 
 ## What's in this repository
 
