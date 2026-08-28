@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Week 1 · Introduction to Agentic AI — CIS 4394</title>
+<link rel="icon" href="../assets/gsu_torch.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <span class="sep">·</span><span>J. Mack Robinson College of Business</span>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 1</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="llm-to-agent.html"><span class="k">01</span>LLM → Agent</a>
+  <a href="agent-vs-workflow.html"><span class="k">02</span>Agent vs Workflow</a>
+  <a href="enterprise.html"><span class="k">03</span>Enterprise 2026</a>
+  <a href="exercises.html"><span class="k">04</span>Exercises &amp; Setup</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Week 1 · Foundations</div>
+  <h1>Introduction to <em>Agentic AI</em> — and what enterprises actually use.</h1>
+  <p class="lede">Everyone uses AI; few profit from it yet. Agents — systems where the model owns the control flow — are the bet the industry is making to close that gap. This week builds your mental model: the loop, the vocabulary, the autonomy dial, and the 2026 landscape.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">In the news · 2026</div>
+  <h2>Five numbers that frame the semester</h2>
+  <p class="lede">Click each card for the “so what” and the source. All figures are approximate and dated — that’s a feature of this field, not a bug of these slides.</p>
+  <div class="bigstatgrid">
+    <div class="bigstat"><span class="tap">TAP</span><div class="num">88%</div><div class="what">of firms use AI regularly — but only ~39% report EBIT impact</div><div class="sowhat">Everyone uses AI; few profit yet. Agents are the industry’s bridge from usage to value — and the paradox this course exists to close.</div><div class="src">McKinsey, State of AI in 2025 (2025), approx.</div></div>
+    <div class="bigstat"><span class="tap">TAP</span><div class="num">40%</div><div class="what">of enterprise apps expected to ship task-specific agents by end of 2026 — up from &lt;5% in 2025</div><div class="sowhat">You are early. The skill you build this semester is arriving in the software you’ll use at work.</div><div class="src">Gartner (2025), projection, approx.</div></div>
+    <div class="bigstat"><span class="tap">TAP</span><div class="num">4+</div><div class="what">live agentic-commerce efforts: Visa + OpenAI, ChatGPT Instant Checkout, Amazon “Buy for Me,” Mastercard Agent Pay</div><div class="sowhat">Software can now hold a wallet. What goes right — and what goes wrong — when an agent can transact?</div><div class="src">Digital Commerce 360 (2026)</div></div>
+    <div class="bigstat caution"><span class="tap">TAP</span><div class="num">80–90%</div><div class="what">of a real cyber-espionage campaign was automated after a state-linked group jailbroke an agentic coding tool (~30 targets)</div><div class="sowhat">Autonomy cuts both ways. Power without guardrails is a liability — this previews our security week.</div><div class="src">Anthropic / Cybersecurity Dive (Nov 2025)</div></div>
+    <div class="bigstat"><span class="tap">TAP</span><div class="num">−14%</div><div class="what">hiring rate for 22–25-year-olds in AI-exposed jobs — yet ~57% of AI use augments rather than automates</div><div class="sowhat">It’s not replacing you; it rewards the people who can use it well. That’s the career case for this course.</div><div class="src">Anthropic, Labor-Market Impacts / Economic Index (2026), approx.</div></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The tension</div>
+  <h2>The 2026 split: exploding capability, stubborn unreliability</h2>
+  <div class="grid2">
+    <div class="card"><span class="kicker">Advancing fast</span><h3 style="margin-top:6px">Task length doubles ~every 88 days</h3><p class="small">The length of tasks agents can complete autonomously has been doubling roughly every three months (METR, approx.). Demos get dramatically better every semester.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Still unreliable</span><h3 style="margin-top:6px">~20% vs 72%</h3><p class="small">On long computer-use tasks, top agents score around 20% where humans score ~72% (OSWorld, approx.). Benchmarks lag the demos — reliability is the semester’s recurring villain.</p></div>
+  </div>
+  <div class="bigq">Both of these are true at once. Holding that tension — capability <em>and</em> unreliability — is the whole discipline of agentic AI.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">This week</div>
+  <h2>Work through the four parts</h2>
+  <div class="navcards">
+    <a class="navcard" href="llm-to-agent.html">
+      <span class="num">01</span>
+      <span><span class="tag">Foundations</span><b>From LLM to agent</b><span class="small">What a language model actually is, why one call can’t book a flight, the four parts of an agent — and a step-through agent-loop simulator.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="agent-vs-workflow.html">
+      <span class="num">02</span>
+      <span><span class="tag">Vocabulary</span><b>Agent vs workflow vs chatbot</b><span class="small">The real distinction — who owns control flow — plus the five workflow patterns and an autonomy dial you can actually turn.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="enterprise.html">
+      <span class="num">03</span>
+      <span><span class="tag">Landscape</span><b>What enterprises actually use in 2026</b><span class="small">The agent stack, build vs buy vs wait, MCP &amp; A2A, why coding agents broke out first — and the gen-AI paradox case.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="exercises.html">
+      <span class="num">04</span>
+      <span><span class="tag">Practice</span><b>Exercises, toolchain, interview check</b><span class="small">Classify seven scenarios, trace a loop by hand, set up Gemini + Copilot for free, and test yourself against interview-level questions.</span></span>
+      <span class="go">→</span>
+    </a>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Objectives</div>
+  <h2>By the end of Week 1 you can…</h2>
+  <div class="grid2">
+    <div class="card checklist">
+      <label><input type="checkbox" /> Explain what an LLM is — and why a bare LLM can’t act</label>
+      <label><input type="checkbox" /> Draw the agent loop and name a stop condition</label>
+      <label><input type="checkbox" /> Distinguish chatbot, workflow, and agent by <b>who owns control flow</b></label>
+    </div>
+    <div class="card checklist">
+      <label><input type="checkbox" /> Place a business problem on the autonomy spectrum — and justify the lowest level that works</label>
+      <label><input type="checkbox" /> Name the 2026 agent stack: frameworks, platforms, standards, coding agents</label>
+      <label><input type="checkbox" /> Set up the free course toolchain (Gemini key, Copilot, hello-agent)</label>
+    </div>
+  </div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="../index.html"><span class="lab">← Back</span><b>Course home</b></a>
+  <a href="llm-to-agent.html" class="next"><span class="lab">Next →</span><b>01 · From LLM to agent</b></a>
+</div>
+
+<div class="logoband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="note">Offered at Robinson College of Business, Georgia State University · developed within PATH — Pathways for AI Training &amp; Hiring</span>
+</div></div>
+<footer class="footer"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 1 — Introduction to Agentic AI + What Enterprises Actually Use<br />Dr. Xinyu Fu · Fall 2026 · Georgia State University</div>
+  <div class="right">Statistics are approximate, dated, and summarized in our own words with sources named; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+document.querySelectorAll('.bigstat').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

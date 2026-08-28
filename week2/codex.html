@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>01 · Unpack Codex — CIS 4394 Week 2</title>
+<link rel="icon" href="../assets/gsu_torch.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <span class="sep">·</span><span>J. Mack Robinson College of Business</span>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 2</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="prep.html"><span class="k">00</span>Prep</a>
+  <a href="codex.html" class="here"><span class="k">01</span>Unpack Codex</a>
+  <a href="claude-code.html"><span class="k">02</span>Claude Code</a>
+  <a href="build.html"><span class="k">03</span>Build</a>
+  <a href="evaluate.html"><span class="k">04</span>Evaluate</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">01 · Part 1</div>
+  <h1>Unpack <em>Codex</em>.</h1>
+  <p class="lede">You skimmed a real coding agent before class. Now we take it apart — not to memorize a repository, but to extract a reusable architecture for agentic systems.</p>
+  <div class="bigq" style="margin-bottom:0">If Codex had the exact same model — but no access to files, shell commands, tools, state, or permissions — would it still be Codex?</div>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">The nine layers</div>
+  <h2>Anatomy of a coding agent</h2>
+  <p class="lede">Click each layer. Together they answer one question: what has to surround a language model before it can actually <em>do</em> things?</p>
+  <div class="arch-shell">
+    <div class="arch-list" id="archButtons"></div>
+    <div class="arch-view"><h3 id="archTitle"></h3><p id="archDesc"></p><div id="archExample" class="codebox"></div><div id="archQuestion" class="quote"></div></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">See it move</div>
+  <h2>Watch the loop run</h2>
+  <p class="lede">The abstract diagram becomes concrete when you watch one real episode: <b>Codex fixes a failing test.</b> Step through it — watch which node is active, what appears in the terminal, and how state accumulates.</p>
+  <div class="sim2">
+    <div class="loopbox">
+      <svg viewBox="0 0 480 330" aria-label="agent loop diagram">
+        <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#cfccc2"/></marker></defs>
+        <path class="looparrow" d="M 330 55 Q 375 70 390 116" />
+        <path class="looparrow" d="M 392 170 Q 392 220 380 261" />
+        <path class="looparrow" d="M 283 288 L 206 288" />
+        <path class="looparrow" d="M 118 261 C 130 180 165 100 215 62" />
+        <path class="looparrow" d="M 306 145 L 192 145" />
+        <path class="looparrow" d="M 100 170 L 100 261" />
+        <g class="loopnode" id="ln0"><rect x="165" y="16" width="150" height="46" rx="10"/><text x="240" y="44" text-anchor="middle">Observe</text></g>
+        <g class="loopnode" id="ln1"><rect x="312" y="122" width="150" height="46" rx="10"/><text x="387" y="150" text-anchor="middle">Decide</text></g>
+        <g class="loopnode" id="ln2"><rect x="288" y="265" width="170" height="46" rx="10"/><text x="373" y="293" text-anchor="middle">Act + record</text></g>
+        <g class="loopnode" id="ln3"><rect x="30" y="265" width="160" height="46" rx="10"/><text x="110" y="293" text-anchor="middle">Update state</text></g>
+        <g class="loopnode pausenode" id="ln4"><rect x="16" y="122" width="176" height="46" rx="10"/><text x="104" y="150" text-anchor="middle">Need human? Pause</text></g>
+      </svg>
+      <p class="small" style="margin:10px 6px 4px">The loop closes: <b>update state → observe again</b>. The pause node is where human approval interrupts autonomy.</p>
+    </div>
+    <div class="simright">
+      <div class="simctl">
+        <button class="primary" id="btnStep">Step ▸</button>
+        <button class="ghost" id="btnAuto">Auto-play</button>
+        <button class="ghost" id="btnReset">Reset</button>
+        <span class="hint" id="stepHint">Episode: fix a failing test · step 0 of 12</span>
+      </div>
+      <div class="term" id="simTerm"><span class="t-dim">Press Step to begin the episode…</span></div>
+      <div class="statepanel" id="simState"><span class="kicker">Agent state</span></div>
+    </div>
+  </div>
+  <div class="callout"><b>Key idea:</b> the model supplies reasoning, but the <b>agent harness</b> supplies capabilities, state, control flow, permissions, and access to the environment. Notice how much of the episode above is harness, not model.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Concept check</div>
+  <h2>Agent or workflow?</h2>
+  <p class="lede">A multi-step system is not automatically an agent. The difference is how the next action is chosen.</p>
+  <div class="grid2">
+    <div class="challenge">
+      <p><b>System A:</b> for every job, it always runs the same four steps: read résumé → score job → write cover letter → show result.</p>
+      <button class="choice" data-answer="workflow">Workflow</button>
+      <button class="choice" data-answer="agent">Agent</button>
+      <div class="feedback" id="feedback1"></div>
+    </div>
+    <div class="challenge">
+      <p><b>System B:</b> it reads a job, checks current state, then chooses among ASK_USER, DOWN_RANK, REQUEST_APPROVAL, or CONTINUE_INVESTIGATION; after the action, it updates state and decides again.</p>
+      <button class="choice" data-answer="agent2">Agent</button>
+      <button class="choice" data-answer="workflow2">Workflow</button>
+      <div class="feedback" id="feedback2"></div>
+    </div>
+  </div>
+  <div class="callout blue"><b>Agency test:</b> when the observation changes, the executed action sequence should change.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="prep.html"><span class="lab">← Previous</span><b>00 · Student prep</b></a>
+  <a href="claude-code.html" class="next"><span class="lab">Next →</span><b>02 · The same lens on Claude Code</b></a>
+</div>
+
+<div class="logoband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="note">Offered at Robinson College of Business, Georgia State University · developed within PATH — Pathways for AI Training &amp; Hiring</span>
+</div></div>
+<footer class="footer"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 2 — Learning from the Best: Unpacking Coding Agents<br />Dr. Xinyu Fu · Fall 2026 · Georgia State University</div>
+  <div class="right">Product names and logos (Google Opal, LangChain, OpenAI) are trademarks of their respective owners, used here for identification in course materials.</div>
+</div></footer>
+
+<script>
+/* ---------- architecture explorer ---------- */
+const arch = [
+ {t:'Goal',d:'The system needs a task-level objective that persists across multiple actions.',e:'USER GOAL\n“Diagnose the failing tests and fix the bug.”',q:'What makes a goal different from a single prompt?'},
+ {t:'Model / Reasoning',d:'The model interprets observations, evaluates alternatives, and proposes the next action.',e:'OBSERVATION → REASONING → NEXT ACTION',q:'Which capabilities come from the model, and which come from the harness?'},
+ {t:'Instructions',d:'System rules and repository-specific instructions shape how the agent should behave.',e:'Global rules\n+ repository instructions (AGENTS.md)\n+ task instructions',q:'Why put persistent instructions in the environment instead of repeating them every turn?'},
+ {t:'Tools',d:'Tools convert model intentions into structured actions on the environment.',e:'read_file()\nsearch_repo()\nshell()\napply_patch()\nrun_tests()',q:'Why are structured tools safer and more reliable than “just output the answer”?'},
+ {t:'Environment',d:'The agent acts on something outside the model: files, commands, tests, and repository state.',e:'repo/\n  src/\n  tests/\n  AGENTS.md\n  package.json',q:'What changes when an LLM can affect an environment rather than only generate text?'},
+ {t:'State / Memory',d:'The agent needs enough state to avoid starting over after every action.',e:'inspected_files = [...]\nchanges_made = [...]\nfailed_tests = [...]\napproval_status = ...',q:'What information belongs in persistent state versus temporary context?'},
+ {t:'Agent Loop',d:'The next action depends on what the previous action revealed. This feedback loop is central to agency.',e:'OBSERVE\n  ↓\nDECIDE → ACT\n  ↑      ↓\n  └─ UPDATE STATE',q:'What evidence would prove that this is a real loop rather than a narrated sequence?'},
+ {t:'Guardrails / HITL',d:'Autonomy is bounded. Some actions should be blocked, sandboxed, or paused for a human decision.',e:'SAFE → act\nUNCERTAIN → ask\nPROHIBITED → refuse',q:'Where should human approval sit in the loop — and why?'},
+ {t:'Evaluation',d:'An agent needs observable success criteria, not just plausible-looking output.',e:'tests pass?\ndiff sensible?\nconstraints respected?\nunsafe action avoided?',q:'How do you evaluate process quality, not just the final answer?'}
+];
+const buttons=document.getElementById('archButtons');
+arch.forEach((x,i)=>{const b=document.createElement('button');b.className='arch-btn'+(i===0?' active':'');b.innerHTML='<span class="n">'+String(i+1).padStart(2,'0')+'</span>'+x.t;b.addEventListener('click',()=>showArch(i));buttons.appendChild(b)});
+function showArch(i){[...buttons.children].forEach((b,j)=>b.classList.toggle('active',i===j));document.getElementById('archTitle').textContent=arch[i].t;document.getElementById('archDesc').textContent=arch[i].d;document.getElementById('archExample').textContent=arch[i].e;document.getElementById('archQuestion').textContent=arch[i].q}
+showArch(0);
+
+/* ---------- loop simulator ---------- */
+const EP=[
+ {n:0,l:[['t-obs','OBSERVE'],['','$ npm test'],['t-dim','FAIL tests/cart.test.js › applyDiscount — expected 27, received 30']],s:{tests:'1 failing'}},
+ {n:1,l:[['t-dec','DECIDE'],['','The failure points at applyDiscount() → inspect src/cart.js']]},
+ {n:2,l:[['t-act','ACT'],['','read_file("src/cart.js")'],['t-dim','→ for (let i = 0; i <= items.length; i++) { … }']],s:{files_inspected:'cart.js'}},
+ {n:2,l:[['t-act','RECORD'],['','Suspicious loop bound at cart.js:42 — "<=" runs one item past the end']],s:{suspect:'cart.js:42'}},
+ {n:3,l:[['t-dim','UPDATE'],['','state.suspect = cart.js:42 · plan = patch the loop bound']],s:{plan:'patch loop bound'}},
+ {n:0,l:[['t-obs','OBSERVE'],['','Re-read the failing assertion — discount must apply once per item']]},
+ {n:1,l:[['t-dec','DECIDE'],['','Fix is clear → apply_patch. Writing files is a permissioned action.']]},
+ {n:4,l:[['t-hitl','HITL ⏸'],['','Approval requested: apply_patch(src/cart.js)'],['t-dim','User: APPROVE']],s:{approval:'approved'}},
+ {n:2,l:[['t-act','ACT'],['','apply_patch — "- i <= items.length"  →  "+ i < items.length"']],s:{plan:'patch applied'}},
+ {n:3,l:[['t-dim','UPDATE'],['','state.changes = [cart.js:42] → verify by rerunning tests']],s:{changes:'cart.js:42'}},
+ {n:0,l:[['t-obs','OBSERVE'],['','$ npm test'],['t-dim','PASS — 12/12 tests']],s:{tests:'12/12 pass ✓'}},
+ {n:1,l:[['t-dec','DECIDE'],['','Goal satisfied → FINISH ✓']]}
+];
+let cur=0, timer=null;
+const state={goal:'fix the failing test'};
+const termEl=document.getElementById('simTerm'), stateEl=document.getElementById('simState'), hintEl=document.getElementById('stepHint');
+function renderState(changed){
+  let h='<span class="kicker">Agent state</span>';
+  for(const [k,v] of Object.entries(state)){h+=`<div>${k} = <b class="${k===changed?'changed':''}">${v}</b></div>`}
+  stateEl.innerHTML=h;
+}
+function setNode(n){for(let i=0;i<5;i++)document.getElementById('ln'+i).classList.toggle('on',i===n)}
+function step(){
+  if(cur>=EP.length){stopAuto();return}
+  const e=EP[cur];
+  setNode(e.n);
+  if(cur===0)termEl.innerHTML='';
+  const div=document.createElement('div');
+  div.innerHTML=e.l.map(([c,t])=>`<span class="${c}">${t}</span>`).join('  ');
+  termEl.appendChild(div);
+  termEl.scrollTop=termEl.scrollHeight;
+  let changed=null;
+  if(e.s){for(const [k,v] of Object.entries(e.s)){state[k]=v;changed=k}}
+  renderState(changed);
+  cur++;
+  hintEl.textContent=`Episode: fix a failing test · step ${cur} of ${EP.length}`;
+  if(cur>=EP.length){hintEl.textContent+=' · done ✓';stopAuto()}
+}
+function stopAuto(){if(timer){clearInterval(timer);timer=null;document.getElementById('btnAuto').textContent='Auto-play'}}
+document.getElementById('btnStep').addEventListener('click',()=>{stopAuto();step()});
+document.getElementById('btnAuto').addEventListener('click',function(){
+  if(timer){stopAuto();return}
+  if(cur>=EP.length)reset();
+  this.textContent='Pause';
+  timer=setInterval(step,1500);
+});
+function reset(){cur=0;stopAuto();for(const k of Object.keys(state))if(k!=='goal')delete state[k];setNode(-1);termEl.innerHTML='<span class="t-dim">Press Step to begin the episode…</span>';renderState();hintEl.textContent=`Episode: fix a failing test · step 0 of ${EP.length}`}
+document.getElementById('btnReset').addEventListener('click',reset);
+renderState();
+
+/* ---------- concept check ---------- */
+document.querySelectorAll('.choice').forEach(btn=>btn.addEventListener('click',()=>{
+  const a=btn.dataset.answer;const first=a==='workflow'||a==='agent';const correct=a==='workflow'||a==='agent2';
+  const fb=document.getElementById(first?'feedback1':'feedback2');
+  btn.classList.add(correct?'good':'bad');
+  fb.textContent=correct
+    ?(first?'Correct. Multiple steps do not create agency if the action sequence is fixed.':'Correct. The system selects its next action from observations and state, then updates state and continues.')
+    :(first?'Not quite. The system never chooses among next actions; the sequence is predetermined.':'Not quite. This system has observation-dependent action selection and a feedback loop.');
+}));
+
+/* ---------- progress ---------- */
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

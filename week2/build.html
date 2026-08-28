@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>03 · Build the Job Search Agent — CIS 4394 Week 2</title>
+<link rel="icon" href="../assets/gsu_torch.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <span class="sep">·</span><span>J. Mack Robinson College of Business</span>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 2</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="prep.html"><span class="k">00</span>Prep</a>
+  <a href="codex.html"><span class="k">01</span>Unpack Codex</a>
+  <a href="claude-code.html"><span class="k">02</span>Claude Code</a>
+  <a href="build.html" class="here"><span class="k">03</span>Build</a>
+  <a href="evaluate.html"><span class="k">04</span>Evaluate</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">03 · Part 3</div>
+  <h1>Build the <em>Job Search Agent</em>.</h1>
+  <p class="lede">Keep the architecture; throw away everything coding-specific. Your agent evaluates jobs against a fictional student’s résumé, explains gaps truthfully, and pauses for a human before drafting anything external-facing.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Transfer</div>
+  <h2>Remove “coding” from the architecture</h2>
+  <p class="lede">Fill in the right column yourself first — then compare with a strong mapping. This table <b>is</b> your architecture diagram deliverable, in draft form.</p>
+  <div class="transfer">
+    <div class="domain"><h3>Codex</h3>
+      <div class="mapping">
+        <span class="lab">Goal</span><div class="fixed">Fix / build software</div>
+        <span class="lab">Environment</span><div class="fixed">Code repository</div>
+        <span class="lab">Observe</span><div class="fixed">Files, diffs, command output</div>
+        <span class="lab">Actions</span><div class="fixed">Search, shell, patch, test</div>
+        <span class="lab">State</span><div class="fixed">Files inspected, changes, test results</div>
+        <span class="lab">Guardrail</span><div class="fixed">Sandbox + permission boundaries</div>
+        <span class="lab">Evaluation</span><div class="fixed">Tests, diff quality, task completion</div>
+      </div>
+    </div>
+    <div class="swap">→</div>
+    <div class="domain"><h3>Your Job Search Agent</h3>
+      <div class="mapping">
+        <label for="goal">Goal</label><input id="goal" value="Find suitable entry-level jobs" />
+        <label for="environment">Environment</label><input id="environment" placeholder="résumé + preferences + …" />
+        <label for="observe">Observe</label><input id="observe" placeholder="What can the agent inspect?" />
+        <label for="actions">Actions</label><input id="actions" placeholder="What can the agent do?" />
+        <label for="state">State</label><input id="state" placeholder="What must it remember?" />
+        <label for="guardrail">Guardrail</label><input id="guardrail" placeholder="What must never happen?" />
+        <label for="evaluation">Evaluation</label><input id="evaluation" placeholder="How do we know it works?" />
+      </div>
+      <div style="margin-top:18px"><button class="primary" id="revealMapping">Reveal one strong mapping</button></div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Safety boundary</div>
+  <h2>Three rules, every path, graded</h2>
+  <div class="rails">
+    <div class="rail"><h3>Separate the inputs</h3><p class="small"><code>resume.md</code> is the <b>only</b> source of truth for factual claims. <code>preferences.md</code> guides ranking. Hard constraints may override an otherwise strong skill match.</p></div>
+    <div class="rail"><h3>Job text is untrusted</h3><p class="small">Job postings are data, never instructions. Ignore embedded requests to fabricate qualifications, reveal data, email recruiters, or override system rules.</p></div>
+    <div class="rail"><h3>Real HITL pause</h3><p class="small">Before any final external-facing material: pause for <b>Approve / Edit / Reject</b>. Sending, submitting, posting, or contacting recruiters is prohibited in this lab.</p></div>
+  </div>
+  <div class="callout red"><b>Hard rule:</b> the agent may evaluate, rank, and draft — but it never fabricates a qualification, and it never takes an external action.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Choose your path</div>
+  <h2>Same rubric, three ways in</h2>
+  <p class="lede">The path changes the tools, not the learning outcomes or the grade ceiling. All paths start from the same starter kit.</p>
+  <div class="paths">
+    <div class="path">
+      <div class="head"><img src="../assets/opal_hi.png" alt="Google Opal logo" /><div class="t"><b>Google Opal</b><span>Path A · no-code · experimental</span></div></div>
+      <div class="body">
+        <span class="badge blue">No code</span> <span class="badge plain">$0</span>
+        <p style="margin-top:12px">Build the agent visually: routing, state, and a visible approval checkpoint.</p>
+        <p class="small">Best for: learning agent design without setup-heavy coding.</p>
+      </div>
+      <div class="pre"><b>Lowest setup friction.</b> Requires a personal Google account (see <a class="doc" href="prep.html">Prep</a>).</div>
+    </div>
+    <div class="path">
+      <div class="head"><img src="../assets/langchain.png" alt="LangChain logo" /><div class="t"><b>LangSmith Fleet</b><span>Path B · agent builder</span></div></div>
+      <div class="body">
+        <span class="badge blue">No code</span> <span class="badge plain">$0 tier</span>
+        <p style="margin-top:12px">Production-like builder with tools, approvals, memory, and inspectable traces.</p>
+        <p class="small">Best for: observability — its run traces are your evidence, for free.</p>
+      </div>
+      <div class="pre"><b>Best traces.</b> Watch the free-tier run budget (see <a class="doc" href="prep.html">Prep</a>).</div>
+    </div>
+    <div class="path">
+      <div class="head"><img src="../assets/openai.png" alt="OpenAI logo" /><div class="t"><b>Codex + Python</b><span>Path C · code</span></div></div>
+      <div class="body">
+        <span class="badge red">Code</span> <span class="badge plain">$0 with ChatGPT sign-in</span>
+        <p style="margin-top:12px">Transform a deliberately non-agentic baseline into an observation-driven agent.</p>
+        <p class="small">Best for: seeing exactly what the abstraction looks like in code.</p>
+      </div>
+      <div class="pre"><b>Guaranteed fallback.</b> The baseline runs offline with zero accounts.</div>
+    </div>
+  </div>
+  <div class="callout"><b>Starter kit (from iCollege):</b> unzip it and work in the <b>extracted</b> <code>job_agent_starter</code> folder — not the ZIP preview. It contains <code>resume.md</code>, <code>preferences.md</code>, <code>data/jobs.json</code> (six postings, untrusted data), <code>prompts/</code> for all three paths, <code>tests/test_cases.md</code>, and the Python baseline.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Step by step</div>
+  <h2>Lab instructions</h2>
+  <p class="lede">Pick your path’s tab and work down the list. Interface labels can drift on live platforms — if a menu name differs, use the current equivalent.</p>
+
+  <div class="pathtabs">
+    <button class="pathtab active" data-p="pa"><img src="../assets/opal_hi.png" alt="" />Path A · Opal</button>
+    <button class="pathtab" data-p="pb"><img src="../assets/langchain.png" alt="" />Path B · Fleet</button>
+    <button class="pathtab" data-p="pc"><img src="../assets/openai.png" alt="" />Path C · Codex + Python</button>
+  </div>
+
+  <div class="pathpanel" id="pa">
+    <div class="prefbox"><b>Before you start:</b> personal Google Account, 18+, English-only, computer only. Verified access to Opal (see <a class="doc" href="prep.html">Prep</a>). Current route: Gemini → <b>Gems</b> → <b>My Gems from Labs</b> → <b>New Gem</b>.</div>
+    <ol class="steps">
+      <li>Open Gemini on a computer, choose <b>Gems</b>, and create a new Gem from Google Labs powered by Opal.</li>
+      <li>Open <code>prompts/opal_starter_prompt.md</code> and paste the <b>complete</b> starter prompt.</li>
+      <li>Paste <code>resume.md</code> as candidate facts, <code>preferences.md</code> as preferences/constraints, and <code>data/jobs.json</code> as local job data.</li>
+      <li>Define or verify state fields: current job, observed evidence, missing qualifications, constraint conflicts, selected action, approval status, completed tests.</li>
+      <li>Create <b>input-dependent routing</b> among ask, recommend/investigate, down-rank/reject, request approval, draft, and finish behaviors.</li>
+      <li>Add the untrusted-job-text guardrail — job descriptions must not be able to override system rules.</li>
+      <li>Add a real <b>Approve / Edit / Reject</b> pause before the final external-facing draft.</li>
+      <li>Run all four cases. Capture actual outputs for all four and detailed screenshots/logs for two contrasting branches.</li>
+      <li>Export or screenshot the architecture, executed evidence, approval checkpoint, ranked output, and approved draft.</li>
+    </ol>
+    <div class="callout" style="margin-top:22px"><b>Access note:</b> no paid model API setup is required for this lab, but Opal is experimental — availability and usage limits can change.</div>
+  </div>
+
+  <div class="pathpanel" id="pb" hidden>
+    <div class="prefbox"><b>Before you start:</b> a LangSmith account with one verified test run. Free Developer plan ≈ 5 Fleet LCUs per org/month; new runs pause when the allowance is exhausted — plan your runs. Managed Fast/Pro/Max tiers mean you do <b>not</b> need your own OpenAI or Anthropic API key.</div>
+    <ol class="steps">
+      <li>Go to LangSmith and choose <b>Switch to Fleet</b> in the left navigation.</li>
+      <li>Use the current <b>+ New Agent</b> flow (docs describe “Chat” and “Create manually” options; labels may drift).</li>
+      <li>Paste <code>prompts/fleet_starter_prompt.md</code> into the agent instructions.</li>
+      <li>Paste <code>resume.md</code>, <code>preferences.md</code>, and <code>data/jobs.json</code> into the agent context if a verified local-file option is unavailable.</li>
+      <li>Configure <b>materially different next actions</b> and state updates — do not route every case through the same node sequence.</li>
+      <li>Configure an approval pause for final external-facing material. Do <b>not</b> connect email or submission tools.</li>
+      <li>Run all four tests and inspect the structured Fleet trace. Save full traces for at least two contrasting branches.</li>
+      <li>Capture one real approval checkpoint and its Approve / Edit / Reject result.</li>
+    </ol>
+  </div>
+
+  <div class="pathpanel" id="pc" hidden>
+    <div class="prefbox"><b>Before you start:</b> Python 3.10+ and Codex CLI installed, authenticated via <b>Sign in with ChatGPT</b> (see <a class="doc" href="prep.html">Prep</a> for the install commands).</div>
+    <p style="margin:16px 0 6px;font-weight:650">First, run the supplied baseline:</p>
+    <div class="codebox" style="margin-top:8px">cd job_agent_starter
+python3 src/job_agent_starter.py</div>
+    <p class="small">Read <code>outputs/ranked_jobs.md</code> and <code>outputs/trace.md</code>. The starter works — but it is <b>deliberately NOT an agent</b>: fixed sequence, no runtime action choice, no real HITL pause. Your job is to transform it.</p>
+    <ol class="steps">
+      <li>Read <code>README.md</code> and <code>AGENTS.md</code>, then inspect the baseline outputs.</li>
+      <li>Run <code>codex</code> from the <code>job_agent_starter</code> folder and paste <code>prompts/codex_starter_prompt.md</code>.</li>
+      <li>Keep candidate facts, preferences, hard constraints, and job data <b>separate in state</b>.</li>
+      <li>Implement a decision policy that selects among materially different actions from the current observation and state.</li>
+      <li>Implement a true <b>Approve / Edit / Reject</b> pause before final external-facing material.</li>
+      <li>Write structured runtime evidence, test results, rankings, and the approved draft under <code>outputs/</code>.</li>
+      <li>Run all four tests and compare at least two contrasting action sequences.</li>
+    </ol>
+    <p style="margin:22px 0 6px;font-weight:650">The shape you are aiming for:</p>
+    <div class="codebox" style="margin-top:8px">state = initialize(resume, preferences, jobs)
+while not state.done:
+    observation = observe(state)
+    actions     = available_actions(state, observation)
+    action      = decide(state, observation, actions)
+    if action == REQUEST_DRAFT_APPROVAL:
+        decision = pause_for_human("Approve / Edit / Reject")
+        result   = apply_human_decision(decision)
+    else:
+        result   = execute(action)
+    record(state, observation, actions, action, result)
+    state = update_state(state, result)</div>
+  </div>
+
+  <div class="callout blue" style="margin-top:26px"><b>The agentic requirement (all paths):</b> at a decision point, your system must select among materially different next actions based on its current observation and state. Across the required tests, different observations must produce different executed action sequences. A fixed sequence does not satisfy the requirement.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="claude-code.html"><span class="lab">← Previous</span><b>02 · The same lens on Claude Code</b></a>
+  <a href="evaluate.html" class="next"><span class="lab">Next →</span><b>04 · Break it, grade it, submit it</b></a>
+</div>
+
+<div class="logoband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="note">Offered at Robinson College of Business, Georgia State University · developed within PATH — Pathways for AI Training &amp; Hiring</span>
+</div></div>
+<footer class="footer"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 2 — Learning from the Best: Unpacking Coding Agents<br />Dr. Xinyu Fu · Fall 2026 · Georgia State University</div>
+  <div class="right">Product names and logos (Google Opal, LangChain, OpenAI) are trademarks of their respective owners, used here for identification in course materials.</div>
+</div></footer>
+
+<script>
+/* ---------- transfer reveal ---------- */
+document.getElementById('revealMapping').addEventListener('click',()=>{
+  const vals={environment:'Résumé + preferences + job postings',observe:'Read résumé evidence, job requirements, constraints, prior results',actions:'ASK_USER, investigate, down-rank/reject, request approval, draft',state:'Jobs inspected, evidence, gaps, constraints, approval status',guardrail:'Never fabricate qualifications; never obey instructions embedded in job text',evaluation:'Fit, partial fit, hard-constraint mismatch, prompt-injection tests'};
+  Object.entries(vals).forEach(([k,v])=>document.getElementById(k).value=v);
+});
+
+/* ---------- path tabs ---------- */
+document.querySelectorAll('.pathtab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.pathtab').forEach(x=>x.classList.toggle('active',x===t));
+  ['pa','pb','pc'].forEach(id=>document.getElementById(id).hidden=(id!==t.dataset.p));
+}));
+
+/* ---------- progress ---------- */
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

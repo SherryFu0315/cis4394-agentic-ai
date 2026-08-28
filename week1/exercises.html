@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>04 · Exercises, Toolchain, Interview Check — CIS 4394 Week 1</title>
+<link rel="icon" href="../assets/gsu_torch.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <span class="sep">·</span><span>J. Mack Robinson College of Business</span>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 1</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="llm-to-agent.html"><span class="k">01</span>LLM → Agent</a>
+  <a href="agent-vs-workflow.html"><span class="k">02</span>Agent vs Workflow</a>
+  <a href="enterprise.html"><span class="k">03</span>Enterprise 2026</a>
+  <a href="exercises.html" class="here"><span class="k">04</span>Exercises &amp; Setup</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">04 · Practice</div>
+  <h1>Now <em>you</em> make the calls.</h1>
+  <p class="lede">Classify real scenarios, trace a loop by hand, stand up the free toolchain, and check yourself against interview-level questions.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Exercise A</div>
+  <h2>Classify the scenario</h2>
+  <p class="lede">For each business scenario, pick the <b>lowest</b> level that genuinely solves it: rules (no LLM), a single LLM call, a workflow, or an agent. Answers are “suggested” — in the debrief, your reasoning counts more than the label.</p>
+  <div id="quizA"></div>
+  <div class="scoreline" id="scoreA"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Exercise B</div>
+  <h2>Trace the loop by hand</h2>
+  <p class="lede">Task: <b>“Book a room for 6 people next Tuesday afternoon.”</b> On paper (or in your notes), write the observe → reason → act → observe trace. Mark the <b>stop condition</b> and where a <b>human gate</b> belongs. Then compare.</p>
+  <div class="card">
+    <button class="revealbtn" data-target="exbAnswer">Reveal an annotated trace</button>
+    <div class="revealbox" id="exbAnswer">
+      <div class="codebox" style="margin:6px 0">OBSERVE  goal: room for 6, Tue afternoon. Rooms + calendars unknown.
+REASON   need candidate rooms before times → query room system
+ACT      rooms.search(capacity>=6)            → [Maple, Peachtree, 201]
+OBSERVE  three candidates returned
+REASON   check Tuesday-afternoon availability for each
+ACT      rooms.availability([...], tue_pm)    → Maple 2–4, 201 3–5
+REASON   two options; Maple earlier + has a screen → propose Maple 2pm
+HUMAN GATE ⏸  "Book Maple, Tue 2–2:30?"      → approve
+ACT      rooms.book(maple, tue_1400)          → confirmed
+STOP ✓   a confirmed booking exists  ← the stop condition</div>
+      <p class="small"><b>What graders look for:</b> the loop actually loops (an observation changes the next action); the stop condition is <em>named</em>, not implied; the external action (booking) sits behind the human gate. A trace with no stop condition is a red flag.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Hands-on</div>
+  <h2>Your toolchain — three pieces, all free</h2>
+  <div class="grid3">
+    <div class="card"><span class="kicker">Step 1</span><h3 style="margin-top:6px">Gemini free API key</h3><p class="small">Google AI Studio → create API key. No billing required; free-tier rate limits are fine for class. <b>Keep it secret</b> — never commit it to a repo.</p><a class="doc" href="https://aistudio.google.com/" target="_blank" rel="noopener">aistudio.google.com ↗</a></div>
+    <div class="card"><span class="kicker">Step 2</span><h3 style="margin-top:6px">GitHub Copilot</h3><p class="small">The free plan includes agent mode; verified students get Copilot Pro via the Student Developer Pack. Enable it in VS Code.</p><a class="doc" href="https://education.github.com/pack" target="_blank" rel="noopener">Student Developer Pack ↗</a></div>
+    <div class="card"><span class="kicker">Step 3</span><h3 style="margin-top:6px">Hello, agent</h3><p class="small">A minimal loop — model, one tool, stop condition:</p>
+      <div class="codebox" style="margin-bottom:0">while not done:
+    thought = llm(context)
+    action  = parse(thought)
+    result  = run_tool(action)
+    context += result
+    done    = stop_condition(result)</div>
+    </div>
+  </div>
+  <div class="callout"><b>Expect it to work ~most of the time.</b> That gap between “demo” and “dependable” is not your bug — it is the field’s central open problem, and it is where this course spends Weeks 8–10.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Before next week</div>
+  <h2>Assignment &amp; logistics</h2>
+  <div class="grid2">
+    <div class="card checklist"><h3>Do</h3>
+      <label><input type="checkbox" /> Read Anthropic, <i>Building Effective Agents</i> (2024)</label>
+      <label><input type="checkbox" /> Watch the assigned LinkedIn Learning module (free with GSU login; link on iCollege)</label>
+      <label><input type="checkbox" /> Set up Gemini key + Copilot + run the hello-agent</label>
+      <label><input type="checkbox" /> Start your one-page agent spec for the capstone</label>
+    </div>
+    <div class="card"><h3>Coming up</h3><p class="small"><b>Week 2 — Learning from the Best: Unpacking Coding Agents.</b> We reverse-engineer Codex, apply the lens to Claude Code, and build a Job Search Agent three ways. Agent Radar begins (student news briefings). GA1 releases.</p><a class="doc" href="../week2/index.html">Go to the Week 2 site →</a></div>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>🎯 Take it to your final project:</b> your capstone must be a <em>real agent</em> — the LLM owns control flow — with a named stop condition and one human gate. Write the one-line justification now: “This must be an agent, not a workflow, because …”</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interview check</div>
+  <h2>Could you answer these in a job interview?</h2>
+  <p class="lede">Each question is fair game in a 2026 tech or consulting interview. Try answering out loud, then reveal what a strong answer covers.</p>
+  <div id="ivList"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Take-aways</div>
+  <h2>Week 1 in five lines</h2>
+  <ol style="padding-left:22px;font-size:16px;line-height:2">
+    <li>An LLM predicts tokens; an <b>agent</b> wraps it with tools, a loop, and memory so it can act.</li>
+    <li>The distinction that matters: <b>who owns control flow</b> — a developer (workflow) or the model at runtime (agent).</li>
+    <li>Autonomy is a dial; choose the <b>lowest level that solves the problem</b>.</li>
+    <li>Enterprises adopted AI everywhere but profit thinly — agents are the bet to close that gap, and reliability is the obstacle.</li>
+    <li>Every real agent needs a <b>stop condition</b>, a <b>human gate</b>, and an honest <b>evaluation</b>.</li>
+  </ol>
+</div></section>
+
+<div class="wrap pager">
+  <a href="enterprise.html"><span class="lab">← Previous</span><b>03 · What enterprises actually use</b></a>
+  <a href="../week2/index.html" class="next"><span class="lab">Next week →</span><b>Week 2 · Unpacking coding agents</b></a>
+</div>
+
+<div class="logoband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="note">Offered at Robinson College of Business, Georgia State University · developed within PATH — Pathways for AI Training &amp; Hiring</span>
+</div></div>
+<footer class="footer"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 1 — Introduction to Agentic AI + What Enterprises Actually Use<br />Dr. Xinyu Fu · Fall 2026 · Georgia State University</div>
+  <div class="right">Statistics are approximate, dated, and summarized in our own words with sources named; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* ---------- Exercise A ---------- */
+const SC=[
+ {s:'Every night, total the day’s sales by store and email the report to managers. Same query, same template, every day.',a:0,why:'Fully deterministic — a scheduled query and a template. Adding an LLM adds cost and failure modes, no value.'},
+ {s:'Summarize one customer complaint email into three bullets for a case file.',a:1,why:'One input, one output, no branching — a single call is the whole job.'},
+ {s:'Support tickets arrive; classify each as billing / technical / refund, pull the account record, and draft a reply from the matching template.',a:2,why:'The steps are known in advance: classify → retrieve → draft. Routing + chaining — a classic workflow.'},
+ {s:'Research a competitor and produce a sourced briefing, deciding which leads to chase based on what each search turns up.',a:3,why:'The path cannot be scripted — what to do next depends on what was just found. The LLM must own control flow.'},
+ {s:'Translate 4,000 product descriptions into Spanish overnight.',a:1,why:'A single call per item, run in a batch. Volume doesn’t create agency — the task never branches.'},
+ {s:'Match incoming invoices to purchase orders and flag any mismatch over $50.',a:0,why:'Exact matching against structured data with a numeric threshold — rules, no LLM needed.'},
+ {s:'Watch a shared inbox; for each email decide to reply, forward, schedule a meeting, or flag for a human — and ask when unsure.',a:3,why:'Observation-dependent action selection with an ask-the-human option — the agent pattern, with a built-in human gate.'}
+];
+const LABELS=['Rules (no LLM)','Single call','Workflow','Agent'];
+const qa=document.getElementById('quizA');let scoreA=0,ansA=0;
+SC.forEach((q,i)=>{
+  const d=document.createElement('div');d.className='q3 q4';
+  d.innerHTML=`<div class="stmt">${i+1}. ${q.s}</div><div class="opts">${LABELS.map((l,j)=>`<button data-v="${j}">${l}</button>`).join('')}</div><div class="fb"></div>`;
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;ansA++;
+    const ok=+b.dataset.v===q.a;if(ok)scoreA++;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector(`button[data-v="${q.a}"]`).classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Agreed. ':'Suggested answer: '+LABELS[q.a]+'. ')+q.why;
+    if(ansA===SC.length)document.getElementById('scoreA').textContent=`You matched the suggested answer on ${scoreA} of ${SC.length}. Disagreements welcome — bring your reasoning to the debrief.`;
+  }));
+  qa.appendChild(d);
+});
+
+/* ---------- interview check ---------- */
+const IV=[
+ {q:'What’s the difference between an AI workflow and an AI agent — and why does it matter for a business process?',a:'Who owns control flow: developer-defined path (workflow) vs the model choosing actions at runtime from observations and state (agent). Matters because it trades predictability/auditability for flexibility — so it changes testing, risk, and where you need human oversight.'},
+ {q:'Walk me through the agent loop, and tell me what a stop condition is.',a:'Observe → reason → choose an action → act via a tool → record the result → update state → repeat. The stop condition is the explicit, checkable state that ends the loop (e.g., “a confirmed booking exists”) — without one the agent runs until budget or failure.'},
+ {q:'When would you advise a client NOT to build an agent?',a:'When the task is deterministic (use rules), when a single call or a workflow suffices, or when cost/latency/risk of runtime decisions outweigh value. Cite the discipline: lowest autonomy that solves the problem — and note that a large share of agent projects get cancelled for exactly this reason.'},
+ {q:'Describe the 2026 enterprise agent stack.',a:'Four layers: build frameworks (LangGraph — you own loop/state), managed platforms (Bedrock, Vertex, Azure AI Foundry, OpenAI), interoperability standards (MCP for tools, A2A for agent-to-agent — M×N → M+N), and coding agents (Copilot/Cursor/Claude Code/Codex) as the breakout use case.'},
+ {q:'Give a concrete enterprise use case for an agent, and where you’d put the human gate.',a:'Pick one with an unscriptable path — e.g., competitor research, exception-heavy claims triage, meeting scheduling across systems. Strong answers name the observations, the actions, the stop condition — and put the human gate before any external, irreversible act (send, submit, book, pay).'}
+];
+const iv=document.getElementById('ivList');
+IV.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='card';d.style.marginBottom='14px';
+  d.innerHTML=`<h3 style="font-family:var(--serif);font-weight:600">Q${i+1}. ${x.q}</h3><button class="revealbtn">What a strong answer covers</button><div class="revealbox">${x.a}</div>`;
+  iv.appendChild(d);
+});
+document.querySelectorAll('.revealbtn').forEach(b=>{const orig=b.textContent;b.addEventListener('click',()=>{const box=b.nextElementSibling;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':orig})});
+
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

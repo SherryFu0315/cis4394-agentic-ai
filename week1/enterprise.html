@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>03 · What Enterprises Actually Use — CIS 4394 Week 1</title>
+<link rel="icon" href="../assets/gsu_torch.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <span class="sep">·</span><span>J. Mack Robinson College of Business</span>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 1</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="llm-to-agent.html"><span class="k">01</span>LLM → Agent</a>
+  <a href="agent-vs-workflow.html"><span class="k">02</span>Agent vs Workflow</a>
+  <a href="enterprise.html" class="here"><span class="k">03</span>Enterprise 2026</a>
+  <a href="exercises.html"><span class="k">04</span>Exercises &amp; Setup</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">03 · Landscape</div>
+  <h1>What enterprises <em>actually</em> use in 2026.</h1>
+  <p class="lede">Past the demos: the stack companies deploy, the build-vs-buy call they wrestle with, the standards that will outlive the tools — and the paradox that explains why this course exists.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">The map</div>
+  <h2>The 2026 agent stack</h2>
+  <div class="stack2x2">
+    <div class="stackcell"><h4>Build frameworks</h4><p class="small"><b>LangGraph</b> &amp; friends — you own the loop, the state, and the edges. Maximum control; more engineering. <b>This course’s default build path.</b></p></div>
+    <div class="stackcell"><h4>Managed platforms</h4><p class="small">Amazon Bedrock Agents, Google Vertex, Azure AI Foundry, OpenAI’s agent tooling. Faster to ship, less control, real lock-in questions.</p></div>
+    <div class="stackcell"><h4>Interop standards</h4><p class="small"><b>MCP</b> (agent ↔ tools) and <b>A2A</b> (agent ↔ agent). Standards turn an M×N integration mess into M+N — likely the most durable layer of the stack.</p></div>
+    <div class="stackcell"><h4>Coding agents</h4><p class="small">Copilot, Cursor, Claude Code, Codex — the breakout enterprise use case, and the reason <a class="doc" href="../week2/index.html">Week 2</a> reverse-engineers one.</p></div>
+  </div>
+  <div class="codebox" style="margin-top:20px">Without a standard:  M agents × N tools  =  M×N custom integrations
+With MCP:            M agents + N tools  =  M+N  (each speaks the protocol once)</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The MIS question</div>
+  <h2>Build vs buy vs wait</h2>
+  <div style="overflow:auto"><table class="plain"><thead><tr><th></th><th>Build (LangGraph)</th><th>Buy (managed platform)</th><th>Wait</th></tr></thead><tbody>
+    <tr><td><b>Control</b></td><td>Full — you own loop &amp; state</td><td>Partial — platform abstractions</td><td>None</td></tr>
+    <tr><td><b>Speed to ship</b></td><td>Slower</td><td>Faster</td><td>—</td></tr>
+    <tr><td><b>Cost shape</b></td><td>Engineering time</td><td>Platform + usage fees</td><td>Opportunity cost</td></tr>
+    <tr><td><b>Lock-in</b></td><td>Low</td><td>Higher</td><td>None</td></tr>
+    <tr><td><b>Right when…</b></td><td>Agent logic is core to the product</td><td>Standard use case, existing cloud contract</td><td>Task doesn’t need an agent yet — a legitimate strategy</td></tr>
+  </tbody></table></div>
+  <div class="callout" style="margin-top:20px"><b>Reality check:</b> adoption is near-universal, bottom-line impact still thin — and a large share of agentic-AI projects are forecast to be cancelled before delivering (Gartner projected 40%+ by end of 2027, approx.). “Wait, and pick your shots” is often the analytically correct answer.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Case</div>
+  <h2>The gen-AI paradox — and the human turn</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card">
+      <h3>The paradox</h3>
+      <p class="small">Near-universal adoption, heavy investment, little EBIT impact so far (McKinsey, approx.). Three discussion prompts we’ll cold-call in class:</p>
+      <ol style="padding-left:20px;font-size:14.5px;margin:10px 0 0">
+        <li>Why the gap — capability problem or organization problem?</li>
+        <li>What would have to change for agents to move the P&amp;L?</li>
+        <li>If you were CIO, what would you <b>measure</b> to know it’s working?</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>The augmentation story: IKEA’s “Billie”</h3>
+      <p class="small">A support bot has absorbed a large share of routine service inquiries since 2021 — and IKEA retrained ~8,500 call-center staff as remote interior-design advisors, feeding a ~€1.3B design channel (2022, approx.; CX Today / PYMNTS, 2023). The routine slice got automated; the people moved up the value chain.</p>
+      <p class="small" style="margin-top:8px">The evidence beyond one case: AI assistance lifted support-agent productivity ~+14% overall and ~+34% for novices (Brynjolfsson, Li &amp; Raymond, QJE 2025); across real usage, ~57% of AI use augments rather than automates (Anthropic Economic Index, approx.).</p>
+    </div>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>The bar for your capstone:</b> build agents that make people <em>better</em> at their work — not just cheaper to replace.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="agent-vs-workflow.html"><span class="lab">← Previous</span><b>02 · Agent vs workflow vs chatbot</b></a>
+  <a href="exercises.html" class="next"><span class="lab">Next →</span><b>04 · Exercises, toolchain, interview check</b></a>
+</div>
+
+<div class="logoband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="note">Offered at Robinson College of Business, Georgia State University · developed within PATH — Pathways for AI Training &amp; Hiring</span>
+</div></div>
+<footer class="footer"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 1 — Introduction to Agentic AI + What Enterprises Actually Use<br />Dr. Xinyu Fu · Fall 2026 · Georgia State University</div>
+  <div class="right">Statistics are approximate, dated, and summarized in our own words with sources named; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

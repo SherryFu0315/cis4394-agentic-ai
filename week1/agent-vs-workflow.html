@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>02 · Agent vs Workflow vs Chatbot — CIS 4394 Week 1</title>
+<link rel="icon" href="../assets/gsu_torch.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <span class="sep">·</span><span>J. Mack Robinson College of Business</span>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 1</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="llm-to-agent.html"><span class="k">01</span>LLM → Agent</a>
+  <a href="agent-vs-workflow.html" class="here"><span class="k">02</span>Agent vs Workflow</a>
+  <a href="enterprise.html"><span class="k">03</span>Enterprise 2026</a>
+  <a href="exercises.html"><span class="k">04</span>Exercises &amp; Setup</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">02 · Vocabulary</div>
+  <h1>Three things people call <em>“AI.”</em></h1>
+  <p class="lede">Chatbot, workflow, agent — the words get used interchangeably in industry, and the confusion is expensive. The real distinction is a single question: <b>who owns the control flow?</b></p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Definitions</div>
+  <h2>Precise, with one example each</h2>
+  <div class="grid3">
+    <div class="card"><span class="kicker">Chatbot</span><h3 style="margin-top:6px">Responds</h3><p class="small">Generates a reply to a message. Control flow: one turn, then back to the human.</p><p class="small"><b>Example:</b> a support FAQ bot that answers “What’s your return policy?”</p></div>
+    <div class="card"><span class="kicker">Workflow</span><h3 style="margin-top:6px">Follows a path</h3><p class="small">LLM calls arranged along a <b>predefined code path</b> — steps and routing written by a developer.</p><p class="small"><b>Example:</b> classify ticket → look up account → draft reply from template.</p></div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Agent</span><h3 style="margin-top:6px">Directs its own process</h3><p class="small">The <b>LLM owns the control flow</b>: it decides the next action from observations and state, acts, and continues until a stop condition.</p><p class="small"><b>Example:</b> “find and book the best venue” — which searches, calls, and comparisons happen is decided at runtime.</p></div>
+  </div>
+  <div style="overflow:auto;margin-top:26px"><table class="plain"><thead><tr><th></th><th>Chatbot</th><th>Workflow</th><th>Agent</th></tr></thead><tbody>
+    <tr><td><b>Who owns control flow</b></td><td>Human (per turn)</td><td>Developer (in code)</td><td style="background:var(--warn)"><b>The LLM, at runtime</b></td></tr>
+    <tr><td><b>Path across runs</b></td><td>One turn</td><td>Same steps every time</td><td>Changes with observations</td></tr>
+    <tr><td><b>Predictability</b></td><td>High</td><td>High — auditable</td><td>Lower — needs eval + guardrails</td></tr>
+    <tr><td><b>Best when</b></td><td>Answering is enough</td><td>Steps are known in advance</td><td>The path can’t be scripted</td></tr>
+  </tbody></table></div>
+  <p class="small" style="margin-top:12px">Anthropic’s framing (this week’s reading): workflows use predefined code paths; agents direct their own process — and you should look for the “simplest thing that works.” (Anthropic, <i>Building Effective Agents</i>, 2024.)</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Most “agents” are these</div>
+  <h2>The five workflow patterns</h2>
+  <p class="lede">Click each pattern. Deterministic, auditable, cheap — and often all you need. Knowing them keeps you from building an agent where a workflow would do.</p>
+  <div class="arch-shell">
+    <div class="arch-list" id="patternButtons"></div>
+    <div class="arch-view"><h3 id="patTitle"></h3><p id="patDesc"></p><div id="patDiagram" class="codebox"></div><div id="patWhen" class="quote"></div></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive</div>
+  <h2>Autonomy is a dial, not a switch</h2>
+  <p class="lede">Drag the dial. Value rises with autonomy — and so do risk and the oversight you owe it. The engineering discipline: <b>pick the lowest autonomy that solves the problem.</b></p>
+  <div class="dialwrap">
+    <input type="range" id="dial" min="0" max="4" step="1" value="0" aria-label="autonomy level" />
+    <div class="diallabels"><span>Rules, no LLM</span><span>Single call</span><span>Workflow</span><span>Agent</span><span>Fully autonomous</span></div>
+    <div class="dialout">
+      <div class="card"><h3 id="dialName"></h3><p class="small" id="dialDesc"></p><p class="small" id="dialEx" style="margin-top:8px"></p></div>
+      <div class="card">
+        <span class="kicker">Value potential</span>
+        <div class="riskbar v"><i id="barV"></i></div>
+        <span class="kicker" style="display:block;margin-top:16px">Risk &amp; oversight burden</span>
+        <div class="riskbar r"><i id="barR"></i></div>
+        <p class="small" id="dialNote" style="margin-top:14px"></p>
+      </div>
+    </div>
+  </div>
+  <div class="callout red" style="margin-top:24px"><b>When NOT to build an agent:</b> the task is deterministic; a single call is enough; or the cost, latency, or risk of runtime decisions outweighs the value. Most business problems do not need an agent — saying so out loud is a professional skill.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="llm-to-agent.html"><span class="lab">← Previous</span><b>01 · From LLM to agent</b></a>
+  <a href="enterprise.html" class="next"><span class="lab">Next →</span><b>03 · What enterprises actually use</b></a>
+</div>
+
+<div class="logoband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="note">Offered at Robinson College of Business, Georgia State University · developed within PATH — Pathways for AI Training &amp; Hiring</span>
+</div></div>
+<footer class="footer"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 1 — Introduction to Agentic AI + What Enterprises Actually Use<br />Dr. Xinyu Fu · Fall 2026 · Georgia State University</div>
+  <div class="right">Statistics are approximate, dated, and summarized in our own words with sources named; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* ---------- workflow pattern explorer ---------- */
+const PAT=[
+ {t:'Prompt chaining',d:'Decompose a task into fixed sequential LLM calls, each consuming the previous output. Optionally add programmatic checks (“gates”) between steps.',g:'draft outline → [gate: sections ok?]\n→ write sections → polish tone',w:'When a task cleanly splits into steps you can name in advance — e.g., outline, then write, then edit.'},
+ {t:'Routing',d:'Classify the input first, then dispatch it to a specialized prompt, model, or pipeline.',g:'input → classify ──ᐅ billing prompt\n              ├──ᐅ tech-support prompt\n              └──ᐅ refund pipeline',w:'When inputs fall into distinct categories that deserve different handling — separation of concerns for prompts.'},
+ {t:'Parallelization',d:'Run several LLM calls at once — either splitting the work into sections or voting with multiple independent attempts.',g:'        ┌─ᐅ check policy A ─┐\ninput ──┼─ᐅ check policy B ─┼─ᐅ merge\n        └─ᐅ check policy C ─┘',w:'When subtasks are independent (speed) or when multiple perspectives raise confidence (voting, guardrail checks).'},
+ {t:'Orchestrator – workers',d:'A central LLM decomposes the task at runtime and delegates dynamic subtasks to worker calls, then synthesizes the results.',g:'orchestrator ─ plans subtasks\n  ├─ᐅ worker: search files\n  ├─ᐅ worker: edit file A\n  └─ᐅ worker: edit file B\n→ synthesize',w:'When you can’t predict the subtasks in advance (e.g., a multi-file code change) but still want structured delegation.'},
+ {t:'Evaluator – optimizer',d:'One call produces; another evaluates against criteria and demands revision; loop until accepted.',g:'draft ─ᐅ evaluate ─ pass? ─ᐅ done\n  ↑         │ fail + feedback\n  └─────────┘',w:'When you can articulate clear evaluation criteria and iteration measurably improves the result — e.g., translation, search-and-refine.'}
+];
+const pb=document.getElementById('patternButtons');
+PAT.forEach((x,i)=>{const b=document.createElement('button');b.className='arch-btn'+(i===0?' active':'');b.innerHTML='<span class="n">'+String(i+1).padStart(2,'0')+'</span>'+x.t;b.addEventListener('click',()=>showPat(i));pb.appendChild(b)});
+function showPat(i){[...pb.children].forEach((b,j)=>b.classList.toggle('active',i===j));document.getElementById('patTitle').textContent=PAT[i].t;document.getElementById('patDesc').textContent=PAT[i].d;document.getElementById('patDiagram').textContent=PAT[i].g;document.getElementById('patWhen').textContent=PAT[i].w}
+showPat(0);
+document.querySelector('#patternButtons + .arch-view p#patDesc');
+
+/* ---------- autonomy dial ---------- */
+const DIAL=[
+ {n:'Level 0 — Rules, no LLM',d:'Deterministic logic: if/then, SQL, RPA. Nothing is generated; nothing is decided at runtime.',e:'Example: invoice-total validation against a purchase order.',v:15,r:5,note:'Perfectly auditable. If rules solve it, stop here.'},
+ {n:'Level 1 — Single LLM call',d:'One prompt in, one answer out. The application owns everything around the call.',e:'Example: summarize this complaint email into three bullets.',v:35,r:15,note:'Cheap, fast, easy to test. The workhorse of most production “AI features.”'},
+ {n:'Level 2 — Workflow',d:'Multiple LLM calls on a predefined path with gates and routing. Developers own control flow.',e:'Example: classify ticket → retrieve account → draft templated reply.',v:60,r:35,note:'Predictable and auditable — the right ceiling for most business processes today.'},
+ {n:'Level 3 — Agent',d:'The LLM owns control flow: it chooses actions at runtime from observations and state, with guardrails and a human gate.',e:'Example: research a competitor and produce a sourced briefing, deciding which leads to follow.',v:85,r:65,note:'Powerful where paths can’t be scripted. Requires evaluation, guardrails, and a named stop condition.'},
+ {n:'Level 4 — Fully autonomous',d:'Long-running, self-directed, minimal oversight — the agent initiates its own goals and external actions.',e:'Example: an agent that manages a live ad budget and reallocates spend on its own.',v:100,r:100,note:'Highest value on paper, highest risk in practice. In 2026, deploy only with extraordinary justification and controls.'}
+];
+const dial=document.getElementById('dial');
+function setDial(){const L=DIAL[dial.value];
+  document.getElementById('dialName').textContent=L.n;
+  document.getElementById('dialDesc').textContent=L.d;
+  document.getElementById('dialEx').textContent=L.e;
+  document.getElementById('barV').style.width=L.v+'%';
+  document.getElementById('barR').style.width=L.r+'%';
+  document.getElementById('dialNote').textContent=L.note;
+}
+dial.addEventListener('input',setDial);setDial();
+
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

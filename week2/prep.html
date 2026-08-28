@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>00 · Student Prep — CIS 4394 Week 2</title>
+<link rel="icon" href="../assets/gsu_torch.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <span class="sep">·</span><span>J. Mack Robinson College of Business</span>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 2</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="prep.html" class="here"><span class="k">00</span>Prep</a>
+  <a href="codex.html"><span class="k">01</span>Unpack Codex</a>
+  <a href="claude-code.html"><span class="k">02</span>Claude Code</a>
+  <a href="build.html"><span class="k">03</span>Build</a>
+  <a href="evaluate.html"><span class="k">04</span>Evaluate</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">00 · Before class</div>
+  <h1>Arrive ready to <em>build</em>.</h1>
+  <p class="lede">You may choose your final path in class, but class time is for building and testing — not account recovery or installation. Get your chosen path working <b>before</b> you arrive.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Checklist</div>
+  <h2>Everyone brings</h2>
+  <div class="grid2">
+    <div class="card checklist"><h3>The basics</h3>
+      <label><input type="checkbox" /> Laptop + charger</label>
+      <label><input type="checkbox" /> The fictional <b>Jordan Lee résumé</b> downloaded (default classroom input)</label>
+      <label><input type="checkbox" /> 2–3 target job roles (e.g., Data Analyst, Business Analyst)</label>
+      <label><input type="checkbox" /> 3–5 preferences / hard constraints (location, remote, experience level)</label>
+      <label><input type="checkbox" /> Optional: one manually saved public job posting</label>
+    </div>
+    <div class="card"><h3>Privacy default</h3>
+      <p class="small">Use the fictional résumé — you do not need your real identity for this lab. If you choose to use your own résumé, first remove your home address, phone number, student ID, date of birth, and any government IDs before uploading it to any cloud service.</p>
+      <p class="small" style="margin-top:10px">Never scrape login-protected job boards or automate real job applications in this lab.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Accounts &amp; installs</div>
+  <h2>Path-specific preflight</h2>
+  <p class="lede">Pick the path you are most likely to use and verify it works end-to-end. Verifying takes five minutes now; debugging it in class costs you the build sprint.</p>
+  <div class="paths">
+    <div class="path">
+      <div class="head"><img src="../assets/opal_hi.png" alt="Google Opal logo" /><div class="t"><b>Path A · Google Opal</b><span>no-code · experimental</span></div></div>
+      <div class="body">
+        <ul style="padding-left:18px;margin:0;font-size:14px;line-height:1.8">
+          <li>Use a <b>personal</b> Google Account — <b>not</b> your GSU account (Labs is blocked on school accounts)</li>
+          <li>You must be 18 or older</li>
+          <li>Currently English-only, computer only</li>
+          <li><b>Verify:</b> open Gemini on a computer → <b>Gems</b> → confirm you can create a Gem from Google Labs</li>
+        </ul>
+      </div>
+      <div class="pre"><a class="doc" href="https://support.google.com/gemini/answer/16802014" target="_blank" rel="noopener">Account requirements ↗</a></div>
+    </div>
+    <div class="path">
+      <div class="head"><img src="../assets/langchain.png" alt="LangChain logo" /><div class="t"><b>Path B · LangSmith Fleet</b><span>agent builder</span></div></div>
+      <div class="body">
+        <ul style="padding-left:18px;margin:0;font-size:14px;line-height:1.8">
+          <li>Create a free LangSmith account</li>
+          <li>Open LangSmith → <b>Switch to Fleet</b></li>
+          <li><b>Verify:</b> complete one small test run</li>
+          <li>Free tier ≈ 5 Fleet LCUs per org/month; runs pause when exhausted — <b>don’t burn runs</b> before class</li>
+        </ul>
+      </div>
+      <div class="pre"><a class="doc" href="https://docs.langchain.com/langsmith/fleet" target="_blank" rel="noopener">Fleet docs ↗</a> &nbsp;·&nbsp; <a class="doc" href="https://www.langchain.com/pricing" target="_blank" rel="noopener">Pricing ↗</a></div>
+    </div>
+    <div class="path">
+      <div class="head"><img src="../assets/openai.png" alt="OpenAI logo" /><div class="t"><b>Path C · Codex + Python</b><span>code</span></div></div>
+      <div class="body">
+        <p class="small" style="margin-bottom:8px">Codex is included across ChatGPT plans, including Free (limits vary). Sign in with ChatGPT — <b>not</b> a paid API key.</p>
+        <div class="codebox" style="margin:0">python3 --version        <span style="color:#8b909c"># need 3.10+</span>
+curl -fsSL https://chatgpt.com/codex/install.sh | sh
+codex --version
+codex login              <span style="color:#8b909c"># choose “Sign in with ChatGPT”</span></div>
+        <p class="small" style="margin-top:8px">Windows: use the Windows tab in the official docs instead of the curl command.</p>
+      </div>
+      <div class="pre"><a class="doc" href="https://learn.chatgpt.com/docs/codex/cli" target="_blank" rel="noopener">Codex CLI docs ↗</a></div>
+    </div>
+  </div>
+  <div class="callout"><b>If preflight fails:</b> don’t panic, and don’t spend class time on it. Every path has a fallback — the local Python starter runs offline with zero accounts.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Reading · 30–40 minutes</div>
+  <h2>Guided reading: meet a real agent</h2>
+  <p class="lede">Class starts by reverse-engineering Codex. Skim these three sources first, hunting for the answers below — you do not need to understand the code.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="readings card">
+      <a href="https://github.com/openai/codex" target="_blank" rel="noopener"><b>Required 1 · Codex README</b><br /><span class="small">What is Codex? What can it observe and do?</span></a>
+      <a href="https://github.com/openai/codex/tree/main/codex-rs" target="_blank" rel="noopener"><b>Required 2 · Browse the Codex implementation</b><br /><span class="small">Find evidence of tools, state, permissions / sandboxing, and repository instructions. You do not need to understand Rust.</span></a>
+      <a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener"><b>Required 3 · Claude Code overview</b><br /><span class="small">Can the same architecture explain this competing coding agent?</span></a>
+    </div>
+    <div style="display:grid;gap:18px">
+      <div class="card"><h3>Scavenger hunt — bring answers</h3><ol style="padding-left:20px;font-size:14.5px;margin:0">
+        <li>Name one way Codex <b>observes</b> its environment.</li>
+        <li>Name one <b>action/tool</b> Codex can use.</li>
+        <li>What role do <b>repository instructions</b> play?</li>
+        <li>Why are <b>sandboxing / approval</b> boundaries necessary?</li>
+        <li>What makes Codex an <b>agent</b> rather than merely an LLM chatbot?</li>
+      </ol></div>
+      <div class="card"><h3>Bring one mystery</h3><p class="small">Find one file, folder, function, or design choice you do <b>not</b> understand. Bring it to class. The goal is not mastery — it is learning how to inspect a real agent system.</p></div>
+    </div>
+  </div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="index.html"><span class="lab">← Back</span><b>Home</b></a>
+  <a href="codex.html" class="next"><span class="lab">Next →</span><b>01 · Unpack Codex</b></a>
+</div>
+
+<div class="logoband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="note">Offered at Robinson College of Business, Georgia State University · developed within PATH — Pathways for AI Training &amp; Hiring</span>
+</div></div>
+<footer class="footer"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 2 — Learning from the Best: Unpacking Coding Agents<br />Dr. Xinyu Fu · Fall 2026 · Georgia State University</div>
+  <div class="right">Product names and logos (Google Opal, LangChain, OpenAI) are trademarks of their respective owners, used here for identification in course materials.</div>
+</div></footer>
+
+<script>
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

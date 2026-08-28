@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CIS 4394 · Agentic AI — Georgia State University</title>
+<link rel="icon" href="assets/gsu_torch.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/site.css" />
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <img src="assets/gsu_logo2.svg" alt="Georgia State University" />
+  <span class="sep">·</span><span>J. Mack Robinson College of Business</span>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Agentic AI</a>
+  <a href="week1/index.html">Week 1</a>
+  <a href="week2/index.html">Week 2</a>
+  <a href="#materials">Materials</a>
+  <a href="#about">About</a>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">GSU · Fall 2026 · CIS 4394</div>
+  <h1>Agentic <em>AI</em>: build systems that reason, act, and know when to stop.</h1>
+  <p class="lede">Generative AI is evolving into agentic AI — systems that reason, plan, adapt, and collaborate in complex environments. This course teaches the foundations and the practice: from the agent loop and tool use to evaluation, safety, and deployment, ending in a real capstone agent.</p>
+  <div class="coursemeta">
+    <div><b>Instructor</b>Dr. Xinyu Fu</div>
+    <div><b>School</b>Robinson College of Business, GSU</div>
+    <div><b>Format</b>2.5-hour weekly studio classes</div>
+    <div><b>Tools</b>All free — no paid API keys</div>
+  </div>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive class sites</div>
+  <h2>The weeks, so far</h2>
+  <p class="lede">Each week ships as an interactive mini-site: clickable architecture explorers, step-through agent-loop simulators, live concept checks, and full lab instructions. New weeks are added as the semester progresses.</p>
+  <div class="weekcards">
+    <a class="weekcard" href="week1/index.html">
+      <span class="wk">Week 1</span>
+      <span><b>Introduction to Agentic AI + What Enterprises Actually Use</b>
+      <span class="small">What an LLM is (just enough) · the agent loop · agent vs workflow vs chatbot · the autonomy dial · the 2026 enterprise agent stack · classify-the-scenario exercises · toolchain setup.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="weekcard" href="week2/index.html">
+      <span class="wk">Week 2</span>
+      <span><b>Learning from the Best: Unpacking Coding Agents</b>
+      <span class="small">Reverse-engineer Codex · the same lens on Claude Code · then build a Job Search Agent three ways (Google Opal, LangSmith Fleet, or Codex + Python) with tests, guardrails, and human approval.</span></span>
+      <span class="go">→</span>
+    </a>
+    <span class="weekcard soon">
+      <span class="wk">Week 3+</span>
+      <span><b>Prompting &amp; context engineering, planning with LangGraph, tool use, MCP &amp; A2A, memory &amp; RAG, evaluation, multi-agent systems, security, deployment, capstone studio…</b>
+      <span class="small">Published here week by week.</span></span>
+    </span>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">How the course runs</div>
+  <h2>Four modules, one capstone</h2>
+  <div class="grid2" style="grid-template-columns:repeat(4,1fr)">
+    <div class="card"><span class="kicker">Module 1</span><h3 style="margin-top:6px">Foundations</h3><p class="small">LLMs → agents, the loop, agentic coding, prompting &amp; context engineering, reasoning &amp; planning.</p></div>
+    <div class="card"><span class="kicker">Module 2</span><h3 style="margin-top:6px">Tools &amp; protocols</h3><p class="small">Tool use and function calling, MCP &amp; A2A, memory &amp; RAG.</p></div>
+    <div class="card"><span class="kicker">Module 3</span><h3 style="margin-top:6px">Eval, safety, governance</h3><p class="small">Evaluation &amp; reliability, multi-agent systems, security &amp; governance.</p></div>
+    <div class="card"><span class="kicker">Module 4</span><h3 style="margin-top:6px">Deployment &amp; capstone</h3><p class="small">Deployment &amp; agentic commerce, capstone studios, final presentations.</p></div>
+  </div>
+  <div class="callout blue" style="margin-top:24px"><b>Build paths (all free):</b> LangGraph on the Google Gemini free tier (code, default) · LangSmith Fleet (no-code) · GitHub Copilot as the coding assistant · LangSmith for evaluation and observability. The capstone must be a real agent — the LLM owns control flow — with a named stop condition, one human gate, an evaluation harness, and a security review.</div>
+</div></section>
+
+<section id="materials"><div class="wrap">
+  <div class="eyebrow">Downloads</div>
+  <h2>Class materials</h2>
+  <div class="grid2">
+    <div class="card"><h3>Week 1 — lecture deck</h3><p class="small">Introduction to Agentic AI + What Enterprises Actually Use (PowerPoint, ~66 slides, with speaker notes and references).</p><a class="doc" href="materials/CIS4394_Week1_Intro_Agentic_AI.pptx" download>Download .pptx ↓</a></div>
+    <div class="card"><h3>Week 2 — class bundle</h3><p class="small">Lesson deck, step-by-step lab guide, starter kit (résumé, preferences, six-job dataset with a prompt-injection test, Python baseline), and pre-class prep.</p><a class="doc" href="materials/CIS4394_Week2_Class_Bundle.zip" download>Download .zip ↓</a></div>
+  </div>
+</div></section>
+
+<section id="about"><div class="wrap">
+  <div class="eyebrow">About</div>
+  <h2>Who teaches this</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><h3>Dr. Xinyu Fu</h3><p class="small">Instructor, Computer Information Systems, J. Mack Robinson College of Business, Georgia State University. This course pairs research-grounded foundations (ReAct, Toolformer, LLM-agent surveys, τ-bench) with what enterprises actually deploy — and every claim on these pages is dated and sourced, because agentic AI moves fast.</p><p class="small" style="margin-top:10px">Contact: <a class="doc" href="mailto:xfu11@gsu.edu">xfu11@gsu.edu</a></p></div>
+    <div class="card"><h3>Why the sites are interactive</h3><p class="small">Agent loops, autonomy, and control flow are abstract until you can push on them. Each week's site turns the core abstractions into things students can click, step through, and break — the same standard the course applies to agents themselves: don't trust the demo, test the behavior.</p></div>
+  </div>
+</div></section>
+
+<div class="logoband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="note">Offered at Robinson College of Business, Georgia State University · developed within PATH — Pathways for AI Training &amp; Hiring</span>
+</div></div>
+<footer class="footer"><div class="wrap">
+  <img src="assets/gsu_logo2.svg" alt="Georgia State University" />
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Fall 2026 · Dr. Xinyu Fu · Georgia State University<br /><a href="https://github.com/SherryFu0315/cis4394-agentic-ai" style="color:#fff">Course repository on GitHub</a></div>
+  <div class="right">Product names and logos are trademarks of their respective owners, used for identification in course materials. Cited statistics are approximate and dated; verify against primary sources.</div>
+</div></footer>
+
+</body>
+</html>

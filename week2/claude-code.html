@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>02 · The Same Lens on Claude Code — CIS 4394 Week 2</title>
+<link rel="icon" href="../assets/gsu_torch.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <span class="sep">·</span><span>J. Mack Robinson College of Business</span>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 2</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="prep.html"><span class="k">00</span>Prep</a>
+  <a href="codex.html"><span class="k">01</span>Unpack Codex</a>
+  <a href="claude-code.html" class="here"><span class="k">02</span>Claude Code</a>
+  <a href="build.html"><span class="k">03</span>Build</a>
+  <a href="evaluate.html"><span class="k">04</span>Evaluate</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">02 · Part 2</div>
+  <h1>The same lens on <em>Claude Code</em>.</h1>
+  <p class="lede">We just extracted an architecture from Codex. Real test of a good abstraction: does it explain a <b>competing</b> product we didn’t derive it from? Use the shared vocabulary — not a feature-by-feature marketing comparison.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Side by side</div>
+  <h2>One architecture, two products</h2>
+  <div class="tabs">
+    <button class="tab active" data-mode="architecture">Architecture</button>
+    <button class="tab" data-mode="differences">What differs?</button>
+    <button class="tab" data-mode="question">Discussion</button>
+  </div>
+  <div class="compare" id="compareView"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Sort it out</div>
+  <h2>Codex, Claude Code — or both?</h2>
+  <p class="lede">For each statement, decide whether it describes Codex, Claude Code, or the shared architecture underneath both. This is the heart of Part 2: separating <b>product decisions</b> from <b>agent design</b>.</p>
+  <div id="quiz3"></div>
+  <div class="scoreline" id="scoreLine"></div>
+  <div class="callout blue" style="margin-top:22px"><b>Takeaway:</b> most of what makes these systems <em>agents</em> is shared. What differs is implementation: models, tool schemas, permission systems, context strategies, UX. Same architecture — different product decisions.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Discussion</div>
+  <h2>Separate the model from the harness</h2>
+  <div class="bigq">If we swapped the model but kept the entire agent harness, how much of the product would still remain?</div>
+  <p class="lede">Use this question to separate <b>model capability</b> from <b>agent-system design</b>. In Part 3, you will keep the design and throw away everything coding-specific.</p>
+</div></section>
+
+<div class="wrap pager">
+  <a href="codex.html"><span class="lab">← Previous</span><b>01 · Unpack Codex</b></a>
+  <a href="build.html" class="next"><span class="lab">Next →</span><b>03 · Build the Job Search Agent</b></a>
+</div>
+
+<div class="logoband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="note">Offered at Robinson College of Business, Georgia State University · developed within PATH — Pathways for AI Training &amp; Hiring</span>
+</div></div>
+<footer class="footer"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 2 — Learning from the Best: Unpacking Coding Agents<br />Dr. Xinyu Fu · Fall 2026 · Georgia State University</div>
+  <div class="right">Product names and logos (Google Opal, LangChain, OpenAI) are trademarks of their respective owners, used here for identification in course materials.</div>
+</div></footer>
+
+<script>
+/* ---------- comparison tabs ---------- */
+const compare={
+ architecture:`<table><thead><tr><th>Architecture component</th><th>Codex</th><th>Claude Code</th></tr></thead><tbody>
+ <tr><td>Goal</td><td>Complete a coding task</td><td>Complete a coding task</td></tr>
+ <tr><td>Repository instructions</td><td><code>AGENTS.md</code></td><td><code>CLAUDE.md</code></td></tr>
+ <tr><td>Observe</td><td>Files, search, command/test output</td><td>Files, search, command/tool output</td></tr>
+ <tr><td>Act</td><td>Shell, patch/edit, tests</td><td>Shell, edit/write, tools</td></tr>
+ <tr><td>Environment</td><td>Local/project workspace</td><td>Local/project workspace</td></tr>
+ <tr><td>State/context</td><td>Conversation + project/tool state</td><td>Conversation + project/tool state</td></tr>
+ <tr><td>Safety</td><td>Sandbox + approval controls</td><td>Permission modes + approval controls</td></tr>
+ <tr><td>Loop</td><td>Observe → act → observe</td><td>Observe → act → observe</td></tr></tbody></table>`,
+ differences:`<div class="grid2"><div class="card"><h3>Different implementations</h3><p class="small">Models, tool schemas, permission systems, context strategies, UX, and internal runtime choices can differ substantially between the two products.</p></div><div class="card"><h3>Shared abstraction</h3><p class="small">Both can still be analyzed with the same nine layers: goal, instructions, observations, state, tools/actions, environment, loop, safety, evaluation.</p></div></div>`,
+ question:`<div class="bigq">A new coding agent launches next month. What questions would you ask to “unpack” it in ten minutes?</div><p class="lede">If your questions come from the nine layers, the abstraction is doing its job.</p>`
+};
+function setCompare(mode){document.getElementById('compareView').innerHTML=compare[mode];document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.mode===mode))}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setCompare(b.dataset.mode)));
+setCompare('architecture');
+
+/* ---------- codex / claude / both quiz ---------- */
+const Q=[
+ {s:'Reads repository instructions from a file called <code>AGENTS.md</code>.',a:'codex',why:'AGENTS.md is the Codex convention; Claude Code reads CLAUDE.md.'},
+ {s:'Reads repository instructions from a file called <code>CLAUDE.md</code>.',a:'claude',why:'CLAUDE.md is the Claude Code convention; Codex reads AGENTS.md.'},
+ {s:'Runs an observe → decide → act → update-state loop until the task is done.',a:'both',why:'The loop is the shared architecture — it is what makes either system an agent.'},
+ {s:'Pauses for human approval before risky actions.',a:'both',why:'Both bound autonomy with approval boundaries; the mechanisms differ, the principle is shared.'},
+ {s:'The harness — not the model — provides tools, permissions, and environment access.',a:'both',why:'This is the central lesson of Part 1, and it holds for every serious agent product.'},
+ {s:'Maintains state so it doesn’t start over after every action.',a:'both',why:'State/memory is a shared architectural layer, implemented differently in each product.'}
+];
+const qEl=document.getElementById('quiz3');let score=0,answered=0;
+Q.forEach((q,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML=`<div class="stmt">${i+1}. ${q.s}</div><div class="opts">
+    <button data-v="codex">Codex</button><button data-v="claude">Claude Code</button><button data-v="both">Both</button>
+  </div><div class="fb"></div>`;
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;answered++;
+    const ok=b.dataset.v===q.a;if(ok)score++;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector(`button[data-v="${q.a}"]`).classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Not quite. ')+q.why;
+    if(answered===Q.length)document.getElementById('scoreLine').textContent=`You got ${score} of ${Q.length}. ${score>=5?'You can unpack an agent.':'Revisit Part 1 — the layers are the answer key.'}`;
+  }));
+  qEl.appendChild(d);
+});
+
+/* ---------- progress ---------- */
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

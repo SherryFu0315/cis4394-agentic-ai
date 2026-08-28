@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>01 · From LLM to Agent — CIS 4394 Week 1</title>
+<link rel="icon" href="../assets/gsu_torch.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <span class="sep">·</span><span>J. Mack Robinson College of Business</span>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 1</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="llm-to-agent.html" class="here"><span class="k">01</span>LLM → Agent</a>
+  <a href="agent-vs-workflow.html"><span class="k">02</span>Agent vs Workflow</a>
+  <a href="enterprise.html"><span class="k">03</span>Enterprise 2026</a>
+  <a href="exercises.html"><span class="k">04</span>Exercises &amp; Setup</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">01 · Foundations</div>
+  <h1>From <em>LLM</em> to <em>agent</em>.</h1>
+  <p class="lede">Just enough about language models to see why they can’t act alone — then the loop that turns a text predictor into something that gets work done.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Just enough LLM</div>
+  <h2>A language model predicts the next token</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card">
+      <h3>That’s the whole trick</h3>
+      <p class="small">Input text goes in; the model outputs a <b>probability distribution over possible next tokens</b>; one gets sampled; repeat. Everything impressive an LLM does is built from that single operation at scale.</p>
+      <div class="codebox" style="margin-bottom:0">“The capital of France is” →
+  Paris   ████████████  92%
+  Lyon    █             3%
+  the     ▌             1%
+  …</div>
+    </div>
+    <div class="card">
+      <h3>Good at / bad at</h3>
+      <div style="overflow:auto"><table class="plain"><thead><tr><th>Strong</th><th>Weak</th></tr></thead><tbody>
+        <tr><td>Language: summarize, draft, translate, explain</td><td>Knowing what it doesn’t know — can be confidently wrong</td></tr>
+        <tr><td>Pattern recognition across huge context</td><td>Fresh or private information past its training data</td></tr>
+        <tr><td>Code and structured text</td><td>Math it can’t verify; precise multi-step state</td></tr>
+        <tr><td>Following instructions in context</td><td><b>Doing anything</b> — it can only emit text</td></tr>
+      </tbody></table></div>
+      <p class="small" style="margin-top:10px">The limits in the right column are exactly what tools, memory, and the loop exist to fix.</p>
+    </div>
+  </div>
+  <div class="bigq">Ask a bare LLM to “book me the cheapest flight to Chicago on Friday” and it can only write words <em>about</em> booking. It can’t check prices, compare options, or click purchase — it needs to act, observe, and decide.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The mental model</div>
+  <h2>The four parts of an agent</h2>
+  <p class="lede">Model + Tools + Loop + Memory (Wiesinger, Marlow &amp; Vuskovic, 2024). The research literature decomposes the same idea as profile, memory, planning, and action (Wang et al., 2023, arXiv:2308.11432).</p>
+  <div class="grid2" style="grid-template-columns:repeat(4,1fr)">
+    <div class="card"><h3>Model</h3><p class="small">The reasoning engine. Interprets observations, weighs options, proposes the next action.</p></div>
+    <div class="card"><h3>Tools</h3><p class="small">The hands. Structured functions — search, calendar, database, code — that turn intent into effect.</p></div>
+    <div class="card"><h3>Loop</h3><p class="small">The heartbeat. Reason → act → observe → repeat, until a stop condition is met.</p></div>
+    <div class="card"><h3>Memory</h3><p class="small">The thread. State that persists across turns so the agent doesn’t start over each step.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">See it move</div>
+  <h2>Watch a full agent trace</h2>
+  <p class="lede">One concrete episode: <b>“Schedule a 30-minute meeting with Maya this week.”</b> Step through it. Watch which node is active, what the tools return, how state accumulates — and where the loop <em>stops</em>.</p>
+  <div class="sim2">
+    <div class="loopbox">
+      <svg viewBox="0 0 480 330" aria-label="agent loop diagram">
+        <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#cfccc2"/></marker></defs>
+        <path class="looparrow" d="M 330 55 Q 375 70 390 116" />
+        <path class="looparrow" d="M 392 170 Q 392 220 380 261" />
+        <path class="looparrow" d="M 283 288 L 206 288" />
+        <path class="looparrow" d="M 118 261 C 130 180 165 100 215 62" />
+        <path class="looparrow" d="M 306 145 L 192 145" />
+        <path class="looparrow" d="M 100 170 L 100 261" />
+        <g class="loopnode" id="ln0"><rect x="165" y="16" width="150" height="46" rx="10"/><text x="240" y="44" text-anchor="middle">Observe</text></g>
+        <g class="loopnode" id="ln1"><rect x="312" y="122" width="150" height="46" rx="10"/><text x="387" y="150" text-anchor="middle">Reason</text></g>
+        <g class="loopnode" id="ln2"><rect x="288" y="265" width="170" height="46" rx="10"/><text x="373" y="293" text-anchor="middle">Act (tool call)</text></g>
+        <g class="loopnode" id="ln3"><rect x="30" y="265" width="160" height="46" rx="10"/><text x="110" y="293" text-anchor="middle">Update state</text></g>
+        <g class="loopnode pausenode" id="ln4"><rect x="16" y="122" width="176" height="46" rx="10"/><text x="104" y="150" text-anchor="middle">Human gate / Stop</text></g>
+      </svg>
+      <p class="small" style="margin:10px 6px 4px">The loop closes — until the <b>stop condition</b> is met or a <b>human gate</b> interrupts. An agent without a stop condition is a bug with a budget.</p>
+    </div>
+    <div class="simright">
+      <div class="simctl">
+        <button class="primary" id="btnStep">Step ▸</button>
+        <button class="ghost" id="btnAuto">Auto-play</button>
+        <button class="ghost" id="btnReset">Reset</button>
+        <span class="hint" id="stepHint">Episode: schedule a meeting · step 0 of 12</span>
+      </div>
+      <div class="term" id="simTerm"><span class="t-dim">Press Step to begin the episode…</span></div>
+      <div class="statepanel" id="simState"><span class="kicker">Agent state</span></div>
+    </div>
+  </div>
+  <div class="callout"><b>Read the trace like an examiner:</b> every step is either an observation, a decision, an action with a recorded result, or a state update. That structure — not the fancy output — is what makes it an agent. You will hand-trace one of these yourself in <a class="doc" href="exercises.html">Exercise B</a>.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Scholarly anchor</div>
+  <h2>The research view of the same loop</h2>
+  <p class="lede">The academic survey literature describes agent architecture as four modules — the same idea in formal dress.</p>
+  <div class="grid2" style="grid-template-columns:repeat(4,1fr)">
+    <div class="card"><span class="kicker">Profile</span><p class="small" style="margin-top:8px">Who the agent is: role, goals, constraints, persona.</p></div>
+    <div class="card"><span class="kicker">Memory</span><p class="small" style="margin-top:8px">Short-term context + long-term store the agent reads and writes.</p></div>
+    <div class="card"><span class="kicker">Planning</span><p class="small" style="margin-top:8px">Decomposing goals, choosing next steps, revising on feedback.</p></div>
+    <div class="card"><span class="kicker">Action</span><p class="small" style="margin-top:8px">Tool calls and outputs that change the environment.</p></div>
+  </div>
+  <p class="small" style="margin-top:14px">Wang et al. (2024), <i>A Survey on LLM-based Autonomous Agents</i>, Frontiers of Computer Science 18(6), arXiv:2308.11432 · Yao et al. (2023), <i>ReAct</i>, ICLR, arXiv:2210.03629 — the observe→reason→act formulation.</p>
+</div></section>
+
+<div class="wrap pager">
+  <a href="index.html"><span class="lab">← Back</span><b>Week 1 home</b></a>
+  <a href="agent-vs-workflow.html" class="next"><span class="lab">Next →</span><b>02 · Agent vs workflow vs chatbot</b></a>
+</div>
+
+<div class="logoband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="note">Offered at Robinson College of Business, Georgia State University · developed within PATH — Pathways for AI Training &amp; Hiring</span>
+</div></div>
+<footer class="footer"><div class="wrap">
+  <img src="../assets/gsu_logo2.svg" alt="Georgia State University" />
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 1 — Introduction to Agentic AI + What Enterprises Actually Use<br />Dr. Xinyu Fu · Fall 2026 · Georgia State University</div>
+  <div class="right">Statistics are approximate, dated, and summarized in our own words with sources named; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+const EP=[
+ {n:0,l:[['t-obs','OBSERVE'],['','Goal: 30-min meeting with Maya this week. My calendar and Maya’s availability are unknown.']],s:{goal:'meet Maya, 30 min'}},
+ {n:1,l:[['t-dec','REASON'],['','I can’t propose a time before seeing both calendars → check mine first.']]},
+ {n:2,l:[['t-act','ACT'],['','calendar.get_free_slots(me, this_week)'],['t-dim','→ Tue 2–4pm, Wed 10–11am, Thu 3–5pm']],s:{my_slots:'Tue pm · Wed am · Thu pm'}},
+ {n:3,l:[['t-dim','UPDATE'],['','state.my_slots saved — now I need Maya’s side.']]},
+ {n:0,l:[['t-obs','OBSERVE'],['','Maya’s calendar is not shared with me.']],s:{maya_slots:'unknown'}},
+ {n:1,l:[['t-dec','REASON'],['','Two options: email Maya to ask, or use the scheduling tool she publishes. The tool is faster.']]},
+ {n:2,l:[['t-act','ACT'],['','scheduling.lookup(maya)'],['t-dim','→ Maya is free Tue 3pm, Thu 3:30pm']],s:{maya_slots:'Tue 3pm · Thu 3:30pm'}},
+ {n:3,l:[['t-dim','UPDATE'],['','Intersect: Tue 3–3:30pm and Thu 3:30–4pm both work.']],s:{overlap:'Tue 3pm · Thu 3:30pm'}},
+ {n:1,l:[['t-dec','REASON'],['','Tue is earlier → propose Tue 3pm. Sending an invite is an external action → human gate.']]},
+ {n:4,l:[['t-hitl','HUMAN GATE ⏸'],['','Proposed: Tue 3:00–3:30pm with Maya. Send invite?'],['t-dim','User: APPROVE']],s:{approval:'approved'}},
+ {n:2,l:[['t-act','ACT'],['','calendar.send_invite(maya, tue_1500, 30min)'],['t-dim','→ accepted']],s:{invite:'sent ✓'}},
+ {n:4,l:[['t-hitl','STOP ✓'],['','Stop condition met: a confirmed 30-min meeting exists this week. Loop ends.']],s:{status:'done'}}
+];
+let cur=0, timer=null;
+const state={goal:'—'};
+const termEl=document.getElementById('simTerm'), stateEl=document.getElementById('simState'), hintEl=document.getElementById('stepHint');
+function renderState(changed){
+  let h='<span class="kicker">Agent state</span>';
+  for(const [k,v] of Object.entries(state)){h+=`<div>${k} = <b class="${k===changed?'changed':''}">${v}</b></div>`}
+  stateEl.innerHTML=h;
+}
+function setNode(n){for(let i=0;i<5;i++)document.getElementById('ln'+i).classList.toggle('on',i===n)}
+function step(){
+  if(cur>=EP.length){stopAuto();return}
+  const e=EP[cur];
+  setNode(e.n);
+  if(cur===0)termEl.innerHTML='';
+  const div=document.createElement('div');
+  div.innerHTML=e.l.map(([c,t])=>`<span class="${c}">${t}</span>`).join('  ');
+  termEl.appendChild(div);
+  termEl.scrollTop=termEl.scrollHeight;
+  let changed=null;
+  if(e.s){for(const [k,v] of Object.entries(e.s)){state[k]=v;changed=k}}
+  renderState(changed);
+  cur++;
+  hintEl.textContent=`Episode: schedule a meeting · step ${cur} of ${EP.length}`;
+  if(cur>=EP.length){hintEl.textContent+=' · done ✓';stopAuto()}
+}
+function stopAuto(){if(timer){clearInterval(timer);timer=null;document.getElementById('btnAuto').textContent='Auto-play'}}
+document.getElementById('btnStep').addEventListener('click',()=>{stopAuto();step()});
+document.getElementById('btnAuto').addEventListener('click',function(){
+  if(timer){stopAuto();return}
+  if(cur>=EP.length)reset();
+  this.textContent='Pause';
+  timer=setInterval(step,1500);
+});
+function reset(){cur=0;stopAuto();for(const k of Object.keys(state))delete state[k];state.goal='—';setNode(-1);termEl.innerHTML='<span class="t-dim">Press Step to begin the episode…</span>';renderState();hintEl.textContent=`Episode: schedule a meeting · step 0 of ${EP.length}`}
+document.getElementById('btnReset').addEventListener('click',reset);
+renderState();
+
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>
