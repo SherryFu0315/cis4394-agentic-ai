@@ -58,7 +58,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Discussion</div>
   <h2>Separate the model from the harness</h2>
-  <div class="bigq">If we swapped the model but kept the entire agent harness, how much of the product would still remain?</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>If we swapped the model but kept the entire agent harness, how much of the product would still remain?</div>
   <p class="lede">Use this question to separate <b>model capability</b> from <b>agent-system design</b>. In Part 3, you will keep the design and throw away everything coding-specific.</p>
 </div></section>
 
@@ -87,7 +87,7 @@ const compare={
  <tr><td>Safety</td><td>Sandbox + approval controls</td><td>Permission modes + approval controls</td></tr>
  <tr><td>Loop</td><td>Observe → act → observe</td><td>Observe → act → observe</td></tr></tbody></table>`,
  differences:`<div class="grid2"><div class="card"><h3>Different implementations</h3><p class="small">Models, tool schemas, permission systems, context strategies, UX, and internal runtime choices can differ substantially between the two products.</p></div><div class="card"><h3>Shared abstraction</h3><p class="small">Both can still be analyzed with the same nine layers: goal, instructions, observations, state, tools/actions, environment, loop, safety, evaluation.</p></div></div>`,
- question:`<div class="bigq">A new coding agent launches next month. What questions would you ask to “unpack” it in ten minutes?</div><p class="lede">If your questions come from the nine layers, the abstraction is doing its job.</p>`
+ question:`<div class="bigq"><span class="qlabel">Discussion question</span>A new coding agent launches next month. What questions would you ask to “unpack” it in ten minutes?</div><p class="lede">If your questions come from the nine layers, the abstraction is doing its job.</p>`
 };
 function setCompare(mode){document.getElementById('compareView').innerHTML=compare[mode];document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.mode===mode))}
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setCompare(b.dataset.mode)));
