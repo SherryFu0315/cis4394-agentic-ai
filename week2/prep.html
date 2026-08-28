@@ -104,9 +104,9 @@ codex login              <span style="color:#8b909c"># choose “Sign in with Ch
   <p class="lede">Class starts by reverse-engineering Codex. Skim these three sources first, hunting for the answers below — you do not need to understand the code.</p>
   <div class="grid2" style="align-items:start">
     <div class="readings card">
-      <a href="https://github.com/openai/codex" target="_blank" rel="noopener"><b>Required 1 · Codex README</b><br /><span class="small">What is Codex? What can it observe and do?</span></a>
-      <a href="https://github.com/openai/codex/tree/main/codex-rs" target="_blank" rel="noopener"><b>Required 2 · Browse the Codex implementation</b><br /><span class="small">Find evidence of tools, state, permissions / sandboxing, and repository instructions. You do not need to understand Rust.</span></a>
-      <a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener"><b>Required 3 · Claude Code overview</b><br /><span class="small">Can the same architecture explain this competing coding agent?</span></a>
+      <a href="https://github.com/openai/codex/blob/main/codex-rs/core/gpt_5_2_prompt.md" target="_blank" rel="noopener"><b>Required 1 · Read the Instructions Given to the Agent</b><br /><span class="small">Codex’s actual system prompt — what the harness tells the model about tools, planning, sandboxing, and permissions. Primary-source evidence for the nine layers.</span></a>
+      <a href="https://github.com/openai/openai-cookbook/blob/main/articles/codex_exec_plans.md" target="_blank" rel="noopener"><b>Required 2 · Planning for Long-Horizon Agents</b><br /><span class="small">How Codex plans and executes multi-step work (OpenAI Cookbook) — the loop and state in practice.</span></a>
+      <a href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noopener"><b>Required 3 · Compare with Claude Code</b><br /><span class="small">Anthropic engineering on Claude Code’s autonomy — does the same architecture explain a competing agent?</span></a>
     </div>
     <div style="display:grid;gap:18px">
       <div class="card"><h3>Scavenger hunt — bring answers</h3><ol style="padding-left:20px;font-size:14.5px;margin:0">
