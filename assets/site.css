@@ -15,11 +15,12 @@ a{color:inherit}
 .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
 
 /* masthead */
-.uniband{background:var(--blue);color:#fff;font-size:12.5px;letter-spacing:.02em}
-.uniband .wrap{display:flex;align-items:center;gap:12px;min-height:40px}
-.uniband img{height:19px;width:auto;filter:brightness(0) invert(1);opacity:.95}
-.uniband .sep{opacity:.45}
-.uniband .right{margin-left:auto;opacity:.92}
+.uniband{background:#fff;border-top:4px solid var(--blue);border-bottom:1px solid var(--line);font-size:12.5px}
+.uniband .wrap{display:flex;align-items:center;gap:26px;min-height:64px}
+.uniband img{height:40px;width:auto}
+.uniband img.path{height:26px}
+.uniband .sep{display:none}
+.uniband .right{margin-left:auto;color:var(--muted);font-weight:600}
 .topbar{position:sticky;top:0;z-index:20;background:rgba(250,249,246,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .nav{display:flex;align-items:center;gap:20px;min-height:56px;overflow-x:auto;white-space:nowrap}
 .brand{font-weight:700;margin-right:auto;font-size:15px;display:flex;align-items:center;gap:10px;text-decoration:none}
@@ -248,12 +249,14 @@ a.doc:hover{text-decoration:underline}
 .pager a.next b{color:var(--blue)}
 
 /* footer */
-.footer{padding:52px 0 40px;background:var(--blue);color:#fff}
-.footer .wrap{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
-.footer img{height:92px;filter:none}
-.footer .meta{font-size:13.5px;line-height:1.7;opacity:.93}
+.footer{padding:46px 0 40px;background:#fff;color:var(--ink);border-top:1px solid var(--line);border-bottom:10px solid var(--blue)}
+.footer .wrap{display:flex;gap:30px;align-items:center;flex-wrap:wrap}
+.footer img{height:48px}
+.footer img.path{height:32px}
+.footer .meta{font-size:13.5px;line-height:1.7;color:var(--ink)}
 .footer .meta b{font-size:15px}
-.footer .right{margin-left:auto;font-size:12.5px;opacity:.7;max-width:340px}
+.footer .meta a{color:var(--blue)}
+.footer .right{margin-left:auto;font-size:12px;color:var(--muted);max-width:340px}
 
 @media(max-width:880px){
   .grid2,.grid3,.agenda,.paths,.rails,.arch-shell,.sim,.transfer,.sim2{grid-template-columns:1fr}
