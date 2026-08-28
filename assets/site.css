@@ -253,6 +253,7 @@ a.doc:hover{text-decoration:underline}
 .footer{padding:46px 0 40px;background:#fff;color:var(--ink);border-top:1px solid var(--line);border-bottom:10px solid var(--blue)}
 .footer .wrap{display:flex;gap:30px;align-items:center;flex-wrap:wrap}
 .footer img{height:68px}
+.footer img.hitbadge{height:22px;align-self:center;margin-left:6px}
 .footer img.path{height:44px}
 .footer .meta{font-size:13.5px;line-height:1.7;color:var(--ink)}
 .footer .meta b{font-size:15px}
