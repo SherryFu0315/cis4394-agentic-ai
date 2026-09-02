@@ -39,6 +39,58 @@
 </div></header>
 
 <section><div class="wrap">
+  <div class="eyebrow">How we got here</div>
+  <h2>Three shifts in AI engineering</h2>
+  <p class="lede">In two years, the center of gravity of AI engineering has moved twice. Each era is defined by the question it obsesses over.</p>
+  <div class="rails">
+    <div class="rail" style="border-top-color:#7c5cd6"><span class="kicker">Shift 1 · 2023</span><h3 style="margin-top:6px">Prompt Engineering</h3><p class="small" style="font-weight:600;color:var(--ink)">“Does the model understand what you’re asking?”</p><p class="small">Wording, examples, personas, magic phrases. Necessary — but a better sentence still can’t read a file or run a test.</p></div>
+    <div class="rail" style="border-top-color:#d99a1b"><span class="kicker">Shift 2 · 2024–25</span><h3 style="margin-top:6px">Context Engineering</h3><p class="small" style="font-weight:600;color:var(--ink)">“Does the model have the right information?”</p><p class="small">Retrieval, RAG, memory, long context. Feeds the model the facts it needs — but knowing is still not doing.</p></div>
+    <div class="rail" style="border-top-color:var(--blue)"><span class="kicker">Shift 3 · now</span><h3 style="margin-top:6px">Harness Engineering</h3><p class="small" style="font-weight:600;color:var(--ink)">“Can the model execute reliably in the real world?”</p><p class="small">Tools, environment, state, sandboxing, approvals, the loop. Where the industry’s effort — and hiring — has moved.</p></div>
+  </div>
+  <div class="callout blue" style="margin-top:24px"><b>Where this course sits:</b> prompting and context still matter, but this is, at heart, a <b>harness-engineering</b> course. And the best way to study harnesses is to read the best one shipping today — so we start by opening Codex’s actual repository.</div>
+  <p class="small" style="margin-top:12px">Framing after <a class="doc" href="https://www.youtube.com/watch?v=3DlXq9nsQOE" target="_blank" rel="noopener">“最近爆火的 Harness Engineering 到底是个啥？” ↗</a> (code秘密花园, Apr 2026 — video in Chinese).</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Open the hood</div>
+  <h2>A field guide to the Codex repository</h2>
+  <p class="lede"><a class="doc" href="https://github.com/openai/codex" target="_blank" rel="noopener">github.com/openai/codex ↗</a> is not a model repository — <b>the model isn’t in it</b>. Everything you’ll see is harness. We’re here to recognize structure, not to read Rust.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="card">
+      <h3>The top level, in one pass</h3>
+      <div style="overflow:auto"><table class="plain"><tbody>
+        <tr><td><code>codex-rs/</code></td><td>The engine room — the agent’s core, written in Rust. <b>Today’s destination.</b></td></tr>
+        <tr><td><code>codex-cli/</code></td><td>The npm wrapper you actually install (<code>@openai/codex</code>) — a shell around the Rust engine.</td></tr>
+        <tr><td><code>sdk/</code> · <code>docs/</code></td><td>For developers embedding Codex; documentation.</td></tr>
+        <tr><td><code>AGENTS.md</code> · <code>.codex/</code></td><td>⭐ The repo carries its <em>own</em> agent instructions — OpenAI uses Codex to build Codex. Layer 3, live, eating its own dog food.</td></tr>
+        <tr><td>everything else</td><td>Build systems, CI, scripts — engineering plumbing; skip.</td></tr>
+      </tbody></table></div>
+    </div>
+    <div class="card">
+      <h3>Why we go to <code>codex-rs/core</code></h3>
+      <p class="small"><code>codex-rs/</code> holds <b>111 modules</b> — pause on that number: is “a chatbot with some tools” 111 modules big? That is the true size of a production harness.</p>
+      <p class="small" style="margin-top:8px">We go to <code>core</code> because its own README says so: <i>“This crate implements the <b>business logic</b> for Codex… used by the various Codex UIs.”</i> Every interface is a shell; the agent lives here. And your pre-class reading — <code>gpt_5_2_prompt.md</code> — lives at this address.</p>
+      <p class="small" style="margin-top:8px">Neighbors whose names alone tell the story: <code>apply-patch</code>, <code>sandboxing</code>, <code>shell-escalation</code>, <code>rollout</code> (traces), <code>tui</code>.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <button class="revealbtn">Open the map of core/ — what’s inside, layer by layer</button>
+    <div class="revealbox">
+      <div style="overflow:auto"><table class="plain"><thead><tr><th>Inside <code>core/</code></th><th>Layer</th><th>What it tells you</th></tr></thead><tbody>
+        <tr><td><code>gpt_5_2_prompt.md</code> — plus <b>four sibling prompt files</b>, one per model</td><td>3 · Instructions</td><td>⭐ Five prompts, one harness: the model is a swappable engine. Last section’s “swap the model” answer, sitting in a file listing.</td></tr>
+        <tr><td><code>src/tools/</code> — with <code>registry.rs</code>, <code>orchestrator.rs</code>, <code>parallel.rs</code></td><td>4 · Tools</td><td>Tools are a subsystem — registry, scheduling, parallel execution — not a sentence in a prompt.</td></tr>
+        <tr><td><code>src/exec.rs</code> · <code>unified_exec/</code> · <code>exec_policy/</code></td><td>5 · Environment</td><td>Where words become commands on a real filesystem.</td></tr>
+        <tr><td><code>src/state/</code> · <code>session/</code> · <code>context_manager/</code> · a dozen <code>compact*.rs</code> files</td><td>6 · State / Memory</td><td>“Compact” = context compression: deciding what to remember and what to forget takes a dozen files.</td></tr>
+        <tr><td><code>src/tasks/</code> · <code>agent/</code> · <code>codex_thread.rs</code></td><td>7 · Loop</td><td>The turn-by-turn skeleton of the loop.</td></tr>
+        <tr><td><code>src/tools/approvals.rs</code> · <code>sandboxing/</code> · <code>guardian/</code></td><td>8 · Guardrails / HITL</td><td>⭐ There is literally a file named <b>approvals.rs</b> — asking the human is a code module, not a courtesy line.</td></tr>
+        <tr><td><code>tests/</code></td><td>9 · Evaluation</td><td>The harness verifies itself, too.</td></tr>
+      </tbody></table></div>
+      <p class="small" style="margin-top:12px">Last week the nine layers were boxes on a slide. Here they are folders. The abstraction wasn’t invented — it was extracted. <span style="color:var(--muted)">(Structure as of Sept 2026; this repository moves fast — expect renames.)</span></p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
   <div class="eyebrow">The nine layers</div>
   <h2>Anatomy of a coding agent</h2>
   <p class="lede">Click each layer. Together they answer one question: what has to surround a language model before it can actually <em>do</em> things?</p>
