@@ -72,6 +72,8 @@
     </a>
   </div>
   <div class="bigq"><span class="qlabel">Discussion question</span>If Codex had the exact same model — but no access to files, shell commands, tools, state, or permissions — would it still be Codex?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">No — you would have a chatbot that talks <em>about</em> code. Everything that makes it Codex — reading files, running tests, applying patches, pausing for approval — lives in the <b>harness</b>. The model supplies reasoning; the product is the loop built around it. Part 1 takes this answer apart layer by layer.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -92,5 +94,6 @@
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>
 
+<script>document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});</script>
 </body>
 </html>

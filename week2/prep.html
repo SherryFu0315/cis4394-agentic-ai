@@ -115,7 +115,15 @@ codex login              <span style="color:#8b909c"># choose “Sign in with Ch
         <li>What role do <b>repository instructions</b> play?</li>
         <li>Why are <b>sandboxing / approval</b> boundaries necessary?</li>
         <li>What makes Codex an <b>agent</b> rather than merely an LLM chatbot?</li>
-      </ol><p class="small" style="margin-top:12px">Bring your answers — in class we check them against the real prompt, line by line, on the <a class="doc" href="codex.html">Unpack Codex page</a>.</p></div>
+      </ol><p class="small" style="margin-top:12px">Bring your answers — in class we check them against the real prompt, line by line, on the <a class="doc" href="codex.html">Unpack Codex page</a>.</p>
+      <button class="revealbtn">See suggested answers (try yours first)</button>
+      <div class="revealbox">
+        <b>1 · Observes:</b> files in the workspace, search results, and the output of commands and tests it runs.<br />
+        <b>2 · Actions/tools:</b> shell commands, <code>apply_patch</code> for editing files, <code>update_plan</code> for tracking progress.<br />
+        <b>3 · Repository instructions:</b> <code>AGENTS.md</code> files let humans leave standing rules for the agent — conventions, how to test — scoped to the directory tree they sit in.<br />
+        <b>4 · Sandboxing / approvals:</b> because the agent’s words become real commands on a real machine; risky calls are escalated to the user for approval before they run.<br />
+        <b>5 · Agent, not chatbot:</b> it doesn’t just answer — it acts on an environment, observes results, updates state, and keeps going until the task is resolved, under bounded permissions.
+      </div></div>
       <div class="card"><h3>Bring one mystery</h3><p class="small">Find one file, folder, function, or design choice you do <b>not</b> understand. Bring it to class. The goal is not mastery — it is learning how to inspect a real agent system.</p></div>
     </div>
   </div>
@@ -135,6 +143,7 @@ codex login              <span style="color:#8b909c"># choose “Sign in with Ch
 </div></footer>
 
 <script>
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
 const progress=document.getElementById('progressBar');
 addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
 </script>
