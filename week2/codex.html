@@ -34,6 +34,8 @@
   <h1>Unpack <em>Codex</em>.</h1>
   <p class="lede">You skimmed a real coding agent before class. Now we take it apart — not to memorize a repository, but to extract a reusable architecture for agentic systems.</p>
   <div class="bigq" style="margin-bottom:0"><span class="qlabel">Discussion question</span>If Codex had the exact same model — but no access to files, shell commands, tools, state, or permissions — would it still be Codex?</div>
+  <button class="revealbtn">What a strong answer covers</button>
+  <div class="revealbox">No — you would have a chatbot that talks <em>about</em> code. Everything that makes it Codex — reading files, running tests, applying patches, pausing for approval — lives in the <b>harness</b>. The model supplies reasoning; the product is the loop built around it. (Corollary: swap the model and most of the product survives; remove the harness and nothing does.)</div>
 </div></header>
 
 <section><div class="wrap">
@@ -42,7 +44,30 @@
   <p class="lede">Click each layer. Together they answer one question: what has to surround a language model before it can actually <em>do</em> things?</p>
   <div class="arch-shell">
     <div class="arch-list" id="archButtons"></div>
-    <div class="arch-view"><h3 id="archTitle"></h3><p id="archDesc"></p><div id="archExample" class="codebox"></div><div id="archQuestion" class="quote"></div></div>
+    <div class="arch-view"><h3 id="archTitle"></h3><p id="archDesc"></p><div id="archExample" class="codebox"></div><div id="archQuestion" class="quote"></div><button class="revealbtn">Suggested answer</button><div class="revealbox" id="archAnswer"></div></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Primary-source check</div>
+  <h2>The nine layers, in the real prompt</h2>
+  <p class="lede">Before class you read <a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/gpt_5_2_prompt.md" target="_blank" rel="noopener">Codex&rsquo;s actual system prompt ↗</a>. The file never says &ldquo;layer&rdquo; &mdash; the nine layers are <em>our</em> analysis framework. But read it with the checklist in hand and the evidence is right there. Compare your scavenger-hunt answers first, then reveal.</p>
+  <div class="card">
+    <button class="revealbtn">Reveal the line-by-line evidence</button>
+    <div class="revealbox">
+      <div style="overflow:auto"><table class="plain"><thead><tr><th>Layer</th><th>Where</th><th>What the prompt actually says</th></tr></thead><tbody>
+        <tr><td><b>1 &middot; Goal</b></td><td>Task execution</td><td>&ldquo;keep going <b>until the query or task is completely resolved</b>, before ending your turn&rdquo; &mdash; the goal persists across many actions.</td></tr>
+        <tr><td><b>2 &middot; Model / Reasoning</b></td><td>Opening line</td><td>&ldquo;You are <b>GPT-5.2</b> running in the Codex CLI&rdquo; &mdash; the very first sentence separates the model from the harness: this whole file is the harness talking <em>to</em> the model.</td></tr>
+        <tr><td><b>3 &middot; Instructions</b></td><td>AGENTS.md spec</td><td>The entire file <b>is</b> this layer. It even defines scope and precedence: nested AGENTS.md files win over outer ones; direct system/user instructions win over AGENTS.md.</td></tr>
+        <tr><td><b>4 &middot; Tools</b></td><td>Tool Guidelines</td><td>A whole chapter: shell commands, <code>apply_patch</code> (with its full patch format), <code>update_plan</code> &mdash; &ldquo;Emit function calls to run terminal commands and apply patches.&rdquo;</td></tr>
+        <tr><td><b>5 &middot; Environment</b></td><td>Capabilities</td><td>&ldquo;files <b>in the workspace</b>&rdquo;; &ldquo;the repo(s) in the current environment&rdquo; &mdash; the world it acts on is the repository.</td></tr>
+        <tr><td><b>6 &middot; State / Memory</b></td><td>Planning</td><td><code>update_plan</code> is an explicit state machine: &ldquo;exactly one item <b>in_progress</b> at a time&rdquo;; &ldquo;Do not let the plan go stale while coding.&rdquo;</td></tr>
+        <tr><td><b>7 &middot; Agent Loop</b></td><td>Autonomy &amp; Task execution</td><td>&ldquo;carry changes through implementation, <b>verification</b>&hellip;&rdquo;; &ldquo;<b>persevere even when function calls fail</b>. Only terminate your turn when you are sure that the problem is solved&rdquo; &mdash; a loop with an explicit stop condition.</td></tr>
+        <tr><td><b>8 &middot; Guardrails / HITL</b></td><td>Capabilities &amp; Validating</td><td>&ldquo;function calls be <b>escalated to the user for approval</b> before running&rdquo;; three approval modes are named &mdash; <b>never / untrusted / on-request</b>.</td></tr>
+        <tr><td><b>9 &middot; Evaluation</b></td><td>Validating your work</td><td>&ldquo;If the codebase has tests&hellip; use them to <b>verify changes</b>&rdquo; &mdash; plus a strategy: start with the most specific tests, then broaden.</td></tr>
+      </tbody></table></div>
+      <p class="small" style="margin-top:14px"><b>Two things sharp readers notice:</b> the <code>## Responsiveness</code> heading is empty &mdash; system prompts are engineering artifacts, not magic; and the file references a &ldquo;Sandbox and approvals&rdquo; section that isn&rsquo;t in it &mdash; the harness assembles the full instructions at runtime, and this file is only one piece. <b>One honest gap:</b> there is no cross-session long-term memory here &mdash; not every product ships all nine layers, and spotting which are missing is itself the skill. (Quotes from the Apache-2.0 <code>openai/codex</code> repository as of Sept 2026; the file evolves.)</p>
+    </div>
   </div>
 </div></section>
 
@@ -131,7 +156,8 @@ const arch = [
 ];
 const buttons=document.getElementById('archButtons');
 arch.forEach((x,i)=>{const b=document.createElement('button');b.className='arch-btn'+(i===0?' active':'');b.innerHTML='<span class="n">'+String(i+1).padStart(2,'0')+'</span>'+x.t;b.addEventListener('click',()=>showArch(i));buttons.appendChild(b)});
-function showArch(i){[...buttons.children].forEach((b,j)=>b.classList.toggle('active',i===j));document.getElementById('archTitle').textContent=arch[i].t;document.getElementById('archDesc').textContent=arch[i].d;document.getElementById('archExample').textContent=arch[i].e;document.getElementById('archQuestion').textContent=arch[i].q}
+const ANS=['A prompt is one exchange; a goal persists across many actions and implies a stop condition. The agent works until the goal state is reached — not until it has produced a reply.', 'The model contributes reasoning and language. The harness contributes tools, environment access, state, permissions, and the loop. Swap the model and the product mostly survives; remove the harness and it collapses into a chatbot.', 'So they persist across runs, scope to the code they govern, and can be versioned and reviewed like code — instead of depending on every user retyping them. Codex’s AGENTS.md spec even defines precedence rules for conflicts.', 'A structured call can be validated, sandboxed, logged, and intercepted for approval <em>before</em> anything happens. Free-text “answers” can’t be safely executed or audited — structure is what makes guardrails possible.', 'Text becomes action: the model’s words now change files, run commands, and have consequences. That single change is why permissions, sandboxing, and approval suddenly matter — a chatbot can be wrong; an agent can do damage.', 'State holds durable facts the next decision needs: files inspected, changes made, test results, approval status. Context is transient conversation. Rule of thumb: if losing it would force the agent to start over, it belongs in state.', 'Two runs where a different observation produced a different next action — e.g., a failing test triggered inspection while a passing one triggered finish. A narrated fixed sequence can never show that; a trace of real branching can.', 'Immediately before irreversible or external actions — writes, deletes, sends. Early enough to prevent harm, late enough that the agent still does real autonomous work; pausing at read-only steps just wastes the human’s attention.', 'Read the trace, not just the output: did it verify its work, respect constraints, stop when done, avoid unsafe actions? “Tests pass” plus a sound process is trustworthy; a plausible-looking diff alone is not.'];
+function showArch(i){[...buttons.children].forEach((b,j)=>b.classList.toggle('active',i===j));document.getElementById('archTitle').textContent=arch[i].t;document.getElementById('archDesc').textContent=arch[i].d;document.getElementById('archExample').textContent=arch[i].e;document.getElementById('archQuestion').textContent=arch[i].q;const box=document.getElementById('archAnswer');box.innerHTML=ANS[i];box.classList.remove('open');const rb=box.previousElementSibling;if(rb&&rb.dataset.orig)rb.textContent=rb.dataset.orig}
 showArch(0);
 
 /* ---------- loop simulator ---------- */
@@ -185,6 +211,9 @@ document.getElementById('btnAuto').addEventListener('click',function(){
 function reset(){cur=0;stopAuto();for(const k of Object.keys(state))if(k!=='goal')delete state[k];setNode(-1);termEl.innerHTML='<span class="t-dim">Press Step to begin the episode…</span>';renderState();hintEl.textContent=`Episode: fix a failing test · step 0 of ${EP.length}`}
 document.getElementById('btnReset').addEventListener('click',reset);
 renderState();
+
+/* ---------- reveal ---------- */
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
 
 /* ---------- concept check ---------- */
 document.querySelectorAll('.choice').forEach(btn=>btn.addEventListener('click',()=>{

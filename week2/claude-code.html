@@ -60,6 +60,8 @@
   <h2>Separate the model from the harness</h2>
   <div class="bigq"><span class="qlabel">Discussion question</span>If we swapped the model but kept the entire agent harness, how much of the product would still remain?</div>
   <p class="lede">Use this question to separate <b>model capability</b> from <b>agent-system design</b>. In Part 3, you will keep the design and throw away everything coding-specific.</p>
+  <button class="revealbtn">What a strong answer covers</button>
+  <div class="revealbox">Most of the product remains: the tools, permission system, state, instruction files, UX, and the loop itself. What changes is reasoning quality. That is why “which agent is best” is as much a <b>harness</b> question as a model question — and why vendors can swap models underneath without renaming the product.</div>
 </div></section>
 
 <div class="wrap pager">
@@ -88,7 +90,7 @@ const compare={
  <tr><td>Safety</td><td>Sandbox + approval controls</td><td>Permission modes + approval controls</td></tr>
  <tr><td>Loop</td><td>Observe → act → observe</td><td>Observe → act → observe</td></tr></tbody></table>`,
  differences:`<div class="grid2"><div class="card"><h3>Different implementations</h3><p class="small">Models, tool schemas, permission systems, context strategies, UX, and internal runtime choices can differ substantially between the two products.</p></div><div class="card"><h3>Shared abstraction</h3><p class="small">Both can still be analyzed with the same nine layers: goal, instructions, observations, state, tools/actions, environment, loop, safety, evaluation.</p></div></div>`,
- question:`<div class="bigq"><span class="qlabel">Discussion question</span>A new coding agent launches next month. What questions would you ask to “unpack” it in ten minutes?</div><p class="lede">If your questions come from the nine layers, the abstraction is doing its job.</p>`
+ question:`<div class="bigq"><span class="qlabel">Discussion question</span>A new coding agent launches next month. What questions would you ask to “unpack” it in ten minutes?</div><p class="lede">If your questions come from the nine layers, the abstraction is doing its job.</p><button class="revealbtn">A ten-minute question list</button><div class="revealbox">What is its goal and stop condition? What can it observe? What tools/actions does it have? What environment does it touch? Where does state live? What instruction files does it read? Where is the loop visible — can I see a trace? What requires approval, and what is sandboxed? How does it verify its own work? — Nine questions, nine layers.</div>`
 };
 function setCompare(mode){document.getElementById('compareView').innerHTML=compare[mode];document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.mode===mode))}
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setCompare(b.dataset.mode)));
@@ -119,6 +121,8 @@ Q.forEach((q,i)=>{
   }));
   qEl.appendChild(d);
 });
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
 
 /* ---------- progress ---------- */
 const progress=document.getElementById('progressBar');

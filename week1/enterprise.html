@@ -73,6 +73,8 @@ With MCP:            M agents + N tools  =  M+N  (each speaks the protocol once)
         <li>What would have to change for agents to move the P&amp;L?</li>
         <li>If you were CIO, what would you <b>measure</b> to know it’s working?</li>
       </ol>
+      <button class="revealbtn">What strong answers sound like</button>
+      <div class="revealbox"><b>1.</b> Both — but organization dominates. Capability gets you demos; moving EBIT requires redesigned workflows, data access, evaluation, and people who trust the system. Adopting the tech without changing the process <em>is</em> the paradox.<br /><b>2.</b> Agents must own a measurable slice of a process end-to-end (with human gates) rather than sprinkling assistance everywhere — and reliability must be high enough that people stop double-checking every output.<br /><b>3.</b> Outcomes, not usage: resolution time, error/rework rate, cost per case, human hours redeployed, escalation quality — measured against a baseline, not against enthusiasm.</div>
     </div>
     <div class="card">
       <h3>The augmentation story: IKEA’s “Billie”</h3>
@@ -97,6 +99,7 @@ With MCP:            M agents + N tools  =  M+N  (each speaks the protocol once)
 </div></footer>
 
 <script>
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
 const progress=document.getElementById('progressBar');
 addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
 </script>
