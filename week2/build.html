@@ -188,6 +188,19 @@ while not state.done:
   <div class="callout blue" style="margin-top:26px"><b>The agentic requirement (all paths):</b> at a decision point, your system must select among materially different next actions based on its current observation and state. Across the required tests, different observations must produce different executed action sequences. A fixed sequence does not satisfy the requirement.</div>
 </div></section>
 
+<section><div class="wrap">
+  <div class="eyebrow">Field study</div>
+  <h2>The real-world version</h2>
+  <p class="lede">While you build the classroom version, know that a production version of this exact idea went viral. <a class="doc" href="https://github.com/MadsLorentzen/ai-job-search" target="_blank" rel="noopener">MadsLorentzen/ai-job-search ↗</a> (~40k stars, Sept 2026) is a job-application framework built <b>on top of Claude Code</b>: <code>/scrape</code> job boards, <code>/apply</code> with a tailored LaTeX CV and cover letter, <code>/interview</code> prep. Its author used it for his own search — 69 tailored applications, 20 first interviews, one signed offer — and was hired as an AI engineer in June 2026. This assignment is not a toy; it is the training run for a real skill.</p>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Run our agency test on this 40,000-star project: which parts are an agent — and which are a workflow?</div>
+  <button class="revealbtn">What a strong answer covers</button>
+  <div class="revealbox">
+    <b>Mostly a workflow — by our own test.</b> <code>/scrape → /apply → /interview</code> is a predefined pipeline, and a <b>human triggers every stage</b>: the human owns the outer control flow. Its drafter → reviewer → revise cycle is the <b>evaluator–optimizer</b> pattern from Week 1. The agentic moments live <em>inside</em> each stage, where Claude Code decides which files to read and how to tailor.
+    <br /><br />The precise description: <b>a workflow of agentic steps, with a human as the outer loop.</b> And that is a <em>feature</em>, not a flaw — real applications are high-stakes, irreversible, external actions, so the author deliberately set the autonomy dial <b>low</b> exactly where our lab puts its human gate. Forty thousand people starred the design discipline this course grades you on.
+  </div>
+  <div class="callout red" style="margin-top:20px"><b>Boundary:</b> that framework scrapes real job boards and produces real applications — precisely what this lab prohibits. Learn the design discipline on fictional data first; drive the real thing later, on your own time and judgment. Build yours first, then go read that repo — you’ll recognize every folder.</div>
+</div></section>
+
 <div class="wrap pager">
   <a href="claude-code.html"><span class="lab">← Previous</span><b>02 · The same lens on Claude Code</b></a>
   <a href="evaluate.html" class="next"><span class="lab">Next →</span><b>04 · Break it, grade it, submit it</b></a>
@@ -215,6 +228,7 @@ document.querySelectorAll('.pathtab').forEach(t=>t.addEventListener('click',()=>
 }));
 
 /* ---------- progress ---------- */
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
 const progress=document.getElementById('progressBar');
 addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
 </script>
