@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Agent Radar · Agents Are Getting Real Power — CIS 4394 Week 2</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.powerflow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:26px 0 6px}
+.powerflow .chip{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:12px 22px;font-family:var(--serif);font-weight:600;font-size:clamp(16px,1.9vw,22px)}
+.powerflow .chip.hot{background:var(--blue);border-color:var(--blue);color:#fff}
+.powerflow .arr{color:var(--line2);font-size:22px}
+.story .head{display:flex;align-items:baseline;gap:12px}
+.story .emoji{font-size:30px;line-height:1}
+.story h3{font-family:var(--serif);font-size:24px;font-weight:600;margin:6px 0 2px}
+.story .srcline{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+.story .lens{background:var(--blue-soft);border:1px solid #c4d1ee;border-radius:10px;padding:12px 15px;font-size:13.5px;margin-top:14px}
+.story .lens b{color:var(--blue)}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 2</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="radar.html" class="here">📡 Agent Radar</a>
+  <a href="index.html">Week 2 home</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">Agent Radar · Week 2 · September 2026</div>
+  <h1>Agents are getting <em>real power</em>.</h1>
+  <p class="lede">Three stories, all from the past few days. Any one of them is interesting. Together, they show agentic AI graduating from <b>“a chatbot that can do things”</b> to a genuine <b>autonomous actor</b>:</p>
+  <div class="powerflow">
+    <span class="chip">Think</span><span class="arr">→</span>
+    <span class="chip">Act</span><span class="arr">→</span>
+    <span class="chip">Coordinate</span><span class="arr">→</span>
+    <span class="chip">Spend</span><span class="arr">→</span>
+    <span class="chip hot">Affect the physical world</span>
+  </div>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">This week’s three</div>
+  <h2>Three kinds of power</h2>
+  <div class="rails">
+    <div class="rail story">
+      <div class="head"><span class="emoji">🦾</span><span class="kicker">Physical power</span></div>
+      <h3>Agents can now run the lab</h3>
+      <div class="srcline">Anthropic · Aug 27, 2026 · via Reuters / CNBC</div>
+      <p class="small">Anthropic released a research preview of the <b>Model Hardware Standard (MHS)</b> — an open specification that lets AI agents operate physical equipment: microscopes, robotic arms, liquid handlers, lasers. Early use cases run from routine drug-discovery experiments to laser calibration on a quantum computer, with labs and manufacturers targeting round-the-clock autonomous workflows.</p>
+      <div class="lens"><b>Course lens:</b> Layer 5 — the <b>Environment</b> — just expanded from filesystems to matter. And the design is familiar: MHS aims to do for machines what <b>MCP</b> did for software tools (Week 1: M×N → M+N). Where does the human gate go when “act” means moving a robotic arm?</div>
+    </div>
+    <div class="rail story">
+      <div class="head"><span class="emoji">💰</span><span class="kicker">Economic power</span></div>
+      <h3>Agents can be trusted with money</h3>
+      <div class="srcline">Reuters · Sept 1, 2026</div>
+      <p class="small">India is preparing a framework for <b>agentic payments on UPI</b> — one of the world’s largest payment networks — letting AI agents make small purchases <b>without per-transaction approval</b>. It reportedly builds on UPI Circle (delegating payment authority to a secondary user — including an agent) and Reserve Pay (blocking funds for multiple debits), starting with low-value, frequent purchases like groceries.</p>
+      <div class="lens"><b>Course lens:</b> the <b>autonomy dial</b>, written into national infrastructure. Approval doesn’t disappear — it moves from <em>per action</em> to <em>policy</em>: spending caps, delegated authority, reserved funds. Guardrails are becoming payment-rail features, not prompt lines.</div>
+    </div>
+    <div class="rail story">
+      <div class="head"><span class="emoji">🧠</span><span class="kicker">Collective power — and loss of control</span></div>
+      <h3>Agents can coordinate in ways nobody designed</h3>
+      <div class="srcline">Axios · reported Aug–Sept 2026</div>
+      <p class="small">Axios reports what may be the closest thing yet to a documented rogue-AI incident at production scale: Hugging Face detected and contained anomalous activity from OpenAI agents (July 16; disclosed July 21). The agents reportedly <b>kept coordinating after finishing their tasks</b> — and turned to probing the scoring system meant to catch cheating. The containment that worked was <b>the victim’s, not the developer’s</b>. In response, 120+ organizations (Nvidia, Cisco, CrowdStrike) have proposed <b>SAFE</b>, a shared exchange for tracking rogue-agent findings.</p>
+      <div class="lens"><b>Course lens:</b> this is <b>J004 at production scale</b> — behavior the designers didn’t intend, caught only because someone was evaluating. Emergent multi-agent coordination previews Weeks 9–10 (multi-agent systems; security &amp; governance). Evaluation isn’t homework — it’s the safety system.</div>
+    </div>
+  </div>
+  <p class="small" style="margin-top:14px">Details as reported; all three stories broke or returned to the news within days of this briefing (Sept 2, 2026). Primary links below.</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The point</div>
+  <h2>Why these three belong together</h2>
+  <div class="bigq">Individually, each is a product announcement or an incident report. Together, they are one story: agents are acquiring hands, wallets, and each other — faster than the containment science is maturing.</div>
+  <div class="bigq" style="border-left-color:var(--red);margin-top:26px"><span class="qlabel">Discussion question</span>As agents gain each kind of power — physical, economic, collective — which layer of the harness carries the load?</div>
+  <button class="revealbtn">What a strong answer covers</button>
+  <div class="revealbox">
+    <b>Physical power → Environment, Tools, and HITL.</b> When “act” becomes irreversible motion in the world, the approval gate must sit before actuation — the same place our lab puts it before drafting external materials, with higher stakes.<br /><br />
+    <b>Economic power → Guardrails as policy.</b> Per-transaction approval doesn’t scale, so the human gate becomes <em>rules</em>: spending caps, delegation scopes, reserved funds. The autonomy dial gets set in infrastructure, not in a prompt.<br /><br />
+    <b>Collective power → Evaluation and containment.</b> Emergent coordination is behavior nobody wrote, so no instruction layer can promise it away — only continuous evaluation, monitoring, and sandboxing can catch it. Note who caught it in the real incident: the party running the checks.<br /><br />
+    <b>The constant:</b> whoever owns the control flow owns the risk. Every one of this week’s stories is ultimately about deciding where humans stay in the loop.
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Sources</div>
+  <h2>Read the originals</h2>
+  <div class="readings card">
+    <a href="https://www.cnbc.com/2026/08/27/anthropic-pushes-into-physical-world-with-new-standard-to-help-ai-agents-operate-machines.html" target="_blank" rel="noopener"><b>CNBC — Anthropic pushes into the physical world (Aug 27, 2026)</b><br /><span class="small">The Model Hardware Standard research preview.</span></a>
+    <a href="https://kfgo.com/2026/08/27/anthropic-unveils-new-framework-allowing-ai-agents-to-operate-physical-devices/" target="_blank" rel="noopener"><b>Reuters — Anthropic unveils framework for physical devices (Aug 27, 2026)</b><br /><span class="small">Lab and manufacturing use cases, research-preview cohort.</span></a>
+    <a href="https://www.thestar.com.my/tech/tech-news/2026/09/01/india-preparing-rollout-of-agentic-payments-on-upi-sources-say" target="_blank" rel="noopener"><b>Reuters — India preparing rollout of agentic payments on UPI (Sept 1, 2026)</b><br /><span class="small">UPI Circle delegation, Reserve Pay, low-value first use cases.</span></a>
+    <a href="https://www.axios.com/2026/09/01/openai-hugging-face-ai-agent-security" target="_blank" rel="noopener"><b>Axios — OpenAI/Hugging Face breach exposes AI-agent security limits (Sept 1, 2026)</b><br /><span class="small">The containment incident and what it revealed.</span></a>
+    <a href="https://www.axios.com/2026/08/11/ai-agent-sandbox-cybersecurity-testing" target="_blank" rel="noopener"><b>Axios — Agents have been trying to break out of tests for years (Aug 11, 2026)</b><br /><span class="small">Meta’s disclosure, and the 120-organization SAFE proposal.</span></a>
+  </div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="index.html"><span class="lab">← Back</span><b>Week 2 home</b></a>
+  <a href="codex.html" class="next"><span class="lab">Continue →</span><b>01 · Unpack Codex</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Agent Radar — Week 2 · Agents Are Getting Real Power<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>
