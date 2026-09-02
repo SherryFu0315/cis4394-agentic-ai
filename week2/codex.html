@@ -47,8 +47,34 @@
     <div class="rail" style="border-top-color:#d99a1b"><span class="kicker">Shift 2 · 2024–25</span><h3 style="margin-top:6px">Context Engineering</h3><p class="small" style="font-weight:600;color:var(--ink)">“Does the model have the right information?”</p><p class="small">Retrieval, RAG, memory, long context. Feeds the model the facts it needs — but knowing is still not doing.</p></div>
     <div class="rail" style="border-top-color:var(--blue)"><span class="kicker">Shift 3 · now</span><h3 style="margin-top:6px">Harness Engineering</h3><p class="small" style="font-weight:600;color:var(--ink)">“Can the model execute reliably in the real world?”</p><p class="small">Tools, environment, state, sandboxing, approvals, the loop. Where the industry’s effort — and hiring — has moved.</p></div>
   </div>
-  <div class="callout blue" style="margin-top:24px"><b>Where this course sits:</b> prompting and context still matter, but this is, at heart, a <b>harness-engineering</b> course. And the best way to study harnesses is to read the best one shipping today — so we start by opening Codex’s actual repository.</div>
-  <p class="small" style="margin-top:12px">Framing after <a class="doc" href="https://www.youtube.com/watch?v=3DlXq9nsQOE" target="_blank" rel="noopener">“最近爆火的 Harness Engineering 到底是个啥？” ↗</a> (code秘密花园, Apr 2026 — video in Chinese).</p>
+  <div class="card" style="margin-top:26px;padding:28px">
+    <h3 style="margin-bottom:4px">The shifts nest — each one contains the last</h3>
+    <p class="small" style="margin-bottom:16px">These are not replacements. A harness still contains context engineering, which still contains prompting — each shift wraps the previous one in more machinery. Your prompt-engineering skills aren’t obsolete; they are now one layer of a bigger system.</p>
+    <svg viewBox="0 0 900 470" style="width:100%;max-width:860px;height:auto;display:block;margin:0 auto;font-family:var(--sans)" role="img" aria-label="Nested diagram: harness engineering contains context engineering, which contains prompt engineering, which wraps the model">
+      <rect x="8" y="8" width="884" height="454" rx="16" fill="#eef2fb" stroke="#0039a6" stroke-width="2"/>
+      <text x="34" y="44" font-size="17" font-weight="700" fill="#0039a6">HARNESS ENGINEERING</text>
+      <text x="34" y="66" font-size="13" fill="#5d6069">“Can it execute reliably in the real world?”</text>
+      <text x="866" y="44" font-size="12.5" fill="#0039a6" text-anchor="end" font-weight="600">+ tools · environment · state · sandbox · approvals · loop</text>
+      <rect x="66" y="92" width="768" height="336" rx="14" fill="#fdf3dd" stroke="#d99a1b" stroke-width="2"/>
+      <text x="90" y="126" font-size="16" font-weight="700" fill="#8a6d1d">CONTEXT ENGINEERING</text>
+      <text x="90" y="147" font-size="13" fill="#5d6069">“Does it have the right information?”</text>
+      <text x="810" y="126" font-size="12.5" fill="#8a6d1d" text-anchor="end" font-weight="600">+ retrieval · memory · documents</text>
+      <rect x="126" y="174" width="648" height="220" rx="12" fill="#f2edfb" stroke="#7c5cd6" stroke-width="2"/>
+      <text x="150" y="207" font-size="15" font-weight="700" fill="#5b3fb8">PROMPT ENGINEERING</text>
+      <text x="150" y="227" font-size="13" fill="#5d6069">“Does it understand the ask?”</text>
+      <text x="750" y="207" font-size="12.5" fill="#5b3fb8" text-anchor="end" font-weight="600">+ instructions · examples · personas</text>
+      <rect x="330" y="272" width="240" height="76" rx="12" fill="#16181d"/>
+      <text x="450" y="305" font-size="16" font-weight="700" fill="#ffffff" text-anchor="middle">THE MODEL</text>
+      <text x="450" y="327" font-size="12" fill="#b9bdc7" text-anchor="middle">frozen weights · pure reasoning</text>
+    </svg>
+  </div>
+  <div style="overflow:auto;margin-top:18px"><table class="plain"><thead><tr><th></th><th>Prompt engineering</th><th>Context engineering</th><th>Harness engineering</th></tr></thead><tbody>
+    <tr><td><b>You are tuning…</b></td><td>the wording of one request</td><td>what information reaches the model</td><td>the system <em>around</em> the model</td></tr>
+    <tr><td><b>The artifact is…</b></td><td>a prompt string</td><td>a pipeline — retrieval, memory, context assembly</td><td>a product — tools, state, sandbox, approvals, loop</td></tr>
+    <tr><td><b>It fixes…</b></td><td>“it misunderstood me”</td><td>“it didn’t know, so it made something up”</td><td>“it can’t <em>do</em> it, reliably”</td></tr>
+    <tr><td><b>Skill ceiling</b></td><td>writing</td><td>information architecture</td><td>systems engineering — this course</td></tr>
+  </tbody></table></div>
+  <div class="callout blue" style="margin-top:20px"><b>What all three share:</b> none of them touch the model’s weights. All of AI engineering is building around a frozen model — and this course works on the outermost ring. The best way to study harnesses is to read the best one shipping today, so next we open Codex’s actual repository.</div>
 </div></section>
 
 <section><div class="wrap">
