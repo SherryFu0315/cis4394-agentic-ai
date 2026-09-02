@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>03 · Context Engineering — CIS 4394 Week 3</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.packer{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px}
+.pkitem{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:11px 15px;margin-bottom:8px;background:#fff}
+.pkitem b{font-size:14px}.pkitem .small{display:block}
+.pkitem .tok{font-family:var(--mono);font-size:12.5px;color:var(--muted);white-space:nowrap}
+.pkitem select{font:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.budgetbar{height:26px;border-radius:999px;background:var(--paper);border:1px solid var(--line);overflow:hidden;position:relative;margin-top:16px}
+.budgetbar i{display:block;height:100%;background:var(--blue);transition:width .3s}
+.budgetbar.over i{background:var(--red)}
+.budgetbar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:var(--ink)}
+.pkverdict{margin-top:12px;font-size:14px;min-height:24px}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 3</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="anatomy.html"><span class="k">01</span>Prompt Anatomy</a>
+  <a href="techniques.html"><span class="k">02</span>Techniques</a>
+  <a href="context.html" class="here"><span class="k">03</span>Context Engineering</a>
+  <a href="exercises.html"><span class="k">04</span>Practice &amp; Cases</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">03 · The 2026 core skill</div>
+  <h1>Context <em>engineering</em>.</h1>
+  <p class="lede"><b>Prompting is what you say; context engineering is everything the model can see.</b> As agents got longer-running, deciding what fills the context window — instructions, retrieved documents, examples, tool outputs, history — and in what order became its own discipline (Mei et al., 2025; Anthropic, 2025).</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">The constraint</div>
+  <h2>The context window is a budget</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><p class="small">A <b>token</b> is roughly ¾ of an English word. The <b>context window</b> is the fixed number of tokens the model can attend to per call — and <em>everything</em> competes for it: the system prompt, conversation history, retrieved data, the current question, and room for the answer itself.</p>
+    <p class="small" style="margin-top:8px">HF Agents Course tie-in (this week’s reading): context is the agent’s <b>working memory</b>. And like any working memory: more is not better.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Context rot</span><p class="small" style="margin-top:8px">As the window fills with long or noisy input, accuracy and instruction-following <b>degrade</b>: models “lose the middle,” forget rules stated early, and drift — documented across 2024–25 long-context evaluations, including Chroma’s <i>Context Rot</i> report (2025).</p><p class="small" style="margin-top:8px"><b>Practical rule:</b> put the most important instructions first <em>and</em> last, and test at the lengths you’ll actually run.</p></div>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>Curation over accumulation:</b> include what’s relevant, exclude the rest — top-k retrieval instead of the whole manual (RAG preview, Week 7), summarize old history, drop stale turns. The anti-pattern: dumping everything into every call “just in case.”</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · Exercise B preview</div>
+  <h2>The packing game: fit the agent in 4,000 tokens</h2>
+  <p class="lede">You’re shipping a customer-support agent. Everything below “wants” to be in context — but it totals far more than your 4,000-token budget (you must leave <b>≥500 tokens</b> of room for the answer). For each item choose <b>Keep · Summarize · Drop</b>, then check your packing.</p>
+  <div class="packer" id="packer"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">News hook · 2026</div>
+  <h2>Even Anthropic cut 80% of Claude Code’s system prompt</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><p class="small">Anthropic engineer Thariq Shihipar reported removing <b>over 80%</b> of <b>Claude Code’s</b> system prompt for Claude 5–generation models — with <b>no measurable loss on coding evals</b> (Shihipar, Anthropic blog, 2026; as reported).</p>
+    <p class="small" style="margin-top:8px"><b>Read it carefully:</b> this is a <em>capability-driven simplification</em> — “the model got better, so the prompt could get shorter.” It is NOT “prompts don’t matter.” And it’s Claude Code’s prompt (the CLI coding agent), not the Claude.ai app. Viral restatements over-generalize; cite the primary post.</p></div>
+    <div class="card" style="background:#101319;border-color:#101319"><div style="font-size:clamp(40px,4.5vw,60px);font-weight:700;color:#fff">&gt;80%</div><p class="small" style="color:#b9bdc7">of the system prompt removed, no measurable eval loss — as reported, 2026.</p>
+    <p class="small" style="color:#b9bdc7;margin-top:10px"><b style="color:#fff">Three takeaways for your prompts:</b><br />1 · Less can beat more.<br />2 · Match scaffolding to capability — don’t over-constrain a strong model.<br />3 · Curate, don’t stuff — context rot is real.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The last fork</div>
+  <h2>Prompting vs fine-tuning</h2>
+  <div style="overflow:auto"><table class="plain"><thead><tr><th></th><th>Prompt / context engineering</th><th>Fine-tuning</th></tr></thead><tbody>
+    <tr><td><b>What changes</b></td><td>What the model sees</td><td>The model’s weights</td></tr>
+    <tr><td><b>Cost &amp; speed</b></td><td>Free · instant</td><td>Data + compute + upkeep · weeks</td></tr>
+    <tr><td><b>Data needed</b></td><td>None (a few examples)</td><td>Hundreds+ curated examples</td></tr>
+    <tr><td><b>Best for</b></td><td>Almost everything — start here</td><td>Consistent style at massive scale · cutting prompt cost · deep domain behavior</td></tr>
+  </tbody></table></div>
+  <div class="callout" style="margin-top:20px"><b>The order:</b> prompt → few-shot → better context / RAG → fine-tune, <b>last</b>. Every rung you skip is money and weeks you didn’t need to spend.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="techniques.html"><span class="lab">← Previous</span><b>02 · Techniques</b></a>
+  <a href="exercises.html" class="next"><span class="lab">Next →</span><b>04 · Practice &amp; cases</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 3 — Prompting &amp; Context Engineering<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* ---------- packing game ---------- */
+const CAP=4000, ANSWER=500;
+const ITEMS=[
+ {n:'System prompt (role, rules, refusal path)',t:600,s:250,best:'keep',why:'Non-negotiable — this is the policy guardrail. Never drop it; heavy trimming risks behavior.'},
+ {n:'Full product manual',t:2500,s:400,best:'summarize',why:'The classic stuffing mistake. Summarize to the sections that match this ticket — or better, retrieve top-k passages on demand (Week 7).'},
+ {n:'Conversation history (14 earlier turns)',t:1800,s:350,best:'summarize',why:'The user’s issue and promises made matter; the verbatim transcript doesn’t. Summarize old turns, keep the last one or two whole.'},
+ {n:'3 knowledge-base snippets matching this ticket',t:500,s:200,best:'keep',why:'This is curation working for you — already retrieved, already relevant. Keep whole.'},
+ {n:'2 raw tool-output blobs (full JSON dumps)',t:700,s:150,best:'summarize',why:'The model needs the result, not 700 tokens of envelope. Extract the fields that matter.'},
+ {n:'Current customer message',t:120,s:120,best:'keep',why:'The input itself — always keep, always whole.'}
+];
+const pk=document.getElementById('packer');
+let html='';
+ITEMS.forEach((x,i)=>{
+  html+=`<div class="pkitem"><span><b>${x.n}</b><span class="small">keep = ${x.t} tok · summarize ≈ ${x.s} tok</span></span><span class="tok" id="pt${i}">${x.t} tok</span><select id="ps${i}"><option value="keep">Keep</option><option value="summarize">Summarize</option><option value="drop">Drop</option></select></div>`;
+});
+html+=`<div class="budgetbar" id="bbar"><i id="bfill"></i><span id="btext"></span></div>
+<div class="pkverdict" id="pkv"></div>
+<button class="revealbtn" id="pkcheck">Check my packing</button><div class="revealbox" id="pkbox"></div>`;
+pk.innerHTML=html;
+function tokOf(i){const v=document.getElementById('ps'+i).value;return v==='keep'?ITEMS[i].t:v==='summarize'?ITEMS[i].s:0}
+function update(){
+  let total=0;
+  ITEMS.forEach((x,i)=>{const t=tokOf(i);total+=t;document.getElementById('pt'+i).textContent=t+' tok'});
+  const used=total+ANSWER;
+  const pct=Math.min(100,used/CAP*100);
+  const bar=document.getElementById('bbar');
+  document.getElementById('bfill').style.width=pct+'%';
+  bar.classList.toggle('over',used>CAP);
+  document.getElementById('btext').textContent=`${total} content + ${ANSWER} answer room = ${used} / ${CAP} tokens`;
+  document.getElementById('pkv').innerHTML=used>CAP?'<b style="color:var(--red)">Over budget — the call will truncate or fail. Trim something.</b>':(total===0?'':'<b style="color:#2e6b3f">Fits ✓</b> — now check whether it fits <em>well</em>.');
+}
+ITEMS.forEach((x,i)=>document.getElementById('ps'+i).addEventListener('change',update));
+update();
+document.getElementById('pkcheck').addEventListener('click',()=>{
+  let out='';
+  ITEMS.forEach((x,i)=>{
+    const v=document.getElementById('ps'+i).value;
+    const ok=v===x.best;
+    out+=`<b>${ok?'✓':'✗'} ${x.n}</b> — ${ok?'agreed':'suggested: <b>'+x.best+'</b>'}. ${x.why}<br /><br />`;
+  });
+  out+='<b>The twist:</b> suppose the customer now asks something answered only in a manual section you (rightly) summarized away. That is not a packing failure — it is the signal that pre-loading has limits. The answer is <b>retrieval on demand</b>: fetch the right passage when the question arrives. That is Week 7 (RAG &amp; memory), previewed.';
+  document.getElementById('pkbox').innerHTML=out;
+});
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

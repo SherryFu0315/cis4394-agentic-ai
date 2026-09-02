@@ -14,7 +14,8 @@ Each week of the course ships as an **interactive mini-site** — clickable arch
 |---|---|---|---|
 | **1** | Introduction to Agentic AI + What Enterprises Actually Use | [week1/](https://sherryfu0315.github.io/cis4394-agentic-ai/week1/) | The agent loop as a step-through simulator · agent vs workflow vs chatbot · an autonomy dial you can turn · the five workflow patterns · the 2026 enterprise agent stack · classify-the-scenario exercises · free toolchain setup |
 | **2** | Learning from the Best: Unpacking Coding Agents | [week2/](https://sherryfu0315.github.io/cis4394-agentic-ai/week2/) | Reverse-engineer Codex layer by layer · the same architecture lens on Claude Code · build a Job Search Agent three ways (Google Opal, LangSmith Fleet, or Codex + Python) with four behavior tests including a prompt-injection case, real human-approval gates, and a path-neutral rubric |
-| 3–14 | Prompting & context engineering · reasoning & planning with LangGraph · tool use · MCP & A2A · memory & RAG · evaluation & reliability · multi-agent systems · security & governance · deployment & agentic commerce · capstone studios | *coming soon* | Published here as the semester progresses |
+| **3** | Prompting & Context Engineering | [week3/](https://sherryfu0315.github.io/cis4394-agentic-ai/week3/) | A clickable annotated prompt · few-shot, chain-of-thought, structured JSON output · an interactive temperature dial · the context-window packing game · context rot · the $1 Chevy Tahoe case study |
+| 4–14 | Reasoning & planning with LangGraph · tool use · MCP & A2A · memory & RAG · evaluation & reliability · multi-agent systems · security & governance · deployment & agentic commerce · capstone studios | *coming soon* | Published here as the semester progresses |
 
 Downloadable materials (lecture deck, lab starter kits) live in [`materials/`](materials/).
 

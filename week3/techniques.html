@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>02 · Techniques That Raise Reliability — CIS 4394 Week 3</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.tempout{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.tempcard{background:#101319;color:#dfe3ec;border-radius:12px;padding:16px 18px;font-family:var(--mono);font-size:12.5px;line-height:1.8;min-height:150px;white-space:pre-wrap}
+.tempcard .lab2{font-family:var(--sans);font-size:11px;letter-spacing:.12em;font-weight:700;color:#9fb6e8;text-transform:uppercase;display:block;margin-bottom:8px}
+.ladder{counter-reset:rung;display:grid;gap:8px;margin-top:8px}
+.rung{counter-increment:rung;display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 16px}
+.rung::before{content:counter(rung);width:28px;height:28px;border-radius:50%;background:var(--blue-soft);color:var(--blue);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px}
+.rung b{font-size:14.5px}.rung .small{display:block}
+.rung .cost{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+@media(max-width:880px){.tempout{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 3</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="anatomy.html"><span class="k">01</span>Prompt Anatomy</a>
+  <a href="techniques.html" class="here"><span class="k">02</span>Techniques</a>
+  <a href="context.html"><span class="k">03</span>Context Engineering</a>
+  <a href="exercises.html"><span class="k">04</span>Practice &amp; Cases</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">02 · Reliability</div>
+  <h1>Techniques that raise <em>reliability</em>.</h1>
+  <p class="lede">Four techniques and one dial. Each fixes a different kind of failure — matching the technique to the failure is the skill.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Technique 1</div>
+  <h2>Few-shot: show, don’t describe</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card">
+      <p class="small"><b>Zero-shot</b> = no examples. <b>One-shot</b> = one worked pair. <b>Few-shot</b> = several. Models pattern-match on examples far more reliably than they follow prose descriptions — the effect that made GPT-3 famous (Brown et al., 2020).</p>
+      <p class="small" style="margin-top:8px"><b>Best for:</b> locking output format, label strings, and edge-case behavior. Three labeled tickets lock <code>BILLING / TECHNICAL / SALES</code> exactly, so downstream code can switch on them.</p>
+    </div>
+    <div class="codebox" style="margin:0">ticket: "I was charged twice"        → {"category":"BILLING"}
+ticket: "App crashes on login"        → {"category":"TECHNICAL"}
+ticket: "Can we add 50 more seats?"   → {"category":"SALES"}
+
+ticket: "Password reset email never arrives" → ?</div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Technique 2</div>
+  <h2>Chain-of-thought: reason before answering</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><span class="kicker">What it is</span>
+      <p class="small" style="margin-top:8px">Ask the model to work step by step <em>before</em> giving the final answer — big gains on multi-step math, logic, and policy questions (Wei et al., 2022). The lazy version works too: just add <b>“Let’s think step by step”</b> (zero-shot CoT, Kojima et al., 2022) — the cheapest first thing to try on a reasoning miss.</p>
+    </div>
+    <div class="card"><span class="kicker">When it helps vs hurts</span>
+      <div style="overflow:auto;margin-top:8px"><table class="plain"><tbody>
+        <tr><td style="background:var(--good)"><b>Helps</b></td><td>3-rule discount eligibility · multi-step calculations · ambiguous policy calls</td></tr>
+        <tr><td style="background:var(--bad)"><b>Overkill</b></td><td>Extract a phone number · yes/no lookups — you pay tokens + latency for nothing</td></tr>
+      </tbody></table></div>
+      <p class="small" style="margin-top:8px"><b>For automation:</b> let it reason, then demand a delimited final answer your code can parse — reasoning for the model, structure for the machine.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Technique 3</div>
+  <h2>Structured JSON output: the coupling point</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><p class="small">Free text cannot pipe into a database. <code>{"field": value}</code> can. Forcing a fixed, machine-readable shape is what turns “a model that answers” into “a component in a system” — the flow is <b>free text → JSON → database / next agent</b>.</p>
+    <p class="small" style="margin-top:8px"><b>Caution:</b> validate. Well-formed JSON can still contain wrong values — schema conformance is not accuracy (the hands-on tests both).</p></div>
+    <div class="codebox" style="margin:0">SCHEMA
+{"vendor": str, "invoice_no": str,
+ "total_usd": number|null,
+ "due_date": "YYYY-MM-DD"|null,
+ "currency": str}
+
+messy input: "Pls remit $1,284.50 to DataCorp
+by Oct 1 — inv #DC-2291, thanks!!"
+
+output: {"vendor":"DataCorp","invoice_no":"DC-2291",
+ "total_usd":1284.50,"due_date":"2026-10-01",
+ "currency":"USD"}</div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The dial</div>
+  <h2>Temperature: drag it and watch</h2>
+  <p class="lede">Temperature controls output randomness. Same prompt — <i>“Name our new project-management app”</i> — different dial positions. Drag it.</p>
+  <div class="dialwrap">
+    <input type="range" id="tdial" min="0" max="2" step="1" value="0" aria-label="temperature" />
+    <div class="diallabels"><span>0 · deterministic</span><span>0.5 · balanced</span><span>1.0 · creative</span></div>
+    <div class="tempout">
+      <div class="tempcard"><span class="lab2">Run 1</span><span id="t1"></span></div>
+      <div class="tempcard"><span class="lab2">Run 2 — same prompt, run again</span><span id="t2"></span></div>
+    </div>
+    <p class="small" id="tnote" style="margin-top:14px"></p>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>Rule of thumb:</b> extraction, JSON, routing, anything automated → <b>0–0.3</b>. Brainstorming, naming, drafts for humans to pick from → <b>0.7–1.0</b>. If you’re going to automate it, turn the temperature down.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Test yourself</div>
+  <h2>Which technique fixes it?</h2>
+  <p class="lede">Each scenario has one best-fit fix. Pick, then check.</p>
+  <div id="techQuiz"></div>
+  <div class="scoreline" id="techScore"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Synthesis</div>
+  <h2>The reliability ladder</h2>
+  <p class="lede">Climb in this order — each rung adds reliability at rising cost. Fine-tuning is the top rung for a reason: try everything below it first.</p>
+  <div class="ladder">
+    <div class="rung"><span><b>Clear instruction</b><span class="small">Say precisely what you want, and what to do when unsure</span></span><span class="cost">free · seconds</span></div>
+    <div class="rung"><span><b>System prompt</b><span class="small">Role, scope, rules, refusals — the policy guardrail</span></span><span class="cost">free · minutes</span></div>
+    <div class="rung"><span><b>Few-shot examples</b><span class="small">Lock format and labels by showing worked pairs</span></span><span class="cost">free · minutes</span></div>
+    <div class="rung"><span><b>Chain-of-thought</b><span class="small">Buy accuracy on multi-step reasoning with tokens</span></span><span class="cost">tokens + latency</span></div>
+    <div class="rung"><span><b>Structured output</b><span class="small">Fixed JSON so machines can consume the answer</span></span><span class="cost">free · minutes</span></div>
+    <div class="rung"><span><b>Tuned temperature</b><span class="small">Down for automation, up for ideation</span></span><span class="cost">free · seconds</span></div>
+    <div class="rung"><span><b>Curated context</b><span class="small">The right facts in the window — next page</span></span><span class="cost">engineering time</span></div>
+    <div class="rung"><span><b>Fine-tuning</b><span class="small">Train the weights — last resort, needs data + upkeep</span></span><span class="cost">$$ · weeks</span></div>
+  </div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="anatomy.html"><span class="lab">← Previous</span><b>01 · Anatomy of a prompt</b></a>
+  <a href="context.html" class="next"><span class="lab">Next →</span><b>03 · Context engineering</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 3 — Prompting &amp; Context Engineering<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* temperature demo */
+const T=[
+ {a:'TaskFlow Pro',b:'TaskFlow Pro',note:'At temperature 0 the model picks the most probable answer every time — two runs, identical output. This is what you want when code depends on the answer.'},
+ {a:'TaskFlow Pro',b:'ProjectHub',note:'Mid temperature: usually sensible, occasionally different. Fine for drafts a human reviews; risky for automation.'},
+ {a:'Orbitally — “your projects, in orbit”',b:'ZenBoard 🧘 (also considered: Flowtopia, TaskWizard)',note:'High temperature: wide sampling, real variety, occasional weirdness. Great for brainstorming a list a human picks from — never for a pipeline.'}
+];
+const td=document.getElementById('tdial');
+function setT(){const x=T[td.value];document.getElementById('t1').textContent=x.a;document.getElementById('t2').textContent=x.b;document.getElementById('tnote').textContent=x.note}
+td.addEventListener('input',setT);setT();
+
+/* which-technique quiz */
+const TQ=[
+ {s:'Your extractor returns the right data but in a different shape every run — sometimes prose, sometimes a list.',o:['Chain-of-thought','Few-shot example + fixed JSON schema','Raise the temperature','Fine-tune'],a:1,why:'A format problem: pin the schema and show one worked pair. CoT adds reasoning, not consistency.'},
+ {s:'A discount-eligibility check with three interacting rules keeps getting the logic wrong.',o:['Add “Let’s think step by step”','Lower the temperature','Add more context about the company','Shorter prompt'],a:0,why:'Multi-step rule application is exactly where (zero-shot) chain-of-thought earns its tokens.'},
+ {s:'Your brainstorming assistant returns the same three ideas every time.',o:['Few-shot examples','Raise the temperature','JSON output','System prompt'],a:1,why:'Deterministic sampling is the point at temp 0 — for ideation, turn the dial up.'},
+ {s:'The support bot answers confidently about a refund policy it was never given.',o:['Chain-of-thought','Temperature 0','System prompt: answer only from provided policy, escalate if unknown','More examples'],a:2,why:'A scope/behavior problem: the system prompt must constrain sources and define the refusal path. (Remember this one for the case study.)'},
+ {s:'You need the same document to produce the identical record five runs out of five.',o:['Temperature 0 + fixed schema, then test 5 runs','Chain-of-thought','Longer context','A bigger model'],a:0,why:'Consistency = low temperature + pinned structure — then prove it with the 5-run reliability check from the hands-on.'}
+];
+const tq=document.getElementById('techQuiz');let ts=0,ta=0;
+TQ.forEach((q,i)=>{
+  const d=document.createElement('div');d.className='q3 q4';
+  d.innerHTML=`<div class="stmt">${i+1}. ${q.s}</div><div class="opts" style="flex-direction:column;align-items:stretch">${q.o.map((o,j)=>`<button data-v="${j}" style="text-align:left;border-radius:10px">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div><div class="fb"></div>`;
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;ta++;
+    const ok=+b.dataset.v===q.a;if(ok)ts++;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector(`button[data-v="${q.a}"]`).classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Best fit: '+String.fromCharCode(65+q.a)+'. ')+q.why;
+    if(ta===TQ.length)document.getElementById('techScore').textContent=`${ts} of ${TQ.length}. Matching technique to failure is the whole skill.`;
+  }));
+  tq.appendChild(d);
+});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

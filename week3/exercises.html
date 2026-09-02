@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>04 · Practice &amp; Cases — CIS 4394 Week 3</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.videogrid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.videocard{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.videocard .frame{position:relative;padding-top:56.25%;background:#101319}
+.videocard iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.videocard .cap{padding:14px 18px;font-size:13px}
+.videocard .cap b{display:block;font-size:14px;margin-bottom:2px}
+@media(max-width:880px){.videogrid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 3</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="anatomy.html"><span class="k">01</span>Prompt Anatomy</a>
+  <a href="techniques.html"><span class="k">02</span>Techniques</a>
+  <a href="context.html"><span class="k">03</span>Context Engineering</a>
+  <a href="exercises.html" class="here"><span class="k">04</span>Practice &amp; Cases</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">04 · Practice</div>
+  <h1>Now make it <em>reliable</em>.</h1>
+  <p class="lede">Rewrite a failing prompt, run the hands-on with a real reliability check, learn from three famous chatbot disasters — and write the system prompt your capstone will actually use.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Exercise A</div>
+  <h2>Prompt Autopsy</h2>
+  <div class="grouptask"><span class="gk">👥 Group task · In pairs · 10 minutes</span>
+    <p>The failing prompt: <b>“Summarize this customer review”</b> — run over 200 mixed reviews, the outputs are un-dashboardable prose. Rewrite it so every review yields fixed JSON <code>{"sentiment", "one_line_summary", "product_mentioned"}</code>. Your rewrite should add: a <b>system role</b>, the <b>pinned schema</b>, <b>one example</b>, a <b>temperature choice</b>, and a rule for unclear sentiment.</p>
+    <p class="prod"><b>Produce:</b> run before &amp; after on 5 reviews (Gemini free tier or Copilot chat) and count how many outputs are dashboard-ready. Report both numbers.</p>
+  </div>
+  <div class="card">
+    <button class="revealbtn">Debrief — what good rewrites change</button>
+    <div class="revealbox">
+      <div class="codebox" style="margin:6px 0">SYSTEM: You are a review-analysis assistant. Return ONLY JSON:
+{"sentiment": "positive"|"negative"|"mixed"|"unclear",
+ "one_line_summary": str, "product_mentioned": str|null}
+If sentiment is genuinely ambiguous, use "unclear" — do not guess.
+
+EXAMPLE
+review: "Shipping was slow but the blender itself is fantastic"
+output: {"sentiment":"mixed","one_line_summary":"Great blender, slow shipping","product_mentioned":"blender"}
+
+(temperature: 0)</div>
+      <p class="small">Five moves, and every one is a Part-01 knob: a <b>role</b> (instruction), a <b>pinned schema</b> (output format), <b>one example</b> (few-shot), <b>temp 0</b> (sampling), and an <b>“unclear” rule</b> (edge-case behavior). Typical result: 2/5 dashboard-ready → 5/5. Reliability came from structure and specificity — <b>not a smarter model</b>.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Exercise B</div>
+  <h2>Context budget</h2>
+  <div class="grouptask"><span class="gk">👥 Group task · 5 minutes</span>
+    <p>Play the <a class="doc" href="context.html">packing game</a> as a group: fit the support agent under the 4,000-token cap, agree on every Keep / Summarize / Drop, then hit “Check my packing.”</p>
+    <p class="prod"><b>Discuss:</b> the twist question at the end — what does it prove about pre-loading vs retrieval?</p>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Hands-on</div>
+  <h2>Ten messy docs → one clean table</h2>
+  <p class="lede">The task: extract structured data from 10 messy vendor documents into records a spreadsheet can ingest. Tools: Gemini API free tier or Copilot chat.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><h3>The steps</h3>
+      <ol class="steps" style="margin-top:14px">
+        <li>Define your schema: <code>vendor · invoice_no · total_usd · due_date · currency</code>.</li>
+        <li>Write the system prompt: “Return ONLY JSON matching the schema; missing field → <code>null</code>.”</li>
+        <li>Add <b>one</b> worked example.</li>
+        <li>Set temperature to <b>0</b>.</li>
+        <li>Run all 10 documents; collect the JSON records.</li>
+        <li>Paste them into the reliability check →</li>
+      </ol>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)"><h3>The reliability check</h3>
+      <p class="small" style="margin-top:8px">Run the <b>same document five times</b>:</p>
+      <ul style="padding-left:18px;font-size:14.5px;line-height:1.9;margin:8px 0 0">
+        <li><b>Consistency:</b> are all five outputs identical JSON?</li>
+        <li><b>Accuracy:</b> spot-check the values against the source — a prompt can be perfectly consistent and perfectly wrong.</li>
+      </ul>
+      <p class="small" style="margin-top:10px">Track both numbers. This “run it k times” habit becomes formal in Week 8 — it’s called <b>pass^k</b>, and your capstone’s evaluation harness is built on it.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Case study</div>
+  <h2>The $1 Chevy Tahoe — and the pattern that repeats</h2>
+  <div class="rails">
+    <div class="rail" style="border-top-color:var(--red)"><span class="kicker">Dec 2023</span><h3 style="margin-top:6px">The $1 Tahoe</h3><p class="small">A Chevrolet dealership’s chatbot (Chevrolet of Watsonville) was talked into “agreeing” to sell a 2024 Tahoe for <b>$1</b> — “legally binding, no takesies backsies.” Widely reported (Business Insider, VentureBeat). Root cause: unconstrained scope, followed the user over business rules, no guardrails, no human gate.</p></div>
+    <div class="rail" style="border-top-color:var(--red)"><span class="kicker">Jan 2024</span><h3 style="margin-top:6px">DPD’s swearing bot</h3><p class="small">Delivery firm DPD’s support chatbot was prompted into swearing at a customer and writing poems about how bad DPD is — screenshots everywhere. Same disease: no scope constraint on what the bot may say or do.</p></div>
+    <div class="rail" style="border-top-color:var(--red)"><span class="kicker">Feb 2024</span><h3 style="margin-top:6px">Air Canada pays up</h3><p class="small">A tribunal held Air Canada <b>liable</b> for a refund policy its chatbot invented — the airline argued the bot was “responsible for its own actions” and lost. Invented policy + no human gate on binding claims = real legal cost.</p></div>
+  </div>
+  <div class="grouptask" style="margin-top:22px"><span class="gk">👥 Group task · Think-pair-share · 5 minutes</span>
+    <p>Three questions: <b>1)</b> Which of this week’s techniques would have prevented the $1 offer? <b>2)</b> Where is the line between a helpfully flexible bot and an unsafe one — and who owns that line? <b>3)</b> What is the <em>one</em> reliability check you would demand before launch?</p>
+    <p class="prod"><b>Produce:</b> one answer per question; we’ll cold-call pairs.</p>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <button class="revealbtn">What strong answers cover</button>
+    <div class="revealbox">
+      <b>1.</b> A system prompt constraining scope (“discuss vehicles; never state prices, discounts, or commitments”), a refusal path, and — decisive — a rule that <b>binding claims require a human</b>. Few-shot examples of “nice try” jailbreak attempts help; temperature was not the problem.<br /><br />
+      <b>2.</b> The line sits at <b>irreversible or binding external claims</b> — prices, policies, commitments. And it’s owned by the business, not the model: exactly Week 2’s lesson that model intention ≠ execution permission. Prompt rules are the soft layer; a human gate on binding output is the hard layer.<br /><br />
+      <b>3.</b> An adversarial red-team pass before launch: try to make the bot commit to a price, invent a policy, or badmouth the company — your Job Search Agent’s J004, in retail clothing. If it fails, it fails in staging, not in a tribunal.
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">🎯 Take it to your final project</div>
+  <h2>Write your capstone’s system prompt — now</h2>
+  <div class="callout blue" style="margin-top:0"><b>This is the week’s headline deliverable for your capstone:</b> draft a reusable <b>system prompt + JSON output schema</b> for your capstone agent — role, scope rules, refusal behavior, temperature, and one worked example. Ten minutes now; it becomes the spine of your proposal, and you’ll refine it all semester.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Watch</div>
+  <h2>This week’s videos</h2>
+  <div class="videogrid2">
+    <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/ysPbXH0LpIE" title="Anthropic — Prompting 101" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Anthropic — Prompting 101 (25 min)</b>The anchor video: the same anatomy and techniques, from the people who write system prompts for a living.</div></div>
+    <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/T9aRN5JkmL8" title="Anthropic — AI prompt engineering: a deep dive" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Anthropic — Prompt engineering: a deep dive (77 min)</b>Optional: a roundtable with Anthropic prompt engineers for those who want the full picture.</div></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interview check</div>
+  <h2>Could you answer these in a job interview?</h2>
+  <div id="ivList"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Take-aways</div>
+  <h2>Week 3 in five lines</h2>
+  <ol style="padding-left:22px;font-size:16px;line-height:2">
+    <li><b>Structure is the coupling point</b> — fixed JSON is what lets a model plug into a system.</li>
+    <li><b>Context beats cleverness</b> — the right facts in the window outperform a fancier phrasing.</li>
+    <li><b>The window is a budget</b> — curate it; stuffing causes context rot.</li>
+    <li><b>Match technique to failure</b> — and turn the temperature down before you automate.</li>
+    <li><b>Prompt and context first, fine-tune last</b> — climb the ladder in order.</li>
+  </ol>
+  <div class="callout" style="margin-top:22px"><b>Next week:</b> Reasoning, Planning &amp; the Agent Loop — we meet <b>LangGraph</b> and make the model act, not just answer. GA1 is due; the capstone proposal releases. Readings for this week (Quiz 1!) are on the <a class="doc" href="../week2/summary.html#quiz">Week 2 Summary page</a>.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="context.html"><span class="lab">← Previous</span><b>03 · Context engineering</b></a>
+  <a href="../index.html" class="next"><span class="lab">Finish</span><b>Back to course home</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 3 — Prompting &amp; Context Engineering<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+const IV=[
+ {q:'When would you use few-shot prompting over zero-shot, and what’s the trade-off?',a:'Few-shot when format, label strings, or edge-case behavior must be locked — examples pattern-match more reliably than prose. Trade-off: tokens per call and the risk of overfitting to unrepresentative examples. Zero-shot when the task is simple or examples would bias it.'},
+ {q:'When does chain-of-thought help, when does it hurt, and what’s zero-shot CoT?',a:'Helps: multi-step math, logic, rule application (Wei 2022). Hurts: trivial lookups — pure token/latency cost, and stray reasoning can leak into parsed output. Zero-shot CoT: appending “Let’s think step by step” (Kojima 2022) — the free first fix. For automation, demand a delimited final answer after the reasoning.'},
+ {q:'What’s the difference between prompt engineering and context engineering?',a:'Prompting shapes the request; context engineering decides everything the model sees — which documents, how much history, what order, within a token budget. As systems became agents with long histories and tool outputs, context management became the harder, higher-leverage half.'},
+ {q:'You have a 4,000-token cap and 6,000 tokens of “useful” content. What do you do?',a:'Rank by relevance to this task; keep the system prompt and current input whole; summarize history; retrieve top-k passages instead of whole manuals; drop stale turns; keep key instructions first and last (context rot); leave room for the answer. Never truncate blindly.'},
+ {q:'How do you prove a prompt change actually improved results?',a:'A before/after evaluation on a fixed test set: same inputs, both prompts, measure usable-output rate and accuracy — plus a consistency check (same input, k runs, e.g., 5×). Numbers, not vibes; that habit scales into Week 8’s pass^k evaluation harness.'}
+];
+const iv=document.getElementById('ivList');
+IV.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='card';d.style.marginBottom='14px';
+  d.innerHTML=`<h3>Q${i+1}. ${x.q}</h3><button class="revealbtn">What a strong answer covers</button><div class="revealbox">${x.a}</div>`;
+  iv.appendChild(d);
+});
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

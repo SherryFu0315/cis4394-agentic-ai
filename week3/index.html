@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Week 3 · Prompting &amp; Context Engineering — CIS 4394</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.beforeafter{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.ba{border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+.ba .tag2{padding:10px 18px;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.ba.bad2 .tag2{background:var(--red-soft);color:var(--red)}
+.ba.good2 .tag2{background:var(--good);color:#2e6b3f}
+.ba .codebox{margin:0;border-radius:0}
+.ba .meter{padding:14px 18px;font-size:13.5px}
+.meterbar{height:10px;border-radius:999px;background:var(--paper);border:1px solid var(--line);overflow:hidden;margin-top:6px}
+.meterbar i{display:block;height:100%}
+@media(max-width:880px){.beforeafter{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 3</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="anatomy.html"><span class="k">01</span>Prompt Anatomy</a>
+  <a href="techniques.html"><span class="k">02</span>Techniques</a>
+  <a href="context.html"><span class="k">03</span>Context Engineering</a>
+  <a href="exercises.html"><span class="k">04</span>Practice &amp; Cases</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Week 3 · Foundations</div>
+  <h1>Prompting &amp; <em>Context Engineering</em>.</h1>
+  <p class="lede">How to make a probabilistic model behave like a <b>reliable business tool</b>. Last week you drove a coding agent and saw its harness. This week we zoom into one layer — the instruction layer — because it is the highest-leverage, lowest-cost skill in the entire stack.</p>
+</div></header>
+
+<section style="padding:34px 0"><div class="wrap">
+  <div class="callout" style="margin-top:0"><b>This week:</b> 📝 <b>Quiz 1</b> (Weeks 1–3 foundations, 5 multiple choice, closed-book) at the end of class — readings and sample questions are on the <a class="doc" href="../week2/summary.html#quiz">Week 2 Summary page</a>. 👥 <b>GA1</b> is due Tue 9/15 (Wed section) / Wed 9/16 (Thu section), 11:59 pm — <a class="doc" href="../week2/summary.html#ga1">join a group</a> if you haven’t. 📡 Agent Radar opens class.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The hook</div>
+  <h2>One prompt change flips reliability</h2>
+  <p class="lede">Same model. Same 20 messy vendor emails. The only thing that changes is the prompt. (Illustrative teaching example — you’ll reproduce this effect yourself in the hands-on.)</p>
+  <div class="beforeafter">
+    <div class="ba bad2">
+      <div class="tag2">Before</div>
+      <div class="codebox">What’s the total?</div>
+      <div class="meter">Usable outputs: sometimes a number, sometimes a sentence, sometimes the wrong currency…<div class="meterbar"><i style="width:60%;background:var(--red)"></i></div><span class="small">~60% usable · format varies every run</span></div>
+    </div>
+    <div class="ba good2">
+      <div class="tag2">After</div>
+      <div class="codebox">SYSTEM: You are an invoice-processing assistant.
+Return ONLY JSON: {"total_usd": number|null}
+If no total is present, use null.
+
+EXAMPLE
+input: "…amount due USD 1,284.50…"
+output: {"total_usd": 1284.50}</div>
+      <div class="meter">Same model — now every answer is a clean, parseable record.<div class="meterbar"><i style="width:100%;background:#2e6b3f"></i></div><span class="small">~100% usable · identical shape every run</span></div>
+    </div>
+  </div>
+  <div class="bigq" style="margin-top:28px">The gap between ~70% and ~98% reliability is the gap between a tool people trust and a tool people turn off. Prompting is free and instant — it’s where an MIS professional adds value without an ML PhD.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The cost lever</div>
+  <h2>Cheapest fix first</h2>
+  <p class="lede">When an LLM feature underperforms, there is an ordered menu of fixes — and the price rises steeply as you go down it.</p>
+  <div style="overflow:auto"><table class="plain"><thead><tr><th>Fix</th><th>Cost</th><th>Speed</th><th>When</th></tr></thead><tbody>
+    <tr><td><b>1 · Edit the prompt</b></td><td>Free</td><td>Seconds</td><td><b>Always start here</b></td></tr>
+    <tr><td><b>2 · Add few-shot examples</b></td><td>Free (a few tokens)</td><td>Minutes</td><td>Format or edge-case misses</td></tr>
+    <tr><td><b>3 · Better context / retrieval</b></td><td>Engineering time</td><td>Days</td><td>Model lacks the facts (Week 7: RAG)</td></tr>
+    <tr><td><b>4 · Fine-tune</b></td><td>Data + compute + upkeep</td><td>Weeks</td><td>Consistent style at scale, hundreds+ examples</td></tr>
+    <tr><td><b>5 · Wait for a new model</b></td><td>—</td><td>Quarters</td><td>Not a strategy</td></tr>
+  </tbody></table></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">This week</div>
+  <h2>Work through the four parts</h2>
+  <div class="navcards">
+    <a class="navcard" href="anatomy.html">
+      <span class="num">01</span>
+      <span><span class="tag">Foundations</span><b>Anatomy of a prompt</b><span class="small">The five parts every prompt has — click through an annotated real example — plus system vs user prompts and why the system prompt is your policy guardrail.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="techniques.html">
+      <span class="num">02</span>
+      <span><span class="tag">Reliability</span><b>Techniques that raise reliability</b><span class="small">Few-shot, chain-of-thought, structured JSON output, and a temperature dial you can drag — with a which-technique picker to test yourself.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="context.html">
+      <span class="num">03</span>
+      <span><span class="tag">The 2026 core skill</span><b>Context engineering</b><span class="small">The window is a budget. Play the packing game: fit a support agent into 4,000 tokens — and meet context rot, plus the week’s news hook.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="exercises.html">
+      <span class="num">04</span>
+      <span><span class="tag">Practice</span><b>Exercises, case studies, interview check</b><span class="small">Prompt Autopsy, the hands-on with a reliability check, the $1 Chevy Tahoe and friends, your capstone system prompt, and five interview questions.</span></span>
+      <span class="go">→</span>
+    </a>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Objectives</div>
+  <h2>By the end of Week 3 you can…</h2>
+  <div class="grid2">
+    <div class="card checklist">
+      <label><input type="checkbox" /> Name the five parts of a prompt and use each as a knob</label>
+      <label><input type="checkbox" /> Apply system prompts, few-shot examples, chain-of-thought, and JSON output</label>
+      <label><input type="checkbox" /> Set temperature to match the task — low to automate, high to ideate</label>
+    </div>
+    <div class="card checklist">
+      <label><input type="checkbox" /> Explain context engineering: the budget, curation, and context rot</label>
+      <label><input type="checkbox" /> Decide when to prompt vs when to fine-tune (and why fine-tuning comes last)</label>
+      <label><input type="checkbox" /> Prove a prompt change actually improved results — with a reliability check</label>
+    </div>
+  </div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="../index.html"><span class="lab">← Back</span><b>Course home</b></a>
+  <a href="anatomy.html" class="next"><span class="lab">Next →</span><b>01 · Anatomy of a prompt</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 3 — Prompting &amp; Context Engineering<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

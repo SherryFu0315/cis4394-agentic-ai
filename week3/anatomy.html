@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>01 · Anatomy of a Prompt — CIS 4394 Week 3</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.anat{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
+.anat .parts{display:grid;gap:8px}
+.partbtn{width:100%;text-align:left;border:1px solid var(--line);background:var(--panel);padding:13px 16px;border-radius:10px;cursor:pointer;font:inherit;font-size:14.5px;font-weight:600;border-left:5px solid var(--line2)}
+.partbtn .small{display:block;font-weight:400;margin-top:2px}
+.partbtn.p0{border-left-color:#0039a6}.partbtn.p1{border-left-color:#d99a1b}.partbtn.p2{border-left-color:#2e6b3f}.partbtn.p3{border-left-color:#c8102e}.partbtn.p4{border-left-color:#7c5cd6}
+.partbtn.on{background:var(--blue-soft)}
+.promptview{background:#101319;color:#dfe3ec;border-radius:14px;padding:22px;font-family:var(--mono);font-size:13px;line-height:1.9;white-space:pre-wrap}
+.promptview span{border-radius:4px;padding:1px 3px;transition:background .2s}
+.promptview .hl0.on{background:#0039a6;color:#fff}
+.promptview .hl1.on{background:#d99a1b;color:#101319}
+.promptview .hl2.on{background:#2e6b3f;color:#fff}
+.promptview .hl3.on{background:#c8102e;color:#fff}
+.promptview .hl4.on{background:#7c5cd6;color:#fff}
+.partnote{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-top:12px;font-size:14.5px;min-height:74px}
+@media(max-width:880px){.anat{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 3</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="anatomy.html" class="here"><span class="k">01</span>Prompt Anatomy</a>
+  <a href="techniques.html"><span class="k">02</span>Techniques</a>
+  <a href="context.html"><span class="k">03</span>Context Engineering</a>
+  <a href="exercises.html"><span class="k">04</span>Practice &amp; Cases</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">01 · Foundations</div>
+  <h1>Anatomy of a <em>prompt</em>.</h1>
+  <p class="lede">A prompt is <b>everything the model sees before it responds</b> — not just your question. Every well-built prompt has up to five parts, and each part is a knob you can turn (Boonstra, Google/Kaggle Prompt Engineering whitepaper, 2024–25).</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive</div>
+  <h2>Click each part — see it in a real prompt</h2>
+  <p class="lede">This is a real business prompt for routing support tickets. Click the five parts on the left and watch them light up.</p>
+  <div class="anat">
+    <div class="parts" id="partBtns"></div>
+    <div>
+      <div class="promptview" id="promptView"><span class="hl0">You are a support-ticket triage assistant for Acme Software. Route tickets accurately; when unsure, choose HUMAN_REVIEW. Never invent order numbers.</span>
+
+<span class="hl1">Context: Acme sells a project-management app. Billing handles payments and refunds; Technical handles bugs and access; Sales handles upgrades and demos.</span>
+
+<span class="hl4">Example —
+ticket: "I was charged twice this month"
+output: {"category": "BILLING", "urgent": false}</span>
+
+<span class="hl3">Return ONLY JSON: {"category": "BILLING"|"TECHNICAL"|"SALES"|"HUMAN_REVIEW", "urgent": true|false}</span>
+
+<span class="hl2">Ticket: "The app deleted my project and I present to a client in an hour!!"</span></div>
+      <div class="partnote" id="partNote">Click a part on the left.</div>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:22px"><b>Why it matters:</b> when an output is wrong, don’t rewrite the whole prompt — diagnose <em>which part</em> failed. Wrong format? Fix the output spec. Wrong facts? Fix the context. Wrong behavior? Fix the instruction. That’s the skill Exercise A trains.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Two kinds of prompt</div>
+  <h2>System prompt vs user prompt</h2>
+  <div class="grid2">
+    <div class="card"><span class="kicker">System prompt</span><h3 style="margin-top:6px">The employee handbook</h3><p class="small">Persistent. Set once by the developer; wraps <em>every</em> conversation. Role, scope, rules, refusals, output format. Users never see it — but it governs everything. (Week 2 flashback: you read Codex’s.)</p></div>
+    <div class="card"><span class="kicker">User prompt</span><h3 style="margin-top:6px">Today’s ticket</h3><p class="small">Per-turn. The specific question or task right now. Changes every message; interpreted <em>under</em> the system prompt’s rules.</p></div>
+  </div>
+  <div class="grid2" style="margin-top:18px">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Without a system prompt</span>
+      <div class="codebox" style="margin-top:10px">User: Can I get a refund after 60 days?
+Model: Absolutely! Acme offers a 90-day
+money-back guarantee…   ← invented policy</div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">With a system prompt</span>
+      <div class="codebox" style="margin-top:10px">SYSTEM: You are Acme support. Answer ONLY
+from the policy text provided. If the answer
+is not in the policy, say so and escalate.
+Never invent prices or policies.
+
+User: Can I get a refund after 60 days?
+Model: Our policy covers refunds within 30
+days. I've flagged your case for a human
+agent to review options.</div>
+    </div>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>The system prompt is a policy guardrail.</b> It’s also where Week 3 meets Week 2: prompt-level rules are the <em>soft</em> layer of guardrails; runtime enforcement (like Codex’s <code>exec_policy</code>) is the hard layer. Real systems need both — and next week’s $1-Tahoe case shows what happens with neither.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="index.html"><span class="lab">← Back</span><b>Week 3 home</b></a>
+  <a href="techniques.html" class="next"><span class="lab">Next →</span><b>02 · Techniques that raise reliability</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 3 — Prompting &amp; Context Engineering<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+const PARTS=[
+ {n:'Instruction',d:'What to do, and the rules of engagement. Here it also sets a safe default (HUMAN_REVIEW) and a hard prohibition (never invent order numbers). Vague instruction → vague output.'},
+ {n:'Context',d:'Background the model needs to do the job: what the company sells, what each team owns. Without it, the model guesses from general knowledge — sometimes wrongly.'},
+ {n:'Input',d:'The actual data to process — this ticket, this email, this document. Everything else in the prompt exists to shape how this input gets handled.'},
+ {n:'Output format',d:'The shape of the answer. Fixed JSON with an enum means downstream code can switch on the value. Free text can’t pipe into a database; structure is the coupling point for automation.'},
+ {n:'Examples',d:'A worked input→output pair. One good example locks the format and label strings far more reliably than three sentences of description — this is few-shot prompting (next page).'}
+];
+const order=[0,1,2,3,4]; // button order: instruction, context, input, output, examples
+const hlmap={0:'hl0',1:'hl1',2:'hl2',3:'hl3',4:'hl4'};
+const btns=document.getElementById('partBtns');
+PARTS.forEach((p,i)=>{
+  const b=document.createElement('button');b.className='partbtn p'+i;
+  b.innerHTML=`${i+1} · ${p.n}<span class="small">${['role + rules','background facts','the data to process','the answer’s shape','worked pairs'][i]}</span>`;
+  b.addEventListener('click',()=>show(i));btns.appendChild(b);
+});
+function show(i){
+  document.querySelectorAll('.partbtn').forEach((b,j)=>b.classList.toggle('on',i===j));
+  for(let k=0;k<5;k++)document.querySelectorAll('.promptview .'+hlmap[k]).forEach(el=>el.classList.toggle('on',k===i));
+  document.getElementById('partNote').innerHTML='<b>'+PARTS[i].n+':</b> '+PARTS[i].d;
+}
+show(0);
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>
