@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Week 2 Summary — CIS 4394</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.videogrid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.videocard{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.videocard .frame{position:relative;padding-top:56.25%;background:#101319}
+.videocard iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.videocard .cap{padding:14px 18px;font-size:13px}
+.videocard .cap b{display:block;font-size:14px;margin-bottom:2px}
+.keytable td{font-size:13.5px}
+.keytable td code{white-space:nowrap}
+@media(max-width:880px){.videogrid3{grid-template-columns:1fr}.keytable td code{white-space:normal}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 2</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="summary.html" class="here">Week 2 Summary</a>
+  <a href="#answerkey">Answer key</a>
+  <a href="#ga1">GA1 groups</a>
+  <a href="#tutorials">Tutorials</a>
+  <a href="#quiz">Quiz 1</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">After class · Week 2</div>
+  <h1>Week 2, wrapped — and what’s next.</h1>
+  <p class="lede">Four things on this page: the full <b>answer key</b> for the repo scavenger hunt, how to <b>join a group</b> for Group Assignment 1, clear <b>step-by-step tutorials</b> for each build path, and a heads-up on <b>Quiz 1</b> with sample questions.</p>
+</div></header>
+
+<section id="answerkey"><div class="wrap">
+  <div class="eyebrow">Scavenger hunt · full answer key</div>
+  <h2>The nine layers, mapped to real Codex files</h2>
+  <p class="lede">Finding evidence in a 111-module repo was genuinely hard — that was part of the point. Here is the full map: one concrete file per layer, with what you’ll find inside. Remember: the repo has no folders named “Goal” or “Loop” — the nine layers are <b>our architectural interpretation</b>, not OpenAI’s official taxonomy. (Paths verified Sept 2026; this repo moves fast.)</p>
+  <div style="overflow:auto"><table class="plain keytable"><thead><tr><th>Layer</th><th>File (click to open)</th><th>What you find there</th></tr></thead><tbody>
+    <tr><td><b>01 Goal</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/mcp-server/src/codex_tool_config.rs" target="_blank" rel="noopener"><code>mcp-server/src/codex_tool_config.rs</code></a></td><td>The goal is surprisingly thin — just “the initial user prompt to start the Codex conversation.” No GoalManager class. Persistence comes from keeping that objective in context across many actions. <b>Prompt = one message; goal = that objective across a sequence of actions.</b></td></tr>
+    <tr><td><b>02 Model / Reasoning</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/src/config/edit.rs" target="_blank" rel="noopener"><code>core/src/config/edit.rs</code></a></td><td><code>SetModel { model, effort }</code> — the model and its reasoning effort are <em>configuration</em>. The model decides what to do next; the runtime carries it out. Reasoning is a component, not the whole system.</td></tr>
+    <tr><td><b>03 Instructions</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/config/src/config_toml.rs" target="_blank" rel="noopener"><code>config/src/config_toml.rs</code></a></td><td>Instruction layers beyond your prompt: “Developer instructions inserted as a ‘developer’ role message.” <b>Goal = what outcome; instructions = how to behave while pursuing it.</b></td></tr>
+    <tr><td><b>04 Tools</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/src/tools/handlers/plan_spec.rs" target="_blank" rel="noopener"><code>core/src/tools/handlers/plan_spec.rs</code></a></td><td><code>name: "update_plan"</code> — a tool defined in code, with a schema (steps, statuses: pending / in_progress / completed) the model can see. Tools turn “input → text” into “reason → choose tool → act → observe.”</td></tr>
+    <tr><td><b>05 Environment</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/tests/suite/prompt_caching.rs" target="_blank" rel="noopener"><code>core/tests/suite/prompt_caching.rs</code></a></td><td>Codex injects environment context — the tests check for <code>&lt;cwd&gt;</code>, <code>&lt;shell&gt;</code>, <code>&lt;current_date&gt;</code>, <code>&lt;timezone&gt;</code> tags. The environment is <b>the world the agent can observe and act on</b>.</td></tr>
+    <tr><td><b>06 State / Memory</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/config.schema.json" target="_blank" rel="noopener"><code>core/config.schema.json</code></a></td><td>History persists to <code>~/.codex/history.jsonl</code>, and a separate <code>memories</code> subsystem exists. Three kinds: turn state → conversation state → long-lived memory. You don’t need all three to be an agent.</td></tr>
+    <tr><td><b>07 Agent Loop</b> ⭐</td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/src/session/turn.rs" target="_blank" rel="noopener"><code>core/src/session/turn.rs</code></a></td><td><b>Read this file first.</b> Its comments state the whole algorithm: if the model requests a function call, execute it and send the output back; if it sends only a message, the turn is complete. That’s the agent loop — and its stop condition — in two sentences.</td></tr>
+    <tr><td><b>08 Guardrails / HITL</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/src/exec_policy.rs" target="_blank" rel="noopener"><code>core/src/exec_policy.rs</code></a></td><td><code>Decision::Prompt → NeedsApproval</code> — policy code sits <b>between reasoning and action</b>: allow, forbid, or ask the human. Model intention ≠ execution permission. This is runtime enforcement, not a polite prompt line.</td></tr>
+    <tr><td><b>09 Evaluation</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/protocol/src/prompts/base_instructions/default.md" target="_blank" rel="noopener"><code>protocol/…/base_instructions/default.md</code></a></td><td>The base instructions tell the agent to verify its work with the project’s own tests and builds. Evaluation doesn’t need another LLM — <code>pytest</code> passing is evaluation. And a failing test <b>feeds the loop</b>: fail → observe → reason → retry.</td></tr>
+  </tbody></table></div>
+
+  <div class="card" style="margin-top:20px">
+    <h3>The whole architecture, in one loop</h3>
+    <div class="codebox" style="margin-top:10px">while not done:
+    response = model(goal, instructions, environment, history, tools)
+    if response.requests_tool:
+        if policy(response.tool_call) == NEEDS_APPROVAL:   # layer 8
+            wait_for_human()
+        result = execute(response.tool_call)                # layer 4/5
+        history.append(result)                              # layer 6
+    else:
+        return response                                     # stop condition</div>
+    <p class="small" style="margin-top:10px">The real Rust adds streaming, cancellation, compaction, errors, parallel tools — but architecturally, <b>that is Codex</b>. The single takeaway of Week 2: <b>the LLM is only one component of the agent.</b></p>
+  </div>
+
+  <div class="callout blue" style="margin-top:18px"><b>Want to read the repo yourself? Go in this order:</b> <code>core/src/session/turn.rs</code> (the loop) → <code>core/src/tools/</code> → <code>protocol/…/base_instructions/default.md</code> → <code>core/src/session/turn_context.rs</code> → <code>core/src/exec_policy.rs</code> → config / history / memories. Loop first — or you’ll drown in infrastructure.</div>
+</div></section>
+
+<section id="ga1"><div class="wrap">
+  <div class="eyebrow">Action required</div>
+  <h2>Join a group for Group Assignment 1</h2>
+  <p class="lede">GA1 (the Job Search Agent) is submitted <b>as a group</b>, and you must <b>self-enroll</b> in a group on iCollege — in your own section.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="card">
+      <h3>How to enroll (2 minutes)</h3>
+      <ol class="steps" style="margin-top:14px">
+        <li>Open your section’s course on <a class="doc" href="https://gastate.view.usg.edu/" target="_blank" rel="noopener">iCollege ↗</a>.</li>
+        <li>Go to <b>Assessments → Groups</b>.</li>
+        <li>Click <b>View Available Groups</b>.</li>
+        <li>Find a group with space and click <b>Join Group</b>.</li>
+        <li>Confirm your name appears in the member list.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>The rules</h3>
+      <ul style="padding-left:18px;font-size:14.5px;margin:14px 0 0;line-height:1.9">
+        <li><b>1–6 members.</b> Working solo is allowed — you still must join a group (of one).</li>
+        <li><b>Join the group you mean to join.</b> Coordinate with your teammates first — don’t drop into a group of strangers, and don’t “save seats” in multiple groups.</li>
+        <li><b>Your own section only.</b> Groups don’t transfer between sections.</li>
+        <li><b>Deadline:</b> GA1 is due <b>Tue Sept 15</b> (Wednesday section) / <b>Wed Sept 16</b> (Thursday section), 11:59 pm EST — enroll well before then.</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<section id="tutorials"><div class="wrap">
+  <div class="eyebrow">Build paths</div>
+  <h2>Path tutorials — clearer this time</h2>
+  <p class="lede">In-class was a quick look; here is the sit-down version. Each path: numbered steps, an official illustrated guide, and a video. Full lab requirements stay on the <a class="doc" href="build.html">Build page</a>.</p>
+
+  <div class="card" style="margin-bottom:18px">
+    <h3>🅐 Google Opal — the visual path</h3>
+    <div class="grid2" style="align-items:start;margin-top:12px">
+      <div>
+        <ol class="steps">
+          <li>Use a <b>personal Gmail</b> — your GSU account is blocked from Labs. You must be 18+.</li>
+          <li>On a computer, open <a class="doc" href="https://gemini.google.com/" target="_blank" rel="noopener">gemini.google.com ↗</a> → left sidebar → <b>Gems</b>.</li>
+          <li>Under <b>My Gems from Labs</b>, click <b>New Gem</b> — this opens the Opal editor (boxes connected by arrows; each box is a step).</li>
+          <li>Paste the full starter prompt from <code>prompts/opal_starter_prompt.md</code> (starter kit).</li>
+          <li>Add three inputs by pasting the files as text: <code>resume.md</code> (facts), <code>preferences.md</code> (constraints), <code>data/jobs.json</code> (jobs).</li>
+          <li>Build the flow: an <b>evaluate</b> step → <b>routing</b> (recommend / investigate / down-rank / ask) → a <b>user-input step</b> for Approve / Edit / Reject → a <b>draft</b> step that only runs after approval.</li>
+          <li>Click <b>Preview</b> to run; test with J001 first, then all four cases. Screenshot every run — those are your evidence.</li>
+        </ol>
+        <p class="small" style="margin-top:10px">Illustrated official guide: <a class="doc" href="https://developers.google.com/opal" target="_blank" rel="noopener">developers.google.com/opal ↗</a> · account requirements: <a class="doc" href="https://support.google.com/gemini/answer/16802014" target="_blank" rel="noopener">Google Help ↗</a></p>
+      </div>
+      <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/jHR_M-rOMUU" title="How to Build an AI Agent Workflow on Gemini Gems Using Google Opal" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Video walkthrough (12 min)</b>Building an agent workflow in Opal via the current Gemini → Gems route (AsapGuide, May 2026).</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:18px">
+    <h3>🅑 LangSmith Fleet — the builder path</h3>
+    <div class="grid2" style="align-items:start;margin-top:12px">
+      <div>
+        <ol class="steps">
+          <li>Sign in at <a class="doc" href="https://smith.langchain.com/" target="_blank" rel="noopener">smith.langchain.com ↗</a> (free account).</li>
+          <li>In the left navigation, click <b>Switch to Fleet</b>.</li>
+          <li>Click <b>+ New Agent</b> → choose <b>Create manually</b> (skip templates for this lab).</li>
+          <li>Paste <code>prompts/fleet_starter_prompt.md</code> into the agent <b>instructions</b>.</li>
+          <li>Paste <code>resume.md</code>, <code>preferences.md</code>, and <code>data/jobs.json</code> into the agent’s <b>context</b>.</li>
+          <li>In settings, require <b>approval</b> before final external-facing drafts. Do not connect email or any submission tools.</li>
+          <li>Run the four cases from the chat panel. After each run, open the <b>trace</b> — that trace view is exactly the evidence deliverable.</li>
+          <li><b>Budget:</b> free tier ≈ 5 Fleet LCUs/month and runs pause when it’s gone — plan your runs, don’t spam retries.</li>
+        </ol>
+        <p class="small" style="margin-top:10px">Illustrated official guide: <a class="doc" href="https://docs.langchain.com/langsmith/fleet" target="_blank" rel="noopener">Fleet docs ↗</a> · free hands-on course: <a class="doc" href="https://academy.langchain.com/courses/quickstart-agent-builder" target="_blank" rel="noopener">LangChain Academy ↗</a></p>
+      </div>
+      <div>
+        <div class="videocard" style="margin-bottom:12px"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/t2EYd57rvQg" title="Introducing LangSmith Fleet" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Official: Introducing Fleet (7 min)</b>LangChain, Mar 2026 — what Fleet is and the core flow.</div></div>
+        <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/97iiCrHPOpw" title="Get Started with LangSmith Agent Builder" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Official: hands-on getting started (7 min)</b>LangChain — recorded under the old name “Agent Builder”; same product, some labels have changed.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🅒 Code path — recommended: Google ADK</h3>
+    <div class="grid2" style="align-items:start;margin-top:12px">
+      <div>
+        <p class="small">For those coding GA1, we recommend Google’s <b>Agent Development Kit (ADK)</b> — an official, open-source Python framework that runs on the <b>same free Gemini API key</b> you created in Week 1, and ships a built-in dev UI with a <b>trace view</b> (instant evidence for deliverables #8–9).</p>
+        <div class="codebox" style="margin-top:12px">pip install google-adk
+adk create job_agent        # scaffold
+# put your GOOGLE_API_KEY in job_agent/.env
+adk web                     # dev UI + traces at localhost:8000</div>
+        <ol class="steps" style="margin-top:14px">
+          <li>Follow the <a class="doc" href="https://google.github.io/adk-docs/" target="_blank" rel="noopener">ADK quickstart ↗</a> to a running hello-agent.</li>
+          <li>Give your agent tools to read <code>resume.md</code>, <code>preferences.md</code>, <code>jobs.json</code> from the starter kit.</li>
+          <li>Implement the decision policy (recommend / investigate / down-rank / ask) and an Approve / Edit / Reject pause before drafting.</li>
+          <li>Run the four cases; export traces from <code>adk web</code>.</li>
+        </ol>
+        <p class="small" style="margin-top:10px">Also fine: the plain-Python starter-kit baseline + any coding agent (Codex, Copilot, Claude Code). We’ll meet <b>LangGraph</b> — the course’s main framework — in Week 4; ADK is the fastest on-ramp for GA1.</p>
+      </div>
+      <div>
+        <div class="videocard" style="margin-bottom:12px"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/zgrOwow_uTQ" title="Introducing Agent Development Kit" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Official: Introducing ADK (9 min)</b>Google for Developers.</div></div>
+        <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/44C8u0CDtSo" title="Getting started with Agent Development Kit" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Official: getting started (19 min)</b>Google for Developers — from install to a working agent.</div></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section id="quiz"><div class="wrap">
+  <div class="eyebrow">Next week</div>
+  <h2>Quiz 1 — foundations, Weeks 1–3</h2>
+  <p class="lede"><b>Five multiple-choice questions</b>, closed-book, at the end of next week’s session. Everything comes from the assigned readings below. Read them; the quiz will feel easy.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="readings card">
+      <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener"><b>W1 · Anthropic — Building Effective AI Agents</b><br /><span class="small">Workflows vs agents; the five workflow patterns; “simplest thing that works.”</span></a>
+      <a href="https://www.linkedin.com/learning/agentic-artificial-intelligence-harnessing-ai-agents-to-reinvent-business-work-and-life" target="_blank" rel="noopener"><b>W1 · Bornet — Agentic Artificial Intelligence (LinkedIn Learning)</b><br /><span class="small">Enter via the <a class="doc" href="https://technology.gsu.edu/technology-services/technology-professional-training/linkedin-learning/">GSU portal</a> first, or you’ll hit a paywall.</span></a>
+      <a href="https://github.com/openai/codex/blob/main/codex-rs/core/gpt_5_2_prompt.md" target="_blank" rel="noopener"><b>W2 · Codex’s system prompt (gpt_5_2_prompt.md)</b><br /><span class="small">AGENTS.md rules, planning, task execution, validation.</span></a>
+      <a href="https://github.com/openai/openai-cookbook/blob/main/articles/codex_exec_plans.md" target="_blank" rel="noopener"><b>W2 · OpenAI Cookbook — Planning for Long-Horizon Agents</b><br /><span class="small">How Codex plans multi-step work.</span></a>
+      <a href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noopener"><b>W2 · Anthropic — Claude Code auto mode</b><br /><span class="small">Autonomy and safeguards in a competing coding agent.</span></a>
+      <a href="https://www.linkedin.com/learning/introduction-to-prompt-engineering-for-generative-ai" target="_blank" rel="noopener"><b>W3 · Sheer — Introduction to Prompt Engineering (LinkedIn Learning)</b><br /><span class="small">Via the GSU portal, same as above.</span></a>
+      <a href="https://huggingface.co/learn/agents-course/unit1/introduction" target="_blank" rel="noopener"><b>W3 · Hugging Face Agents Course — Unit 1</b><br /><span class="small">Free; what an agent is, in the HF framing.</span></a>
+    </div>
+    <div>
+      <div class="card"><h3>Five sample questions</h3><p class="small">Same style and difficulty as the real thing. Try before revealing.</p>
+        <div id="sampleQuiz"></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="index.html"><span class="lab">← Back</span><b>Week 2 home</b></a>
+  <a href="build.html" class="next"><span class="lab">Keep building →</span><b>03 · Build the Job Search Agent</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 2 Summary<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* sample quiz */
+const SQ=[
+ {q:'According to Anthropic’s “Building Effective AI Agents,” the key difference between a workflow and an agent is:',
+  o:['Agents use newer models than workflows','Workflows follow predefined code paths, while agents direct their own process at runtime','Agents always have more tools than workflows','Workflows cannot call an LLM more than once'],
+  a:1, why:'The reading defines workflows as LLM calls orchestrated through predefined code paths, and agents as systems where the model dynamically directs its own process — our “who owns control flow” test.'},
+ {q:'A system drafts a cover letter, a second LLM call critiques it against criteria, and the draft is revised until it passes. In Anthropic’s five workflow patterns, this is:',
+  o:['Prompt chaining','Routing','Orchestrator–workers','Evaluator–optimizer'],
+  a:3, why:'Produce → evaluate against criteria → revise → repeat is the evaluator–optimizer pattern. Chaining has no feedback loop; routing classifies; orchestrator–workers delegates subtasks.'},
+ {q:'Per Codex’s system prompt, when a deeply nested AGENTS.md conflicts with one at the repository root, the agent should:',
+  o:['Always follow the root file','Follow the more deeply nested file for files in its scope','Ignore both and ask the user','Merge both sets of instructions equally'],
+  a:1, why:'The prompt states: “More-deeply-nested AGENTS.md files take precedence in the case of conflicting instructions” — though direct system/user instructions outrank any AGENTS.md.'},
+ {q:'In Codex, the requirement to get human approval before running a risky command is enforced by:',
+  o:['A sentence in the prompt asking the model to be careful','The model’s own judgment at inference time','Runtime policy code that can allow, forbid, or require approval before execution','A weekly human audit of past commands'],
+  a:2, why:'exec_policy evaluates each proposed action — allow, forbid, or NeedsApproval — between the model’s intention and actual execution. Guardrails are enforced by the harness, not requested of the model.'},
+ {q:'In the Hugging Face Agents Course (Unit 1), what turns a language model into an “agent”?',
+  o:['Fine-tuning it on more data','Giving it the ability to reason, plan, and interact with its environment through tools','Running it on faster hardware','Connecting it to the internet'],
+  a:1, why:'Unit 1 defines an agent as a model that can reason about a goal, plan actions, and use tools to act on its environment — the same Model + Tools + Loop picture from Week 1.'}
+];
+const el=document.getElementById('sampleQuiz');
+SQ.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';d.style.marginTop='14px';
+  d.innerHTML=`<div class="stmt">${i+1}. ${x.q}</div><div class="opts" style="flex-direction:column;align-items:stretch">${x.o.map((o,j)=>`<button data-v="${j}" style="text-align:left;border-radius:10px">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div><div class="fb"></div>`;
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector(`button[data-v="${x.a}"]`).classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+String.fromCharCode(65+x.a)+'. ')+x.why;
+  }));
+  el.appendChild(d);
+});
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

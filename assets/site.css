@@ -3,9 +3,9 @@
   --paper:#faf9f6; --panel:#ffffff; --ink:#16181d; --muted:#5d6069; --line:#e3e1da; --line2:#cfccc2;
   --blue:#0039a6; --blue-soft:#eef2fb; --red:#c8102e; --red-soft:#fbeef0;
   --good:#e9f3ec; --good-line:#bfd9c6; --bad:#f8ecec; --bad-line:#e3c2c2; --warn:#faf3e3; --warn-line:#e8d9b0;
-  --serif:"Fraunces",Georgia,"Times New Roman",serif;
-  --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --serif:Arial,Helvetica,ui-sans-serif,sans-serif;
+  --sans:Arial,Helvetica,ui-sans-serif,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --max:1160px;
 }
 *{box-sizing:border-box}
@@ -63,7 +63,7 @@ h2{font-size:clamp(28px,3.4vw,44px);line-height:1.08;margin:12px 0 14px}
 .small{font-size:13.5px;color:var(--muted)}
 .kicker{font-size:11px;text-transform:uppercase;letter-spacing:.15em;font-weight:700;color:var(--muted)}
 code{font-family:var(--mono);font-size:.9em;background:var(--blue-soft);padding:1px 6px;border-radius:5px}
-.codebox{background:#101319;color:#e8eaf0;border-radius:10px;padding:18px;font-family:var(--mono);overflow:auto;font-size:13px;line-height:1.65;margin:16px 0}
+.codebox{background:#101319;color:#e8eaf0;border-radius:10px;padding:18px;font-family:var(--mono);overflow:auto;font-size:13px;line-height:1.65;margin:16px 0;white-space:pre-wrap}
 .codebox code{background:none;padding:0;color:inherit}
 .callout{padding:18px 20px;border-radius:12px;background:var(--warn);border:1px solid var(--warn-line);margin-top:26px;font-size:15px}
 .callout.red{background:var(--red-soft);border-color:#e6bcc4}
