@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>04 · Practice &amp; Case — CIS 4394 Week 4</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.tracebox{background:#101319;color:#dfe3ec;border-radius:14px;padding:20px 24px;font-family:var(--mono);font-size:12.5px;line-height:1.85;white-space:pre-wrap}
+.tracebox .th{color:#e3c078}
+.tracebox .ac{color:#9ad0a0}
+.tracebox .ob{color:#8ab8ff}
+.tracebox .fin{color:#ff9d9d}
+.ansgraph rect{fill:#fff;stroke:var(--line2);stroke-width:1.3;rx:9}
+.ansgraph text{font-family:var(--mono);font-size:12px;font-weight:600;fill:var(--ink)}
+.ansgraph .cond rect{fill:#fff7ea;stroke:#dbb96a}
+.ansgraph .term rect{fill:#f1f3f7;rx:20}
+.ansgraph path{stroke:var(--line2);stroke-width:1.5;fill:none;marker-end:url(#arr3)}
+.ansgraph .dash{stroke-dasharray:5 4}
+.ansgraph .lbl{font-size:10.5px;fill:var(--muted);font-weight:400}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 4</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="loop.html"><span class="k">01</span>The Agent Loop</a>
+  <a href="patterns.html"><span class="k">02</span>Reasoning Patterns</a>
+  <a href="langgraph.html"><span class="k">03</span>LangGraph</a>
+  <a href="exercises.html" class="here"><span class="k">04</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">04 · Practice</div>
+  <h1>Read a loop. Draw a loop. <em>Budget</em> a loop.</h1>
+  <p class="lede">Three activities that turn this week's ideas into skills: annotate a real trace, design a state graph on paper, and argue a case the way a manager would.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Exercise A</div>
+  <h2>Annotate the transcript</h2>
+  <div class="grouptask"><span class="gk">👥 Group task · Pairs · ~10 minutes</span>
+    <p>Below is the full trace of a <b>travel-cost agent</b> answering: <em>“Can I do 3 nights in Boston — flight from Atlanta plus hotel — for under $900?”</em> Mark up a copy (or a screenshot): <b>(1)</b> circle every point where the loop made a <em>decision</em>; <b>(2)</b> underline the observation that <em>changed</em> the plan; <b>(3)</b> find one <em>wasted</em> step; <b>(4)</b> verdict: is this plan-then-execute or interleaved — and how can you tell from the trace alone?</p>
+    <p class="prod"><b>Produce:</b> your annotated trace + a one-sentence verdict with evidence.</p>
+  </div>
+  <div class="tracebox"><span class="th">Thought 1:</span> Budget question. Plan: find flight price, find hotel price ×3, add, compare to 900.
+<span class="ac">Action 1:</span>  Search("ATL to BOS round trip flight price this weekend")
+<span class="ob">Obs 1:</span>     Round trips from $228.
+<span class="th">Thought 2:</span> Now hotels near downtown Boston.
+<span class="ac">Action 2:</span>  Search("Boston downtown hotel price per night")
+<span class="ob">Obs 2:</span>     Downtown averages ~$310/night. Cambridge side ~$185/night.
+<span class="th">Thought 3:</span> 310 × 3 = 930 already busts the budget before airfare.
+           But the observation offered a cheaper substitute — switch to Cambridge.
+<span class="ac">Action 3:</span>  Search("cheapest month to visit Boston")
+<span class="ob">Obs 3:</span>     January–February are cheapest.
+<span class="th">Thought 4:</span> That doesn't help — the user asked about THIS weekend. Back to the math.
+<span class="ac">Action 4:</span>  Calculator("228 + 3*185")
+<span class="ob">Obs 4:</span>     783
+<span class="th">Thought 5:</span> 783 &lt; 900, with $117 slack. Goal satisfied → stop.
+<span class="fin">Answer:</span>    Yes — about $783: $228 flights + 3 nights in Cambridge at ~$185. Downtown would bust the budget.</div>
+  <div class="card" style="margin-top:16px">
+    <button class="revealbtn">Debrief — answer key</button>
+    <div class="revealbox"><b>(1) Decisions:</b> Thought 1 (decompose + set the plan), Thought 3 (accept the Cambridge substitute — the big one), Thought 4 (recognize a dead end and return to plan), Thought 5 (stop check: goal satisfied). <b>(2) The plan-changing observation:</b> Obs 2 — the agent came for one number and the environment offered a better option; feeding that back is what a one-shot answer can never do. <b>(3) The wasted step:</b> Action 3. “Cheapest month” doesn't serve a this-weekend goal — a step cap or a sharper Thought 3 would have saved one call. Honest traces show waste; that's a feature. <b>(4) Verdict: interleaved (ReAct-style), with a light plan on top.</b> The tell: Action 4 depends on the <em>content</em> of Obs 2 (185 wasn't knowable when the plan was made). In strict plan-then-execute, Thought 1's plan would have been executed verbatim — and would have concluded “no, $930+ busts it.”</div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Exercise B</div>
+  <h2>Draw the state graph</h2>
+  <div class="grouptask"><span class="gk">👥 Group task · Pairs · ~15 minutes</span>
+    <p>On paper or a whiteboard, design a LangGraph-style graph for an agent that <b>(1) makes a plan, (2) executes one step, (3) reflects on the result</b>, and loops or finishes. Your drawing must label: the <b>state fields</b> that persist across nodes (e.g., <code>task</code>, <code>plan</code>, <code>past_steps</code>, <code>results</code>, <code>critique</code>); every <b>node</b>; which edges are <b>fixed</b> vs <b>conditional</b>; and the <b>stopping condition</b> that prevents an infinite loop.</p>
+    <p class="prod"><b>Produce:</b> a photo of the graph + one sentence: where would ReAct collapse two of your nodes into one?</p>
+  </div>
+  <div class="card">
+    <button class="revealbtn">Debrief — a reference answer</button>
+    <div class="revealbox">
+      <div class="loopbox" style="background:#fff">
+      <svg class="ansgraph" viewBox="0 0 720 250" aria-label="plan-execute-reflect reference graph">
+        <defs><marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#cfccc2"/></marker></defs>
+        <path d="M 96 125 L 138 125" />
+        <path d="M 258 125 L 300 125" />
+        <path d="M 420 125 L 462 125" />
+        <path class="dash" d="M 540 100 Q 480 40 378 98" />
+        <path d="M 600 125 L 642 125" />
+        <g class="term"><rect x="26" y="103" width="70" height="44"/><text x="61" y="130" text-anchor="middle">START</text></g>
+        <g><rect x="140" y="100" width="118" height="50"/><text x="199" y="130" text-anchor="middle">planner</text></g>
+        <g><rect x="302" y="100" width="118" height="50"/><text x="361" y="130" text-anchor="middle">executor</text></g>
+        <g class="cond"><rect x="464" y="100" width="136" height="50"/><text x="532" y="130" text-anchor="middle">reflector ?</text></g>
+        <g class="term"><rect x="644" y="103" width="60" height="44"/><text x="674" y="130" text-anchor="middle">END</text></g>
+        <text class="lbl" x="470" y="55">not done &amp; steps &lt; N → back to executor</text>
+        <text class="lbl" x="604" y="168">done, or steps ≥ N</text>
+        <text class="lbl" x="140" y="212">state: { task, plan, past_steps, results, critique, steps }</text>
+      </svg>
+      </div>
+      <p style="margin-top:12px"><b>Fixed edges:</b> START→planner, planner→executor, executor→reflector. <b>Conditional edge:</b> reflector — routes back to executor (critique says “not done”, steps &lt; N) or to END (done, or the <b>max-iteration guard</b> fires at N). <b>The ReAct collapse:</b> ReAct merges <em>planner + executor</em> into one looping “model” node that re-decides the next step every turn — you trade the reviewable up-front plan for adaptivity. <b>Common miss:</b> teams forget <code>steps</code> in the state — a stopping condition that isn't <em>stored</em> anywhere can't be checked.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Case study · fictional teaching case</div>
+  <h2>Planning beats greedy generation</h2>
+  <p class="lede">A travel startup ships an itinerary agent: <em>“3 cities in Italy, 7 days, total budget $2,500.”</em> Two builds, two outcomes.</p>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Build 1 — greedy one-shot</span>
+      <p class="small" style="margin-top:8px">One big prompt, one answer. The model books Rome ($1,100 with a boutique hotel it “liked”), then Florence ($900)… and reaches Venice with $500 left against ~$800 of real costs. The itinerary <em>reads</em> beautifully — and busts the budget by ~$300, discovered by the customer.</p></div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Build 2 — plan, execute, check</span>
+      <p class="small" style="margin-top:8px">First a plan node allocates the budget (roughly $833/city) — reviewable before anything is “booked.” An executor prices each city with tool calls; a checker node compares running total vs plan after every step. Rome comes back at $950 → the checker routes back to replan: downgrade the hotel, shift $100 from Florence. Final: $2,470, under budget, with a trace showing every correction.</p></div>
+  </div>
+  <div style="margin-top:18px">
+    <div class="bigq"><span class="qlabel">Discussion question 1</span>Which reasoning pattern is Build 2 — and what, exactly, did the up-front plan buy that Build 1's fluent answer couldn't?</div>
+    <button class="revealbtn">See the answer</button>
+    <div class="revealbox">Plan-then-execute <b>plus a reflection/check loop</b> (the checker is a lightweight reflector). The plan bought a <b>global constraint</b>: $2,500 allocated across cities <em>before</em> any city could greedily overspend. Greedy generation optimizes each step locally; nothing in Build 1 ever “sees” the whole budget at once. The check node bought <b>error detection mid-run</b> — the $950 Rome quote was caught in step 2, not in the customer's inbox.</div>
+  </div>
+  <div style="margin-top:18px">
+    <div class="bigq"><span class="qlabel">Discussion question 2</span>The startup adds real booking (money moves). Where does the human gate go in Build 2's graph — and what should the approval screen show?</div>
+    <button class="revealbtn">See the answer</button>
+    <div class="revealbox">On the edge <b>into any node that spends</b> — after the checker approves the plan-conforming price, before the booking tool executes. One gate for the full itinerary (batch approval) if bookings are refundable; per-booking gates if not. The screen should show <b>the decision, not the vibes</b>: item, price, remaining budget before/after, which plan line it satisfies, and what the agent will do next if declined. That's the Approve/Edit/Reject pattern from your GA1 rubric, scaled to money.</div>
+  </div>
+  <div style="margin-top:18px">
+    <div class="bigq"><span class="qlabel">Discussion question 3</span>Compliance asks: “prove the agent never exceeded budget.” What must Build 2 have logged, per step, for that sentence to be provable?</div>
+    <button class="revealbtn">See the answer</button>
+    <div class="revealbox">Per step: <b>state before</b> (remaining budget), the <b>observation</b> (the price quote), the <b>available actions</b>, the <b>selected action + arguments</b>, the <b>result</b>, and <b>state after</b> — plus the checker's verdict at each pass and the final stop reason. That's the Week 2 evidence standard again, now as a compliance artifact: with it, “never exceeded budget” is a query over the trace; without it, it's a promise.</div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Job-interview level</div>
+  <h2>Interview check</h2>
+  <p class="lede">Five questions an agent-engineering interview would actually probe. Try answering out loud before revealing.</p>
+  <div id="iv"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Readings &amp; resources</div>
+  <h2>This week's readings</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="readings card">
+      <a href="https://www.kaggle.com/whitepaper-agents" target="_blank" rel="noopener"><b>Google/Kaggle — Introduction to Agents (whitepaper)</b><br /><span class="small">The model–tools–orchestration framing; free download.</span></a>
+      <a href="https://academy.langchain.com/courses/intro-to-langgraph" target="_blank" rel="noopener"><b>LangChain Academy — Introduction to LangGraph</b><br /><span class="small">Free course; modules 0–1 cover everything on page 03.</span></a>
+      <a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener"><b>Skim · Yao et al. 2022 — ReAct</b><br /><span class="small">Intro + Figure 1 are enough to see the pattern.</span></a>
+      <a href="https://arxiv.org/abs/2308.11432" target="_blank" rel="noopener"><b>Optional · Wang et al. — LLM Autonomous Agents survey</b><br /><span class="small">The map of the field: profile / memory / planning / action.</span></a>
+    </div>
+    <div class="card"><span class="kicker">Go deeper (all free)</span>
+      <p class="small" style="margin-top:8px">
+      <a class="doc" href="https://github.com/microsoft/ai-agents-for-beginners" target="_blank" rel="noopener">Microsoft — AI Agents for Beginners (MIT) ↗</a><br />
+      <a class="doc" href="https://github.com/langchain-ai/langchain-academy" target="_blank" rel="noopener">LangChain Academy notebooks (MIT) ↗</a><br />
+      <a class="doc" href="https://github.com/huggingface/agents-course" target="_blank" rel="noopener">Hugging Face Agents Course (Apache-2.0) ↗</a><br />
+      <a class="doc" href="https://www.deeplearning.ai/courses/ai-agents-in-langgraph" target="_blank" rel="noopener">DeepLearning.AI — AI Agents in LangGraph ↗</a><br />
+      <a class="doc" href="https://arxiv.org/abs/2303.11366" target="_blank" rel="noopener">Reflexion (Shinn et al., 2023) ↗</a> ·
+      <a class="doc" href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noopener">Tree of Thoughts (Yao et al., 2023) ↗</a> ·
+      <a class="doc" href="https://arxiv.org/abs/2305.04091" target="_blank" rel="noopener">Plan-and-Solve (Wang et al., 2023) ↗</a></p>
+      <div class="callout blue" style="margin-top:14px;margin-bottom:0"><b>📌 Reminder:</b> Group Assignment 1 is due this week (<a href="../week2/summary.html#ga1">details</a>), and the final-project proposal is on iCollege.</div>
+    </div>
+  </div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="langgraph.html"><span class="lab">← Previous</span><b>03 · LangGraph</b></a>
+  <a href="../index.html" class="next"><span class="lab">Done →</span><b>Back to the course</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 4 — Reasoning, Planning &amp; the Agent Loop<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+const IV=[
+ {q:'1 · Walk me through the ReAct loop. Why does feeding observations back matter?',
+  a:'Strong answers name the three roles — Thought (reason about what’s needed), Action (a specific tool + arguments), Observation (the result, appended to context) — and then the WHY: observations ground the next decision in reality, so wrong assumptions surface mid-run instead of shipping in the final answer. Bonus points for “it also makes the trace auditable — you can see where it went wrong.”'},
+ {q:'2 · When would you choose plan-and-execute over ReAct, and what do you give up?',
+  a:'Choose plan-first when the task is predictable, high-volume, or needs sign-off before execution: cheaper (one planning call), reviewable, parallelizable. You give up mid-run adaptivity — a surprise at step 2 leaves you executing a stale plan unless you add replanning. Strong answers mention volatility as the deciding variable, and hybrid designs (plan + a checker that can trigger replan).'},
+ {q:'3 · What does reflection/self-critique actually add — and when is it a waste of tokens?',
+  a:'It adds a second chance driven by feedback: generate, critique (ideally against something checkable — tests, constraints, a rubric), revise, with the critique stored so later attempts remember earlier failures (Reflexion). It pays when errors are detectable and expensive; it’s waste on simple lookups or when the critic has no signal — an LLM re-reading its own guess mostly agrees with itself. Each pass roughly doubles cost.'},
+ {q:'4 · Define state, node, and edge in LangGraph. What makes an edge “conditional”?',
+  a:'State: the typed, shared data structure passed between steps (e.g., a message list). Node: a function state→update. Edge: routing between nodes; conditional means the destination is computed from state at runtime — and a conditional edge that can route backwards is precisely what makes the system a loop rather than a pipeline.'},
+ {q:'5 · Your agent occasionally loops forever in production. Name three controls, in order of preference.',
+  a:'(1) An explicit stop condition tied to the goal — “done when X verified.” (2) A max-iteration/recursion cap stored in state and enforced by the graph, not requested of the model. (3) A token/$ budget per run with a kill switch, plus trace logging so you can see WHERE it wandered and fix the real cause (bad tool output, unsatisfiable goal, missing information). Strong answers add: alert a human on cap-hit instead of failing silently.'}
+];
+const iv=document.getElementById('iv');
+IV.forEach(x=>{
+  const d=document.createElement('div');d.className='card';d.style.marginBottom='12px';
+  d.innerHTML=`<p style="margin:0;font-weight:600">${x.q}</p><button class="revealbtn">What a strong answer covers</button><div class="revealbox">${x.a}</div>`;
+  iv.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

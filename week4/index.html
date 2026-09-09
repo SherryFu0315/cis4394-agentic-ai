@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CIS 4394 Week 4 — Reasoning, Planning &amp; the Agent Loop</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 4</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="loop.html"><span class="k">01</span>The Agent Loop</a>
+  <a href="patterns.html"><span class="k">02</span>Reasoning Patterns</a>
+  <a href="langgraph.html"><span class="k">03</span>LangGraph</a>
+  <a href="exercises.html"><span class="k">04</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">Week 4 · Module 1 · Foundations</div>
+  <h1>Reasoning, planning &amp; the agent <em>loop</em>.</h1>
+  <p class="lede">Week 3 was about one great prompt. This week the model gets to send <b>many</b> prompts — a loop where it sees a result, thinks, and chooses its own next step. The loop is the part of an agent that <b>you</b> own: you can read it, budget it, audit it, and stop it.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="callout blue"><b>📌 This week's logistics:</b> <b>Group Assignment 1 is due</b> — Tue Sept 15 (Wed section) / Wed Sept 16 (Thu section), 11:59 pm EST, on iCollege (<a href="../week2/summary.html#ga1">enrollment &amp; submission details</a>). The <b>final-project proposal</b> is released on iCollege this week. And the <a href="../week2/radar.html">Agent Radar</a> presenter slot for next week is open — sign up.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The big question</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>In Week 2 you watched Codex loop: observe → decide → act, over and over. Who decides that the loop should run <em>one more time</em> — and who decides that it should stop?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">The <b>model</b> proposes ("I'm not done — the tests still fail"), but the <b>harness</b> disposes: the loop code you write decides whether to grant another iteration, checking the stop condition, the step cap, and the budget. An agent that "knows when to stop" is really a loop that checks. This week you build that loop yourself — first on paper, then in LangGraph.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Why one prompt is not enough</div>
+  <h2>One shot vs the loop</h2>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">One-shot prompt</span>
+      <div class="codebox" style="margin-top:10px">Q: Which is taller — the tallest building
+in Atlanta, or twice the height of the
+Statue of Liberty?
+
+Model: (from memory, no checking)
+"Twice the Statue of Liberty is taller."   ✗</div>
+      <p class="small" style="margin-top:10px">No tools, no verification, no recovery. If the memory is wrong, the answer is wrong — and nobody notices.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">The loop</span>
+      <div class="codebox" style="margin-top:10px">Thought: I need both heights. Search first.
+Action: Search("tallest building Atlanta")
+Observation: Bank of America Plaza — 312 m
+Thought: Now the statue, then compare.
+Action: Search → 93 m · Calculator → 186 m
+Thought: 312 &gt; 186. Done.
+Answer: the Atlanta building — by 126 m.  ✓</div>
+      <p class="small" style="margin-top:10px">Each observation is fed back before the next decision. Wrong turns become visible — and recoverable.</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>The trade:</b> every extra loop step is another model call — more latency, more tokens, more money. This week is about buying reliability with steps, and knowing when you're overpaying.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">This week's pages</div>
+  <h2>Work through in order</h2>
+  <div class="navcards">
+    <a class="navcard" href="loop.html">
+      <span class="num">01</span>
+      <span><b>The agent loop</b><span class="small">Reactive vs goal-oriented · the Observe → Reason → Act cycle · step through a real ReAct episode · where the human gate goes.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="patterns.html">
+      <span class="num">02</span>
+      <span><b>Reasoning patterns</b><span class="small">ReAct · plan-then-execute · reflection · Tree of Thoughts — what each buys, what each costs, and how to choose (with the papers).</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="langgraph.html">
+      <span class="num">03</span>
+      <span><b>LangGraph — the loop you own</b><span class="small">State, nodes, edges · the canonical agent graph, clickable · build a minimal agent on the Gemini free tier · the max-iteration guard.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="exercises.html">
+      <span class="num">04</span>
+      <span><b>Practice &amp; case</b><span class="small">Annotate a real trace · draw the state graph · the itinerary case (greedy vs plan-and-check) · interview check · readings.</span></span>
+      <span class="go">→</span>
+    </a>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Why managers care</div>
+  <h2>The loop is the auditable part</h2>
+  <div class="grid3">
+    <div class="card"><span class="kicker">Auditability</span><p class="small" style="margin-top:8px">An explicit loop logs every thought, tool call, and state change. When compliance asks "why did the system do that?", you replay the trace.</p></div>
+    <div class="card"><span class="kicker">Cost control</span><p class="small" style="margin-top:8px">Steps are the unit of spend. A step cap and a token budget turn "AI costs" from a surprise into a line item.</p></div>
+    <div class="card"><span class="kicker">Reliability</span><p class="small" style="margin-top:8px">Feeding observations back is what lets an agent notice failure and recover — the difference between confident nonsense and a checked answer.</p></div>
+  </div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="../index.html"><span class="lab">← Course</span><b>All weeks</b></a>
+  <a href="loop.html" class="next"><span class="lab">Start →</span><b>01 · The agent loop</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 4 — Reasoning, Planning &amp; the Agent Loop<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

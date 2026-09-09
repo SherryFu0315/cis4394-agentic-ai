@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>02 · Reasoning Patterns — CIS 4394 Week 4</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.pat4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.pat4 .rail{border-top-width:4px;cursor:default}
+.pat4 .rail:nth-child(4){border-top-color:#7c5cd6}
+.pat4 .mini{font-family:var(--mono);font-size:11.5px;line-height:1.7;background:#101319;color:#dfe3ec;border-radius:8px;padding:10px 12px;margin:10px 0;white-space:pre-wrap}
+.costrow{display:grid;grid-template-columns:210px 1fr 90px;gap:14px;align-items:center;margin-top:10px}
+.costrow .cbar{height:26px;border-radius:7px;background:var(--blue);transition:width .5s}
+.costrow.warn .cbar{background:#d99a1b}
+.costrow.hot .cbar{background:var(--red)}
+.costnote{font-size:12.5px;color:var(--muted)}
+.cmp{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:14px}
+.cmp th,.cmp td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+.cmp th{background:var(--blue-soft);font-size:12.5px}
+.cmp td:first-child{font-weight:650;white-space:nowrap}
+.cmpwrap{overflow-x:auto}
+@media(max-width:980px){.pat4{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.pat4{grid-template-columns:1fr}.costrow{grid-template-columns:1fr;gap:4px}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 4</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="loop.html"><span class="k">01</span>The Agent Loop</a>
+  <a href="patterns.html" class="here"><span class="k">02</span>Reasoning Patterns</a>
+  <a href="langgraph.html"><span class="k">03</span>LangGraph</a>
+  <a href="exercises.html"><span class="k">04</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">02 · Patterns</div>
+  <h1>Four ways to <em>think</em> in a loop.</h1>
+  <p class="lede">Same loop, different reasoning strategies. Each pattern below is a real, cited technique — and each buys reliability with tokens. Your job as a designer is matching the pattern to the task, not maxing out the thinking.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">The four patterns</div>
+  <h2>ReAct · Plan-then-execute · Reflection · Tree of Thoughts</h2>
+  <div class="pat4">
+    <div class="rail"><h3>ReAct — interleaved</h3>
+      <div class="mini">Thought → Action → Observation
+Thought → Action → Observation
+… → Answer</div>
+      <p class="small">Decide the <b>next</b> step only after seeing the last result. Grounds reasoning in real observations — fewer hallucinations, natural error recovery. Cost: a model call per step; can wander.</p>
+      <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">Yao et al., 2022 (ICLR 2023) ↗</a></p>
+    </div>
+    <div class="rail"><h3>Plan-then-execute</h3>
+      <div class="mini">Plan: 1. …  2. …  3. …
+Execute 1 → 2 → 3
+→ Answer</div>
+      <p class="small">Think once, up front; then run the steps. Cheaper, auditable before anything runs, parallelizable. Cost: brittle — if step 2's result surprises you, the plan is stale.</p>
+      <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2305.04091" target="_blank" rel="noopener">Wang et al., Plan-and-Solve, ACL 2023 ↗</a></p>
+    </div>
+    <div class="rail"><h3>Reflection</h3>
+      <div class="mini">Generate → Critique
+→ Revise → Critique
+→ good enough? → Answer</div>
+      <p class="small">A second pass that critiques the first, with the critique stored and fed back (Reflexion: verbal self-feedback in episodic memory). Shines when the target is <b>checkable</b> — code, math. Each pass roughly doubles cost.</p>
+      <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2303.11366" target="_blank" rel="noopener">Shinn et al., NeurIPS 2023 ↗</a></p>
+    </div>
+    <div class="rail"><h3>Tree of Thoughts</h3>
+      <div class="mini">     thought A ─ dead end ✗
+goal ┤
+     thought B ┬ B1 → score
+               └ B2 → best ✓</div>
+      <p class="small">Generate <b>several</b> candidate thoughts, score them, expand the promising ones, backtrack from dead ends. Big gains on branching, search-heavy puzzles; very token-hungry.</p>
+      <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noopener">Yao et al., ToT, NeurIPS 2023 ↗</a></p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>Evidence, honestly stated:</b> the ReAct paper shows reasoning + acting together beats either alone on multi-hop QA and fact-verification benchmarks, with more interpretable, recoverable traces (Yao et al., 2022) — and it still fails when retrieval fails. No pattern fixes bad tools.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Side by side</div>
+  <h2>When each wins</h2>
+  <div class="cmpwrap"><table class="cmp">
+    <tr><th></th><th>Chain-of-thought (W3)</th><th>Plan-then-execute</th><th>ReAct (interleaved)</th><th>Tree of Thoughts</th></tr>
+    <tr><td>Predictability</td><td>High — one call</td><td>High — plan is visible up front</td><td>Medium — path emerges at runtime</td><td>Low — search branches</td></tr>
+    <tr><td>Cost</td><td>$ </td><td>$$</td><td>$$–$$$ (a call per step)</td><td>$$$$</td></tr>
+    <tr><td>Adapts mid-task</td><td>No</td><td>Poorly (needs replanning)</td><td>Yes — that's the point</td><td>Yes, via backtracking</td></tr>
+    <tr><td>Auditability</td><td>One blob of reasoning</td><td>Plan reviewable before execution</td><td>Full step-by-step trace</td><td>Full tree (large)</td></tr>
+    <tr><td>Best for</td><td>Single-shot reasoning, no tools</td><td>Stable, well-understood workflows</td><td>Volatile tasks where results steer next steps</td><td>Puzzles/search where partial states can be scored</td></tr>
+  </table></div>
+  <div class="callout blue" style="margin-top:18px"><b>The MIS rule of thumb:</b> choose by <b>task volatility</b> and <b>oversight needs</b>. Predictable + high-compliance → plan first (auditors can read the plan). Surprising environments → interleave. Branching search + a way to score partial progress → only then pay for ToT.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · pick the pattern</div>
+  <h2>Which pattern fits the task?</h2>
+  <div id="pq"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · the cost of thinking harder</div>
+  <h2>Every “think again” is an invoice line</h2>
+  <p class="lede">Click a strategy. Bars show <b>illustrative</b> multipliers vs a single call (real numbers depend on model, prompt size, and tools — measure your own).</p>
+  <div class="simctl" style="margin-bottom:6px">
+    <button class="primary" data-cost="0">1 call (CoT)</button>
+    <button class="ghost" data-cost="1">8-step ReAct loop</button>
+    <button class="ghost" data-cost="2">8 steps + reflection</button>
+  </div>
+  <div id="costbars"></div>
+  <div class="callout" style="margin-top:18px"><b>Budget the loop — four dials you own:</b> a <b>step cap</b> (max iterations), a <b>token/$ budget</b> per run, an explicit <b>stop condition</b> (“done when X”), and the <b>human-gate placement</b>. The manager's question is never “is it smart?” — it's “what does a run cost, and when do I trust it unattended?”</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Discussion</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Your team automates invoice-coding: 5,000 near-identical invoices a month, and finance must sign off on the procedure. Interleaved ReAct would work. Why is it still the wrong choice?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">Because the task has <b>low volatility and high oversight</b>. ReAct pays a model call per step to buy adaptivity you don't need — 5,000× a month — and its emergent, run-by-run paths are exactly what a sign-off process hates. A plan-then-execute design (or an outright Week 1 workflow) gives finance a fixed, reviewable procedure and costs a fraction. Save the interleaving for the 2% of invoices that fail validation — route those to an agent, or a human.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="loop.html"><span class="lab">← Previous</span><b>01 · The agent loop</b></a>
+  <a href="langgraph.html" class="next"><span class="lab">Next →</span><b>03 · LangGraph — the loop you own</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 4 — Reasoning, Planning &amp; the Agent Loop<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* pattern picker quiz */
+const PQ=[
+ {q:'Debug a failing build: each error message changes what you look at next.',
+  o:['Plan-then-execute','ReAct (interleaved)','Tree of Thoughts'],
+  a:1, why:'Each observation (the next error) steers the next action — the canonical interleaved case. A fixed plan would be stale after the first surprise.'},
+ {q:'Extract the same 6 fields from 500 identical vendor PDFs, with a compliance sign-off on the procedure.',
+  o:['ReAct (interleaved)','Reflection on every document','Plan-then-execute (or a plain workflow)'],
+  a:2, why:'Zero volatility, high oversight, huge volume: fix the procedure once, let auditors read it, run it cheap. Paying per-step reasoning 500× buys nothing.'},
+ {q:'Write a function that must pass a test suite you can rerun for free.',
+  o:['Reflection (generate → run tests → critique → revise)','Tree of Thoughts','One-shot CoT'],
+  a:0, why:'A checkable target is where reflection pays: the critique isn’t the model’s opinion, it’s the test results. Loop until green or budget out.'},
+ {q:'Solve a scheduling puzzle where each partial schedule can be scored and many branches dead-end.',
+  o:['ReAct (interleaved)','Tree of Thoughts','Plan-then-execute'],
+  a:1, why:'Branching + scoreable partial states is exactly the ToT condition (Yao et al., 2023). And its cost is why you check that condition before paying.'}
+];
+const pq=document.getElementById('pq');
+PQ.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML=`<div class="stmt">${i+1}. ${x.q}</div><div class="opts">${x.o.map((o,j)=>`<button data-v="${j}">${o}</button>`).join('')}</div><div class="fb"></div>`;
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector(`button[data-v="${x.a}"]`).classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+x.o[x.a]+'. ')+x.why;
+  }));
+  pq.appendChild(d);
+});
+
+/* cost bars */
+const COST=[
+ {name:'1 call (CoT)',rows:[['Tokens','1×',8,''],['Latency','1×',8,''],['Cost / run','1×',8,'']],
+  note:'Baseline: one prompt in, one answer out. Cheap, fast — and unchecked.'},
+ {name:'8-step ReAct loop',rows:[['Tokens','~8–12×',62,'warn'],['Latency','~8×',55,'warn'],['Cost / run','~8–12×',62,'warn']],
+  note:'A model call per step, and the growing trace rides along in every prompt. You bought: grounding, recovery, a full audit trail.'},
+ {name:'8 steps + reflection',rows:[['Tokens','~16–25×',100,'hot'],['Latency','~14×',85,'hot'],['Cost / run','~16–25×',100,'hot']],
+  note:'Each reflection pass re-reads and re-generates. Worth it when the target is checkable and errors are expensive; waste on simple lookups.'}
+];
+const cb=document.getElementById('costbars');
+function renderCost(i){
+  const c=COST[i];
+  cb.innerHTML=c.rows.map(([lab,mult,w,cls])=>`<div class="costrow ${cls}"><div><b>${lab}</b> <span class="costnote">(illustrative)</span></div><div><div class="cbar" style="width:${w}%"></div></div><div style="font-weight:700">${mult}</div></div>`).join('')+`<p class="small" style="margin-top:12px">${c.note}</p>`;
+  document.querySelectorAll('[data-cost]').forEach((b,j)=>{b.className=j===i?'primary':'ghost'});
+}
+document.querySelectorAll('[data-cost]').forEach(b=>b.addEventListener('click',()=>renderCost(+b.dataset.cost)));
+renderCost(0);
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

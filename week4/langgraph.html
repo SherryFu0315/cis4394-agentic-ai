@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>03 · LangGraph — CIS 4394 Week 4</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.lgwrap{display:grid;grid-template-columns:minmax(320px,460px) 1fr;gap:20px;align-items:start}
+.lgnode{cursor:pointer}
+.lgnode rect{fill:#fff;stroke:var(--line2);stroke-width:1.4;rx:10}
+.lgnode text{font-family:var(--mono);font-size:13px;font-weight:600;fill:var(--ink)}
+.lgnode.term rect{fill:#f1f3f7;stroke:var(--line2);rx:22}
+.lgnode.on rect{fill:var(--blue);stroke:var(--blue)}
+.lgnode.on text{fill:#fff}
+.lgnode.cond rect{fill:#fff7ea;stroke:#dbb96a}
+.lgnode.cond.on rect{fill:var(--red);stroke:var(--red)}
+.lgedge{stroke:var(--line2);stroke-width:1.6;fill:none;marker-end:url(#arr2)}
+.lgedge.dash{stroke-dasharray:5 4}
+.lgnote{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:14.5px;min-height:96px}
+.codebox .cm{color:#8b909c}
+.codebox .ck{color:#8ab8ff}
+.codebox .cs{color:#9ad0a0}
+@media(max-width:880px){.lgwrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 4</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="loop.html"><span class="k">01</span>The Agent Loop</a>
+  <a href="patterns.html"><span class="k">02</span>Reasoning Patterns</a>
+  <a href="langgraph.html" class="here"><span class="k">03</span>LangGraph</a>
+  <a href="exercises.html"><span class="k">04</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">03 · Hands-on</div>
+  <h1>LangGraph — the loop you <em>own</em>.</h1>
+  <p class="lede">LangGraph is an open-source library that makes the agent loop <b>explicit</b>: your agent is a graph of nodes connected by edges, passing a typed state. Nothing hidden — which is exactly why enterprises like it. Runs free on the Gemini API tier you set up in Week 1.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Three primitives</div>
+  <h2>State · nodes · edges</h2>
+  <div class="grid3">
+    <div class="card"><span class="kicker">State</span><h3 style="margin-top:6px">The shared memory</h3><p class="small">A typed dict passed to every node. Ours holds <code>messages</code> — the growing conversation of thoughts, tool calls, and results. Whatever a node returns is merged in.</p></div>
+    <div class="card"><span class="kicker">Nodes</span><h3 style="margin-top:6px">Units of work</h3><p class="small">A node is just a function: <code>state in → update out</code>. The two classics: a <b>model</b> node (ask the LLM what to do next) and a <b>tools</b> node (execute what it asked for).</p></div>
+    <div class="card"><span class="kicker">Edges</span><h3 style="margin-top:6px">Routing = the loop</h3><p class="small">Normal edges always fire. <b>Conditional</b> edges look at state and choose the next node — and a conditional edge that can route <em>backwards</em> is all a loop is.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · the canonical agent graph</div>
+  <h2>Click each part of the graph</h2>
+  <p class="lede">This is the same Observe→Reason→Act cycle from page 01, drawn the way LangGraph sees it.</p>
+  <div class="lgwrap">
+    <div class="loopbox">
+      <svg viewBox="0 0 440 400" aria-label="LangGraph state graph">
+        <defs><marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#cfccc2"/></marker></defs>
+        <path class="lgedge" d="M 220 66 L 220 108" />
+        <path class="lgedge" d="M 260 190 Q 330 205 330 240" />
+        <path class="lgedge dash" d="M 300 300 Q 240 330 190 310" />
+        <path class="lgedge" d="M 150 240 Q 150 205 180 190" transform="translate(0,60)" visibility="hidden"/>
+        <path class="lgedge" d="M 170 296 Q 130 270 165 196" />
+        <path class="lgedge" d="M 180 155 Q 90 175 80 240" />
+        <g class="lgnode term" id="lg0"><rect x="170" y="22" width="100" height="44"/><text x="220" y="49" text-anchor="middle">START</text></g>
+        <g class="lgnode" id="lg1"><rect x="155" y="110" width="130" height="48"/><text x="220" y="139" text-anchor="middle">model</text></g>
+        <g class="lgnode cond" id="lg2"><rect x="255" y="240" width="150" height="48"/><text x="330" y="269" text-anchor="middle">tools_condition</text></g>
+        <g class="lgnode" id="lg3"><rect x="115" y="296" width="110" height="48"/><text x="170" y="325" text-anchor="middle">tools</text></g>
+        <g class="lgnode term" id="lg4"><rect x="35" y="240" width="90" height="44"/><text x="80" y="267" text-anchor="middle">END</text></g>
+      </svg>
+      <p class="small" style="margin:10px 6px 4px">Dashed edge = the loop-back: <b>tools → model</b>. The amber diamond-in-spirit is the conditional edge deciding “tool call or finish?”</p>
+    </div>
+    <div>
+      <div class="lgnote" id="lgNote">Click a node in the graph.</div>
+      <div class="callout blue" style="margin-top:14px"><b>That's the whole trick.</b> START → model → <em>if the model asked for a tool</em> → tools → back to model → … → END. The canonical ReAct agent is a five-piece graph.</div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The code</div>
+  <h2>A minimal agent in ~30 lines</h2>
+  <div class="grid2" style="align-items:start">
+    <div>
+      <p class="small"><b>1 · State, a tool, a model.</b> The state is a message list; the tool is a plain Python function with a docstring (that docstring <em>is</em> the tool's description to the model — Week 2's tool-inventory lesson).</p>
+      <div class="codebox"><span class="cm"># pip install langgraph langchain-google-genai</span>
+<span class="ck">from</span> typing <span class="ck">import</span> Annotated
+<span class="ck">from</span> typing_extensions <span class="ck">import</span> TypedDict
+<span class="ck">from</span> langgraph.graph <span class="ck">import</span> StateGraph, START, END
+<span class="ck">from</span> langgraph.graph.message <span class="ck">import</span> add_messages
+<span class="ck">from</span> langgraph.prebuilt <span class="ck">import</span> ToolNode, tools_condition
+<span class="ck">from</span> langchain_google_genai <span class="ck">import</span> ChatGoogleGenerativeAI
+
+<span class="ck">class</span> State(TypedDict):
+    messages: Annotated[list, add_messages]
+
+<span class="ck">def</span> calculator(expression: <span class="cs">str</span>) -> <span class="cs">str</span>:
+    <span class="cs">"""Evaluate an arithmetic expression like '2*93'."""</span>
+    <span class="ck">return</span> <span class="cs">str</span>(eval(expression))  <span class="cm"># demo only!</span>
+
+llm = ChatGoogleGenerativeAI(model=<span class="cs">"gemini-2.0-flash"</span>)
+llm_tools = llm.bind_tools([calculator])</div>
+    </div>
+    <div>
+      <p class="small"><b>2 · Nodes, edges, run.</b> One model node, one prebuilt tools node, one conditional edge — and the <code>tools → model</code> edge that closes the loop.</p>
+      <div class="codebox"><span class="ck">def</span> call_model(state: State):
+    <span class="ck">return</span> {<span class="cs">"messages"</span>: [llm_tools.invoke(state[<span class="cs">"messages"</span>])]}
+
+g = StateGraph(State)
+g.add_node(<span class="cs">"model"</span>, call_model)
+g.add_node(<span class="cs">"tools"</span>, ToolNode([calculator]))
+g.add_edge(START, <span class="cs">"model"</span>)
+g.add_conditional_edges(<span class="cs">"model"</span>, tools_condition)  <span class="cm"># tool call → "tools", else → END</span>
+g.add_edge(<span class="cs">"tools"</span>, <span class="cs">"model"</span>)                      <span class="cm"># ← the loop</span>
+agent = g.compile()
+
+out = agent.invoke({<span class="cs">"messages"</span>:
+  [(<span class="cs">"user"</span>, <span class="cs">"What is twice the height of the Statue of Liberty (93 m)?"</span>)]})
+<span class="ck">for</span> m <span class="ck">in</span> out[<span class="cs">"messages"</span>]: m.pretty_print()</div>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:18px"><b>Where's the loop?</b> Nowhere in your code is there a <code>while</code>. The loop <em>is</em> <code>add_conditional_edges + add_edge("tools","model")</code>. Control flow became data — a graph you can draw, diff, and show an auditor.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Control the loop</div>
+  <h2>The max-iteration guard</h2>
+  <p class="lede">Page 01's rule: the harness decides whether the loop runs again. Here's that rule as four lines of state + one condition.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="codebox"><span class="ck">class</span> State(TypedDict):
+    messages: Annotated[list, add_messages]
+    steps: <span class="cs">int</span>                    <span class="cm"># NEW: the counter</span>
+
+<span class="ck">def</span> call_model(state: State):
+    <span class="ck">return</span> {<span class="cs">"messages"</span>: [llm_tools.invoke(state[<span class="cs">"messages"</span>])],
+            <span class="cs">"steps"</span>: state[<span class="cs">"steps"</span>] + 1}
+
+<span class="ck">def</span> guarded_condition(state: State):
+    <span class="ck">if</span> state[<span class="cs">"steps"</span>] >= 8:      <span class="cm"># the cap</span>
+        <span class="ck">return</span> END               <span class="cm"># stop, whatever the model wants</span>
+    <span class="ck">return</span> tools_condition(state)
+
+g.add_conditional_edges(<span class="cs">"model"</span>, guarded_condition)</div>
+    <div>
+      <div class="card"><span class="kicker">Why this matters</span><p class="small" style="margin-top:8px">This is the loop-layer guardrail from the nine layers, in real code: the model can <em>ask</em> for step 9, and the graph simply won't grant it. Runaway loops, infinite retries, and surprise bills all die at this line. (LangGraph also has a built-in <code>recursion_limit</code> — the point is that <b>you</b> set it.)</p></div>
+      <div class="card" style="margin-top:14px"><span class="kicker">🎯 Take it to your final project</span><p class="small" style="margin-top:8px">Your capstone agent must have a named stop condition. This pattern — a counter in state plus a guarded conditional edge — is the reference implementation. Add a reflection node before END and you've covered two rubric lines in one graph.</p></div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Group task</div>
+  <div class="grouptask"><span class="gk">👥 Group task · Pairs · ~25 minutes</span>
+    <p>Run the minimal agent above on the <b>Gemini free tier</b> (your Week 1 key from <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>; set it as <code>GOOGLE_API_KEY</code>). Then: (1) add a second tool, <code>search_stub(query)</code>, that just returns a canned string with a height; (2) ask the Atlanta-vs-statue question from page 01; (3) add the max-iteration guard with a cap of 3 and watch it cut the run short.</p>
+    <p class="prod"><b>Produce:</b> the printed message trace for one successful run, plus one sentence: which edge in your graph is the loop?</p>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Zoom out</div>
+  <h2>Every framework elaborates this loop</h2>
+  <div class="grid2">
+    <div class="card"><p class="small">CrewAI, AutoGen, the OpenAI Agents SDK, and the managed platforms you used in Week 2 (Opal, Fleet) all wrap the same model↔tools cycle with the same three primitives under different names. Learn the loop once, and every framework becomes a dialect. <a class="doc" href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noopener">LangGraph docs ↗</a></p></div>
+    <div class="card"><span class="kicker">Auditability — the MIS framing</span><p class="small" style="margin-top:8px">An explicit graph means every decision, tool call, and state change is logged and replayable. When audit or compliance asks “why did the agent do that?”, the answer is a trace, not a shrug. That's the business case for owning the loop instead of renting a black box.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Watch</div>
+  <h2>Two short videos</h2>
+  <div class="grid2">
+    <div class="card"><h3>Introduction to LangGraph (LangChain, official)</h3><p class="small">The free LangChain Academy course in 2½ minutes — nodes, edges, state, memory, human-in-the-loop. The full course is this week's optional deep dive.</p>
+      <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/29XE10U6ooc" title="LangChain Academy: Introduction to LangGraph" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
+      <p class="small" style="margin-top:10px"><a class="doc" href="https://academy.langchain.com/courses/intro-to-langgraph" target="_blank" rel="noopener">Free full course ↗</a></p>
+    </div>
+    <div class="card"><h3>Why Agentic AI Fails (IBM Technology, 12 min)</h3><p class="small">Infinite loops, planning errors, and runaway agents — the failure modes that motivate everything on this page: stop conditions, guards, and reflection.</p>
+      <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/D37Ijn2o5U0" title="IBM Technology: Why Agentic AI Fails" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Concept check</div>
+  <h2>State, node, or edge?</h2>
+  <div id="ccheck"></div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="patterns.html"><span class="lab">← Previous</span><b>02 · Reasoning patterns</b></a>
+  <a href="exercises.html" class="next"><span class="lab">Next →</span><b>04 · Practice &amp; case</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 4 — Reasoning, Planning &amp; the Agent Loop<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+const LG=[
+ {id:'lg0',t:'<b>START:</b> the entry point. Whatever you pass to <code>agent.invoke()</code> becomes the initial state — here, a message list containing the user’s question. In the nine layers: the Goal arrives here.'},
+ {id:'lg1',t:'<b>model:</b> the reasoning node. It hands the full message history to Gemini, which returns either an answer or a request to call a tool with specific arguments. The LLM owns only this box.'},
+ {id:'lg2',t:'<b>tools_condition:</b> the conditional edge — the decision point. It inspects the model’s last message: tool call present → route to <code>tools</code>; none → route to END. Replace it with <code>guarded_condition</code> and this same spot enforces your step cap.'},
+ {id:'lg3',t:'<b>tools:</b> the acting node. It executes the requested tool and appends the result to <code>messages</code> as an observation. Then the dashed edge sends everything back to <code>model</code> — that edge IS the loop.'},
+ {id:'lg4',t:'<b>END:</b> the stop. Reached when the model answers without asking for a tool — or when your guard says “enough.” An agent that knows when to stop is a graph with a reachable END.'}
+];
+LG.forEach(n=>{
+  document.getElementById(n.id).addEventListener('click',()=>{
+    LG.forEach(m=>document.getElementById(m.id).classList.toggle('on',m.id===n.id));
+    document.getElementById('lgNote').innerHTML=n.t;
+  });
+});
+
+const CC=[
+ {q:'“The running list of messages — thoughts, tool calls, results — that every step can read.”',
+  o:['State','Node','Edge'], a:0, why:'That’s the state: the shared, typed memory passed between nodes. Nodes read it and return updates to it.'},
+ {q:'“The rule that checks whether the model asked for a tool, and routes to tools or END accordingly.”',
+  o:['State','Node','Conditional edge'], a:2, why:'Routing based on state is an edge’s job — and a conditional one, because the destination depends on what it sees.'},
+ {q:'“The function that actually executes calculator(\'2*93\') and records the result.”',
+  o:['State','Node','Edge'], a:1, why:'Units of work are nodes. The tools node acts on the environment and writes the observation back into state.'}
+];
+const cc=document.getElementById('ccheck');
+CC.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML=`<div class="stmt">${i+1}. ${x.q}</div><div class="opts">${x.o.map((o,j)=>`<button data-v="${j}">${o}</button>`).join('')}</div><div class="fb"></div>`;
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector(`button[data-v="${x.a}"]`).classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+x.o[x.a]+'. ')+x.why;
+  }));
+  cc.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>
