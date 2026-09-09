@@ -21,7 +21,22 @@
 .cmp th{background:var(--blue-soft);font-size:12.5px}
 .cmp td:first-child{font-weight:650;white-space:nowrap}
 .cmpwrap{overflow-x:auto}
+.ftwrap{display:grid;grid-template-columns:minmax(320px,440px) 1fr;gap:20px;align-items:start}
+.netbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;position:relative}
+.netbox svg{width:100%;height:auto;display:block}
+.wbadge{position:absolute;top:12px;right:12px;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:#eef1f6;border:1px solid var(--line2)}
+.wbadge.hot{background:#fdecec;border-color:#e2a8a8;color:var(--red)}
+.netnode{fill:#fff;stroke:var(--line2);stroke-width:1.4}
+.netedge{transition:stroke-width .7s,stroke .7s,opacity .7s}
+.wlabel{font-family:var(--mono);font-size:10.5px;fill:var(--muted)}
+.wlabel.changed{fill:var(--red);font-weight:700}
+.chatline{background:#101319;color:#dfe3ec;border-radius:10px;padding:14px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.75;white-space:pre-wrap;min-height:120px}
+.chatline .u{color:#8ab8ff}.chatline .a{color:#9ad0a0}.chatline .sys{color:#e3c078}.chatline .dim{color:#8b909c}
+.statusstrip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.statusstrip .st{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--muted)}
+.statusstrip .st b{display:block;font-size:13.5px;margin-top:3px;color:var(--ink)}
 @media(max-width:980px){.pat4{grid-template-columns:1fr 1fr}}
+@media(max-width:880px){.ftwrap{grid-template-columns:1fr}.statusstrip{grid-template-columns:1fr}}
 @media(max-width:640px){.pat4{grid-template-columns:1fr}.costrow{grid-template-columns:1fr;gap:4px}}
 </style>
 </head>
@@ -120,6 +135,37 @@ goal ┤
 </div></section>
 
 <section><div class="wrap">
+  <div class="eyebrow">Aside · the one thing that changes the model</div>
+  <h2>Prompting changes the <em>input</em>. Fine-tuning changes the <em>weights</em>.</h2>
+  <p class="lede">Everything this week — ReAct, plans, reflection — and everything last week — prompts, context — lives to the <b>left</b> of the model: it changes what the model <em>sees</em>. (Week 2 flashback: prompt ⊂ context ⊂ harness — <b>none touch the weights</b>.) Fine-tuning is different in kind: it rewrites the numbers <em>inside</em>. Watch the difference below — the network's edges are its weights; thicker = stronger.</p>
+  <div class="ftwrap">
+    <div class="netbox">
+      <span class="wbadge" id="wBadge">weights: unchanged 🔒</span>
+      <svg id="netsvg" viewBox="0 0 440 300" aria-label="miniature neural network with visible weights"></svg>
+      <p class="small" style="margin:10px 6px 2px">A toy 3–4–2 network. A real LLM has <b>billions</b> of these edges — that's all "parameters" means: the numbers on the arrows. <span id="wCount">Changed in this demo: <b>0 of 20</b>.</span></p>
+    </div>
+    <div>
+      <div class="simctl" style="margin-bottom:10px">
+        <button class="primary" id="ftTabP">🅐 Prompt it</button>
+        <button class="ghost" id="ftTabT">🅑 Fine-tune it</button>
+      </div>
+      <div class="simctl" id="ftControls" style="margin-bottom:10px"></div>
+      <div class="chatline" id="ftChat"></div>
+      <div class="statusstrip" id="ftStatus"></div>
+    </div>
+  </div>
+  <div class="grid2" style="margin-top:22px;align-items:start">
+    <div class="card"><span class="kicker">Terminology — clear this up once</span>
+      <p class="small" style="margin-top:8px"><b>Parameters (= weights):</b> the numbers inside the model — the edges above, billions of them. They were <em>learned</em> in training, and <b>fine-tuning updates exactly these</b>. Prompting never does.</p>
+      <p class="small" style="margin-top:8px"><b>Hyperparameters:</b> NOT inside the model. They're the dials <em>you</em> set on the training process itself — learning rate, number of epochs, batch size. You choose them; the model never “learns” them.</p>
+      <p class="small" style="margin-top:8px"><b>Analogy:</b> parameters are the employee's skills after the course; hyperparameters are the course schedule. “Fine-tuning updates the parameters” = the training changed the skills. (Saying it “updates hyperparameters” is the common mix-up — the schedule doesn't change the employee.)</p></div>
+    <div class="card"><span class="kicker">Why fine-tune is still the LAST rung</span>
+      <p class="small" style="margin-top:8px">The demo hides the real bill: hundreds+ of curated examples, GPU time, and re-running your evals to make sure the new weights didn't break something else — every time the task changes. A prompt edit ships in minutes; new weights ship in weeks.</p>
+      <p class="small" style="margin-top:8px">That's the Week 3 ladder: prompt → few-shot → context/RAG → <b>fine-tune last</b> (<a class="doc" href="../week3/context.html">the decision table</a>). Week 7 revisits the fork one more time: RAG vs fine-tuning for company knowledge — retrieval usually wins for <em>facts</em>, fine-tuning for <em>style and format at massive scale</em>.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
   <div class="eyebrow">Discussion</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your team automates invoice-coding: 5,000 near-identical invoices a month, and finance must sign off on the procedure. Interleaved ReAct would work. Why is it still the wrong choice?</div>
   <button class="revealbtn">See the answer</button>
@@ -186,6 +232,76 @@ function renderCost(i){
 }
 document.querySelectorAll('[data-cost]').forEach(b=>b.addEventListener('click',()=>renderCost(+b.dataset.cost)));
 renderCost(0);
+
+/* fine-tune visualizer */
+(function(){
+const svg=document.getElementById('netsvg');if(!svg)return;
+const NS='http://www.w3.org/2000/svg';
+const layers=[[70,[80,150,220]],[220,[55,120,185,250]],[370,[110,190]]];
+const BASE=[0.62,-0.31,0.18,0.45,-0.52,0.29,-0.14,0.71,0.08,-0.44,0.33,0.57,-0.23,0.16,-0.61,0.42,0.27,-0.35,0.53,-0.19];
+const TGT =[0.21,-0.74,0.55,-0.12,0.38,-0.47,0.66,0.24,-0.58,0.13,-0.36,0.09,0.61,-0.52,0.28,-0.15,0.72,0.31,-0.27,0.49];
+const edges=[],labelIdx=[1,7,13,18],labels={};
+let k=0;
+for(let a=0;a<2;a++){
+  const [x1,ys1]=layers[a],[x2,ys2]=layers[a+1];
+  ys1.forEach(y1=>ys2.forEach(y2=>{
+    const l=document.createElementNS(NS,'line');
+    l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);
+    l.setAttribute('class','netedge');svg.appendChild(l);edges.push(l);
+    if(labelIdx.includes(k)){
+      const t=document.createElementNS(NS,'text');
+      t.setAttribute('x',(x1+x2)/2+((k%2)?6:-30));t.setAttribute('y',(y1+y2)/2-5);
+      t.setAttribute('class','wlabel');svg.appendChild(t);labels[k]=t;
+    }
+    k++;
+  }));
+}
+layers.forEach(([x,ys])=>ys.forEach(y=>{const c=document.createElementNS(NS,'circle');c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r',13);c.setAttribute('class','netnode');svg.appendChild(c)}));
+function setWeights(t){
+  edges.forEach((e,i)=>{
+    const w=BASE[i]+(TGT[i]-BASE[i])*t;
+    e.setAttribute('stroke-width',(0.8+Math.abs(w)*4.2).toFixed(2));
+    e.setAttribute('stroke',w>=0?'#0039a6':'#c8102e');
+    e.setAttribute('opacity',(0.3+Math.abs(w)*0.55).toFixed(2));
+    if(labels[i]){labels[i].textContent=(w>=0?'+':'')+w.toFixed(2);labels[i].classList.toggle('changed',t>0)}
+  });
+  document.getElementById('wCount').innerHTML='Changed in this demo: <b>'+(t>0?'20':'0')+' of 20</b>.';
+  const b=document.getElementById('wBadge');
+  if(t===0){b.textContent='weights: unchanged 🔒';b.classList.remove('hot')}
+  else{b.textContent='weights: UPDATED';b.classList.add('hot')}
+}
+const Q='<span class="u">Customer: My package arrived broken.</span>\n';
+const GENERIC='<span class="a">Model: Sorry to hear that. You could try contacting the seller’s support team for options.</span>';
+const SYSLINE='<span class="sys">SYSTEM: You are Acme Support. Apologize, offer a free replacement within 2 business days, sign “— Acme Care”.</span>\n';
+const TAILORED='<span class="a">Model: I’m so sorry your package arrived damaged. A free replacement is on its way — it ships within 2 business days. — Acme Care</span>';
+const HALF='<span class="a">Model: Sorry about the damage — Acme can help with a replacement; support will confirm the timing.</span>';
+const LOSS=[2.31,0.94,0.42,0.19];
+let mode='prompt',promptOn=false,epochs=0;
+const ctl=document.getElementById('ftControls'),chat=document.getElementById('ftChat'),stat=document.getElementById('ftStatus');
+function strip(a,b,c){stat.innerHTML=`<div class="st">What changed<b>${a}</b></div><div class="st">Weights touched<b>${b}</b></div><div class="st">After this call<b>${c}</b></div>`}
+function render(){
+  document.getElementById('ftTabP').className=mode==='prompt'?'primary':'ghost';
+  document.getElementById('ftTabT').className=mode==='ft'?'primary':'ghost';
+  if(mode==='prompt'){
+    setWeights(0);
+    ctl.innerHTML=`<button class="${promptOn?'ghost':'primary'}" id="ftP1">${promptOn?'Remove the prompt':'Attach a system prompt ▸'}</button><span class="hint">the model itself is frozen</span>`;
+    chat.innerHTML=(promptOn?SYSLINE:'')+Q+(promptOn?TAILORED:GENERIC)+(promptOn?'\n\n<span class="dim">Same 20 weights — the behavior lives in the request.</span>':'\n\n<span class="dim">Base behavior: generic, no Acme voice.</span>');
+    strip('The input (context)','0 of 20',promptOn?'Nothing persists — remove the prompt and it’s gone':'—');
+    document.getElementById('ftP1').addEventListener('click',()=>{promptOn=!promptOn;render()});
+  }else{
+    setWeights(epochs/3);
+    ctl.innerHTML=`<button class="primary" id="ftT1" ${epochs>=3?'disabled style="opacity:.45"':''}>Run one training epoch ▸</button><button class="ghost" id="ftT2">Reset training</button><span class="hint">loss: <b>${LOSS[epochs]}</b> · 500 Acme transcripts</span>`;
+    const reply=epochs===0?GENERIC:(epochs<3?HALF:TAILORED);
+    chat.innerHTML='<span class="dim">Ask with NO prompt attached:</span>\n'+Q+reply+(epochs>=3?'\n\n<span class="dim">No system prompt anywhere — the Acme voice is now IN the weights, permanently.</span>':(epochs>0?'\n\n<span class="dim">Weights are shifting — behavior is partway there.</span>':'\n\n<span class="dim">Untrained: same base behavior as before.</span>'));
+    strip('The weights themselves',epochs>0?'20 of 20':'0 of 20 (yet)',epochs>0?'Permanent — every future call, from every user, no prompt needed':'—');
+    document.getElementById('ftT1').addEventListener('click',()=>{if(epochs<3){epochs++;render()}});
+    document.getElementById('ftT2').addEventListener('click',()=>{epochs=0;render()});
+  }
+}
+document.getElementById('ftTabP').addEventListener('click',()=>{mode='prompt';render()});
+document.getElementById('ftTabT').addEventListener('click',()=>{mode='ft';render()});
+render();
+})();
 
 document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
 const progress=document.getElementById('progressBar');
