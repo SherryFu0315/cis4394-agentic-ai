@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>01 · Agents That Buy — CIS 4394 Week 11</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.flowwrap{display:grid;grid-template-columns:minmax(320px,440px) 1fr;gap:20px;align-items:start}
+.fnode{cursor:pointer}
+.fnode rect{fill:#fff;stroke:var(--line2);stroke-width:1.4;rx:10}
+.fnode text{font-family:var(--mono);font-size:12.5px;font-weight:600;fill:var(--ink)}
+.fnode.gate rect{fill:#fff7ea;stroke:#dbb96a;stroke-width:2}
+.fnode.gate.on rect{fill:var(--red);stroke:var(--red)}
+.fnode.on rect{fill:var(--blue);stroke:var(--blue)}
+.fnode.on text{fill:#fff}
+.fedge{stroke:var(--line2);stroke-width:1.6;fill:none;marker-end:url(#arrf)}
+.fedge.dash{stroke-dasharray:5 4}
+.lbl{font-family:var(--sans);font-size:10px;fill:var(--muted)}
+.fnote{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;font-size:14.5px;min-height:150px}
+.fnote h3{font-family:var(--serif);font-size:22px;margin:0 0 4px;font-weight:600}
+.fnote .risk{display:block;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--red);margin-bottom:8px}
+.fnote .liab{margin-top:12px;background:var(--blue-soft);border:1px solid #c4d1ee;border-radius:9px;padding:11px 13px;font-size:13.5px}
+.cmp{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:14px}
+.cmp th,.cmp td{border:1px solid var(--line);padding:11px 13px;text-align:left;vertical-align:top}
+.cmp th{background:var(--blue-soft);font-size:12.5px}
+.cmp td:first-child,.cmp th:first-child{width:170px;font-weight:650}
+.cmpwrap{overflow-x:auto}
+.ladder{display:grid;gap:10px;margin-top:16px}
+.rung{display:grid;grid-template-columns:150px 1fr;gap:18px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:12px;padding:16px 20px}
+.rung:nth-child(2){border-left-color:#d99a1b}
+.rung:nth-child(3){border-left-color:var(--red)}
+.rung .t{font-weight:650;font-size:15px}
+.rung .t span{display:block;font-size:12px;color:var(--muted);font-weight:400;margin-top:3px}
+.rung p{margin:0;font-size:14px}
+@media(max-width:880px){.flowwrap{grid-template-columns:1fr}.rung{grid-template-columns:1fr;gap:6px}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 11</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="commerce.html" class="here"><span class="k">01</span>Agents That Buy</a>
+  <a href="deploy.html"><span class="k">02</span>Shipping an Agent</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">01 · Agentic commerce</div>
+  <h1>Agents that <em>buy</em>.</h1>
+  <p class="lede">Search is reversible. Summarizing is reversible. Paying is not. This page is about the four things that change when the last step of the loop is a purchase — irreversibility, liability, identity, and the merchant's side of the problem — and about the young, competing standards trying to make agent-initiated payments checkable.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Four shifts</div>
+  <h2>What a purchase changes</h2>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">1 · Irreversibility</span>
+      <p class="small" style="margin-top:8px">Your retry logic was built on an assumption that just broke: that doing the thing twice is harmless. It is not. A timeout on <code>place_order()</code> is genuinely ambiguous — did the order go through? Retrying blindly is how one purchase becomes two. The fix has a name (<b>idempotency</b>) and it lives on <a class="doc" href="deploy.html">page 02</a>.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">2 · Liability</span>
+      <p class="small" style="margin-top:8px">When an agent buys the wrong thing, somebody eats the cost: the customer, the merchant, the agent's operator, or the payment provider. That allocation is decided by contracts and by <em>what can be proven</em> — which is why “what did the user actually authorize?” has to be a question the system can answer, not a question the lawyers argue about afterward.</p></div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">3 · Identity &amp; authorization</span>
+      <p class="small" style="margin-top:8px">Two different questions, often confused. <b>Identity:</b> is this really the customer's agent? <b>Authorization:</b> is this specific purchase inside what the customer allowed — this item, this amount, this window? A credential proves the first. Only an explicit record of the user's instruction proves the second.</p></div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">4 · The merchant's problem</span>
+      <p class="small" style="margin-top:8px">From the store's side, a helpful agent and a scraping bot look similar: automated traffic, no human rhythm, no mouse movement. Years of fraud tooling was tuned to <em>block</em> exactly that pattern. Merchants now need a way to tell “a customer's agent, acting with permission” apart from abuse — and to keep the sale rather than refuse it.</p></div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>Notice the direction of travel.</b> Every one of these four problems is solved by making something explicit that a human click used to leave implicit: what was authorized, by whom, for how much, and until when.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · click every step</div>
+  <h2>The purchase flow, and where it breaks</h2>
+  <p class="lede">This is the shape of nearly every agentic purchase. Click a node: each one tells you what goes wrong there and who ends up holding the cost.</p>
+  <div class="flowwrap">
+    <div class="loopbox">
+      <svg viewBox="0 0 440 545" aria-label="agent purchase flow diagram">
+        <defs><marker id="arrf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#cfccc2"/></marker></defs>
+        <path class="fedge" d="M 240 60 L 240 86" />
+        <path class="fedge" d="M 240 136 L 240 162" />
+        <path class="fedge" d="M 240 212 L 240 238" />
+        <path class="fedge" d="M 240 288 L 240 314" />
+        <path class="fedge" d="M 240 364 L 240 390" />
+        <path class="fedge" d="M 240 440 L 240 466" />
+        <path class="fedge dash" d="M 115 263 C 50 258 50 192 111 187" />
+        <text class="lbl" x="2" y="222">rejected</text>
+        <text class="lbl" x="2" y="235">or edited</text>
+        <g class="fnode" id="fn0"><rect x="115" y="10" width="250" height="50"/><text x="240" y="40" text-anchor="middle">1 · intent + limits</text></g>
+        <g class="fnode" id="fn1"><rect x="115" y="86" width="250" height="50"/><text x="240" y="116" text-anchor="middle">2 · search / discover</text></g>
+        <g class="fnode" id="fn2"><rect x="115" y="162" width="250" height="50"/><text x="240" y="192" text-anchor="middle">3 · compare + build cart</text></g>
+        <g class="fnode gate" id="fn3"><rect x="115" y="238" width="250" height="50"/><text x="240" y="268" text-anchor="middle">4 · HUMAN APPROVAL</text></g>
+        <g class="fnode" id="fn4"><rect x="115" y="314" width="250" height="50"/><text x="240" y="344" text-anchor="middle">5 · authorized payment</text></g>
+        <g class="fnode" id="fn5"><rect x="115" y="390" width="250" height="50"/><text x="240" y="420" text-anchor="middle">6 · confirmation</text></g>
+        <g class="fnode" id="fn6"><rect x="115" y="466" width="250" height="50"/><text x="240" y="496" text-anchor="middle">7 · receipt + audit trail</text></g>
+      </svg>
+      <p class="small" style="margin:10px 6px 4px">The amber node is the <b>last cheap place to be wrong</b>. Everything above it can be redone for free; everything below it costs money to undo.</p>
+    </div>
+    <div>
+      <div class="fnote" id="fNote"><span class="risk">Start</span><h3>Click a step in the flow</h3><p style="margin:0">Work down the diagram. For each step, ask the two questions this page keeps repeating: <b>what can go wrong here</b>, and <b>who pays when it does</b>.</p></div>
+      <div class="callout blue" style="margin-top:14px"><b>The design rule:</b> push every irreversible consequence <em>below</em> the gate, and every correctable mistake <em>above</em> it. An agent architecture is largely a question of where you draw that line.</div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Emerging standards · read this carefully</div>
+  <h2>Two young protocols, both from 2025</h2>
+  <p class="lede">In September 2025 two overlapping proposals appeared for making agent-initiated payments work: <b>AP2</b>, announced by Google with a set of payments and technology partners, and <b>ACP</b>, published by Stripe and OpenAI. They are early, they are still changing, and they solve related but different problems. Treat what follows as a snapshot, not a settled answer.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">AP2 — Agent Payments Protocol</span>
+      <h3 style="margin-top:8px">Making the authorization provable</h3>
+      <p class="small">Google's announcement frames AP2 as an open protocol for payments initiated by agents, built around <b>mandates</b>: signed, verifiable records of what the human actually authorized — the intent, the cart, and the payment — expressed as W3C Verifiable Credentials. The point is that a merchant or an issuer downstream can <em>check</em> the permission slip rather than take the agent's word for it, and that the record survives afterward as evidence of consent. It is positioned to sit alongside agent-to-agent and tool protocols rather than replace them (Google, 2025).</p>
+      <p class="small" style="margin-top:10px"><a class="doc" href="https://cloud.google.com/blog/products/ai-machine-learning/announcing-agents-to-payments-ap2-protocol" target="_blank" rel="noopener">Primary source — the AP2 announcement ↗</a></p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">ACP — Agentic Commerce Protocol</span>
+      <h3 style="margin-top:8px">Making the checkout work at all</h3>
+      <p class="small">Stripe and OpenAI published ACP as an <b>open standard for agent-initiated checkout</b>: a documented way for an agent to hand a merchant a cart, have the merchant confirm price and availability, and complete payment — with a <b>Shared Payment Token</b> arrangement so the merchant continues to be the merchant of record and keeps its own relationship with the customer, rather than the agent platform taking it over. The specification is published openly (Apache-2.0 on the spec repository) so that merchants and agent builders can implement against the same shapes (OpenAI &amp; Stripe, 2025).</p>
+      <p class="small" style="margin-top:10px"><a class="doc" href="https://stripe.com/blog/developing-an-open-standard-for-agentic-commerce" target="_blank" rel="noopener">Primary source — the Stripe announcement ↗</a> · <a class="doc" href="https://www.agenticcommerce.dev/" target="_blank" rel="noopener">agenticcommerce.dev ↗</a> · <a class="doc" href="https://github.com/agentic-commerce-protocol/agentic-commerce-protocol" target="_blank" rel="noopener">spec repo ↗</a></p>
+    </div>
+  </div>
+  <div class="cmpwrap">
+  <table class="cmp">
+    <tr><th></th><th>AP2 (Google + partners, 2025)</th><th>ACP (Stripe + OpenAI, 2025)</th></tr>
+    <tr><td>Centre of gravity</td><td>Payment <b>authorization</b> — proving a human permitted this spend.</td><td>The <b>checkout transaction</b> — a common way for an agent and a merchant to complete a sale.</td></tr>
+    <tr><td>How consent is carried</td><td>Mandates as verifiable credentials (intent → cart → payment), signed and checkable after the fact.</td><td>The buyer's confirmed cart plus a shared payment token scoped to that purchase.</td></tr>
+    <tr><td>Who most needs to care</td><td>Issuers, networks, wallets, and anyone who has to answer “was this authorized?”</td><td>Merchants and agent platforms wiring up a working buy button inside a conversation.</td></tr>
+    <tr><td>Openness</td><td>Published openly by Google with partner input; check the current specification before building.</td><td>Specification published on an open repository under Apache-2.0; check the repo for the current version.</td></tr>
+    <tr><td>Maturity (as of this course)</td><td colspan="2"><b>Both are early.</b> Both were announced in 2025, both are still being revised, and they overlap in places and complement each other in others. Nothing here says one has won — and any page that tells you which one won is guessing.</td></tr>
+  </table>
+  </div>
+  <div class="callout red" style="margin-top:20px"><b>How to talk about this in an interview (or a memo).</b> Say what each protocol tries to make checkable, say that both are new and moving, and say what you would do about it: build the <em>capability</em> — an explicit record of authorization, a scoped payment credential, a receipt that links back to both — behind an interface you can re-point. Betting your architecture on one 2025 standard is how you inherit a migration. Never quote adoption figures you have not read in the primary source this week; in a fast-moving standards race those numbers go stale faster than anything else on the page.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Trust architecture</div>
+  <h2>Five controls, none of them a prompt</h2>
+  <p class="lede">“We told the agent not to overspend” is not a control. Each of these lives in code or configuration, outside anything the model can talk its way past — the Week 10 governance lesson, applied to money.</p>
+  <div class="cmpwrap">
+  <table class="plain">
+    <tr><th>Control</th><th>What it actually stops</th><th>Where it lives</th></tr>
+    <tr><td><b>Spending cap</b></td><td>The runaway: an agent that misreads a price, a quantity, or a loop and spends far past what anyone intended. Caps come in layers — per transaction, per day, per month.</td><td>The harness and the payment credential. Enforced before the tool runs, and again by whatever issues the funds.</td></tr>
+    <tr><td><b>Merchant allow-list</b></td><td>Purchases from places nobody vetted — including the storefront that a poisoned search result invented. If it is not on the list, the call fails.</td><td>Tool configuration. The agent cannot add to its own list.</td></tr>
+    <tr><td><b>Per-transaction mandate</b></td><td>Scope creep between approval and execution: an approval for one item at one price being reused for a different, larger purchase.</td><td>The authorization record that travels with the payment — the idea AP2 is trying to standardize.</td></tr>
+    <tr><td><b>Receipt</b></td><td>Silent action. Every completed purchase produces an artifact a human can read, tied to the approval that permitted it.</td><td>Your system of record, plus the customer's inbox.</td></tr>
+    <tr><td><b>Audit trail</b></td><td>Unanswerable questions later: what did the agent see, what else could it have chosen, why this vendor, who approved it.</td><td>Trace storage — the Week 2 evidence standard, retained for as long as a dispute could arrive.</td></tr>
+  </table>
+  </div>
+  <h2 style="margin-top:38px">The spend ladder</h2>
+  <p class="lede">Do not choose between “fully autonomous” and “ask a human every time.” Sort actions into three rungs, and be explicit about the boundary between them.</p>
+  <div class="ladder">
+    <div class="rung"><div class="t">Auto-run<span>reversible, routine, small</span></div><p>Reading a catalog, checking inventory, pricing options, drafting the cart. Nothing here costs anything to undo, so gating it only teaches people to stop reading approvals. Log it; do not interrupt for it.</p></div>
+    <div class="rung"><div class="t">Capped<span>spends, but bounded</span></div><p>A repeat purchase of a previously approved item, from an allow-listed vendor, under a fixed per-transaction and monthly limit. The agent may act, but the limit is enforced in code, and hitting the cap raises an alert rather than silently failing.</p></div>
+    <div class="rung"><div class="t">Approval required<span>irreversible, novel, or large</span></div><p>New vendor, new item, amount above the cap, anything that touches a contract or a subscription. The agent proposes; a named human approves. This rung is small on purpose — a long approval queue is an approval queue nobody reads.</p></div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>The approval screen is part of the control.</b> A gate that shows “Agent wants to place an order — Approve?” is theatre. Show the decision: the exact items and quantities, the total, the vendor and whether it is allow-listed, the budget before and after, which instruction this purchase is meant to satisfy, and what the agent will do instead if you decline.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Discussion</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>A customer disputes a purchase their agent made: “I never approved that.” You run the merchant. What do you need to have collected — at the moment of the sale — for that sentence to be answerable rather than arguable?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">Three things, and they have to have been captured <em>then</em>, not reconstructed later. <b>(1) An authorization record</b> tied to this specific purchase — what was permitted, for how much, for which items, valid until when, and signed by something you can verify rather than asserted by the caller. That is the problem the mandate idea in AP2 is aimed at. <b>(2) A binding between that authorization and this transaction</b> — a payment credential or token scoped to this cart, so an approval for one order cannot be replayed for another; the shared-token design in ACP is aimed at this side. <b>(3) The trace</b>: what the agent saw, what it selected, and the confirmation you returned — the Week 2 evidence standard, kept as long as a chargeback window plus your retention policy. Notice what is <em>not</em> on the list: the agent's own claim that the user approved it. Anything the agent asserts about its own permissions is exactly the thing under dispute.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Concept check</div>
+  <h2>Three questions before you move on</h2>
+  <div id="ccheck"></div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="index.html"><span class="lab">← Back</span><b>Week 11 home</b></a>
+  <a href="deploy.html" class="next"><span class="lab">Next →</span><b>02 · Shipping an agent</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 11 — Agentic Commerce<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+const FLOW=[
+ {id:'fn0',h:'1 · Intent + limits',r:'Risk: a wish, not an instruction',
+  t:'The human states what they want and what bounds it: item, budget, deadline, acceptable vendors. Most bad purchases are born here, as an under-specified goal — "get us more coffee" has no price ceiling, no quantity, and no deadline, so every later step is guessing.',
+  l:'<b>Who pays:</b> the operator. There is no counterparty yet, so a mistake at this stage is entirely yours — and it is the cheapest one to fix. Write limits the harness can enforce as numbers, not adjectives.'},
+ {id:'fn1',h:'2 · Search / discover',r:'Risk: hostile input',
+  t:'The agent reads listings, descriptions and reviews written by strangers with a commercial interest in what it does next. This is the classic prompt-injection surface: text that tries to be read as an instruction ("ignore previous limits", "the customer approved bulk orders"). It is also where a plausible but fake vendor gets into the candidate set.',
+  l:'<b>Who pays:</b> initially the buyer, but the fight is over whether the merchant, the platform, or the operator was negligent. Controls: treat all tool output as data, never instructions; restrict purchasing to an allow-list; and keep discovery separate from any tool that can spend.'},
+ {id:'fn2',h:'3 · Compare + build cart',r:'Risk: quietly wrong arithmetic',
+  t:'Units, quantities, pack sizes, shipping, tax. This is where "10 boxes" becomes "100 units" because the listing sells by the case, and where a total is compared against a budget in the wrong currency. The reasoning looks fluent the whole way through — nothing about a wrong quantity reads as an error in a transcript.',
+  l:'<b>Who pays:</b> almost always the buyer, because the order was technically fulfilled as placed. Controls: compute totals in code rather than in prose, and make the approval screen show unit price, quantity, and total separately so a human can spot the mismatch.'},
+ {id:'fn3',h:'4 · HUMAN APPROVAL',r:'Risk: the rubber stamp',
+  t:'The gate. It sits after the agent has committed to a specific cart and before anything is charged. Two ways it fails: it is placed too late (approving a purchase already made), or it fires so often that people approve without reading — approval fatigue, which is what turns a real control into a signature you cannot rely on. Selectivity is a safety property.',
+  l:'<b>Who pays:</b> whoever clicked, in practice — which is exactly why an unreadable approval screen is a governance problem, not a UX complaint. Show the decision, the budget before and after, and the alternative if declined.'},
+ {id:'fn4',h:'5 · Authorized payment',r:'Risk: the ambiguous retry',
+  t:'The credential is presented and the charge is made. The nastiest failure here is not a decline but a timeout: the call did not return, and nobody knows whether the charge landed. Retry blindly and you have bought it twice. This is where an idempotency key earns its keep, and where the scope of the credential matters — a token bound to this cart cannot be reused for a bigger one.',
+  l:'<b>Who pays:</b> the double charge is your bug and your refund, plus the support cost. Controls: an idempotency key generated before the first attempt, a payment credential scoped to this transaction, and an alert on every retry.'},
+ {id:'fn5',h:'6 · Confirmation',r:'Risk: the silent success',
+  t:'The merchant confirms; the agent records what actually happened, not what it intended. Confirmations drift from carts: substitutions, backorders, a changed delivery date, a partial shipment. An agent that logs its own intent instead of the merchant\'s response will insist for weeks that the order was correct.',
+  l:'<b>Who pays:</b> the buyer, in wasted time, until somebody notices. Control: reconcile the confirmation against the approved cart automatically and escalate the difference to a human.'},
+ {id:'fn6',h:'7 · Receipt + audit trail',r:'Risk: unanswerable questions',
+  t:'The transaction ends where accountability begins. The receipt is the human-readable artifact; the trace is the machine-readable one. Linked together, they answer: who authorized this, within what limits, what did the agent see, what did it choose, and what did the merchant confirm. Unlinked, you have a charge and a story.',
+  l:'<b>Who pays:</b> whoever cannot prove their version. Retention is a real decision — dispute windows outlive most default log settings, and a trace deleted after seven days is a control you no longer have.'}
+];
+FLOW.forEach(n=>{
+  document.getElementById(n.id).addEventListener('click',()=>{
+    FLOW.forEach(m=>document.getElementById(m.id).classList.toggle('on',m.id===n.id));
+    document.getElementById('fNote').innerHTML='<span class="risk">'+n.r+'</span><h3>'+n.h+'</h3><p style="margin:0">'+n.t+'</p><div class="liab">'+n.l+'</div>';
+  });
+});
+
+const CC=[
+ {q:'An AP2-style mandate gives a merchant something a plain API call from an agent does not. What?',
+  o:['Proof that the shopper is a human being','A signed, checkable record of what the customer authorized — amount, items, and scope','A guarantee that the agent will not be tricked','A lower processing fee'],
+  a:1, why:'Mandates are the "permission slip" idea: the authorization is expressed as a verifiable credential, so the merchant can check it and, later, prove what was consented to. It says nothing about whether a human was at the keyboard, and it does not make the agent smarter or safer at choosing.'},
+ {q:'In the purchase flow above, which step is the LAST one where a mistake is still cheap?',
+  o:['Search — before anything is compared','Human approval — everything below it costs money to undo','Confirmation — the merchant can always cancel','The receipt, because you can dispute it later'],
+  a:1, why:'Everything above the gate is a draft; everything below it is a transaction. That is the whole reason the gate sits where it does — after the agent has committed to specific arguments, before the harness executes them. Cancellation and disputes exist, but they cost time, goodwill and sometimes money.'},
+ {q:'A merchant asks: "why would I implement an agent-checkout standard at all?" The best answer is:',
+  o:['It proves incoming traffic is not a bot','It replaces the merchant with the agent platform, which is more efficient','It gives one documented way to accept agent-initiated orders — including keeping the merchant-of-record relationship — instead of a custom deal per platform','It removes the merchant\'s liability for fraud'],
+  a:2, why:'The argument is the Week 6 argument: one protocol instead of M x N private integrations, plus a design that lets the merchant keep the customer relationship rather than ceding it to whoever owns the agent. It does not settle bot detection, and it does not transfer liability.'}
+];
+const cc=document.getElementById('ccheck');
+CC.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML='<div class="stmt">'+(i+1)+'. '+x.q+'</div><div class="opts" style="flex-direction:column;align-items:stretch">'+x.o.map((o,j)=>'<button data-v="'+j+'" style="text-align:left;border-radius:10px">'+String.fromCharCode(65+j)+'. '+o+'</button>').join('')+'</div><div class="fb"></div>';
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector('button[data-v="'+x.a+'"]').classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+String.fromCharCode(65+x.a)+'. ')+x.why;
+  }));
+  cc.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

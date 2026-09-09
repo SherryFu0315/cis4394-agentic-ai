@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>02 · pass@k, pass^k &amp; Benchmarks — CIS 4394 Week 8</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.formula{font-family:var(--mono);font-size:15px;background:#101319;color:#e8eaf0;border-radius:10px;padding:14px 18px;margin:12px 0;line-height:1.8;white-space:pre-wrap}
+.formula .hi{color:#8ab8ff}
+.formula .lo{color:#ff9d9d}
+.calcwrap{display:grid;grid-template-columns:minmax(300px,360px) 1fr;gap:20px;align-items:start}
+.dialwrap label.ctl{display:block;font-size:13px;font-weight:700;color:var(--ink);margin-top:14px}
+.dialwrap label.ctl span{color:var(--blue)}
+.readout{display:grid;gap:10px;margin-top:18px}
+.ro{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.ro .lab{font-size:12.5px;color:var(--muted);font-weight:600}
+.ro .val{font-family:var(--serif);font-size:27px;font-weight:600}
+.ro.up .val{color:var(--blue)}
+.ro.down .val{color:var(--red)}
+.ro.base .val{color:var(--ink)}
+.chartbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.chartbox svg{width:100%;height:auto;display:block}
+.chartbox .gl{stroke:var(--line);stroke-width:1}
+.chartbox .axis{stroke:var(--line2);stroke-width:1.2}
+.chartbox .tick{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+.chartbox .axlab{font-family:var(--sans);font-size:12px;fill:var(--muted);font-weight:600}
+.chartbox .cUp{fill:none;stroke:#0039a6;stroke-width:2.6}
+.chartbox .cDown{fill:none;stroke:#c8102e;stroke-width:2.6}
+.chartbox .kline{stroke:var(--line2);stroke-width:1.2;stroke-dasharray:4 4}
+.chartbox .dot{stroke:#fff;stroke-width:2}
+.chartbox .leg{font-family:var(--sans);font-size:12px;font-weight:700}
+.ptable{width:100%;border-collapse:collapse;font-size:14px;margin-top:14px}
+.ptable th,.ptable td{border:1px solid var(--line);padding:10px 13px;text-align:left}
+.ptable th{background:var(--blue-soft);font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.ptable td:first-child{font-weight:700;white-space:nowrap}
+.ptable td.mono{font-family:var(--mono);font-size:13px}
+.ptable td.drop{color:var(--red);font-weight:700}
+.ptablewrap{overflow-x:auto}
+.biasgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.biascard{background:var(--red-soft);border:1px solid #e6bcc4;border-radius:12px;padding:18px 20px}
+.biascard h4{margin:0 0 6px;font-size:15.5px;color:#8f2233}
+.biascard p{margin:0;font-size:13.5px;color:#4b3038}
+@media(max-width:880px){.calcwrap,.biasgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 8</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="why.html"><span class="k">01</span>Why Demos Lie</a>
+  <a href="metrics.html" class="here"><span class="k">02</span>pass@k, pass^k &amp; Benchmarks</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">02 · Metrics &amp; benchmarks</div>
+  <h1>One symbol apart. <em>Opposite</em> stories.</h1>
+  <p class="lede"><b>pass@k</b> and <b>pass^k</b> look almost identical on a slide and mean nearly opposite things. One is the most generous number you can quote about an agent; the other is the number your customer actually lives in. Learning to tell them apart is the single most useful thing on this site.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">The definitions</div>
+  <h2>Read the symbol carefully</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">pass@k — a generosity metric</span>
+      <h3 style="margin-top:8px">“At least ONE of k samples passes.”</h3>
+      <p class="small">Introduced for evaluating code generation on HumanEval (<b>Chen et al., 2021</b>). You let the model generate <em>k</em> candidate solutions for one problem and count the problem as solved if <b>any single one</b> of them passes the unit tests. It answers: <em>if I can sample k times and cheaply check which one is right, how often is a correct answer somewhere in the batch?</em></p>
+      <div class="formula">pass@k = P(<span class="hi">at least one</span> of k passes)
+        = 1 - (1 - p)^k      <span class="hi">// rises toward 1 as k grows</span></div>
+      <p class="small"><b>Rises</b> with k. Bigger k always looks better. That is legitimate <em>when a cheap, reliable verifier exists</em> — unit tests, a compiler, a checksum — because the verifier is what lets you pick the winner out of the batch.</p>
+      <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2107.03374" target="_blank" rel="noopener">Chen et al., 2021 — Evaluating LLMs Trained on Code (arXiv:2107.03374) ↗</a></p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">pass^k — a consistency metric</span>
+      <h3 style="margin-top:8px">“ALL k independent trials succeed.”</h3>
+      <p class="small">Introduced by <b>τ-bench</b> (<b>Yao et al., 2024</b>) precisely because pass@k was flattering agents that could not be relied on. Run the same task <em>k</em> independent times; it counts only if <b>every single run</b> succeeds. It answers: <em>can I hand this to a customer who will use it k times?</em></p>
+      <div class="formula">pass^k = P(<span class="lo">all k</span> trials succeed)
+        = p^k                <span class="lo">// collapses toward 0 as k grows</span></div>
+      <p class="small"><b>Falls</b> with k — fast. There is no verifier to rescue you: in production nobody generates eight refunds and picks the good one. The customer gets the run they get.</p>
+      <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noopener">Yao et al., 2024 — τ-bench (arXiv:2406.12045) ↗</a></p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>Both formulas above assume independent trials each succeeding with probability p</b> — the clean textbook case. Real runs are not perfectly independent (a badly worded test case fails every time; a flaky API fails in bursts), so treat these as the model that makes the <em>shape</em> obvious, and measure your own agent to get the real numbers. In practice you estimate <b>pass@1</b> (= p) by running many trials and counting how many passed, then compute the rest.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · the whole week in one widget</div>
+  <h2>Move the dials. Watch the two curves separate.</h2>
+  <p class="lede">Set the per-run success rate <b>p</b> and the number of trials <b>k</b>. The blue curve is pass@k (at least one succeeds). The red curve is pass^k (all of them succeed). Same agent. Same p. Opposite conclusions.</p>
+  <div class="calcwrap">
+    <div class="dialwrap">
+      <label class="ctl" for="pSlider">Per-run success rate p = <span id="pOut">90%</span></label>
+      <input type="range" id="pSlider" min="50" max="99" step="1" value="90" />
+      <div class="diallabels"><span>50%</span><span>75%</span><span>99%</span></div>
+      <label class="ctl" for="kSlider">Number of trials k = <span id="kOut">8</span></label>
+      <input type="range" id="kSlider" min="1" max="10" step="1" value="8" />
+      <div class="diallabels"><span>1</span><span>5</span><span>10</span></div>
+      <div class="readout">
+        <div class="ro base"><span class="lab">pass@1 &nbsp;(one attempt)</span><span class="val" id="roP">90.0%</span></div>
+        <div class="ro up"><span class="lab">pass@k &nbsp;(at least one of k)</span><span class="val" id="roAt">99.9%+</span></div>
+        <div class="ro down"><span class="lab">pass^k &nbsp;(all k succeed)</span><span class="val" id="roHat">43.0%</span></div>
+      </div>
+      <p class="small" style="margin-top:14px" id="calcMath"></p>
+    </div>
+    <div class="chartbox">
+      <svg id="chart" viewBox="0 0 720 320" aria-label="pass@k rising and pass^k falling as k increases"></svg>
+      <p class="small" style="margin:12px 6px 2px" id="chartNote"></p>
+    </div>
+  </div>
+  <div class="callout red" style="margin-top:22px"><b>The manager's version.</b> <span id="mgrLine">An agent that succeeds 90% of the time sounds like a good hire. But a customer who uses it eight times has only a 43% chance of a week without a failure — so most of your customers meet the failure, not the average.</span></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The arithmetic, laid out</div>
+  <h2>Reliability is exponentially expensive</h2>
+  <p class="lede">Three agents you might describe with the same word — “reliable” — and what happens to each when a real user runs it more than once. Every cell is p<sup>k</sup>, rounded.</p>
+  <div class="ptablewrap"><table class="ptable">
+    <tr><th>pass@1 (one run)</th><th>pass^2</th><th>pass^3</th><th>pass^5</th><th>pass^8</th><th>What it means in a sentence</th></tr>
+    <tr><td>70%</td><td class="mono">49%</td><td class="mono">34%</td><td class="mono drop">17%</td><td class="mono drop">6%</td><td>Fails more often than it works by the third use. This is a prototype, not a product.</td></tr>
+    <tr><td>90%</td><td class="mono">81%</td><td class="mono">73%</td><td class="mono">59%</td><td class="mono drop">43%</td><td>The number everyone celebrates. Most repeat users still hit a failure.</td></tr>
+    <tr><td>99%</td><td class="mono">98%</td><td class="mono">97%</td><td class="mono">95%</td><td class="mono">92%</td><td>Survives repeated use — and going from 90% to 99% is usually far more than 9% more work.</td></tr>
+  </table></div>
+  <div class="grid2" style="margin-top:20px;align-items:start">
+    <div class="card"><span class="kicker">Why the last nine costs the most</span>
+      <p class="small" style="margin-top:8px">Moving 70% → 90% is usually prompt work, a better tool, one retry. Moving 90% → 99% means finding the long tail: the malformed inputs, the empty tool results, the rate limits, the adversarial cases. Each of those is a separate engineering project, and each buys a fraction of a point. Budget accordingly — and notice that the same money spent on <b>narrowing the task</b> often buys more reliability than the same money spent on the agent.</p></div>
+    <div class="card"><span class="kicker">The honest way to quote a number</span>
+      <p class="small" style="margin-top:8px">“Our agent is 90% accurate” is not a lie, but it is not a deployment statement either. The deployable version names the metric, the k, the dataset, and the date: <em>“On our 40-case eval set, pass@1 = 0.90 and pass^3 = 0.73, measured 10/14. The 27% of cases that fail at least once in three runs are listed here.”</em> That sentence is the deliverable of your capstone eval harness.</p></div>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>The reliability gap.</b> The distance between pass@1 and pass^k <em>is</em> the demo-versus-production gap, expressed as a number. Demos are sold on pass@1 (or worse, on one run). Managers ship on pass^k. Naming the gap out loud — “90% single-run, 43% across eight” — is how you keep the conversation honest without pretending the agent is bad.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · click a benchmark</div>
+  <h2>Benchmark literacy</h2>
+  <p class="lede">Public benchmarks are the closest thing the field has to shared evidence — and the most misquoted numbers in any AI vendor deck. Three you will meet constantly, what each actually stresses, and how the score gets used misleadingly.</p>
+  <div class="arch-shell">
+    <div class="arch-list" id="bmList"></div>
+    <div class="arch-view" id="bmView"></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Side by side</div>
+  <h2>The scorecard</h2>
+  <div class="compare"><table class="plain">
+    <tr><th>Benchmark</th><th>Domain</th><th>What it stresses</th><th>Metric usually quoted</th><th>Watch out for</th></tr>
+    <tr><td><b>SWE-bench</b><br /><span class="small">Jimenez et al., 2023</span></td><td>Real GitHub issues, Python repos</td><td>Navigating an unfamiliar codebase, long edits, making the repo's own tests pass</td><td>% of issues resolved, single attempt</td><td>Contamination (public issues and fixes); which subset was used; harness differences</td></tr>
+    <tr><td><b>τ-bench</b><br /><span class="small">Yao et al., 2024</span></td><td>Retail and airline customer tasks</td><td>Tool use with a simulated user, while following a written domain policy</td><td><b>pass^k</b> — and pass@1 alongside it</td><td>Domain policies are specific; simulated users are not real ones; airline is harder than retail</td></tr>
+    <tr><td><b>WebArena</b><br /><span class="small">Zhou et al., 2023</span></td><td>812 tasks on self-hosted website clones</td><td>Long-horizon, realistic web work across multiple sites</td><td>Task success rate</td><td>Clones are not the live web; the headline numbers are from launch and are dated</td></tr>
+  </table></div>
+  <div class="grid3" style="margin-top:20px">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Misquote 1 · contamination</span><p class="small" style="margin-top:8px">If the benchmark's problems and their solutions have been public on the internet for years, some of them may sit in the model's training data. A high score can then reflect recall rather than capability — and it will not transfer to your private codebase or your internal tickets.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Misquote 2 · harness differences</span><p class="small" style="margin-top:8px">The same model scores differently depending on the scaffolding around it: which tools it gets, how many steps it is allowed, how many attempts, whether a retry counts. Two “SWE-bench scores” are only comparable if the harnesses were. Ask what the scaffold was.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Misquote 3 · which subset</span><p class="small" style="margin-top:8px">“SWE-bench” names a family: the full 2,294-issue set, the human-validated <b>Verified</b> 500-issue subset, and smaller subsets. A number quoted without its subset is unreadable — and the flattering subset is the one that ends up on the slide.</p></div>
+  </div>
+  <div class="card" style="margin-top:22px"><span class="kicker">Reading a benchmark critically — the five questions</span>
+    <div class="checklist" style="margin-top:10px">
+      <label><input type="checkbox" /> <span><b>What is actually measured?</b> Final answers only, or the trajectory too? Whose tests decide a pass?</span></label>
+      <label><input type="checkbox" /> <span><b>pass@1, pass@k, or pass^k?</b> And with what k? A number without its metric is not a number.</span></label>
+      <label><input type="checkbox" /> <span><b>Is it saturated?</b> When top scores crowd near the ceiling, the benchmark has stopped discriminating — differences are noise and harness luck.</span></label>
+      <label><input type="checkbox" /> <span><b>Could it be contaminated?</b> How long have the tasks and solutions been public?</span></label>
+      <label><input type="checkbox" /> <span><b>Does it match my task?</b> Web navigation scores tell you little about refund policy compliance. Your own eval set is always the tiebreaker.</span></label>
+    </div>
+    <div class="callout blue" style="margin-bottom:0"><b>The stance to hold:</b> a benchmark is <em>evidence</em>, never a guarantee. It narrows the field of candidate models and designs. The decision to deploy is made on your data, with your cases, at your k.</div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The evaluator problem</div>
+  <h2>LLM-as-judge: useful, biased, and easy to trust too much</h2>
+  <p class="lede">Most of what an agent produces has no exact right answer, so you need a grader for open-ended output. The obvious move is to have a strong model grade it against a rubric or a reference (<b>Zheng et al., 2023</b>). It scales beautifully. It is also a fallible evaluator, and the failure mode is that it <em>looks</em> rigorous.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><h3>Pick the evaluator per check, not per project</h3>
+      <div class="compare" style="margin-top:8px"><table class="plain">
+        <tr><th>Kind</th><th>Good for</th><th>Cost</th></tr>
+        <tr><td><b>Rule / exact match</b></td><td>Anything checkable: IDs, numbers, required fields, forbidden actions, schema validity, tests passing</td><td>Nearly free, perfectly consistent</td></tr>
+        <tr><td><b>LLM-as-judge</b></td><td>Open-ended quality: clarity, tone, helpfulness, faithfulness to a source</td><td>Cheap per item, but biased and needs validating</td></tr>
+        <tr><td><b>Human review</b></td><td>High-stakes and ambiguous edges: legal risk, safety, anything you will be asked to defend</td><td>Expensive, slow, and the ground truth everything else is calibrated against</td></tr>
+      </table></div>
+      <p class="small" style="margin-top:12px"><b>Worked example — one document-QA agent, four checks:</b> the cited document ID → <b>rule</b> (it either matches or it does not). The extracted dollar amount → <b>rule</b>. Whether the answer reads clearly and stays faithful to the source → <b>LLM-judge</b>. Anything flagged as a legal-risk edge case → <b>human</b>. Do not reach for a judge where a rule is exact and free.</p></div>
+    <div class="card"><h3>LLM as a Judge (IBM Technology, 6m08s)</h3>
+      <p class="small">The concept, the rubric, and the pitfalls in six minutes. Watch it, then read the four biases below and see how many the video names.</p>
+      <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/trfUBIDeI1Y" title="LLM as a Judge: Scaling AI Evaluation Strategies" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:34px;font-size:20px">The four biases you must be able to name</h3>
+  <div class="biasgrid">
+    <div class="biascard"><h4>Position bias</h4><p>When comparing two answers, judges can favor the one in a particular position rather than the better one. Documented in <b>Zheng et al., 2023</b>. Your ranking can flip when you swap A and B.</p></div>
+    <div class="biascard"><h4>Verbosity / length bias</h4><p>Longer, more elaborate answers tend to score higher, whether or not they are more correct. This is the bias students game accidentally: pad the response and the rubric rewards it.</p></div>
+    <div class="biascard"><h4>Self-preference</h4><p>A judge can prefer text in its own style or from its own model family. If the judge and the agent are the same model, you are partly grading a family resemblance.</p></div>
+    <div class="biascard"><h4>Sycophancy</h4><p>Agreeable, flattering, confident-sounding output scores well. Confidently wrong answers are exactly the ones a judge is worst at catching — and exactly the ones that hurt in production.</p></div>
+  </div>
+  <div class="callout red" style="margin-top:20px"><b>Why this is worse than having no eval:</b> a biased judge produces a number, a chart, and a sense of rigor. Teams then make deployment decisions on it and stop looking. An unmeasured system at least keeps people suspicious.</div>
+
+  <h3 style="margin-top:30px;font-size:20px">Mitigations — validate the evaluator like you validate the agent</h3>
+  <ol class="steps">
+    <li><b>Swap positions and average.</b> Run every pairwise comparison in both orders. If the verdict flips, the judge is reading position, not quality — record that as a disagreement rather than a score.</li>
+    <li><b>Write an explicit rubric with anchors, and give a reference answer.</b> “Rate helpfulness 1–5” invites vibes. “2 = answers the question but omits the policy citation” is checkable, and it is what makes two runs of the judge agree with each other.</li>
+    <li><b>Prefer pairwise comparison over absolute scores</b> when you can. “Which of these two is better?” is a far more stable judgment than “score this 1–10,” for models and humans alike.</li>
+    <li><b>Calibrate against humans — non-negotiable.</b> Hand-label a sample (say 50 items), run the judge on the same sample, and report the agreement rate. If the judge agrees with your humans 60% of the time, its scores are decoration. Recheck the agreement whenever the rubric, the judge model, or the task changes.</li>
+    <li><b>Use rules wherever a rule exists.</b> Every check you can express deterministically is one fewer place for bias to enter, and it is cheaper besides.</li>
+  </ol>
+  <p class="small" style="margin-top:14px"><a class="doc" href="https://arxiv.org/abs/2306.05685" target="_blank" rel="noopener">Zheng et al., 2023 — Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena (arXiv:2306.05685) ↗</a></p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Discussion</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>A vendor's deck says: “Our coding agent achieves 78% on SWE-bench — near-human performance.” You have four minutes with them. What do you ask, and what would change your mind either way?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox"><b>Four questions, in order of how much they move the number:</b><br />
+  <b>1. Which subset, and which harness?</b> Full set, Verified, or Lite — and what scaffolding did the agent get: how many steps, which tools, how many attempts, did retries count? Two numbers are only comparable if these match.<br />
+  <b>2. pass@1 or pass@k?</b> If the agent generated many patches and a test suite picked the winner, that is a pass@k number and it is legitimate <em>only because SWE-bench has a free verifier</em> — my repository at 2 a.m. does not. Ask for the pass^k, or at least the variance across repeated runs.<br />
+  <b>3. Contamination?</b> These issues and their accepted fixes have been public for years. Ask what they have measured on issues created <em>after</em> the model's training cutoff, or on a private repo.<br />
+  <b>4. What does it do on my tickets?</b> The only question that decides anything. Propose a pilot on 30 of our own issues, scored by our own tests, run three times each, reporting pass@1 and pass^3.<br /><br />
+  <b>What would change my mind:</b> a strong result on our own private cases at pass^3, with traces I can inspect. <b>What would not:</b> a bigger benchmark number. And note the rhetorical move to reject explicitly — “near-human performance” compares a benchmark score against a human baseline measured on that same benchmark, which says nothing about human performance on our work.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Concept check</div>
+  <h2>Three questions before you move on</h2>
+  <div id="mcheck"></div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="why.html"><span class="lab">← Previous</span><b>01 · Why demos lie</b></a>
+  <a href="exercises.html" class="next"><span class="lab">Next →</span><b>03 · Practice &amp; case</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 8 — Evaluation &amp; Reliability<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* ---------- pass@k vs pass^k calculator + chart ---------- */
+(function(){
+const NS='http://www.w3.org/2000/svg';
+const svg=document.getElementById('chart');
+const L=64,R=690,T=24,B=262,KMAX=10;
+const X=k=>L+(k-1)/(KMAX-1)*(R-L);
+const Y=v=>B-v*(B-T);
+function el(n,a){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e}
+function draw(p,k){
+  while(svg.firstChild)svg.removeChild(svg.firstChild);
+  /* gridlines + y ticks */
+  [0,.25,.5,.75,1].forEach(v=>{
+    svg.appendChild(el('line',{x1:L,y1:Y(v),x2:R,y2:Y(v),class:'gl'}));
+    const t=el('text',{x:L-10,y:Y(v)+4,class:'tick','text-anchor':'end'});
+    t.textContent=(v*100)+'%';svg.appendChild(t);
+  });
+  svg.appendChild(el('line',{x1:L,y1:T,x2:L,y2:B,class:'axis'}));
+  svg.appendChild(el('line',{x1:L,y1:B,x2:R,y2:B,class:'axis'}));
+  for(let i=1;i<=KMAX;i++){
+    const t=el('text',{x:X(i),y:B+20,class:'tick','text-anchor':'middle'});
+    t.textContent=i;svg.appendChild(t);
+  }
+  const xl=el('text',{x:(L+R)/2,y:B+44,class:'axlab','text-anchor':'middle'});
+  xl.textContent='k  —  number of trials';svg.appendChild(xl);
+  /* marker line at current k */
+  svg.appendChild(el('line',{x1:X(k),y1:T,x2:X(k),y2:B,class:'kline'}));
+  /* curves */
+  let up='',dn='';
+  for(let i=1;i<=KMAX;i++){
+    up+=X(i).toFixed(1)+','+Y(1-Math.pow(1-p,i)).toFixed(1)+' ';
+    dn+=X(i).toFixed(1)+','+Y(Math.pow(p,i)).toFixed(1)+' ';
+  }
+  svg.appendChild(el('polyline',{points:up,class:'cUp'}));
+  svg.appendChild(el('polyline',{points:dn,class:'cDown'}));
+  for(let i=1;i<=KMAX;i++){
+    svg.appendChild(el('circle',{cx:X(i),cy:Y(1-Math.pow(1-p,i)),r:i===k?6:3.4,fill:'#0039a6',class:'dot'}));
+    svg.appendChild(el('circle',{cx:X(i),cy:Y(Math.pow(p,i)),r:i===k?6:3.4,fill:'#c8102e',class:'dot'}));
+  }
+  /* legend */
+  const lg1=el('text',{x:R-6,y:T+16,class:'leg',fill:'#0039a6','text-anchor':'end'});
+  lg1.textContent='pass@k — at least one passes';svg.appendChild(lg1);
+  const lg2=el('text',{x:R-6,y:T+34,class:'leg',fill:'#c8102e','text-anchor':'end'});
+  lg2.textContent='pass^k — all k pass';svg.appendChild(lg2);
+}
+const ps=document.getElementById('pSlider'), ks=document.getElementById('kSlider');
+function pct(x){const s=(x*100).toFixed(1);return (x<1&&s==='100.0')?'99.9%+':s+'%'}
+function num(x){return (x<1&&x.toFixed(4)==='1.0000')?x.toFixed(8):x.toFixed(4)}
+function update(){
+  const p=+ps.value/100, k=+ks.value;
+  const at=1-Math.pow(1-p,k), hat=Math.pow(p,k);
+  document.getElementById('pOut').textContent=(+ps.value)+'%';
+  document.getElementById('kOut').textContent=k;
+  document.getElementById('roP').textContent=pct(p);
+  document.getElementById('roAt').textContent=pct(at);
+  document.getElementById('roHat').textContent=pct(hat);
+  document.getElementById('calcMath').innerHTML=
+    'pass@'+k+' = 1 - (1 - '+p.toFixed(2)+')<sup>'+k+'</sup> = <b>'+num(at)+'</b><br />'+
+    'pass^'+k+' = '+p.toFixed(2)+'<sup>'+k+'</sup> = <b>'+num(hat)+'</b>';
+  document.getElementById('chartNote').innerHTML=
+    'At p = <b>'+(+ps.value)+'%</b> and k = <b>'+k+'</b>: the generous number is <b style="color:#0039a6">'+pct(at)+
+    '</b> and the honest one is <b style="color:#c8102e">'+pct(hat)+'</b>. The vertical dashed line marks your current k.';
+  document.getElementById('mgrLine').innerHTML=
+    'An agent that succeeds <b>'+(+ps.value)+'%</b> of the time sounds like a good hire. But a customer who uses it <b>'+k+
+    ' time'+(k===1?'':'s')+'</b> has only a <b>'+Math.round(hat*100)+'%</b> chance of never seeing it fail'+
+    (hat<0.5?' — so most of your repeat customers meet the failure, not the average.':'. Push k a little higher and watch that hold up.');
+  draw(p,k);
+}
+ps.addEventListener('input',update);ks.addEventListener('input',update);update();
+})();
+
+/* ---------- benchmark explorer ---------- */
+const BM=[
+ {n:'SWE-bench',
+  h:'Can an agent resolve a real GitHub issue?',
+  cite:'Jimenez et al., 2023 · arXiv:2310.06770',
+  url:'https://arxiv.org/abs/2310.06770',
+  what:'<b>2,294 real software-engineering problems</b> drawn from issues and pull requests across <b>12 popular Python repositories</b>. The agent gets the repository and the issue text, and must produce a code change. A run passes when the repository\'s own tests say it does. <b>SWE-bench Verified</b> (2024) is a human-validated <b>500-issue subset</b>, created because some of the original tasks were underspecified or had unreliable tests.',
+  stress:'Navigating a large unfamiliar codebase, editing across files, running tests, and staying on task for a long horizon.',
+  watch:'Reported top scores have climbed from roughly <b>20% to over 70%</b> (approximate and dated — check the current leaderboard). Rapid climbs like that make the <em>contamination</em> question sharper: the issues and their accepted fixes have been public for years. Also confirm which subset and which harness produced any number you are quoted.',
+  extra:'<a class="doc" href="https://www.swebench.com/" target="_blank" rel="noopener">swebench.com — leaderboard and dataset ↗</a>'},
+ {n:'τ-bench (tau-bench)',
+  h:'Can an agent follow a policy while talking to a user and using tools?',
+  cite:'Yao et al., 2024 · arXiv:2406.12045',
+  url:'https://arxiv.org/abs/2406.12045',
+  what:'Tool-agent-user interaction in two domains — <b>retail</b> and <b>airline</b>. The agent must handle a customer task by calling tools while conversing with a <b>simulated user</b> and obeying the domain\'s <b>written policy</b>. It is the benchmark that introduced <b>pass^k</b>, and the reason this page exists.',
+  stress:'Three things at once: multi-turn conversation, correct tool use, and compliance with rules that are written down rather than learned. Any one of them failing fails the task.',
+  watch:'Its own headline finding is the lesson: <b>pass^k falls as k rises</b> — agents that look capable on a single attempt are much less consistent across repeated attempts. The <b>airline domain is harder than retail</b>. Remember that a simulated user is not a real user, and that domain policies are specific: strong τ-bench numbers do not transfer to your policies for free.',
+  extra:'<span class="small">This is one of your two assigned readings this week.</span>'},
+ {n:'WebArena',
+  h:'Can an agent get real work done across realistic websites?',
+  cite:'Zhou et al., CMU, 2023 · arXiv:2307.13854',
+  url:'https://arxiv.org/abs/2307.13854',
+  what:'<b>812 long-horizon tasks</b> in a <b>self-hosted environment of realistic website clones</b> — an e-commerce site, a forum, a content-management system, and supporting tools. Because it is self-hosted, runs are reproducible and nobody\'s live account gets damaged.',
+  stress:'Long-horizon web work: navigating unfamiliar interfaces, chaining actions across several sites, and recovering when a page is not what the agent expected.',
+  watch:'At launch, the best agent completed roughly <b>14%</b> of tasks against a human baseline of about <b>78%</b> (Zhou et al., 2023). That gap is the most honest picture in this section of how far realistic, multi-site work was from solved — and it is a <em>launch-era</em> figure, so treat it as dated and check current results before quoting it. Clones are also not the live web.',
+  extra:''}
+];
+const bl=document.getElementById('bmList'), bv=document.getElementById('bmView');
+function showBM(i){
+  const b=BM[i];
+  bv.innerHTML='<h3>'+b.h+'</h3><p class="small" style="margin-top:-4px"><a class="doc" href="'+b.url+'" target="_blank" rel="noopener">'+b.cite+' ↗</a></p>'+
+   '<p class="small"><b>What it is:</b> '+b.what+'</p>'+
+   '<p class="small" style="margin-top:10px"><b>What it stresses:</b> '+b.stress+'</p>'+
+   '<div class="callout" style="margin-top:14px"><b>How the number gets misused:</b> '+b.watch+'</div>'+
+   (b.extra?'<p class="small" style="margin-top:12px">'+b.extra+'</p>':'');
+  [...bl.children].forEach((x,j)=>x.classList.toggle('active',j===i));
+}
+BM.forEach((b,i)=>{
+  const btn=document.createElement('button');btn.className='arch-btn';
+  btn.innerHTML='<span class="n">0'+(i+1)+'</span>'+b.n;
+  btn.addEventListener('click',()=>showBM(i));bl.appendChild(btn);
+});
+showBM(0);
+
+/* ---------- concept check ---------- */
+const MC=[
+ {q:'A team reports "pass@5 = 95%" for their customer-refund agent and asks to deploy it unattended. The core problem is:',
+  o:['pass@5 is too small a k','pass@5 counts a task as solved if ANY of 5 runs succeeded — but production gives the customer one run, with no verifier to pick the good one','pass@5 only applies to code generation','Nothing — 95% is strong'],
+  a:1, why:'pass@k is legitimate when a cheap verifier can select the winning sample (unit tests, a compiler). A refund flow has no such verifier: the customer gets whichever run happened. Ask for pass@1 and pass^k instead.'},
+ {q:'Your agent has pass@1 = 0.90. A customer will use it 3 times this week. What is pass^3, and what do you tell them?',
+  o:['0.90 — each run is independent so the rate is unchanged','0.73 — about a 1-in-4 chance of at least one failure across the week','0.9997 — near certainty','Cannot be computed from pass@1'],
+  a:1, why:'0.9 cubed = 0.729. Assuming independent runs, roughly 27% of three-use customers see at least one failure. Tell them the number AND the plan: which failures, what the retry or human gate does, and what it costs them when it happens.'},
+ {q:'Your LLM judge scores agent A above agent B. You swap the order of the two answers and rerun; now B wins. The right conclusion is:',
+  o:['B is better — the second result is more recent','The judge is showing position bias; record a disagreement, average both orders, and calibrate against human labels','Use a bigger judge model and accept its verdict','The agents are equally good, so ship either'],
+  a:1, why:'A verdict that flips on ordering was never about quality (Zheng et al., 2023). Run both orders and average, tighten the rubric with anchors, and check the judge against a human-labeled sample before you trust any of its scores.'}
+];
+const mc=document.getElementById('mcheck');
+MC.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML='<div class="stmt">'+(i+1)+'. '+x.q+'</div><div class="opts" style="flex-direction:column;align-items:stretch">'+x.o.map((o,j)=>'<button data-v="'+j+'" style="text-align:left;border-radius:10px">'+String.fromCharCode(65+j)+'. '+o+'</button>').join('')+'</div><div class="fb"></div>';
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector('button[data-v="'+x.a+'"]').classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+String.fromCharCode(65+x.a)+'. ')+x.why;
+  }));
+  mc.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

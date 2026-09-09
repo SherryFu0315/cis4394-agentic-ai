@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>01 · Agent Memory — CIS 4394 Week 7</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.memwrap{display:grid;grid-template-columns:minmax(320px,470px) 1fr;gap:20px;align-items:start}
+.memnode{cursor:pointer}
+.memnode rect{fill:#fff;stroke:var(--line2);stroke-width:1.4;rx:10}
+.memnode text{font-family:var(--mono);font-size:12.5px;font-weight:600;fill:var(--ink)}
+.memnode .sub{font-family:var(--sans);font-size:10.5px;font-weight:400;fill:var(--muted)}
+.memnode.on rect{fill:var(--blue);stroke:var(--blue)}
+.memnode.on text{fill:#fff}
+.memnode.on .sub{fill:#dfe6f7}
+.memnode.vol rect{fill:#fff7ea;stroke:#dbb96a}
+.memnode.vol.on rect{fill:var(--red);stroke:var(--red)}
+.memedge{stroke:var(--line2);stroke-width:1.5;fill:none;marker-end:url(#arrm)}
+.memedge.dash{stroke-dasharray:5 4}
+.memlbl{font-family:var(--sans);font-size:10.5px;fill:var(--muted)}
+.memnote{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:14.5px;min-height:150px}
+@media(max-width:880px){.memwrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 7</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="memory.html" class="here"><span class="k">01</span>Agent Memory</a>
+  <a href="rag.html"><span class="k">02</span>RAG</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">01 · Foundations</div>
+  <h1>Context is not <em>memory</em>.</h1>
+  <p class="lede">An agent that "remembers" is an agent whose harness <b>wrote something down</b> and <b>read it back</b>. Those are two separate design decisions — a write policy and a read policy — and neither one happens by default.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">The distinction that fixes everything else</div>
+  <h2>Context vs memory</h2>
+  <p class="lede">Both are "what the model sees." Only one of them still exists tomorrow.</p>
+  <div class="compare">
+  <table class="plain">
+    <tr><th></th><th>Context (the window)</th><th>Memory (a store)</th></tr>
+    <tr><td><b>What it is</b></td><td>The tokens assembled for <em>this</em> model call: system prompt, tools, retrieved text, conversation so far.</td><td>Data your system deliberately saved outside the model — a row in a database, a file, a vector index.</td></tr>
+    <tr><td><b>Lifespan</b></td><td>One call. The next call gets whatever your harness re-assembles.</td><td>Until you delete it. Survives the run, the session, the deploy.</td></tr>
+    <tr><td><b>Where it lives</b></td><td>In the request. It is gone the moment the response returns.</td><td>In your infrastructure — and therefore in your backup, your access-control model, and your retention schedule.</td></tr>
+    <tr><td><b>Who controls it</b></td><td>Your prompt-assembly code, every turn (Week 3's context engineering).</td><td>Your write policy (what gets saved) and read policy (what gets loaded back).</td></tr>
+    <tr><td><b>What it costs</b></td><td>Tokens — every turn, forever. Bigger context = higher bill and, past a point, worse recall inside the window.</td><td>Storage plus a retrieval step. Cheap to keep, cheap to update — you pay tokens only for what you load.</td></tr>
+    <tr><td><b>Failure mode</b></td><td>Amnesia between runs; or, if you stuff everything in, context rot.</td><td>Stale, contradictory, or over-broad memories that quietly poison later runs.</td></tr>
+  </table>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>Week 3 callback:</b> you already played the <a href="../week3/context.html">context packing game</a> — a fixed token budget, and every item earning its place. Memory is what you do with the things that <em>lost</em> that competition but still matter: park them in a store, and pull them back only on the turn that needs them.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · click each store</div>
+  <h2>Four kinds of memory, one architecture</h2>
+  <p class="lede">The standard taxonomy borrows its names from cognitive psychology: <b>working</b>, <b>episodic</b>, <b>semantic</b>, and <b>procedural</b> memory. IBM's explainer uses the same four for agent systems (<a class="doc" href="https://www.ibm.com/think/topics/ai-agent-memory" target="_blank" rel="noopener">IBM Think — What is AI agent memory? ↗</a>). Click a box to see what belongs in it and what it costs you.</p>
+  <div class="memwrap">
+    <div class="loopbox">
+      <svg viewBox="0 0 460 380" aria-label="agent memory architecture: working memory plus three long-term stores">
+        <defs><marker id="arrm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#cfccc2"/></marker></defs>
+        <path class="memedge" d="M 230 96 L 230 132" />
+        <path class="memedge dash" d="M 78 236 Q 78 200 142 186" />
+        <path class="memedge dash" d="M 230 236 L 230 188" />
+        <path class="memedge dash" d="M 382 236 Q 382 200 318 186" />
+        <text class="memlbl" x="16" y="126">read path: retrieve → inject</text>
+        <text class="memlbl" x="16" y="352">write path: the loop decides what is worth storing —</text>
+        <text class="memlbl" x="16" y="366">nothing saves itself</text>
+        <g class="memnode vol" id="mem0"><rect x="118" y="46" width="224" height="50"/><text x="230" y="70" text-anchor="middle">working memory</text><text class="sub" x="230" y="86" text-anchor="middle">= the context window · gone at end of run</text></g>
+        <g class="memnode" id="mem9"><rect x="118" y="134" width="224" height="46"/><text x="230" y="155" text-anchor="middle">the agent loop</text><text class="sub" x="230" y="171" text-anchor="middle">reads before deciding · writes after acting</text></g>
+        <g class="memnode" id="mem1"><rect x="10" y="238" width="136" height="62"/><text x="78" y="264" text-anchor="middle">episodic</text><text class="sub" x="78" y="282" text-anchor="middle">what happened</text></g>
+        <g class="memnode" id="mem2"><rect x="162" y="238" width="136" height="62"/><text x="230" y="264" text-anchor="middle">semantic</text><text class="sub" x="230" y="282" text-anchor="middle">what is true</text></g>
+        <g class="memnode" id="mem3"><rect x="314" y="238" width="136" height="62"/><text x="382" y="264" text-anchor="middle">procedural</text><text class="sub" x="382" y="282" text-anchor="middle">how to do it</text></g>
+      </svg>
+      <p class="small" style="margin:10px 6px 4px">Amber = volatile. The three boxes at the bottom are <b>long-term</b> stores: they persist between runs, and something has to load them back in.</p>
+    </div>
+    <div>
+      <div class="memnote" id="memNote">Click a box in the diagram.</div>
+      <div class="callout" style="margin-top:14px"><b>Notice the shape.</b> Long-term memory works exactly like RAG (page 02): decide what to store, store it, then <em>retrieve the relevant part</em> and paste it into the context window at the right moment. Memory is retrieval over things the agent learned; RAG is retrieval over things your organization wrote. Same read path, different corpus.</div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Concept check · interactive</div>
+  <h2>The memory router</h2>
+  <p class="lede">You are building a travel-booking agent for a mid-size firm. Four things happen during a run. For each one, decide which store it belongs in — or whether it belongs in a store at all.</p>
+  <div id="router"></div>
+  <div class="callout blue" style="margin-top:18px"><b>Why the classification is not academic:</b> each store has a different retention rule, a different retrieval trigger, and a different privacy exposure. Semantic facts about a person are the ones the law cares about; episodic run records are what your on-call engineer needs at 2 a.m.; procedural notes are the ones that silently change your agent's behavior forever if nobody reviews them.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The two policies</div>
+  <h2>What gets written, and when it gets read</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><span class="kicker">Write policy</span><h3 style="margin-top:6px">What is worth remembering?</h3>
+      <p class="small">Storing everything is the same mistake as putting everything in the context window — you just move the mess. A workable filter asks four questions of each candidate memory:</p>
+      <ol class="steps" style="margin-top:14px">
+        <li><b>Is it durable?</b> True next week, not just for this turn. "User prefers aisle seats" is durable; "user is currently looking at flight 442" is not.</li>
+        <li><b>Is it reusable?</b> Will a future run actually consult it? A fact nothing will ever retrieve is storage cost with no upside.</li>
+        <li><b>Is it expensive to recompute?</b> Something learned from six tool calls is worth saving; something one cheap lookup returns is not.</li>
+        <li><b>Is it allowed?</b> Do you have a basis to retain it, and can you delete it on request? If not, the answer to "should we store this" is no — regardless of how useful it is.</li>
+      </ol>
+      <p class="small" style="margin-top:12px">Who writes it matters too. <b>Explicit</b> writes ("remember that…") are auditable and rare. <b>Automatic</b> writes — where the agent decides at the end of a run what to save — scale better and are exactly where wrong facts get canonized. Keep a source and timestamp on every memory so a bad one can be traced and revoked.</p>
+    </div>
+    <div class="card"><span class="kicker">Read policy</span><h3 style="margin-top:6px">When do you retrieve?</h3>
+      <p class="small">The naive design loads the whole memory store into every prompt. That works for a demo with nine memories and collapses at nine thousand — you have re-created the context problem with a bigger bill. Real read policies are selective:</p>
+      <ol class="steps" style="margin-top:14px">
+        <li><b>At the start of a session</b>, load a small, bounded profile: the handful of semantic facts about this user, plus the standing procedural rules.</li>
+        <li><b>On relevance</b>, retrieve mid-run by similarity to the current sub-task — the same top-<em>k</em> mechanism as RAG on page 02.</li>
+        <li><b>On failure</b>, pull episodic records of previous attempts at this task. This is the retry that gets smarter instead of louder.</li>
+        <li><b>Bound it.</b> A cap on how many memories can enter the prompt, and a recency or confidence tiebreak. Memory competes for the same token budget as everything else.</li>
+      </ol>
+      <p class="small" style="margin-top:12px">Then close the loop: log which memories were injected on the turn that produced a bad answer. Without that, a poisoned memory is invisible — the trace shows a confident model and no reason for it.</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>Week 4 callback — procedural memory is Reflexion, persisted.</b> On the <a href="../week4/patterns.html">reasoning patterns page</a> you met reflection: the agent critiques its own attempt and stores the critique so the next attempt does better. Inside a single run, that critique lives in the context window. Write it to a store instead and it becomes procedural memory: a lesson that carries into next month's runs. That one change is the difference between an agent that learns within a task and an agent that learns across a job.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Governance</div>
+  <h2>A memory store is retained personal data</h2>
+  <p class="lede">The engineering question is "what should the agent remember?" The business question is "what are we now holding, about whom, and for how long?" They have to be answered together, because the second one has consequences the first one cannot see.</p>
+  <div class="grid3">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Consent &amp; notice</span><p class="small" style="margin-top:8px">A user talking to an assistant does not obviously expect a durable profile to be built from it. If your agent writes semantic facts about people, someone has to be told — and the agent should be able to say what it knows about you when asked.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Retention &amp; deletion</span><p class="small" style="margin-top:8px">"Forget me" has to be executable. That means every memory carries an owner ID and a timestamp, and deletion reaches the vector index and the backups too — not just the pretty table in the admin UI.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Contamination</span><p class="small" style="margin-top:8px">Memory is an input channel, so it is an <b>attack surface</b>. Text the agent read in one session and saved becomes an instruction it reads back later — prompt injection with a delay fuse (Week 2's J004). Treat stored memories as untrusted data, not as system prompt.</p></div>
+  </div>
+  <div style="margin-top:22px">
+    <div class="bigq"><span class="qlabel">Discussion question</span>Your firm's support agent has been writing automatic memories for four months. Legal asks: "for customer #8812, show us everything the system remembers, where each item came from, and delete it." What must have been designed in on day one for that request to be answerable in an afternoon rather than a quarter?</div>
+    <button class="revealbtn">See the answer</button>
+    <div class="revealbox"><b>Four things, none of which can be retrofitted cheaply.</b> <b>(1) A subject key on every memory.</b> Memories written as free text with no owner field cannot be queried by customer — you end up doing similarity search over your own database and hoping. <b>(2) Provenance.</b> Each memory needs the run ID, the timestamp, and the source turn or document that produced it, so "where did this come from" has an answer and a wrong memory can be traced to a wrong input. <b>(3) A single delete path that reaches every copy</b> — the primary store, the vector index (embeddings of personal text are still personal data), any cache, and the run logs. Deleting the row while the embedding survives is not deletion. <b>(4) An export view</b> — the same read path a human can run, so "show us everything" is a query, not an archaeology project. Notice these are the same properties that make a RAG system auditable on page 02: an ID, a source, a version, a timestamp. Governance is mostly the discipline of never storing a fact without knowing where it came from.</div>
+  </div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="index.html"><span class="lab">← Back</span><b>Week 7 home</b></a>
+  <a href="rag.html" class="next"><span class="lab">Next →</span><b>02 · RAG</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 7 — Memory, RAG &amp; Knowledge<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* clickable memory architecture */
+const MEM=[
+ {id:'mem0',t:'<b>Working memory = the context window.</b> Everything the model can see on this call: the system prompt, the tool list, retrieved text, and the conversation so far. It is a scratchpad, not a store — when the run ends it is gone, and nothing in it was ever saved anywhere. Typical contents: the current draft, the last tool result, the sub-goal being worked on right now.'},
+ {id:'mem9',t:'<b>The loop is where both paths run.</b> Before the model decides (Week 4, step 1 of a loop turn), the harness <em>reads</em>: pull the relevant memories and paste them into the prompt. After the step, the harness <em>writes</em>: decide whether anything learned deserves to outlive the run. Neither happens unless you write the code — a model cannot save anything by itself.'},
+ {id:'mem1',t:'<b>Episodic — what happened.</b> A record of specific past events with their context: this run, this customer, this attempt, this outcome. <em>Example:</em> "2026-10-02, booking for Rivera: the Delta API returned 409 twice, the fallback carrier worked." <em>Retrieved when:</em> the agent hits a similar situation or a repeat failure. <em>Business value:</em> the agent stops making the same mistake, and your engineers get an incident history for free. <em>Cost:</em> volume — episodes accumulate fast, so most systems summarize or expire them.'},
+ {id:'mem2',t:'<b>Semantic — what is true.</b> Durable facts about the world, the organization, or the user, stripped of the episode that taught them. <em>Example:</em> "Rivera is in the Atlanta office; approval threshold for her cost center is $1,500." <em>Retrieved when:</em> a session starts, or when the fact is relevant to the current sub-task. <em>Business value:</em> personalization that does not require the user to repeat themselves. <em>Cost:</em> this is the store that holds personal data — and the one that goes quietly stale when the underlying fact changes.'},
+ {id:'mem3',t:'<b>Procedural — how to do it.</b> Learned operating rules: skills, preferences about method, and lessons from past corrections. <em>Example:</em> "Always confirm the traveler cost center before holding a fare — three prior runs had to be reversed." <em>Retrieved when:</em> essentially always, because it shapes behavior; often it is injected into the system prompt. <em>Business value:</em> the agent improves across jobs, not just within one. <em>Cost:</em> highest blast radius. A wrong procedural memory changes every future run, so these deserve human review before they become standing instructions.'}
+];
+MEM.forEach(n=>{
+  const el=document.getElementById(n.id);
+  el.addEventListener('click',()=>{
+    MEM.forEach(m=>document.getElementById(m.id).classList.toggle('on',m.id===n.id));
+    document.getElementById('memNote').innerHTML=n.t;
+  });
+});
+
+/* memory router */
+const RT=[
+ {q:'Mid-conversation, the user says: "Actually I am in the Thursday section, section R." Where does that belong?',
+  o:['Working memory only','Episodic','Semantic','Procedural'],
+  a:2, why:'It is a durable fact about the user that will still be true next week and is useful in any future session — that is semantic memory. Keeping it only in the context window means the user has to say it again tomorrow. Store it with an owner ID and a timestamp, because a fact about a person is personal data.'},
+ {q:'A run fails: the booking tool returned "SEAT_MAP_UNAVAILABLE" for carrier X, and the agent recovered by re-querying without a seat preference. Where does that belong?',
+  o:['Working memory only','Episodic','Semantic','Procedural'],
+  a:1, why:'It is a record of one specific event, with its context and outcome — episodic memory. Retrieved when the agent meets a similar failure, it turns a blind retry into an informed one. Note what it is not: a general truth about the world. If the same failure recurs twenty times, a human may promote the lesson into a procedural rule — that promotion should be a deliberate step, not an accident.'},
+ {q:'The half-written itinerary the agent is composing right now, before the user has approved anything. Where does that belong?',
+  o:['Working memory (the context window)','Episodic','Semantic','Procedural'],
+  a:0, why:'It is the current scratchpad — working memory. It is supposed to disappear. Writing every intermediate draft to long-term storage is the classic beginner mistake: you pay storage and retrieval cost for material that will be superseded in thirty seconds, and you clutter the store that later retrievals have to search through. If the finished itinerary matters after the run, save the finished one.'},
+ {q:'After three reversed bookings, the team agrees: the agent must always confirm the traveler cost center before holding a fare. Where does that belong?',
+  o:['Working memory only','Episodic','Semantic','Procedural'],
+  a:3, why:'It is a rule about how to do the job — procedural memory, typically injected into the system prompt so it shapes every run. This is also the store with the largest blast radius: one wrong entry changes all future behavior, so procedural writes deserve a human review gate. (The three reversed bookings themselves stay as episodic records — they are the evidence for the rule.)'}
+];
+const rt=document.getElementById('router');
+RT.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML=`<div class="stmt">${i+1}. ${x.q}</div><div class="opts">${x.o.map((o,j)=>`<button data-v="${j}">${o}</button>`).join('')}</div><div class="fb"></div>`;
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector(`button[data-v="${x.a}"]`).classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+x.o[x.a]+'. ')+x.why;
+  }));
+  rt.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

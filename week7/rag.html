@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>02 · RAG — CIS 4394 Week 7</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.ragwrap{display:grid;grid-template-columns:minmax(320px,470px) 1fr;gap:20px;align-items:start}
+.ragnode{cursor:pointer}
+.ragnode rect{fill:#fff;stroke:var(--line2);stroke-width:1.4;rx:10}
+.ragnode text{font-family:var(--mono);font-size:12.5px;font-weight:600;fill:var(--ink)}
+.ragnode .sub{font-family:var(--sans);font-size:10.5px;font-weight:400;fill:var(--muted)}
+.ragnode.on rect{fill:var(--blue);stroke:var(--blue)}
+.ragnode.on text{fill:#fff}
+.ragnode.on .sub{fill:#dfe6f7}
+.ragnode.store rect{fill:#fff7ea;stroke:#dbb96a}
+.ragnode.store.on rect{fill:var(--red);stroke:var(--red)}
+.ragedge{stroke:var(--line2);stroke-width:1.5;fill:none;marker-end:url(#arrr)}
+.raglbl{font-family:var(--sans);font-size:11px;fill:var(--muted);font-weight:700;letter-spacing:.1em}
+.ragcap{font-family:var(--sans);font-size:10.5px;fill:var(--muted)}
+.ragnote{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:14.5px;min-height:170px}
+.stagelist{display:grid;gap:8px;align-content:start}
+.stagechip{border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:12px 16px;font-size:14px;display:flex;gap:12px;align-items:center;transition:border-color .15s,background .15s}
+.stagechip .n{font-family:var(--serif);font-style:italic;color:var(--line2);font-size:20px;width:22px;text-align:center}
+.stagechip b{font-weight:650}
+.stagechip .d{font-size:12.5px;color:var(--muted);display:block}
+.stagechip.on{border-color:var(--blue);background:var(--blue-soft)}
+.stagechip.on .n{color:var(--blue)}
+.stagechip.done{opacity:.62}
+.vecmap{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.vecmap svg{width:100%;height:auto;display:block}
+.vecmap .pt{fill:var(--blue)}
+.vecmap .pt.far{fill:var(--line2)}
+.vecmap .q{fill:var(--red)}
+.vecmap text{font-family:var(--sans);font-size:11px;fill:var(--ink)}
+.vecmap text.dim{fill:var(--muted)}
+.vecmap .ring{fill:none;stroke:var(--red);stroke-width:1.2;stroke-dasharray:4 4}
+@media(max-width:880px){.ragwrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 7</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="memory.html"><span class="k">01</span>Agent Memory</a>
+  <a href="rag.html" class="here"><span class="k">02</span>RAG</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">02 · The pipeline</div>
+  <h1>Retrieval-augmented <em>generation</em>.</h1>
+  <p class="lede">The model was trained on text that stopped at a cutoff date and never included your documents. RAG closes that gap without touching the weights: find the passages that answer this question, paste them into the prompt, and require the answer to come from them — with a citation (Lewis et al., 2020).</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Why not just ask the model</div>
+  <h2>Closed book vs open book</h2>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Closed book — parametric knowledge</span>
+      <p class="small" style="margin-top:8px">Everything the model "knows" on its own is compressed into its weights during training. Three consequences follow, and none of them are fixable by prompting harder:</p>
+      <p class="small"><b>It is frozen.</b> Whatever changed after the training cutoff is invisible. <b>It never saw your data.</b> Your contracts, tickets, and policies were not in the training set, and you would not want them to be. <b>It has no sources.</b> Parametric knowledge is a blend, not a filing cabinet, so the model cannot tell you which document a claim came from — and when it is unsure, fluent guessing looks exactly like knowing.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Open book — retrieval-augmented</span>
+      <p class="small" style="margin-top:8px">Lewis et al. (2020) paired a generator with a retriever over an external corpus, so the knowledge lives in documents you control rather than in frozen parameters (<a class="doc" href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">arXiv:2005.11401 ↗</a>). Dense passage retrieval — matching questions to passages by learned embeddings rather than keywords — is the retrieval half of that design (Karpukhin et al., 2020, <a class="doc" href="https://arxiv.org/abs/2004.04906" target="_blank" rel="noopener">arXiv:2004.04906 ↗</a>).</p>
+      <p class="small"><b>Fresh:</b> update a document, and the next answer changes. <b>Private:</b> the corpus stays yours. <b>Attributable:</b> the answer can name the chunk it used, so a human can check it.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The mechanism underneath</div>
+  <h2>Embeddings: meaning as geometry</h2>
+  <p class="lede">Retrieval has to find the right passage when the user's words are not the document's words. A customer types "can I send this back?"; the policy says "return window." Zero words in common — and a keyword search returns nothing useful.</p>
+  <div class="grid2" style="align-items:start">
+    <div>
+      <p>An <b>embedding model</b> converts a piece of text into a list of numbers — a vector, typically several hundred values long. The model is trained so that text with similar meaning lands in similar directions, which turns a language problem into a geometry problem: to find related text, find nearby vectors.</p>
+      <p>Nearness is usually measured with <b>cosine similarity</b> — the angle between two vectors, reported on a scale where 1.0 means pointing the same way and 0 means unrelated. "Retrieve the top <em>k</em>" simply means: embed the question, then return the <em>k</em> stored chunks whose vectors sit at the smallest angle to it.</p>
+      <p class="small">Two practical consequences you will meet in the exercises. First, <b>the question and the documents must be embedded by the same model</b> — vectors from two different models are not comparable, so swapping the embedding model means re-embedding the entire corpus. Second, <b>similarity is not truth</b>: the nearest chunk is the one that talks about the topic most, which may well be last year's version of the policy. Freshness has to be enforced by metadata, not by geometry.</p>
+    </div>
+    <div class="vecmap">
+      <svg viewBox="0 0 420 300" aria-label="illustration: a query vector and nearby document chunks in embedding space">
+        <circle class="ring" cx="150" cy="120" r="86" />
+        <circle class="q" cx="150" cy="120" r="6" />
+        <text x="162" y="118">"can I send this back?"  ← the question</text>
+        <text class="dim" x="162" y="134">the query vector</text>
+        <circle class="pt" cx="96" cy="76" r="5" /><text x="106" y="72">"return window: 30 days"</text>
+        <circle class="pt" cx="206" cy="88" r="5" /><text x="216" y="84">"refunds &amp; exchanges"</text>
+        <circle class="pt" cx="120" cy="182" r="5" /><text x="130" y="196">"how to start a return"</text>
+        <circle class="pt far" cx="336" cy="238" r="5" /><text class="dim" x="228" y="256">"employee parking permits"</text>
+        <circle class="pt far" cx="318" cy="42" r="5" /><text class="dim" x="212" y="34">"holiday shipping cut-off"</text>
+        <text class="dim" x="20" y="286">Illustration only — real embedding spaces have hundreds of dimensions, not two.</text>
+      </svg>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · click each stage</div>
+  <h2>The RAG pipeline</h2>
+  <p class="lede">Six stages, split across two moments in time. The top lane runs <b>offline</b>, once per document. The bottom lane runs <b>live</b>, on every question. Click any box.</p>
+  <div class="ragwrap">
+    <div class="loopbox">
+      <svg viewBox="0 0 460 462" aria-label="RAG pipeline: indexing offline, then query at run time">
+        <defs><marker id="arrr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#cfccc2"/></marker></defs>
+        <text class="raglbl" x="12" y="26">INDEXING · OFFLINE</text>
+        <path class="ragedge" d="M 142 62 L 158 62" />
+        <path class="ragedge" d="M 288 62 L 304 62" />
+        <path class="ragedge" d="M 369 86 Q 369 132 322 154" />
+        <text class="raglbl" x="12" y="212">QUERY · LIVE</text>
+        <path class="ragedge" d="M 142 250 L 158 250" />
+        <path class="ragedge" d="M 288 250 L 304 250" />
+        <path class="ragedge" d="M 240 182 Q 250 214 336 226" />
+        <path class="ragedge" d="M 369 274 Q 369 298 322 316" />
+        <path class="ragedge" d="M 230 348 L 230 368" />
+        <g class="ragnode" id="rg0"><rect x="12" y="40" width="130" height="44"/><text x="77" y="60" text-anchor="middle">documents</text><text class="sub" x="77" y="76" text-anchor="middle">policies, tickets, PDFs</text></g>
+        <g class="ragnode" id="rg1"><rect x="158" y="40" width="130" height="44"/><text x="223" y="60" text-anchor="middle">chunk</text><text class="sub" x="223" y="76" text-anchor="middle">split into passages</text></g>
+        <g class="ragnode" id="rg2"><rect x="304" y="40" width="130" height="44"/><text x="369" y="60" text-anchor="middle">embed</text><text class="sub" x="369" y="76" text-anchor="middle">text → vector</text></g>
+        <g class="ragnode store" id="rg3"><rect x="145" y="134" width="170" height="48"/><text x="230" y="156" text-anchor="middle">vector index</text><text class="sub" x="230" y="172" text-anchor="middle">vectors + text + metadata</text></g>
+        <g class="ragnode" id="rg4"><rect x="12" y="228" width="130" height="44"/><text x="77" y="248" text-anchor="middle">question</text><text class="sub" x="77" y="264" text-anchor="middle">what the user asked</text></g>
+        <g class="ragnode" id="rg5"><rect x="158" y="228" width="130" height="44"/><text x="223" y="248" text-anchor="middle">embed</text><text class="sub" x="223" y="264" text-anchor="middle">same model as above</text></g>
+        <g class="ragnode" id="rg6"><rect x="304" y="228" width="130" height="44"/><text x="369" y="248" text-anchor="middle">retrieve</text><text class="sub" x="369" y="264" text-anchor="middle">top-k nearest</text></g>
+        <g class="ragnode" id="rg7"><rect x="145" y="302" width="170" height="46"/><text x="230" y="323" text-anchor="middle">augment</text><text class="sub" x="230" y="339" text-anchor="middle">chunks + rules + question</text></g>
+        <g class="ragnode" id="rg8"><rect x="145" y="368" width="170" height="46"/><text x="230" y="389" text-anchor="middle">generate</text><text class="sub" x="230" y="405" text-anchor="middle">grounded, cited answer</text></g>
+        <text class="ragcap" x="12" y="436">The generator runs only in the last box.</text>
+        <text class="ragcap" x="12" y="450">Embedding uses a separate, much smaller model.</text>
+      </svg>
+    </div>
+    <div>
+      <div class="ragnote" id="ragNote">Click a stage in the diagram.</div>
+      <div class="callout blue" style="margin-top:14px"><b>Retrieval quality is destiny.</b> The generator can only work with what it is handed. If the right passage is not in the top <em>k</em>, no amount of prompt polish recovers it — the model will either say it does not know (the good outcome) or fill the gap from its parameters (the bad one). Most "the RAG bot is wrong" tickets are retrieval bugs wearing a generation costume.</div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · step through one query</div>
+  <h2>One question, end to end</h2>
+  <p class="lede">A <b>fictional teaching example</b>: Lakeside Supply Co., a retailer with a small policy corpus. A support rep asks about a return. Press <b>Step</b> and watch the question travel through the pipeline. Similarity scores are illustrative.</p>
+  <div class="sim2">
+    <div class="stagelist" id="stages"></div>
+    <div class="simright">
+      <div class="simctl">
+        <button class="primary" id="btnStep">Step ▸</button>
+        <button class="ghost" id="btnAuto">Auto-play</button>
+        <button class="ghost" id="btnReset">Reset</button>
+        <span class="hint" id="stepHint">Query: the Georgia laptop return · step 0 of 8</span>
+      </div>
+      <div class="term" id="simTerm"><span class="t-dim">Press Step to send the question through the pipeline…</span></div>
+      <div class="statepanel" id="simState"><span class="kicker">Pipeline state</span></div>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>Read it like the Week 2 evidence standard.</b> <em>state before → observation → available actions → selected action → result → state after.</em> A RAG answer is auditable for exactly the same reason an agent loop is: every claim in the final sentence traces to a chunk ID, and every chunk ID traces to a document version. If your logs do not contain the retrieved chunk IDs, you cannot prove after the fact <em>why</em> the system said what it said.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The anti-hallucination move</div>
+  <h2>Grounding and citations</h2>
+  <div class="grid2" style="align-items:start">
+    <div>
+      <p>Retrieval alone does not stop a model from inventing things. Three instructions turn retrieved text into an actual constraint, and they belong in the augmented prompt every single time:</p>
+      <ol class="steps" style="margin-top:14px">
+        <li><b>Answer only from the context.</b> Explicitly forbid outside knowledge. Without this line, the model happily blends what it retrieved with what it half-remembers from training — and you cannot tell which sentence came from where.</li>
+        <li><b>Cite the source of each claim.</b> Require the chunk ID or document section next to the statement it supports. Citations are not decoration; they are the mechanism that makes a wrong answer <em>checkable</em> by a human in ten seconds.</li>
+        <li><b>Say "I don't know" when the context is thin.</b> Give the model an approved way to fail — and back it with a rule in your code: if the best similarity score is below a threshold, do not even call the generator. Escalate to a person instead.</li>
+      </ol>
+      <p class="small" style="margin-top:12px">Then verify: a groundedness check compares each claim in the answer against the retrieved text, and a low-confidence result routes to a human gate — the same gate you placed on irreversible actions in Week 4, now placed on <em>assertions</em>.</p>
+    </div>
+    <div>
+      <div class="codebox" style="margin-top:0">SYSTEM
+Answer ONLY from the CONTEXT below.
+Cite the chunk id for every claim, like [R7-3.2].
+If the CONTEXT does not answer the question, reply
+exactly: "I don't have that in the policy documents."
+Do not use outside knowledge.
+
+CONTEXT
+[R7-3.2] Returns Policy v7, s.3.2 (effective
+2026-07-01): Customers in Georgia may return
+unopened electronics within 30 days of delivery.
+[R7-1.0] Returns Policy v7, s.1.0: This policy
+supersedes Returns Policy v6 in all regions.
+
+QUESTION
+How long do I have to return a laptop in Georgia?</div>
+      <div class="callout red" style="margin-top:14px"><b>Week 3 callback — the Air Canada lesson.</b> On the <a href="../week3/anatomy.html">prompt anatomy page</a> you read what happened when a chatbot stated a refund policy that did not exist and a tribunal held the airline to it. A grounded, cited answer is not a nicety — it is the difference between a statement your company can stand behind and one it will be held to anyway.</div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">From pipeline to agent</div>
+  <h2>Agentic RAG — the model decides when to look</h2>
+  <p class="lede">Classic RAG retrieves on every question, whether or not retrieval helps. Agentic RAG makes retrieval a <b>tool</b>, and hands the decision to the model inside the loop you built in Week 4.</p>
+  <div class="grid3">
+    <div class="card"><span class="kicker">Decide</span><p class="small" style="margin-top:8px">"Do I need to look this up?" A greeting, a formatting request, or arithmetic needs no search — and searching anyway costs latency and drags irrelevant text into the context. A question about your refund policy always needs a search, and the model should refuse to answer it from memory.</p></div>
+    <div class="card"><span class="kicker">Re-query</span><p class="small" style="margin-top:8px">If the first retrieval comes back weak, the agent can rewrite the query and try again — dropping jargon, adding a synonym, or narrowing by metadata. That is the Observe → Reason → Act loop pointed at the index instead of at the outside world.</p></div>
+    <div class="card"><span class="kicker">Chain</span><p class="small" style="margin-top:8px">Multi-hop questions need more than one retrieval: find the customer's region, then find the policy for that region. One shot at top-<em>k</em> cannot do this; a loop with a stopping condition can. Each hop is a step you can cap and log.</p></div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>The cost side.</b> Every extra retrieval is another embedding call and more tokens in the window. The same budget discipline from <a href="../week4/langgraph.html">Week 4</a> applies: cap the number of retrieval hops, cap <em>k</em>, and log the score of what came back so you can tell a genuinely hard question from a badly chunked corpus.</div>
+  <div style="margin-top:20px">
+    <div class="bigq"><span class="qlabel">Discussion question</span>Your agentic RAG assistant answers "what is our GA refund window?" by searching — good. It also answers "summarize the paragraph I just pasted" by searching, and returns a policy chunk that has nothing to do with the paragraph. What broke, and where do you fix it?</div>
+    <button class="revealbtn">See the answer</button>
+    <div class="revealbox">Nothing broke in the <em>index</em> — this is a <b>decision</b> failure, not a retrieval failure. The agent searched when the answer was already in the context window, and then, because retrieval always returns <em>something</em>, it got the nearest chunk in a corpus that contains no relevant chunk at all. Three fixes, in order of preference. <b>(1) The tool description.</b> The model chooses tools from their descriptions (Week 2's tool-inventory lesson): "searches Lakeside policy documents; use only for questions about company policy, not for text the user has already provided" is a better spec than "searches documents." <b>(2) A score floor.</b> If the best match is below your threshold, return "no relevant policy found" instead of the nearest three chunks — an index that never says "nothing here" will hand the model noise on every off-topic question. <b>(3) Routing.</b> For high-volume assistants, a cheap classifier decides retrieve-or-not before the expensive model runs. And note the general lesson: retrieval quality is measured not only by whether it finds the right chunk, but by whether it declines when there is no right chunk.</div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The decision managers actually ask about</div>
+  <h2>RAG or fine-tuning?</h2>
+  <p class="lede">These are not competitors — they change different things. <b>Retrieval changes what the model sees. Fine-tuning changes what the model is.</b></p>
+  <div class="compare">
+  <table class="plain">
+    <tr><th></th><th>RAG (retrieval)</th><th>Fine-tuning</th></tr>
+    <tr><td><b>What it changes</b></td><td>The <em>input</em>: relevant passages are added to the prompt at question time. The weights are untouched.</td><td>The <em>weights</em>: continued training on your examples bakes behavior into the model itself.</td></tr>
+    <tr><td><b>Best for</b></td><td>Knowledge — facts, policies, documents, anything the model must be <em>correct</em> about.</td><td>Behavior — tone, format, house style, a narrow repeated task where you want the output shape without a long prompt.</td></tr>
+    <tr><td><b>Freshness</b></td><td>Immediate. Replace the document, re-index that document, done.</td><td>Frozen at training time. New facts require a new training run.</td></tr>
+    <tr><td><b>Traceability</b></td><td>The answer can cite the chunk and version it used.</td><td>None. A fine-tuned claim cannot be traced to a source document.</td></tr>
+    <tr><td><b>Cost to update</b></td><td>Low and incremental — an indexing job, not a training job.</td><td>High and lumpy — curated examples, compute, and a full evaluation pass to check nothing else regressed.</td></tr>
+    <tr><td><b>Access control</b></td><td>Enforceable at retrieval time: filter by the user's permissions before anything enters the prompt.</td><td>Not enforceable. Whatever went into the training data is in the model, for every user.</td></tr>
+  </table>
+  </div>
+  <div class="grid2" style="margin-top:20px;align-items:start">
+    <div class="card"><span class="kicker">Week 4 callback</span><p class="small" style="margin-top:8px">On the <a href="../week4/patterns.html">reasoning patterns page</a> you ran the weights visualizer: prompting left all twenty edges of the toy network untouched, while fine-tuning rewrote them. That picture is the whole argument on this page. Retrieval is a very sophisticated way of changing the <em>input</em> — which is why it can be fresh, private, and citable, and why fine-tuning can be none of those things.</p></div>
+    <div class="card"><span class="kicker">Week 3 callback — the budget still binds</span><p class="small" style="margin-top:8px">Retrieved chunks are tokens, and they compete with everything else in the <a href="../week3/context.html">packing game</a>. Raising <em>k</em> from 3 to 20 does not make answers twenty times better; it dilutes the prompt with near-misses and pushes you toward the recall problems of an overstuffed window. Retrieve narrow and relevant, not wide and hopeful.</p></div>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>The usual answer is "both."</b> Fine-tune for the voice and the output format if you truly need them; retrieve for every fact. If someone proposes fine-tuning so the model "knows our policies," ask the two questions that settle it: <em>how often do those facts change</em>, and <em>does the answer need to cite a source?</em></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Watch</div>
+  <h2>Two short videos</h2>
+  <div class="grid2">
+    <div class="card"><h3>What is Retrieval-Augmented Generation? (IBM Technology)</h3><p class="small">The canonical whiteboard explainer, about 6½ minutes: the two failure modes RAG addresses — no source, and out-of-date knowledge — and the retrieve-then-generate loop.</p>
+      <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/T-D1OfcDW1M" title="IBM Technology: What is Retrieval-Augmented Generation (RAG)?" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
+      <p class="small" style="margin-top:10px"><a class="doc" href="https://www.ibm.com/think/topics/retrieval-augmented-generation" target="_blank" rel="noopener">IBM Think — the written explainer ↗</a></p>
+    </div>
+    <div class="card"><h3>RAG's Evolution: From Simple Retrieval to Agentic AI (IBM Technology)</h3><p class="small">About 8½ minutes on the step this page ends with: retrieval as a tool an agent chooses to call, re-query, and chain — the bridge from a fixed pipeline to the loop you built in Week 4.</p>
+      <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/JB2P5Gk23VI" title="IBM Technology: RAG's Evolution — From Simple Retrieval to Agentic AI" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Concept check</div>
+  <h2>Three that catch people out</h2>
+  <div id="ccheck"></div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="memory.html"><span class="lab">← Previous</span><b>01 · Agent memory</b></a>
+  <a href="exercises.html" class="next"><span class="lab">Next →</span><b>03 · Practice &amp; case</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 7 — Memory, RAG &amp; Knowledge<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* clickable pipeline */
+const RG=[
+ {id:'rg0',t:'<b>documents — the corpus.</b> Whatever your organization already wrote: policy PDFs, Confluence pages, resolved tickets, contracts. Two decisions live here and both are governance decisions: <em>which</em> documents are in scope, and <em>who is allowed to see each one</em>. Permissions have to travel with the document into the index, because retrieval is where they will be enforced.'},
+ {id:'rg1',t:'<b>chunk — split into passages.</b> Whole documents are too big to retrieve usefully, so each is cut into pieces. Small chunks are precise but can slice an answer in half; large chunks carry context but drag in noise that dilutes the match. Split on structure where you can — sections, headings, list items — and keep a little overlap so a sentence at a boundary is not orphaned. Every chunk keeps its metadata: source, section, version, effective date, region, access level.'},
+ {id:'rg2',t:'<b>embed — text becomes a vector.</b> Each chunk is passed through an embedding model that returns a list of numbers representing its meaning. This is a separate, much smaller model than the generator, and it is run once per chunk. Remember the constraint: whatever model you use here, the question must be embedded by the same one.'},
+ {id:'rg3',t:'<b>vector index — the store.</b> Vectors plus the original text plus the metadata, in a database built for nearest-neighbour search. Because the metadata is stored alongside, you can filter <em>before</em> ranking — region = GA, status = current, access = internal — which is how freshness and permissions get enforced. Everything above this box is offline work; nothing here waits on a user.'},
+ {id:'rg4',t:'<b>question — the live input.</b> The user\'s words, which will rarely match the document\'s words. In an agentic system this is also where query rewriting happens: expanding an abbreviation, stripping conversational filler, or splitting a two-part question into two retrievals.'},
+ {id:'rg5',t:'<b>embed the question — same model, same space.</b> The question becomes a vector in the same geometry as the chunks, which is the whole trick: now "can I send this back?" and "return window" can be close together even with no shared words. Use a different embedding model here than you used for the corpus and retrieval degrades to noise — the vectors are simply not comparable.'},
+ {id:'rg6',t:'<b>retrieve — top-k nearest.</b> Filter by metadata, then rank by cosine similarity and return the best k chunks (often 3–5). This is the single highest-leverage stage in the system: k, chunk size, the embedding model, metadata filters, and optional re-ranking all live here. It is also where you should enforce a floor — if the best score is weak, return nothing rather than the nearest irrelevant thing.'},
+ {id:'rg7',t:'<b>augment — build the prompt.</b> Assemble the retrieved chunks, their IDs, the user\'s question, and the grounding rules ("answer only from this context; cite the chunk id; say you don\'t know if it is not here") into one prompt. This is Week 3\'s context engineering, now with a retrieval step feeding it. Notice that nothing has been learned by the model — the knowledge is simply <em>in the request</em>.'},
+ {id:'rg8',t:'<b>generate — the grounded answer.</b> The model writes an answer constrained to the supplied context and tags each claim with the chunk it came from. Log the chunk IDs with the answer: that log is what makes the system auditable, what lets you replay a complaint, and what lets you say "the bot answered from Returns Policy v7, section 3.2" instead of "we are not sure why it said that."'}
+];
+RG.forEach(n=>{
+  document.getElementById(n.id).addEventListener('click',()=>{
+    RG.forEach(m=>document.getElementById(m.id).classList.toggle('on',m.id===n.id));
+    document.getElementById('ragNote').innerHTML=n.t;
+  });
+});
+
+/* one query, end to end */
+const STAGES=[
+ {b:'question',d:'the rep asks'},
+ {b:'embed',d:'question becomes a vector'},
+ {b:'retrieve',d:'top-k nearest chunks'},
+ {b:'filter',d:'metadata: version, region, access'},
+ {b:'augment',d:'build the grounded prompt'},
+ {b:'generate',d:'cited answer'},
+ {b:'check',d:'groundedness + log'}
+];
+const stagesEl=document.getElementById('stages');
+STAGES.forEach((s,i)=>{
+  const d=document.createElement('div');d.className='stagechip';d.id='st'+i;
+  d.innerHTML=`<span class="n">${i+1}</span><span><b>${s.b}</b><span class="d">${s.d}</span></span>`;
+  stagesEl.appendChild(d);
+});
+const EP=[
+ {n:0,l:[['t-obs','QUESTION'],['','Rep: "How long does a customer in Georgia have to return a laptop?"']],s:{question:'GA laptop return'}},
+ {n:1,l:[['t-dim','EMBED'],['','embed_query(...) -> vector[768]  (same model used to index the corpus)']],s:{query_vec:'768-dim'}},
+ {n:2,l:[['t-act','RETRIEVE'],['','similarity_search(k=4) over 1,240 chunks'],['t-dim','0.86  [R7-3.2] Returns Policy v7 s.3.2 (GA, electronics, 30 days)']],s:{top1:'R7-3.2 (0.86)'}},
+ {n:2,l:[['t-dim','...also returned'],['','0.71  [R6-3.2] Returns Policy v6 s.3.2 (GA, electronics, 14 days)  <- SUPERSEDED'],['','0.64  [R7-1.0] Returns Policy v7 s.1.0 (supersedes v6 in all regions)'],['','0.39  [SH3-2.1] Shipping Policy v3 s.2.1 (delivery windows)']],s:{returned:'4 chunks'}},
+ {n:3,l:[['t-hitl','FILTER'],['','metadata rule: status == current  ->  drop [R6-3.2] (superseded 2026-07-01)'],['','metadata rule: score >= 0.45      ->  drop [SH3-2.1]'],['t-dim','2 chunks survive. This step, not the model, is what keeps last year’s policy out of the answer.']],s:{kept:'R7-3.2, R7-1.0'}},
+ {n:4,l:[['t-dec','AUGMENT'],['','prompt = grounding rules + [R7-3.2] + [R7-1.0] + the question'],['t-dim','approx. 380 tokens of context — narrow on purpose']],s:{prompt:'2 chunks + rules'}},
+ {n:5,l:[['t-act','GENERATE'],['','"Customers in Georgia have 30 days from delivery to return unopened'],['',' electronics, including laptops. [R7-3.2]  This is the current policy;'],['',' it supersedes version 6. [R7-1.0]"']],s:{answer:'30 days + 2 citations'}},
+ {n:6,l:[['t-hitl','CHECK + LOG'],['','every claim carries a chunk id -> groundedness check passes'],['','logged: question, 4 retrieved ids + scores, 2 kept, answer, timestamp'],['t-dim','If the top score had been 0.31, the rule fires instead: "I don’t have that in the policy documents" -> escalate.']],s:{status:'✓ grounded + auditable'}}
+];
+let cur=0, timer=null;
+const state={};
+const termEl=document.getElementById('simTerm'), stateEl=document.getElementById('simState'), hintEl=document.getElementById('stepHint');
+function renderState(changed){
+  let h='<span class="kicker">Pipeline state</span>';
+  for(const [k,v] of Object.entries(state)){h+=`<div>${k} = <b class="${k===changed?'changed':''}">${v}</b></div>`}
+  stateEl.innerHTML=h;
+}
+function setStage(n){STAGES.forEach((s,i)=>{const el=document.getElementById('st'+i);el.classList.toggle('on',i===n);el.classList.toggle('done',n>=0&&i<n)})}
+function step(){
+  if(cur>=EP.length){stopAuto();return}
+  const e=EP[cur];
+  setStage(e.n);
+  if(cur===0)termEl.innerHTML='';
+  const div=document.createElement('div');
+  div.innerHTML=e.l.map(([c,t])=>`<span class="${c}">${t}</span>`).join('  ');
+  termEl.appendChild(div);
+  termEl.scrollTop=termEl.scrollHeight;
+  let changed=null;
+  if(e.s){for(const [k,v] of Object.entries(e.s)){state[k]=v;changed=k}}
+  renderState(changed);
+  cur++;
+  hintEl.textContent=`Query: the Georgia laptop return · step ${cur} of ${EP.length}`;
+}
+function stopAuto(){if(timer){clearInterval(timer);timer=null;document.getElementById('btnAuto').textContent='Auto-play'}}
+document.getElementById('btnStep').addEventListener('click',()=>{stopAuto();step()});
+document.getElementById('btnAuto').addEventListener('click',function(){
+  if(timer){stopAuto();return}
+  this.textContent='Pause';
+  timer=setInterval(()=>{if(cur>=EP.length)stopAuto();else step()},1700);
+});
+document.getElementById('btnReset').addEventListener('click',()=>{
+  stopAuto();cur=0;Object.keys(state).forEach(k=>delete state[k]);
+  termEl.innerHTML='<span class="t-dim">Press Step to send the question through the pipeline…</span>';
+  renderState();setStage(-1);
+  hintEl.textContent=`Query: the Georgia laptop return · step 0 of ${EP.length}`;
+});
+renderState();
+
+/* concept check */
+const CC=[
+ {q:'Which stages run BEFORE any user has asked anything?',
+  o:['Chunking, embedding and indexing the documents','Retrieval and augmentation','Generation only'],
+  a:0, why:'Indexing is offline work: documents are chunked, embedded once, and stored with their metadata. Only embedding the question, retrieving, augmenting and generating happen live. That split is why a policy update is an indexing job you can run at 3 a.m. — and why the cost of adding a document is paid once, not per question.'},
+ {q:'You swap in a better embedding model for incoming questions but do not re-embed the 1,240 stored chunks. What happens?',
+  o:['Slightly better retrieval','Retrieval collapses — the question vectors and the chunk vectors are in different spaces and their distances are meaningless','Nothing, embeddings are a universal standard'],
+  a:1, why:'Vectors are only comparable within the space the model that produced them defines. Mixing two models means the "nearest" chunks are essentially arbitrary, and the failure is silent: the system still returns k chunks and the model still writes a fluent answer. Changing the embedding model means re-embedding the entire corpus — budget for it before you promise the upgrade.'},
+ {q:'Commission rules change every quarter, and every answer must cite the rule it used. RAG, fine-tuning, or both?',
+  o:['Fine-tuning — bake the rules into the model','RAG — the current document is read at question time and can be cited','Neither; use a bigger model'],
+  a:1, why:'Two decisive properties: freshness and provenance. A fine-tuned model reproduces what it was trained on and cannot cite a source, so every quarterly change would mean a retraining run and an evaluation pass. With retrieval you replace one document, re-index it, and the next answer is current — with the version it used named in the answer. Fine-tuning would still be reasonable for the memo\'s tone and format, which do not change quarterly.'}
+];
+const cc=document.getElementById('ccheck');
+CC.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML=`<div class="stmt">${i+1}. ${x.q}</div><div class="opts" style="flex-direction:column;align-items:stretch">${x.o.map((o,j)=>`<button data-v="${j}" style="text-align:left;border-radius:10px">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div><div class="fb"></div>`;
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector(`button[data-v="${x.a}"]`).classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+String.fromCharCode(65+x.a)+'. ')+x.why;
+  }));
+  cc.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

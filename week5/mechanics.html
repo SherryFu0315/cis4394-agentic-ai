@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>01 · Function Calling — CIS 4394 Week 5</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.codebox .cm{color:#8b909c}
+.codebox .ck{color:#8ab8ff}
+.codebox .cs{color:#9ad0a0}
+.codebox .cn{color:#e3c078}
+.rolegrid{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel)}
+.rolegrid .r{display:grid;grid-template-columns:118px 1fr;border-bottom:1px solid var(--line)}
+.rolegrid .r:last-child{border-bottom:0}
+.rolegrid .who{padding:13px 14px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);background:var(--paper);border-right:1px solid var(--line)}
+.rolegrid .r.model .who{color:var(--blue)}
+.rolegrid .r.run .who{color:#8a6d1d}
+.rolegrid .what{padding:13px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.7;white-space:pre-wrap;overflow-x:auto}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.tag{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:4px 11px;color:var(--muted)}
+@media(max-width:880px){.rolegrid .r{grid-template-columns:1fr}.rolegrid .who{border-right:0;border-bottom:1px solid var(--line)}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 5</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="mechanics.html" class="here"><span class="k">01</span>Function Calling</a>
+  <a href="design.html"><span class="k">02</span>Schemas, Errors &amp; Gates</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">01 · Mechanics</div>
+  <h1>The model <em>asks</em>. Your code acts.</h1>
+  <p class="lede">Function calling has a reputation for being magic. It is not: the model emits a small piece of structured text naming a function and its arguments, and your program decides what to do about it. Once you see the round trip clearly, every framework, every protocol, and every safety control this semester lands in an obvious place.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Definition</div>
+  <h2>What a “tool” actually is</h2>
+  <div class="grid2" style="align-items:start">
+    <div>
+      <p>A <b>tool</b> is an ordinary function in your codebase — <code>calculator()</code>, <code>lookup_order()</code>, <code>send_email()</code> — that you have described to the model in a form it can read. <b>Function calling</b> (also called tool calling) is the model's ability to respond, instead of with prose, with a structured request to run one of those functions with specific arguments.</p>
+      <p>Three sentences worth memorising:</p>
+      <ol class="steps" style="margin-top:14px">
+        <li><b>The model proposes.</b> Its entire contribution is a JSON object: which function, which arguments. That is text, produced by the same next-token machinery as everything else it writes.</li>
+        <li><b>Your harness disposes.</b> Your code parses that request, checks it against the schema, decides whether it is permitted, and calls the real function. The model has no execution privileges of any kind.</li>
+        <li><b>The result comes back as an observation.</b> The return value is appended to the conversation as a tool message, and the model reads it before deciding again. That is the Week 4 loop, closed.</li>
+      </ol>
+    </div>
+    <div class="card"><span class="kicker">The request / execute / respond flow</span>
+      <div class="codebox" style="margin-top:12px">1  You    → model:  question + tool list
+2  model  → you:    {name, arguments}   <span class="cm">// a REQUEST</span>
+3  you    → tool:   run it (if allowed)
+4  tool   → you:    return value or error
+5  you    → model:  the result, as an observation
+6  model  → you:    another request, or the answer</div>
+      <div class="tags">
+        <span class="tag">Steps 2 &amp; 6 · the model</span>
+        <span class="tag">Steps 1, 3, 4, 5 · your code</span>
+      </div>
+      <p class="small" style="margin-top:12px">Four of the six steps are plain software you can unit-test. This is the same ownership split as the loop in <a href="../week4/loop.html">Week 4</a> — and the reason agent safety is mostly an engineering problem, not a prompting problem.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · step through one round trip</div>
+  <h2>An invoice, two tools, one bad argument</h2>
+  <p class="lede">The episode: <em>“Our Berlin supplier invoiced 4,817 units at €293 each, plus 18% VAT. What is that in USD?”</em> The agent has two tools — <code>calculator</code> and <code>fx_rate</code> — and it will get one call wrong on purpose so you can watch what happens next. Press <b>Step</b>.</p>
+  <div class="sim2">
+    <div class="loopbox">
+      <svg viewBox="0 0 480 330" aria-label="function calling loop diagram">
+        <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#cfccc2"/></marker></defs>
+        <path class="looparrow" d="M 330 55 Q 375 70 390 116" />
+        <path class="looparrow" d="M 392 170 Q 392 220 380 261" />
+        <path class="looparrow" d="M 283 288 L 206 288" />
+        <path class="looparrow" d="M 118 261 C 130 180 165 100 215 62" />
+        <path class="looparrow" d="M 306 145 L 192 145" />
+        <g class="loopnode" id="ln0"><rect x="165" y="16" width="150" height="46" rx="10"/><text x="240" y="44" text-anchor="middle">Model reads state</text></g>
+        <g class="loopnode" id="ln1"><rect x="312" y="122" width="150" height="46" rx="10"/><text x="387" y="150" text-anchor="middle">Model decides</text></g>
+        <g class="loopnode" id="ln2"><rect x="288" y="265" width="170" height="46" rx="10"/><text x="373" y="293" text-anchor="middle">Validate + execute</text></g>
+        <g class="loopnode" id="ln3"><rect x="30" y="265" width="160" height="46" rx="10"/><text x="110" y="293" text-anchor="middle">Append result</text></g>
+        <g class="loopnode pausenode" id="ln4"><rect x="16" y="122" width="176" height="46" rx="10"/><text x="104" y="150" text-anchor="middle">Final answer</text></g>
+      </svg>
+      <p class="small" style="margin:10px 6px 4px">The short arrow from <b>Model decides</b> straight to <b>Final answer</b> is the exit: a turn where the model emits <em>no</em> tool call is how the loop ends. The amber box is therefore a stop condition, not a step.</p>
+    </div>
+    <div class="simright">
+      <div class="simctl">
+        <button class="primary" id="btnStep">Step ▸</button>
+        <button class="ghost" id="btnAuto">Auto-play</button>
+        <button class="ghost" id="btnReset">Reset</button>
+        <span class="hint" id="stepHint">Episode: the supplier invoice · step 0 of 17</span>
+      </div>
+      <div class="term" id="simTerm"><span class="t-dim">Press Step to begin the episode…</span></div>
+      <div class="statepanel" id="simState"><span class="kicker">Agent state</span></div>
+    </div>
+  </div>
+  <div class="callout"><b>Three things to notice on your way through.</b> <b>(1)</b> The line marked <em>EMITS</em> is only text — nothing has executed at that moment, which is exactly why a gate can still stop it. <b>(2)</b> The failed <code>fx_rate</code> call did not raise an exception into your users' faces; the validation error was handed <em>back to the model</em> as an observation, and the model repaired its own call. <b>(3)</b> Read the whole trace as the Week 2 evidence standard: <em>state before → observation → available actions → selected action → result → state after</em>. Every tool call produces that record for free.</div>
+  <p class="small" style="margin-top:14px">The <code>fx_rate</code> value of 1.08 above is an <b>illustrative fixed rate returned by a stub tool</b> written for teaching — not a live or historical quote. The euro subtotal (4,817 × 293 × 1.18 = 1,665,429.58) is exact.</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Anatomy</div>
+  <h2>Two objects: the call, and the schema</h2>
+  <div class="grid2" style="align-items:start">
+    <div>
+      <p class="small"><b>1 · What the model emits.</b> A name and a bag of arguments. That is the whole payload. Different vendors wrap it differently, but every one of them reduces to this.</p>
+      <div class="codebox">{
+  <span class="cn">"name"</span>: <span class="cs">"fx_rate"</span>,
+  <span class="cn">"arguments"</span>: {
+    <span class="cn">"base"</span>:  <span class="cs">"EUR"</span>,
+    <span class="cn">"quote"</span>: <span class="cs">"USD"</span>
+  }
+}
+<span class="cm"># A REQUEST, not an execution.</span>
+<span class="cm"># Nothing has happened to any system yet.</span></div>
+      <p class="small">Because it is a request, three useful things are possible before anything runs: you can <b>validate</b> it, you can <b>refuse</b> it, and you can <b>show it to a human</b>. Page 02 is entirely about using that window.</p>
+    </div>
+    <div>
+      <p class="small"><b>2 · What the model sees.</b> Before the conversation starts, your harness sends the model a list of tool schemas. This is the only thing the model knows about your systems.</p>
+      <div class="codebox">{
+  <span class="cn">"name"</span>: <span class="cs">"fx_rate"</span>,
+  <span class="cn">"description"</span>: <span class="cs">"Return the current exchange</span>
+<span class="cs">     rate from one currency to another.</span>
+<span class="cs">     Use for any conversion between</span>
+<span class="cs">     currencies. Do NOT estimate rates</span>
+<span class="cs">     yourself."</span>,
+  <span class="cn">"parameters"</span>: {
+    <span class="cn">"base"</span>:  {<span class="cn">"type"</span>:<span class="cs">"string"</span>,
+              <span class="cn">"enum"</span>:[<span class="cs">"EUR"</span>,<span class="cs">"GBP"</span>,<span class="cs">"JPY"</span>,<span class="cs">"USD"</span>]},
+    <span class="cn">"quote"</span>: {<span class="cn">"type"</span>:<span class="cs">"string"</span>,
+              <span class="cn">"enum"</span>:[<span class="cs">"EUR"</span>,<span class="cs">"GBP"</span>,<span class="cs">"JPY"</span>,<span class="cs">"USD"</span>]}
+  },
+  <span class="cn">"required"</span>: [<span class="cs">"base"</span>, <span class="cs">"quote"</span>]
+}</div>
+      <p class="small">Name, description, typed parameters, required list. Notice that the <code>enum</code> is what made the simulator's error message useful: the harness could tell the model precisely what the legal values were.</p>
+    </div>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>The description is a prompt.</b> The model chooses between tools by reading their descriptions, in the same way it reads any other instruction. A vague description (<em>“handles currency stuff”</em>) produces vague behaviour: wrong tool, missing arguments, silent non-use. In Python you usually write that description as a docstring — which means <b>the docstring is the interface</b>, and it deserves the same care as an API contract. Page 02 makes this concrete, and you will break it deliberately in the <a href="exercises.html">hands-on exercise</a>.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The same episode, as a transcript</div>
+  <h2>Who said what</h2>
+  <p class="lede">The simulator above with the machinery stripped out — this is what actually sits in the model's message history at the end of the run. Four roles, strictly alternating.</p>
+  <div class="rolegrid">
+    <div class="r"><div class="who">user</div><div class="what">Berlin supplier invoice: 4,817 units at EUR 293 each, plus 18% VAT. Total in USD?</div></div>
+    <div class="r model"><div class="who">model</div><div class="what">tool_call: calculator(expression="4817*293*1.18")</div></div>
+    <div class="r run"><div class="who">runtime</div><div class="what">tool: calculator -> "1665429.58"</div></div>
+    <div class="r model"><div class="who">model</div><div class="what">tool_call: fx_rate(base="euro", quote="USD")</div></div>
+    <div class="r run"><div class="who">runtime</div><div class="what">tool: fx_rate -> "ToolArgError: base must be one of [EUR, GBP, JPY, USD]; got 'euro'"</div></div>
+    <div class="r model"><div class="who">model</div><div class="what">tool_call: fx_rate(base="EUR", quote="USD")</div></div>
+    <div class="r run"><div class="who">runtime</div><div class="what">tool: fx_rate -> "1.08"   (stub tool, illustrative fixed rate)</div></div>
+    <div class="r model"><div class="who">model</div><div class="what">tool_call: calculator(expression="1665429.58*1.08")</div></div>
+    <div class="r run"><div class="who">runtime</div><div class="what">tool: calculator -> "1798663.9464"</div></div>
+    <div class="r model"><div class="who">model</div><div class="what">USD 1,798,663.95 — EUR 1,665,429.58 converted at 1.08. (no tool call -> loop ends)</div></div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>Exact, deterministic, auditable.</b> Every number in that answer came from a function, and every function call is a row you can query. Ask this transcript “what rate did we use, and when?” and it answers. Ask the same question of a model that did the conversion in its head, and you get a shrug.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The code</div>
+  <h2>A tool, in the framework you already know</h2>
+  <p class="lede">In LangChain and LangGraph, defining a tool is defining a function. The type hints become the parameter types; the docstring becomes the description. You saw <code>bind_tools</code> in <a href="../week4/langgraph.html">Week 4</a> — here is what it is binding.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="codebox"><span class="ck">from</span> langchain_core.tools <span class="ck">import</span> tool
+
+<span class="cn">@tool</span>
+<span class="ck">def</span> fx_rate(base: <span class="cs">str</span>, quote: <span class="cs">str</span>) -> <span class="cs">str</span>:
+    <span class="cs">"""Return the exchange rate from `base`</span>
+<span class="cs">    to `quote`. Both must be 3-letter ISO</span>
+<span class="cs">    codes such as EUR, GBP, JPY, USD.</span>
+<span class="cs">    Use this for ANY currency conversion;</span>
+<span class="cs">    never estimate a rate yourself."""</span>
+    allowed = {<span class="cs">"EUR"</span>,<span class="cs">"GBP"</span>,<span class="cs">"JPY"</span>,<span class="cs">"USD"</span>}
+    <span class="ck">if</span> base <span class="ck">not in</span> allowed:
+        <span class="ck">return</span> (<span class="cs">f"ToolArgError: base must be one "</span>
+                <span class="cs">f"of {sorted(allowed)}; got {base!r}"</span>)
+    <span class="ck">return</span> <span class="cs">str</span>(RATES[(base, quote)])</div>
+    <div>
+      <div class="card"><span class="kicker">Read it as three artefacts at once</span>
+        <p class="small" style="margin-top:8px"><b>The signature</b> <code>(base: str, quote: str) -&gt; str</code> generates the JSON parameter types the model receives. Change a type hint and you have changed the model's contract.</p>
+        <p class="small"><b>The docstring</b> is the description — the sentence that decides whether the model reaches for this tool at the right moment. Note that it says what the tool is <em>for</em> and one thing the model must <em>not</em> do.</p>
+        <p class="small"><b>The body</b> is your enforcement point. It returns an error <em>string</em> rather than raising, so a bad call becomes an observation the model can recover from instead of an exception that kills the run. That idea gets its own section on <a href="design.html">page 02</a>.</p>
+      </div>
+      <div class="card" style="margin-top:14px"><span class="kicker">🎯 Take it to your final project</span><p class="small" style="margin-top:8px">Your capstone agent needs at least two real tools with clean schemas. Start them now, in this shape: typed parameters, a description that states when to use the tool, and errors returned as data. Group Assignment 2 grades exactly these properties.</p></div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Where this comes from</div>
+  <h2>Two papers worth knowing by name</h2>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">The pattern</span><h3 style="margin-top:6px">ReAct (Yao et al., 2022)</h3>
+      <p class="small">Interleaving reasoning traces with actions — <em>Thought → Action → Observation</em>, looped — so that the model's next decision is grounded in a real result rather than in its own guess. Week 4 used it as a reasoning pattern; this week, the “Action” is literally a tool call and the “Observation” is literally a return value. <a class="doc" href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">arXiv:2210.03629 ↗</a></p></div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">The capability</span><h3 style="margin-top:6px">Toolformer (Schick et al., 2023)</h3>
+      <p class="small">The paper whose title is the claim: <em>Language Models Can Teach Themselves to Use Tools.</em> It showed that a model can learn, in a largely self-supervised way, <b>which</b> API to call, <b>when</b> to call it, and <b>what</b> to pass — deciding for itself where a tool call helps. That is why tool use is a general capability you can design around, not a trick that needs bespoke training per tool. <a class="doc" href="https://arxiv.org/abs/2302.04761" target="_blank" rel="noopener">arXiv:2302.04761 ↗</a></p></div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>What this pair means for you as a builder:</b> the model brings the judgement about <em>when</em> to call something; you bring the schema that says <em>what is callable and with what</em>. Neither half works alone — a perfect schema with a model that never triggers it is dead code, and a model eager to act with no schema is an accident waiting for a production database.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Watch</div>
+  <h2>Tool calling, explained in five minutes</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><h3>What is Tool Calling? Connecting LLMs to Your Data (IBM Technology, ~4m56s)</h3>
+      <p class="small">The enterprise framing of everything on this page: the model as the reasoning layer, tools as the boundary to the systems that actually hold your data. Watch it before page 02.</p>
+      <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/h8gMhXYAv1k" title="IBM Technology: What is Tool Calling? Connecting LLMs to Your Data" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
+    </div>
+    <div class="card"><span class="kicker">While you watch — three checks</span>
+      <p class="small" style="margin-top:8px">1 · Every time the speaker says the model “calls” something, mentally substitute “asks your code to call.” Does any claim in the video break? (It should not.)</p>
+      <p class="small">2 · Note where the video puts the boundary line between the model and the enterprise systems. That line is the thing you design this week.</p>
+      <p class="small">3 · Count how many of the four gaps from the <a href="index.html">week home</a> — cutoff, private data, computation, actions — the examples are closing.</p>
+      <p class="small" style="margin-top:12px">Reference explainer if you want the same material as text: <a class="doc" href="https://www.ibm.com/think/topics/tool-calling" target="_blank" rel="noopener">IBM Think — What Is Tool Calling? ↗</a> · Framework docs: <a class="doc" href="https://python.langchain.com/docs/concepts/tool_calling/" target="_blank" rel="noopener">LangChain — Tool calling ↗</a></p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Discussion</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>A vendor tells your CIO that their agent “runs Python, queries the warehouse, and emails customers.” Using this page's vocabulary, what is the <em>one</em> question that tells you how much you should worry?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox"><b>“Show me the tool schemas, and show me who validates the arguments.”</b> The impressive verb list is just the tool inventory — it tells you the agent's <em>capability</em>, and nothing about its <em>limits</em>. What matters is the shape of each schema and where the checks live: does <code>query_warehouse</code> accept arbitrary SQL or a table name from an enum? Does <code>email_customer</code> accept any address, or only addresses already attached to the ticket? Is the validation inside the vendor's harness (auditable, versioned, testable) or inside the prompt (a polite request the model can ignore)? A secondary question worth asking in the same breath: <b>what happens on failure?</b> An agent that crashes on a bad argument is annoying; an agent that silently retries a write tool is a duplicate-payment incident. You are looking for the same ownership split as this page: model proposes, harness disposes, every call logged.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Concept check</div>
+  <h2>Who does what?</h2>
+  <div id="ccheck"></div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="index.html"><span class="lab">← Back</span><b>Week 5 home</b></a>
+  <a href="design.html" class="next"><span class="lab">Next →</span><b>02 · Schemas, errors &amp; gates</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 5 — Tool Use &amp; Function Calling<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+const EP=[
+ {n:0,l:[['t-obs','GOAL'],['','Berlin supplier invoice: 4,817 units at EUR 293 each, plus 18% VAT. Total in USD?']],s:{goal:'invoice total in USD'}},
+ {n:1,l:[['t-dec','MODEL DECIDES'],['','Two unknowns: the euro total (arithmetic) and the EUR-USD rate (live data). Guess neither. Calculator first.']]},
+ {n:1,l:[['t-act','EMITS'],['','{"name":"calculator","arguments":{"expression":"4817*293*1.18"}}'],['t-dim','-- text only. Nothing has executed.']],s:{pending:'calculator'}},
+ {n:2,l:[['t-dim','HARNESS VALIDATES'],['','expression: string, 13 chars, digits and operators only -> ALLOW']]},
+ {n:2,l:[['t-act','HARNESS EXECUTES'],['','calculator("4817*293*1.18")'],['t-dim','-> 1665429.58']]},
+ {n:3,l:[['t-obs','OBSERVATION APPENDED'],['','role=tool  name=calculator  content="1665429.58"']],s:{eur_total:'1665429.58',pending:'--'}},
+ {n:0,l:[['t-obs','MODEL READS STATE'],['','The euro total is now a fact in the message history, not a guess. Still need a rate.']]},
+ {n:1,l:[['t-act','EMITS'],['','{"name":"fx_rate","arguments":{"base":"euro","quote":"USD"}}']],s:{pending:'fx_rate'}},
+ {n:2,l:[['t-hitl','VALIDATION FAILS'],['','ToolArgError: base must be one of [EUR, GBP, JPY, USD]; got "euro"'],['t-dim','-- returned to the model AS AN OBSERVATION. Nothing crashed.']]},
+ {n:0,l:[['t-obs','MODEL READS THE ERROR'],['','The enum in the schema named the legal values, so the repair is obvious: use the code, not the word.']]},
+ {n:1,l:[['t-act','EMITS'],['','{"name":"fx_rate","arguments":{"base":"EUR","quote":"USD"}}']]},
+ {n:2,l:[['t-act','HARNESS EXECUTES'],['','fx_rate("EUR","USD")'],['t-dim','-> 1.08   (stub tool, illustrative fixed rate, not a live quote)']]},
+ {n:3,l:[['t-obs','OBSERVATION APPENDED'],['','role=tool  name=fx_rate  content="1.08"']],s:{rate:'1.08 (stub)',pending:'--'}},
+ {n:1,l:[['t-act','EMITS'],['','{"name":"calculator","arguments":{"expression":"1665429.58*1.08"}}']],s:{pending:'calculator'}},
+ {n:2,l:[['t-act','HARNESS EXECUTES'],['','-> 1798663.9464']]},
+ {n:3,l:[['t-obs','OBSERVATION APPENDED'],['','role=tool  name=calculator  content="1798663.9464"']],s:{usd_total:'1798663.9464',pending:'--'}},
+ {n:4,l:[['t-hitl','FINAL ANSWER'],['','No tool call emitted -> the loop exits. USD 1,798,663.95 = EUR 1,665,429.58 at 1.08.']],s:{done:'stop: model answered'}}
+];
+let cur=0, timer=null;
+const state={};
+const termEl=document.getElementById('simTerm'), stateEl=document.getElementById('simState'), hintEl=document.getElementById('stepHint');
+function renderState(changed){
+  let h='<span class="kicker">Agent state</span>';
+  for(const [k,v] of Object.entries(state)){h+=`<div>${k} = <b class="${k===changed?'changed':''}">${v}</b></div>`}
+  stateEl.innerHTML=h;
+}
+function setNode(n){for(let i=0;i<5;i++)document.getElementById('ln'+i).classList.toggle('on',i===n)}
+function step(){
+  if(cur>=EP.length){stopAuto();return}
+  const e=EP[cur];
+  setNode(e.n);
+  if(cur===0)termEl.innerHTML='';
+  const div=document.createElement('div');
+  div.innerHTML=e.l.map(([c,t])=>`<span class="${c}">${t}</span>`).join('  ');
+  termEl.appendChild(div);
+  termEl.scrollTop=termEl.scrollHeight;
+  let changed=null;
+  if(e.s){for(const [k,v] of Object.entries(e.s)){state[k]=v;changed=k}}
+  renderState(changed);
+  cur++;
+  hintEl.textContent=`Episode: the supplier invoice · step ${cur} of ${EP.length}`;
+}
+function stopAuto(){if(timer){clearInterval(timer);timer=null;document.getElementById('btnAuto').textContent='Auto-play'}}
+document.getElementById('btnStep').addEventListener('click',()=>{stopAuto();step()});
+document.getElementById('btnAuto').addEventListener('click',function(){
+  if(timer){stopAuto();return}
+  this.textContent='Pause';
+  timer=setInterval(()=>{if(cur>=EP.length)stopAuto();else step()},1500);
+});
+document.getElementById('btnReset').addEventListener('click',()=>{
+  stopAuto();cur=0;Object.keys(state).forEach(k=>delete state[k]);
+  termEl.innerHTML='<span class="t-dim">Press Step to begin the episode…</span>';
+  renderState();setNode(-1);
+  hintEl.textContent=`Episode: the supplier invoice · step 0 of ${EP.length}`;
+});
+renderState();
+
+/* concept check */
+const CC=[
+ {q:'The model has just emitted {"name":"delete_file","arguments":{"path":"/var/reports/q3.csv"}}. At that instant, what has happened to the file?',
+  o:['It is gone — the model executed the call','Nothing. The model produced text; your harness has not run anything yet','It is queued for deletion inside the model'],
+  a:1, why:'A tool call is a REQUEST. Until your code parses it, validates it, and invokes the function, no side effect exists anywhere. That gap is the only reason validation, refusal, and human gates are possible at all — which is why page 02 lives entirely inside it.'},
+ {q:'Your lookup_order tool works perfectly in tests, but the agent almost never calls it — it guesses order details instead. The most likely fix is:',
+  o:['Switch to a larger, more expensive model','Rewrite the description and parameter names so they say exactly when the tool must be used','Increase the temperature so it explores more tools'],
+  a:1, why:'Tool selection is driven by the description the model reads. "Looks up stuff" competes badly against the model’s own confidence; "Return the status, items, and total for an order ID. Use this whenever the user mentions an order — never answer order questions from memory" does not. Rewriting descriptions is the cheapest, highest-yield fix in tool design.'},
+ {q:'A tool raises a Python exception because the model passed a malformed date. What should the harness do with it?',
+  o:['Let it propagate and end the run — fail fast','Catch it and return a specific error message to the model as a tool observation','Silently retry the same call until it works'],
+  a:1, why:'Errors are data. A caught, specific error ("date must be YYYY-MM-DD; got 03/15/26") goes back into the message history and the model repairs its own call — exactly what happened with fx_rate in the simulator. Fail-fast throws away a recovery the agent could have made; blind retry repeats the same bad argument forever, and on a write tool it duplicates side effects.'}
+];
+const cc=document.getElementById('ccheck');
+CC.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML=`<div class="stmt">${i+1}. ${x.q}</div><div class="opts" style="flex-direction:column;align-items:stretch">${x.o.map((o,j)=>`<button data-v="${j}" style="text-align:left;border-radius:10px">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div><div class="fb"></div>`;
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector(`button[data-v="${x.a}"]`).classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+String.fromCharCode(65+x.a)+'. ')+x.why;
+  }));
+  cc.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

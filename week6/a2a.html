@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>02 · A2A — CIS 4394 Week 6</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.cardwrap{display:grid;grid-template-columns:minmax(320px,1fr) 380px;gap:20px;align-items:start}
+.fld{cursor:pointer;border-bottom:1px dotted #6f7684;padding:0 1px}
+.fld:hover{background:#1d2635}
+.fld.on{background:#24406e;border-bottom-color:#8ab8ff}
+.fldnote{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:14.5px;min-height:150px}
+.codebox .cm{color:#8b909c}
+.codebox .ck{color:#8ab8ff}
+.codebox .cs{color:#9ad0a0}
+.compose rect{fill:#fff;stroke:var(--line2);stroke-width:1.3;rx:10}
+.compose text{font-family:var(--sans);font-size:12px;font-weight:600;fill:var(--ink)}
+.compose text.sm{font-size:10.5px;font-weight:400;fill:var(--muted)}
+.compose .a2a rect{fill:var(--blue-soft);stroke:var(--blue)}
+.compose path{stroke:var(--line2);stroke-width:1.7;fill:none;marker-end:url(#arrC)}
+.compose path.h{stroke:var(--blue);stroke-width:2.2;marker-start:url(#arrC)}
+.compose .lbl{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.1em;fill:var(--muted)}
+@media(max-width:880px){.cardwrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 6</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="mcp.html"><span class="k">01</span>MCP</a>
+  <a href="a2a.html" class="here"><span class="k">02</span>A2A</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">02 · The horizontal handshake</div>
+  <h1>A2A — when the other side is an <em>agent</em>.</h1>
+  <p class="lede">MCP assumes the thing you are calling is a system: it does what it is told and returns. A2A assumes the other side has its own model, its own tools, and its own judgment — so you do not call it, you <b>delegate</b> to it. Announced by Google in April 2025 and contributed to the Linux Foundation that June, it is the younger and less settled of this week's two standards, and we will be honest about that.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">The distinction that generates everything else</div>
+  <h2>Calling a tool vs. delegating to an agent</h2>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Calling a tool</span>
+      <div class="codebox" style="margin-top:10px">book_room(room="Aderhold 204",
+          start="14:00", end="15:00")
+
+→ {"ok": true, "confirmation": "R-8812"}</div>
+      <p class="small" style="margin-top:10px">You know the exact function, the exact arguments, and the shape of the answer. It returns in one shot or it errors. There is nothing to negotiate — and nothing that can ask you a question back.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Delegating to an agent</span>
+      <div class="codebox" style="margin-top:10px">"Find a tutoring slot for a first-year
+ student in MATH 1113, sometime this week,
+ preferably afternoons."
+
+→ "Which campus? And is online acceptable?"
+→ (…several turns…)
+→ "Booked Thu 3:00 pm, Langdale 102."</div>
+      <p class="small" style="margin-top:10px">You state an <b>outcome</b>, not a call. The other side may plan, use tools you cannot see, take minutes rather than milliseconds, and <em>ask you something mid-task</em>. That last one is why a request/response API is not enough.</p></div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>So A2A's design problems are different from MCP's:</b> how does one agent <em>find</em> another and learn what it can do? How do two agents keep a long-running conversation straight? How does an agent ask a clarifying question without breaking the protocol? And — the one that makes managers sit up — how do you delegate across an organizational boundary without exposing your internals?</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Definition</div>
+  <h2>What A2A is</h2>
+  <div class="grid2" style="align-items:start">
+    <div>
+      <p>A2A (Agent2Agent) is an open protocol for agents built by different teams, on different frameworks, from different vendors, to discover each other and work together over ordinary web infrastructure. Its three moving parts:</p>
+      <ol class="steps">
+        <li><b>The Agent Card.</b> A published description of an agent — who it is, where to reach it, what it can do, and how to authenticate. This is how discovery happens: read the card, decide whether this agent is worth talking to.</li>
+        <li><b>The Task.</b> A unit of delegated work with an identity and a lifecycle. Tasks can be long-running, so both sides can track one across many messages instead of pretending everything finishes in one HTTP round trip.</li>
+        <li><b>Messages and artifacts.</b> The back-and-forth inside a task, plus the outputs it produces — a booking confirmation, a document, a table of results.</li>
+      </ol>
+      <p class="small" style="margin-top:14px">Two design commitments worth naming, because they are what makes it enterprise-shaped: it runs on <b>plain web standards</b> (HTTP and JSON, so your existing gateways, auth, and logging apply), and agents are treated as <b>opaque</b> — you expose what you can do, not how you do it. Your prompts, your model choice, and your internal tools stay yours.</p>
+      <p class="small" style="margin-top:12px">Primary sources: <a class="doc" href="https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/" target="_blank" rel="noopener">Google's announcement (2025) ↗</a> · <a class="doc" href="https://a2a-protocol.org" target="_blank" rel="noopener">the A2A protocol site ↗</a>.</p>
+    </div>
+    <div>
+      <div class="card"><span class="kicker">An honest note on maturity</span>
+        <p class="small" style="margin-top:8px">MCP had a year of adoption before A2A was announced, and it shows. A2A moved to a neutral foundation quickly and has real vendor backing, but <b>the open question is adoption, not design</b> — cross-organization agent delegation requires two organizations to actually want it, plus answers to questions the protocol alone cannot settle: who is liable when a delegated task goes wrong, how you audit an agent you do not run, and what a service-level agreement means when the other side is probabilistic.</p>
+        <p class="small" style="margin-top:10px">Learn it for the <b>concepts</b> — discovery, delegation, task lifecycle. Those survive whichever protocol wins. Be skeptical of anyone claiming the standards war is settled; in this material we would rather teach you the shape of the problem than a winner.</p></div>
+      <div class="callout blue" style="margin-top:14px"><b>Interview framing:</b> &ldquo;MCP is how my agent reaches its tools; A2A is how my agent reaches someone else's agent. One is vertical, one is horizontal, and a serious system will use both.&rdquo;</div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · click the fields</div>
+  <h2>Anatomy of an Agent Card</h2>
+  <p class="lede">An Agent Card is a small JSON document an agent publishes so others can find and evaluate it — the A2A analogue of an MCP server advertising its tools. Click any highlighted field to see what it is doing and what a careful reader would ask about it.</p>
+  <div class="cardwrap">
+    <div>
+      <div class="codebox" style="margin-top:0">{
+  <span class="fld" data-i="0">"name": "Tutoring Center Scheduling Agent"</span>,
+  <span class="fld" data-i="1">"description": "Finds and books tutoring appointments for
+                  enrolled students across campus locations."</span>,
+  <span class="fld" data-i="2">"url": "https://tutoring.example.edu/a2a"</span>,
+  <span class="fld" data-i="3">"version": "1.4.0"</span>,
+  <span class="fld" data-i="4">"capabilities": { "streaming": true,
+                    "pushNotifications": true }</span>,
+  <span class="fld" data-i="5">"authentication": { "schemes": ["oauth2"] }</span>,
+  <span class="fld" data-i="6">"skills": [
+    { "id": "find_slot",
+      "description": "Find open tutoring slots for a course",
+      "examples": ["open MATH 1113 slots Thursday afternoon"] },
+    { "id": "book_slot",
+      "description": "Reserve a slot for a student" }
+  ]</span>
+}</div>
+      <p class="small" style="margin-top:10px"><b>Illustrative and simplified</b> — a teaching example, not a spec excerpt. Field names and required properties change between protocol versions; check <a class="doc" href="https://a2a-protocol.org" target="_blank" rel="noopener">a2a-protocol.org ↗</a> for the current definition before you write one.</p>
+    </div>
+    <div>
+      <div class="fldnote" id="fldNote">Click a highlighted field in the JSON.</div>
+      <div class="callout" style="margin-top:14px"><b>The card is a contract.</b> Everything a partner needs to decide &ldquo;can this agent do my job, and may I talk to it?&rdquo; is here — and nothing about how it works inside. Compare with an MCP server's tool list: same idea (advertise capability, hide implementation), one level up the ladder.</div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · step through a delegation</div>
+  <h2>The task lifecycle</h2>
+  <p class="lede">A campus advising agent delegates to the tutoring center's agent — a different department, a different codebase, a different owner. Press <b>Step</b> and watch the task move through its states. The amber state is the interesting one.</p>
+  <div class="sim2">
+    <div class="loopbox">
+      <svg viewBox="0 0 460 296" aria-label="A2A task lifecycle">
+        <defs><marker id="arrT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#cfccc2"/></marker></defs>
+        <path class="looparrow" style="marker-end:url(#arrT)" d="M 230 62 L 230 104" />
+        <path class="looparrow" style="marker-end:url(#arrT)" d="M 152 126 L 118 126" />
+        <path class="looparrow" style="marker-end:url(#arrT)" d="M 118 152 L 152 152" />
+        <path class="looparrow" style="marker-end:url(#arrT)" d="M 230 156 L 230 202" />
+        <path class="looparrow" style="marker-end:url(#arrT)" d="M 306 156 L 366 202" />
+        <g class="loopnode" id="ln0"><rect x="150" y="18" width="160" height="44"/><text x="230" y="45" text-anchor="middle">submitted</text></g>
+        <g class="loopnode" id="ln1"><rect x="150" y="110" width="160" height="46"/><text x="230" y="139" text-anchor="middle">working</text></g>
+        <g class="loopnode pausenode" id="ln2"><rect x="6" y="110" width="110" height="46"/><text x="61" y="132" text-anchor="middle" style="font-size:12px">input-</text><text x="61" y="148" text-anchor="middle" style="font-size:12px">required</text></g>
+        <g class="loopnode" id="ln3"><rect x="150" y="204" width="160" height="44"/><text x="230" y="231" text-anchor="middle">completed</text></g>
+        <g class="loopnode" id="ln4"><rect x="336" y="204" width="112" height="44"/><text x="392" y="231" text-anchor="middle">failed</text></g>
+      </svg>
+      <p class="small" style="margin:10px 6px 4px">The amber state — <b>input-required</b> — is what a plain API call cannot express. The delegate stops and asks, and the task stays alive while it waits.</p>
+    </div>
+    <div class="simright">
+      <div class="simctl">
+        <button class="primary" id="btnStep">Step ▸</button>
+        <button class="ghost" id="btnAuto">Auto-play</button>
+        <button class="ghost" id="btnReset">Reset</button>
+        <span class="hint" id="stepHint">Delegation · step 0 of 8</span>
+      </div>
+      <div class="term" id="simTerm"><span class="t-dim">Press Step to begin the delegation…</span></div>
+      <div class="statepanel" id="simState"><span class="kicker">Task state</span></div>
+    </div>
+  </div>
+  <div class="callout blue"><b>Notice what crossed the boundary and what did not.</b> The advising agent never learned which model the tutoring agent uses, what its prompt says, or which database it queried. It learned one thing: the outcome. That opacity is the feature — it is what makes delegation between two organizations conceivable at all.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Compose, don't choose</div>
+  <h2>MCP and A2A in one picture</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="loopbox">
+      <svg class="compose" viewBox="0 0 460 300" aria-label="An agent using MCP downward and A2A sideways">
+        <defs><marker id="arrC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#cfccc2"/></marker></defs>
+        <rect x="20" y="30" width="170" height="54"/><text x="105" y="55" text-anchor="middle">Your advising agent</text><text class="sm" x="105" y="72" text-anchor="middle">you own this</text>
+        <g class="a2a"><rect x="272" y="30" width="170" height="54"/><text x="357" y="55" text-anchor="middle">Tutoring agent</text><text class="sm" x="357" y="72" text-anchor="middle">another department</text></g>
+        <path class="h" d="M 196 57 L 266 57" />
+        <text class="lbl" x="200" y="26">A2A · HORIZONTAL</text>
+        <path d="M 105 90 L 105 140" />
+        <path d="M 105 90 Q 60 150 45 186" />
+        <path d="M 105 90 Q 150 150 168 186" />
+        <text class="lbl" x="14" y="118">MCP</text>
+        <text class="lbl" x="14" y="132">VERTICAL</text>
+        <rect x="66" y="142" width="118" height="42"/><text x="125" y="168" text-anchor="middle">records DB</text>
+        <rect x="8" y="190" width="118" height="42"/><text x="67" y="216" text-anchor="middle">catalog files</text>
+        <rect x="140" y="190" width="118" height="42"/><text x="199" y="216" text-anchor="middle">email server</text>
+        <path d="M 357 90 L 357 186" />
+        <rect x="298" y="190" width="118" height="42"/><text x="357" y="216" text-anchor="middle">their systems</text>
+        <text class="sm" x="357" y="252" text-anchor="middle">their MCP servers — invisible to you</text>
+      </svg>
+    </div>
+    <div>
+      <div class="compare">
+        <table class="plain">
+          <tr><th></th><th>MCP</th><th>A2A</th></tr>
+          <tr><td><b>Connects</b></td><td>An agent to tools &amp; data</td><td>An agent to another agent</td></tr>
+          <tr><td><b>Direction</b></td><td>Vertical — downward</td><td>Horizontal — sideways</td></tr>
+          <tr><td><b>Other side is</b></td><td>A system: deterministic, no goals</td><td>An agent: plans, may ask you questions</td></tr>
+          <tr><td><b>Discovery</b></td><td>Tool list at connect time</td><td>Agent Card, published</td></tr>
+          <tr><td><b>Unit of work</b></td><td>A tool call, usually fast</td><td>A task, possibly long-running</td></tr>
+          <tr><td><b>Typical use</b></td><td>&ldquo;Read the student record&rdquo;</td><td>&ldquo;Get this student tutored&rdquo;</td></tr>
+          <tr><td><b>Origin</b></td><td>Anthropic, Nov 2024</td><td>Google, Apr 2025</td></tr>
+        </table>
+      </div>
+      <div class="callout" style="margin-top:16px"><b>One agent, both protocols, no conflict.</b> Your agent reaches down through MCP to its own systems and sideways through A2A to a peer. The peer does the same on its side — and you never see its plumbing.</div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The decision</div>
+  <h2>Do you even need a protocol here?</h2>
+  <p class="lede">The most common mistake this week is reaching for A2A when the honest answer is &ldquo;these are two nodes in a graph I control.&rdquo; Three options, one question that separates them: <b>am I crossing a boundary I do not own?</b></p>
+  <div class="grid3">
+    <div class="card"><span class="kicker">In-graph edges</span><h3 style="margin-top:6px">Same app, same deploy</h3>
+      <p class="small">A researcher node and a writer node in one LangGraph. They share state, ship together, and are versioned together. Adding a protocol here buys you serialization overhead and a second failure mode in exchange for nothing. Use edges. <a class="doc" href="../week4/langgraph.html">Week 4 →</a></p>
+      <p class="small" style="margin-top:8px"><b>Week 9 preview:</b> multi-agent design — supervisors, hand-offs, and when splitting one agent into several actually helps — is a whole week of its own, and most of it happens inside a single application.</p></div>
+    <div class="card"><span class="kicker">MCP</span><h3 style="margin-top:6px">You need a capability</h3>
+      <p class="small">You want a system's data or actions and you would be happy with a well-described function. The other side has no goals to negotiate with. Wrap it in a server — once — and every agent you build afterwards gets it free.</p></div>
+    <div class="card"><span class="kicker">A2A</span><h3 style="margin-top:6px">You need someone else's judgment</h3>
+      <p class="small">The work belongs to another team, vendor, or company: they own the data, the rules, and the accountability. You want an outcome without inheriting their internals, and you may need a back-and-forth to get there. That is delegation, and that is A2A's case.</p></div>
+  </div>
+  <div class="callout red" style="margin-top:20px"><b>The manager's version of the same question:</b> a protocol boundary is also a <em>contract</em> boundary. Crossing an organizational line means someone must answer: who authenticates whom, what data is allowed to travel, what is logged on each side, who is liable when the delegated task fails, and how you audit an agent you cannot inspect. If nobody in the room can answer those, the technology choice is premature.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Discussion</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Your procurement agent negotiates delivery dates with a supplier's agent over A2A. The supplier's agent commits to a date it cannot meet. What did your side need to have in place before that call — and what should it have logged?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox"><b>Before:</b> an authenticated, allow-listed counterparty (you delegate to agents you have onboarded, not to any card you find); an explicit scope for what the agent may agree to — a mandate with limits on price, quantity, and date; and a <b>human gate</b> on anything that becomes binding, which is the Week 5 rule surviving contact with another company. Autonomy is fine for &ldquo;ask when they could ship&rdquo;; it is not fine for &ldquo;accept.&rdquo; <b>Logged:</b> the Agent Card version you talked to (capability claims change), the task id, every message in both directions with timestamps, the artifact returned, which human approved what, and the mandate limits in force at the time. <b>The uncomfortable part:</b> none of that makes the supplier's agent honest. The protocol standardizes the conversation, not the counterparty — commitments across organizations still need contracts, penalties, and reconciliation, exactly as they did when humans made the call. Interoperability solves the plumbing; it does not solve trust.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Watch</div>
+  <h2>Introduction to Agent2Agent</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><h3>Introduction to Agent2Agent (A2A) Protocol (Google Cloud Tech)</h3>
+      <p class="small">The official short introduction: Agent Cards, tasks, and discovery across vendors. Watch it with the diagram above in mind and check whether the speaker's example is really cross-organizational — or whether it would have been fine as edges in one graph. <span style="color:var(--muted)">(~8 minutes; runtime approximate.)</span></p>
+      <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/Fbr_Solax1w" title="Google Cloud Tech: Introduction to Agent2Agent (A2A) Protocol" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
+    </div>
+    <div class="card"><span class="kicker">Read it as a strategist</span>
+      <p class="small" style="margin-top:8px">This is a vendor introducing a standard it created, which is not a criticism — it is context. When you watch, separate three layers: <b>the problem</b> (agents from different builders cannot find or talk to each other), which is real and would exist without any vendor; <b>the design</b> (cards, tasks, opacity), which you can evaluate on its merits; and <b>the pitch</b> (that this particular design should be the industry's), which is a claim about the future, not a fact about the present.</p>
+      <p class="small" style="margin-top:10px">Whoever's format becomes the default captures the ecosystem around it — that is the platform economics behind every standards announcement you will read this year, and why open governance under a neutral foundation is a substantive move rather than a press-release detail.</p>
+      <p class="small" style="margin-top:10px">Free deep dives: <a class="doc" href="https://github.com/microsoft/ai-agents-for-beginners" target="_blank" rel="noopener">Microsoft — AI Agents for Beginners ↗</a> · <a class="doc" href="https://huggingface.co/learn/agents-course" target="_blank" rel="noopener">Hugging Face Agents Course ↗</a></p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Concept check</div>
+  <h2>Which standard — if any?</h2>
+  <p class="lede">Four scenarios. Pick MCP, A2A, or neither. The &ldquo;neither&rdquo; option is not a trick — it is the answer more often than students expect.</p>
+  <div id="ccheck"></div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="mcp.html"><span class="lab">← Previous</span><b>01 · MCP</b></a>
+  <a href="exercises.html" class="next"><span class="lab">Next →</span><b>03 · Practice &amp; case</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 6 — MCP &amp; A2A: The Interoperability Standards<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* ---- clickable agent card ---- */
+const FLDS=[
+ '<b>name</b> — the human-readable identity of the agent. Sounds trivial; is not. In a registry of hundreds of agents this is the first filter a discovering agent (or a person) applies, and a vague name is the fastest way to never be chosen.',
+ '<b>description</b> — what this agent is for, in prose. This is what another agent’s model actually reads when deciding whether to delegate, so it is a <em>prompt</em> as much as documentation. Same discipline as a tool description in Week 5: say what it does, and say what it will not do.',
+ '<b>url</b> — where to send tasks. Note it is an ordinary HTTPS endpoint: A2A rides on the web stack you already run, so your existing gateway, TLS, rate limits, and logs apply. That is a deliberate design choice, not an accident.',
+ '<b>version</b> — the agent’s own version. Capabilities change, and a partner that hard-coded assumptions about v1.2 needs to notice when v1.4 behaves differently. Log the version you talked to; &ldquo;which version made this commitment?&rdquo; is an audit question you will eventually be asked.',
+ '<b>capabilities</b> — protocol-level features this agent supports, such as streaming partial results or pushing a notification when a long task finishes. Long-running work is normal here, so &ldquo;how will you tell me you are done?&rdquo; is a first-class question rather than an afterthought.',
+ '<b>authentication</b> — how a caller proves who it is. This is the field that decides whether the card is an invitation or a locked door. Publishing a card does not mean anyone may use the agent; it means anyone may <em>discover</em> it and learn how to ask for access.',
+ '<b>skills</b> — the discrete things this agent can do, each with a description and examples. Compare with an MCP server’s tool list: same idea one level up, but a skill is coarser and outcome-shaped (&ldquo;find a slot&rdquo;) rather than a function signature. The examples matter — they are how a calling model learns what a good request looks like.'
+];
+document.querySelectorAll('.fld').forEach(el=>{
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('.fld').forEach(o=>o.classList.remove('on'));
+    el.classList.add('on');
+    document.getElementById('fldNote').innerHTML=FLDS[+el.dataset.i];
+  });
+});
+
+/* ---- task lifecycle stepper ---- */
+const EP=[
+ {n:-1,l:[['t-dim','DISCOVER'],['','Advising agent fetches the tutoring agent’s Agent Card and reads its skills.'],['t-dim','Match found: skill "find_slot" — and the card is on our allow-list.']],s:{counterparty:'tutoring agent v1.4'}},
+ {n:0,l:[['t-obs','TASK SUBMITTED'],['','"Find and book a MATH 1113 tutoring slot this week, afternoons preferred."'],['t-dim','task id: T-2291']],s:{status:'submitted'}},
+ {n:1,l:[['t-act','WORKING'],['','Tutoring agent plans and queries its OWN systems (its MCP servers — invisible to us).']],s:{status:'working'}},
+ {n:2,l:[['t-hitl','INPUT-REQUIRED'],['','Tutoring agent: "Which campus, and is online acceptable?"'],['t-dim','Task is not failed and not finished — it is waiting. This state is the point of the protocol.']],s:{status:'input-required'}},
+ {n:1,l:[['t-dec','REPLY'],['','Advising agent answers from the student record: "Downtown. Online is fine."'],['t-dim','Note: it answered from data it already had — no human interrupted.']],s:{status:'working'}},
+ {n:1,l:[['t-act','WORKING'],['','Tutoring agent reserves the slot on its side and generates a confirmation.']]},
+ {n:3,l:[['t-obs','COMPLETED'],['','Artifact returned: { slot: "Thu 3:00 pm", location: "Langdale 102", ref: "T-8812" }']],s:{status:'completed',artifact:'booking ref T-8812'}},
+ {n:-1,l:[['t-dim','LOGGED'],['','Card version, task id, every message, the artifact, and the elapsed time — on both sides.'],['t-dim','If it had ended at "failed", the same log is what tells you whose step broke.']],s:{audit:'trace stored'}}
+];
+let cur=0, timer=null;
+const state={};
+const termEl=document.getElementById('simTerm'), stateEl=document.getElementById('simState'), hintEl=document.getElementById('stepHint');
+function renderState(changed){
+  let h='<span class="kicker">Task state</span>';
+  for(const k in state){h+='<div>'+k+' = <b class="'+(k===changed?'changed':'')+'">'+state[k]+'</b></div>'}
+  stateEl.innerHTML=h;
+}
+function setNode(n){for(let i=0;i<5;i++)document.getElementById('ln'+i).classList.toggle('on',i===n)}
+function step(){
+  if(cur>=EP.length){stopAuto();return}
+  const e=EP[cur];
+  setNode(e.n);
+  if(cur===0)termEl.innerHTML='';
+  const div=document.createElement('div');
+  div.innerHTML=e.l.map(([c,t])=>'<span class="'+c+'">'+t+'</span>').join('  ');
+  termEl.appendChild(div);
+  termEl.scrollTop=termEl.scrollHeight;
+  let changed=null;
+  if(e.s){for(const k in e.s){state[k]=e.s[k];changed=k}}
+  renderState(changed);
+  cur++;
+  hintEl.textContent='Delegation · step '+cur+' of '+EP.length;
+}
+function stopAuto(){if(timer){clearInterval(timer);timer=null;document.getElementById('btnAuto').textContent='Auto-play'}}
+document.getElementById('btnStep').addEventListener('click',()=>{stopAuto();step()});
+document.getElementById('btnAuto').addEventListener('click',function(){
+  if(timer){stopAuto();return}
+  this.textContent='Pause';
+  timer=setInterval(()=>{if(cur>=EP.length)stopAuto();else step()},1600);
+});
+document.getElementById('btnReset').addEventListener('click',()=>{
+  stopAuto();cur=0;Object.keys(state).forEach(k=>delete state[k]);
+  termEl.innerHTML='<span class="t-dim">Press Step to begin the delegation…</span>';
+  renderState();setNode(-1);
+  hintEl.textContent='Delegation · step 0 of '+EP.length;
+});
+renderState();
+
+/* ---- which standard? ---- */
+const CC=[
+ {q:'You want your agent to query the university’s student-records database directly.',
+  o:['MCP','A2A','Neither — just wire it in your own graph'], a:0,
+  why:'A database has no goals to negotiate with: you want capability and data. Wrap it in an MCP server once, scope the credentials to the narrowest role that works, and every future agent inherits it.'},
+ {q:'Your procurement agent needs to negotiate delivery dates with a supplier’s agent, run by the supplier.',
+  o:['MCP','A2A','Neither — just wire it in your own graph'], a:1,
+  why:'Cross-organization, back-and-forth, and the other side owns its data and judgment. That is delegation between peers: Agent Cards for discovery, a task for the negotiation, authentication across the boundary — and a human gate before anything binds you.'},
+ {q:'Your app has a research node and a writing node in the same LangGraph, deployed together.',
+  o:['MCP','A2A','Neither — just wire it in your own graph'], a:2,
+  why:'No boundary is being crossed. They share state and ship together, so they are edges in a graph you own. Adding a protocol here buys serialization cost and a new failure mode and returns nothing. "Multi-agent" does not imply "multi-protocol."'},
+ {q:'You want partner universities to discover your advising agent and send it work, without seeing how it is built.',
+  o:['MCP','A2A','Neither — just wire it in your own graph'], a:1,
+  why:'Publishing an Agent Card is exactly this: advertise identity, endpoint, skills, and how to authenticate, while your prompts, model, and internal tools stay opaque. Discovery plus delegation across organizations is A2A’s home ground.'}
+];
+const cc=document.getElementById('ccheck');
+CC.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML='<div class="stmt">'+(i+1)+'. '+x.q+'</div><div class="opts" style="flex-direction:column;align-items:stretch">'+x.o.map((o,j)=>'<button data-v="'+j+'" style="text-align:left;border-radius:10px">'+String.fromCharCode(65+j)+'. '+o+'</button>').join('')+'</div><div class="fb"></div>';
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector('button[data-v="'+x.a+'"]').classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+String.fromCharCode(65+x.a)+'. ')+x.why;
+  }));
+  cc.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

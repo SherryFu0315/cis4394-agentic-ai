@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>02 · Governance &amp; Frameworks — CIS 4394 Week 10</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.fwwrap{display:grid;grid-template-columns:minmax(300px,400px) 1fr;gap:20px;align-items:start}
+.svgbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.svgbox svg{width:100%;height:auto;display:block}
+.wheel g.fn{cursor:pointer}
+.wheel g.fn circle,.wheel g.fn rect{fill:#fff;stroke:var(--line2);stroke-width:1.6;transition:fill .18s,stroke .18s}
+.wheel g.fn text{font-family:var(--sans);font-size:14px;font-weight:700;fill:var(--ink);pointer-events:none}
+.wheel g.fn .sub{font-size:10.5px;font-weight:400;fill:var(--muted)}
+.wheel g.fn:hover circle,.wheel g.fn:hover rect{stroke:var(--blue)}
+.wheel g.fn.sel circle,.wheel g.fn.sel rect{fill:var(--blue);stroke:var(--blue)}
+.wheel g.fn.sel text{fill:#fff}
+.wheel g.fn.sel .sub{fill:#dbe3f5}
+.wheel path.spoke{stroke:var(--line2);stroke-width:1.4;fill:none}
+.pyr g.tier{cursor:pointer}
+.pyr g.tier polygon{stroke:var(--line2);stroke-width:1.5;transition:stroke .18s,stroke-width .18s}
+.pyr g.tier text{font-family:var(--sans);font-size:13px;font-weight:700;fill:var(--ink);pointer-events:none}
+.pyr g.tier:hover polygon{stroke:var(--blue)}
+.pyr g.tier.sel polygon{stroke:var(--ink);stroke-width:3}
+.pyr .t1 polygon{fill:#f6d6da}
+.pyr .t2 polygon{fill:#f7e3c0}
+.pyr .t3 polygon{fill:#dfe8f8}
+.pyr .t4 polygon{fill:#e2eee5}
+.detail{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:28px;min-height:330px}
+.detail h3{font-family:var(--serif);font-size:28px;margin:0 0 4px;font-weight:600}
+.detail .sub{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);font-weight:700}
+.detail p{font-size:14.5px}
+.detail ul{margin:10px 0 0;padding-left:20px;font-size:14px;color:var(--muted)}
+.detail li{margin-bottom:7px}
+.detail li b{color:var(--ink)}
+.cmpt{width:100%;border-collapse:collapse;font-size:14px}
+.cmpt th,.cmpt td{border:1px solid var(--line);padding:12px 14px;text-align:left;vertical-align:top}
+.cmpt th{background:var(--blue-soft);font-size:12.5px}
+.cmpt td:first-child{font-weight:650;background:var(--paper);width:190px}
+.cmpwrap{overflow-x:auto;background:var(--panel);border-radius:12px}
+@media(max-width:980px){.fwwrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 10</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="attacks.html"><span class="k">01</span>How Agents Get Attacked</a>
+  <a href="governance.html" class="here"><span class="k">02</span>Governance &amp; Frameworks</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">02 · Trust &amp; governance</div>
+  <h1>Two documents every AI professional should <em>know</em>.</h1>
+  <p class="lede">One is voluntary and American and tells you <b>how to organize the work</b>. One is binding and European and tells you <b>what you owe, based on how risky your system is</b>. Neither is hard. Being the person in the room who has actually read them is a career advantage that costs you one afternoon.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="callout"><b>Honest note before anything else:</b> this area is <em>moving</em>. Frameworks get revised, profiles get added, and the application dates and details of the EU regulation are phased and have been subject to political argument. Nothing on this page is legal advice, and no slide is a citation. When something rides on it — a job, a client, a grade on Milestone II — cite the <b>primary document</b> and check the date on the version you read. Both primary sources are linked below, free.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · click a function</div>
+  <h2>NIST AI Risk Management Framework</h2>
+  <p class="lede">AI RMF 1.0 (NIST AI 100-1, published January 2023) is a <b>voluntary</b> framework from the US National Institute of Standards and Technology. It is a public-domain US Government work — you may adapt it freely with citation, which is why it is the safest backbone for a company policy or a capstone appendix. Its whole structure is four functions. <b>Click each one.</b></p>
+  <div class="fwwrap">
+    <div class="svgbox">
+      <svg class="wheel" id="wheel" viewBox="0 0 380 330" aria-label="NIST AI RMF four functions">
+        <path class="spoke" d="M 190 148 L 190 78" /><path class="spoke" d="M 190 192 L 190 258" /><path class="spoke" d="M 148 170 L 80 170" /><path class="spoke" d="M 232 170 L 300 170" />
+        <g class="fn sel" data-k="govern"><circle cx="190" cy="170" r="58"/><text x="190" y="167" text-anchor="middle">GOVERN</text><text class="sub" x="190" y="185" text-anchor="middle">the culture &amp; the owner</text></g>
+        <g class="fn" data-k="map"><rect x="112" y="20" width="156" height="56" rx="12"/><text x="190" y="44" text-anchor="middle">MAP</text><text class="sub" x="190" y="62" text-anchor="middle">context &amp; what could go wrong</text></g>
+        <g class="fn" data-k="measure"><rect x="4" y="142" width="140" height="56" rx="12"/><text x="74" y="166" text-anchor="middle">MEASURE</text><text class="sub" x="74" y="184" text-anchor="middle">analyze, test, track</text></g>
+        <g class="fn" data-k="manage"><rect x="236" y="142" width="140" height="56" rx="12"/><text x="306" y="166" text-anchor="middle">MANAGE</text><text class="sub" x="306" y="184" text-anchor="middle">act on the risks</text></g>
+        <g class="fn" data-k="whole"><rect x="96" y="260" width="188" height="52" rx="12"/><text x="190" y="284" text-anchor="middle">The loop, together</text><text class="sub" x="190" y="301" text-anchor="middle">why this is not a checklist</text></g>
+      </svg>
+    </div>
+    <div class="detail" id="fnDetail"></div>
+  </div>
+  <div class="grid2" style="margin-top:22px;align-items:start">
+    <div class="card"><h3>CertMike explains the AI RMF</h3><p class="small">A clean seven-minute walkthrough of the four functions from a well-known certification instructor — useful if you want the framework in someone else's words before you open the PDF. (Mike Chapple; approx. 7 minutes — verify the runtime on the page.)</p>
+      <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/uIC2xJK9wzA" title="CertMike Explains NIST AI Risk Management Framework" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
+    </div>
+    <div class="card"><span class="kicker">Go to the source</span>
+      <p class="small" style="margin-top:10px"><a class="doc" href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener">NIST — AI Risk Management Framework (landing page) ↗</a><br /><span class="small">The hub: the framework, the companion Playbook, and the profiles NIST has published alongside it.</span></p>
+      <p class="small" style="margin-top:12px"><a class="doc" href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf" target="_blank" rel="noopener">AI RMF 1.0 — the full PDF ↗</a><br /><span class="small">Around 40 pages of readable prose, no mathematics. Skim the four function sections; you will recognize most of it from your systems courses.</span></p>
+      <div class="callout blue" style="margin-top:16px;margin-bottom:0"><b>Why it is safe to reuse:</b> as a US Government work it is in the public domain. You can lift its structure into your Milestone II appendix, with a citation, and no licence follows you home. That is not true of every framework on this page.</div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · click a tier</div>
+  <h2>The EU AI Act</h2>
+  <p class="lede">Regulation (EU) 2024/1689 is <b>binding law</b>, not guidance, and it is structured around a simple idea: obligations scale with risk. The same technology sits in a different tier depending on <b>what you point it at</b>. Click each band.</p>
+  <div class="fwwrap">
+    <div class="svgbox">
+      <svg class="pyr" id="pyr" viewBox="0 0 420 300" aria-label="EU AI Act risk tiers pyramid">
+        <g class="tier t1 sel" data-k="unacceptable"><polygon points="210,18 255,84 165,84"/><text x="210" y="72" text-anchor="middle" style="font-size:11px">Unacceptable</text></g>
+        <g class="tier t2" data-k="high"><polygon points="165,84 255,84 300,150 120,150"/><text x="210" y="126" text-anchor="middle">High risk</text></g>
+        <g class="tier t3" data-k="limited"><polygon points="120,150 300,150 345,216 75,216"/><text x="210" y="192" text-anchor="middle">Limited risk · transparency</text></g>
+        <g class="tier t4" data-k="minimal"><polygon points="75,216 345,216 390,282 30,282"/><text x="210" y="258" text-anchor="middle">Minimal risk</text></g>
+      </svg>
+      <p class="small" style="margin:10px 6px 2px">Tier diagram drawn for this course from the structure described in the Act. Placement of any specific product is a legal question answered from the text, not from a lecture diagram.</p>
+    </div>
+    <div class="detail" id="tierDetail"></div>
+  </div>
+  <div class="grid2" style="margin-top:22px;align-items:start">
+    <div class="card"><span class="kicker">Go to the source</span>
+      <p class="small" style="margin-top:10px"><a class="doc" href="https://artificialintelligenceact.eu/the-act/" target="_blank" rel="noopener">The AI Act — readable structure and article-by-article text ↗</a><br /><span class="small">A navigable presentation of the regulation. Useful for finding which article or annex actually governs a use case.</span></p>
+      <p class="small" style="margin-top:12px">Key facts to keep straight: it is <b>Regulation (EU) 2024/1689</b>, published in the Official Journal in July 2024 and in force since <b>1 August 2024</b>. Its obligations do not all start at once — different duties apply from different dates, and the schedule has been actively debated. <b>Read the dates in the text you are citing</b>, and say which version you read.</p>
+    </div>
+    <div class="card"><h3>“But we are in Georgia.”</h3><p class="small" style="margin-top:8px">Three reasons this is still your problem. <b>One:</b> whether the Act reaches a given US-built product is a scoping question you answer from the regulation, not from a rule of thumb — and the answer is often yes for anything sold into or used from Europe. <b>Two:</b> big vendors comply globally because maintaining two products is expensive, so the requirements arrive in your procurement questionnaires either way. <b>Three:</b> the tier structure — <em>obligations proportional to consequence</em> — is simply a good way to think, and it is the structure US regulators, insurers, and enterprise buyers are converging on regardless of what any single legislature does next.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Side by side</div>
+  <h2>Same agent, two lenses</h2>
+  <div class="cmpwrap">
+    <table class="cmpt">
+      <thead><tr><th></th><th>NIST AI RMF 1.0</th><th>EU AI Act — Reg (EU) 2024/1689</th></tr></thead>
+      <tbody>
+        <tr><td>Who issues it</td><td>NIST, a US standards agency (Dept. of Commerce). Developed openly with industry input.</td><td>The European Parliament and Council. It is legislation.</td></tr>
+        <tr><td>Binding?</td><td><b>No</b> — voluntary. Its force comes from contracts, procurement, insurers, and courts asking whether you followed a recognized practice.</td><td><b>Yes</b> — binding regulation, with supervisory authorities and penalties. Consult the text for what applies and when.</td></tr>
+        <tr><td>What it asks of you</td><td>Organize the work: govern it, map the context, measure what you claim, manage what you find. It tells you the <em>process</em>, not the answer.</td><td>Classify the system by risk, then meet the duties attached to that tier — documentation, data and human-oversight requirements, transparency to the people affected.</td></tr>
+        <tr><td>Unit of analysis</td><td>Your <b>organization and lifecycle</b>. Who owns this, and how do risks get found and handled over time?</td><td>The <b>system and its use case</b>. What is this thing pointed at, and who bears the consequence?</td></tr>
+        <tr><td>Licence to reuse</td><td>Public domain (US Government work) — adapt with citation.</td><td>Official EU text — cite and link with attribution; not an open remix licence.</td></tr>
+        <tr><td>What it means for your capstone</td><td>Use its four functions as the <b>headings</b> of your Milestone II security section. It is free structure that a reviewer recognizes.</td><td>State the tier you believe your agent lands in and <b>why</b>, in one paragraph, citing the article or annex you relied on. Being wrong with reasoning beats being silent.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout" style="margin-top:22px"><b>The one-line version:</b> the RMF gives you the structure; the Act gives you the obligation. Mature governance uses both — a security taxonomy and a legal taxonomy look at the same agent and see different things, and you need both views to answer “are we allowed to ship this, and would we know if it went wrong?”</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Concept check</div>
+  <h2>Which tier? Which function?</h2>
+  <div id="ccheck"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Why managers care</div>
+  <h2>You already built most of this</h2>
+  <p class="lede">The uncomfortable secret of AI governance is how little of it is new. Strip the vocabulary and it is the control environment your information-systems courses already taught, applied to a system that happens to hold a language model.</p>
+  <div class="cmpwrap">
+    <table class="cmpt">
+      <thead><tr><th>What you built in this course</th><th>What the control is actually called</th><th>What governance adds</th></tr></thead>
+      <tbody>
+        <tr><td>Tool inventory — every function the agent may call, with its scope (Week 5)</td><td>Asset inventory and least-privilege access control</td><td>A named owner per tool and a review date. An inventory nobody owns is a document, not a control.</td></tr>
+        <tr><td>Human gate before irreversible actions (Weeks 4–5)</td><td>Maker–checker / segregation of duties</td><td>Written criteria for what needs approval, and evidence that approvals actually happened.</td></tr>
+        <tr><td>Egress allow-list and output screening (page 01)</td><td>Data-loss prevention</td><td>A list of approved destinations that changes through a request, not a code commit.</td></tr>
+        <tr><td>Full step trace in the Week 2 evidence format</td><td>Audit trail</td><td>Retention, tamper-resistance, and someone whose job includes reading it.</td></tr>
+        <tr><td>Your eval harness and regression suite (Week 8)</td><td>Testing and control monitoring</td><td>A threshold that means “do not ship,” agreed before the number comes back.</td></tr>
+        <tr><td>Max-iteration guard, budget cap, kill switch (Week 4)</td><td>Operational limits and incident response</td><td>A documented plan for who gets paged, who can stop the agent, and what gets told to whom.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout blue" style="margin-top:22px"><b>Governance is mostly writing down what you built and naming who owns it.</b> That is why MIS graduates are unusually well positioned here: the scarce skill is not training models, it is being able to sit between the engineers and the auditors and speak both languages. Very few people can.</div>
+  <div class="bigq" style="margin-top:26px"><span class="qlabel">Discussion question</span>Your startup has eight engineers and no compliance function. A prospective enterprise customer asks: “What is your AI governance process?” What do you say — and what would make the answer credible instead of aspirational?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">Do not claim a program you do not have; enterprise buyers have heard that and can tell. Say what is true and show the artifacts: <b>(1)</b> we map to the NIST AI RMF and here are our four sections; <b>(2)</b> here is our tool inventory, with an owner per tool and the scope of each credential; <b>(3)</b> these actions require human approval and here is a sample approval record; <b>(4)</b> here is our trace format and retention period, and here is a real trace with the sensitive fields removed; <b>(5)</b> here is our eval suite, its pass threshold, and the last run; <b>(6)</b> this named person owns the agent's behavior and here is how to reach them during an incident. Six artifacts, all of which you can produce in a week if you built the system properly, and none of which require a compliance department. Credibility comes from <em>evidence and a named owner</em>, not from a policy document — the artifacts are the answer, the policy just describes them.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="attacks.html"><span class="lab">← Previous</span><b>01 · How agents get attacked</b></a>
+  <a href="exercises.html" class="next"><span class="lab">Next →</span><b>03 · Practice &amp; case</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 10 — Security, Trust &amp; Governance<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* ===== NIST four functions ===== */
+var FN={
+ govern:{t:'GOVERN',s:'The function that holds the other three up',
+  p:'A culture of risk management, and — the part teams skip — <b>a named human who owns this system</b>. Policies, roles, accountability lines, and the decision rights for saying no. NIST puts GOVERN at the center because MAP, MEASURE and MANAGE all decay without it: findings with no owner do not get fixed.',
+  l:['<b>In your capstone:</b> one sentence naming who is accountable for the agent’s behavior, and who may switch it off.',
+     '<b>Artifact:</b> the tool inventory with an owner per tool.',
+     '<b>Smell test:</b> if an incident happened tonight, does anyone know it is theirs?']},
+ map:{t:'MAP',s:'Context, and what could go wrong',
+  p:'Establish what the system is for, who is affected, what the deployment context is, and what could plausibly go wrong before you build. This is where the trifecta analysis lives: <b>which legs does this design need, and which did we grant out of habit?</b>',
+  l:['<b>In your capstone:</b> the trifecta table — private data, untrusted inputs, external channels, each named concretely.',
+     '<b>Artifact:</b> a short risk register: harm, who bears it, how likely, how bad.',
+     '<b>Smell test:</b> can you name a specific person who is worse off if this agent is wrong?']},
+ measure:{t:'MEASURE',s:'Analyze, test, track — with numbers',
+  p:'Assess the risks you mapped, using methods and metrics you write down. This is your Week 8 eval harness doing double duty: task accuracy, yes, but also refusal behavior, injection-resistance on a red-team set, and drift over time. <b>A claim you never measured is a claim you cannot defend.</b>',
+  l:['<b>In your capstone:</b> the eval suite, its pass threshold, and the last run’s numbers.',
+     '<b>Artifact:</b> a small adversarial test set — ten planted injections you re-run on every change.',
+     '<b>Smell test:</b> would the number change if the system got worse?']},
+ manage:{t:'MANAGE',s:'Act on what you found — and prove you did',
+  p:'Prioritize the risks, treat them, and respond to the ones that materialize. Treatment can be a control (a gate, an allow-list), a design cut (remove a trifecta leg), a transfer (insurance, contract), or an accepted risk — accepted <em>on the record</em>, by the owner named under GOVERN.',
+  l:['<b>In your capstone:</b> the patch you applied and which risk it closed.',
+     '<b>Artifact:</b> an incident plan — who is paged, who can stop the agent, who gets told.',
+     '<b>Smell test:</b> is there anything on your risk register that has sat untouched all semester?']},
+ whole:{t:'The loop, together',s:'Why this is not a checklist',
+  p:'The four functions are continuous and interlocking, not a sequence you complete once. MAP surfaces a risk; MEASURE sizes it; MANAGE treats it; GOVERN decided who was allowed to accept it and makes sure the next release repeats the cycle. A framework used as a one-time checklist produces a document. Used as a loop, it produces a system whose behavior somebody can vouch for.',
+  l:['<b>Note the shape:</b> observe, decide, act, check — the same structure as the agent loop from Week 4, one level up. Governance is the loop that runs around your loop.',
+     '<b>NIST also publishes</b> a companion Playbook and profiles on the same landing page, including material specific to generative AI. Check what is current when you cite.',
+     '<b>Cite it as:</b> NIST, <em>Artificial Intelligence Risk Management Framework (AI RMF 1.0)</em>, NIST AI 100-1, January 2023.']}
+};
+var fnBox=document.getElementById('fnDetail');
+function showFn(k){
+  var d=FN[k];
+  document.querySelectorAll('#wheel g.fn').forEach(function(g){g.classList.toggle('sel',g.dataset.k===k)});
+  fnBox.innerHTML='<span class="sub">'+d.s+'</span><h3>'+d.t+'</h3><p>'+d.p+'</p><ul>'+d.l.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>';
+}
+document.querySelectorAll('#wheel g.fn').forEach(function(g){g.addEventListener('click',function(){showFn(g.dataset.k)})});
+showFn('govern');
+
+/* ===== EU AI Act tiers ===== */
+var TIER={
+ unacceptable:{t:'Unacceptable risk',s:'Prohibited outright',
+  p:'A small set of practices the regulation bans rather than regulates — uses judged incompatible with fundamental rights. There is no compliance path here: no amount of documentation, testing, or human oversight makes a prohibited practice permitted.',
+  l:['<b>Design consequence:</b> the check is binary and it belongs at the idea stage, before anyone writes code.',
+     '<b>For your capstone:</b> nothing you build for this course should be anywhere near this band. If you think it might be, that is a conversation to have early, not in Week 12.',
+     '<b>Read:</b> the prohibited-practices article in the primary text — the list is specific, and paraphrases drift.']},
+ high:{t:'High risk',s:'Permitted, with substantial duties',
+  p:'Systems used in contexts where a wrong output changes someone’s life — the regulation names categories including employment and worker management, education, essential services, and safety components of regulated products. These are legal, and they carry real obligations: risk management, data governance, technical documentation, record-keeping, human oversight, accuracy and robustness.',
+  l:['<b>Design consequence:</b> the human gate stops being a nice practice and becomes a documented requirement with evidence.',
+     '<b>The trap:</b> teams classify by <em>technology</em> (“it is just a chatbot”) when the regulation classifies by <em>use</em>. A chatbot that screens job applicants is not a chatbot problem.',
+     '<b>Read:</b> the high-risk classification article and its annex, and check whether your use case is listed.']},
+ limited:{t:'Limited risk',s:'Transparency duties',
+  p:'Systems where the main concern is that people should know what they are dealing with: that they are interacting with an AI system, or that content was AI-generated or manipulated. The duty is disclosure — modest, cheap, and frequently forgotten.',
+  l:['<b>Design consequence:</b> a label in the interface, wired into the product rather than promised in a policy.',
+     '<b>Business angle:</b> disclosure is also trust-building. Users who discover the disclosure themselves react far worse than users who were told.',
+     '<b>Most conversational agents</b> live here or below — which is why the disclosure line is the cheapest compliance win available to a student project.']},
+ minimal:{t:'Minimal risk',s:'No additional obligations under the Act',
+  p:'The overwhelming majority of AI systems: spam filters, recommendation features, the game AI, an internal summarizer. The regulation adds no specific duties here — voluntary codes of practice are encouraged, and everything else that already applies to software still applies.',
+  l:['<b>Do not misread this band.</b> “No extra duties under the AI Act” is not “no rules.” Data-protection law, sector rules, contracts, and your own security obligations are all untouched by this classification.',
+     '<b>Also:</b> the tier is a property of the use, so a minimal-risk agent becomes a high-risk one the day someone points it at hiring — with no code change at all.',
+     '<b>For your capstone:</b> most projects land here. Say so, and say why, in one paragraph with a citation.']}
+};
+var tierBox=document.getElementById('tierDetail');
+function showTier(k){
+  var d=TIER[k];
+  document.querySelectorAll('#pyr g.tier').forEach(function(g){g.classList.toggle('sel',g.dataset.k===k)});
+  tierBox.innerHTML='<span class="sub">'+d.s+'</span><h3>'+d.t+'</h3><p>'+d.p+'</p><ul>'+d.l.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>';
+}
+document.querySelectorAll('#pyr g.tier').forEach(function(g){g.addEventListener('click',function(){showTier(g.dataset.k)})});
+showTier('unacceptable');
+
+/* ===== concept check ===== */
+const CC=[
+ {q:'A company deploys an agent that reads résumés and ranks candidates for interview. Under the EU AI Act’s tier structure, where does this most likely land?',
+  o:['Minimal risk — it only produces a ranked list, a human still decides','Limited risk — it just needs to disclose that it is AI','High risk — employment and worker management is among the named high-risk contexts'],
+  a:2, why:'The tier follows the use, not the technology. Employment decisions are one of the contexts the regulation treats as high-risk, which brings duties on documentation, data governance, human oversight, accuracy and record-keeping. “A human still decides” does not downgrade it — meaningful human oversight is one of the obligations, not an exemption from them. Confirm the exact classification in the article and annex before relying on it.'},
+ {q:'You write down every tool your agent can call, assign a named owner to each one, and set the policy for which actions require human approval. Which NIST AI RMF function is that?',
+  o:['GOVERN','MEASURE','MANAGE'],
+  a:0, why:'GOVERN: accountability, roles, and policy — the function that decides who owns the system and who may accept a risk. MAP would be identifying what could go wrong; MEASURE would be testing it; MANAGE would be acting on the findings. Note that the artifact here is one you already have — the tool inventory from Week 5.'},
+ {q:'Your team runs its eval harness against the agent every sprint, including ten planted prompt-injection attempts, and tracks the catch rate over time. Which function?',
+  o:['MAP','MEASURE','GOVERN'],
+  a:1, why:'MEASURE: analyzing and tracking identified risks with methods and metrics you wrote down. This is exactly your Week 8 eval work, relabeled — and the relabeling is what lets a non-engineer see that the control exists. A claim you never measured is a claim you cannot defend.'},
+ {q:'The risk register flagged possible data exfiltration. In response the team removes the agent’s send_email tool, adds an egress allow-list, and documents that the residual risk is accepted by the product owner. Which function is that, primarily?',
+  o:['MAP — it identified the risk','MEASURE — it quantified the risk','MANAGE — it prioritized, treated, and recorded the acceptance of the risk'],
+  a:2, why:'MANAGE is the acting function: treat, transfer, avoid, or accept — with the acceptance recorded and made by the person GOVERN put in charge. MAP found it and MEASURE sized it, but nothing changes for a user until MANAGE. Notice which treatment did the heavy lifting: removing the tool cut a trifecta leg, which is stronger than any filter added around it.'}
+];
+const cc=document.getElementById('ccheck');
+CC.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML=`<div class="stmt">${i+1}. ${x.q}</div><div class="opts" style="flex-direction:column;align-items:stretch">${x.o.map((o,j)=>`<button data-v="${j}" style="text-align:left;border-radius:10px">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div><div class="fb"></div>`;
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector(`button[data-v="${x.a}"]`).classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+String.fromCharCode(65+x.a)+'. ')+x.why;
+  }));
+  cc.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

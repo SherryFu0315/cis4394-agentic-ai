@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CIS 4394 Week 7 — Memory, RAG &amp; Knowledge</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 7</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="memory.html"><span class="k">01</span>Agent Memory</a>
+  <a href="rag.html"><span class="k">02</span>RAG</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">Week 7 · Module 2 · Building Blocks</div>
+  <h1>Memory, RAG &amp; <em>knowledge</em>.</h1>
+  <p class="lede">Week 6 gave your agent <b>reach</b> — protocols that let it call tools and talk to other agents. This week is about what it <b>knows</b>: what survives the end of a run, and how a model that has never seen your company's documents can still answer questions about them — with a citation.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="callout blue"><b>📌 This week's logistics:</b> <b>Group Assignment 2 is due this week</b> — see your own section's due date and the submission link on <b>iCollege</b>. <b>📝 Quiz 3 is NEXT week</b> — in class, closed-book, 5 multiple-choice; the full scope and five sample questions are at the bottom of this week's <a href="exercises.html#quiz">Practice page ↓</a>. <a href="../week2/radar.html">Agent Radar</a> continues — check whose slot is next.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The big question</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Your Week 4 agent finished its run, printed a good answer, and exited. Everything it figured out along the way is gone. Which part of that is a <em>bug</em>, and which part is just how a context window works?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">Neither part is a bug in the model — it is a <b>missing component</b> in your system. The context window is <em>working</em> memory: a scratchpad the model sees for one turn, sized by a token budget you pay for (Week 3). It was never storage, and making it bigger does not make it storage — it just makes each turn more expensive and, past a point, less accurate. Anything that should outlive the run has to be deliberately <b>written</b> somewhere (a database, a file, a vector index) and deliberately <b>read back</b> later. That write/read decision is a design choice you own — and it is this entire week: <b>memory</b> for what the agent learned, <b>retrieval</b> for what your organization already wrote down.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The hook · fictional teaching example</div>
+  <h2>The goldfish and the grounded agent</h2>
+  <p class="lede">Same customer-support assistant, same question, two architectures. The only difference is where the knowledge lives.</p>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">No memory, no retrieval</span>
+      <div class="codebox" style="margin-top:10px">Mon 9:14  Rep: Our Georgia refund window is
+               30 days, not 14. Remember that.
+          Bot: Got it — 30 days in Georgia.
+
+Tue 8:02  Rep: What is the refund window in GA?
+          Bot: Our standard refund window is
+               14 days.                          ✗</div>
+      <p class="small" style="margin-top:10px">Nothing was stored. Tuesday's session started from zero, and the model fell back on whatever its training left in its weights. The correction the rep typed on Monday was never knowledge — it was <em>tokens in a window that closed</em>.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Long-term memory + retrieval</span>
+      <div class="codebox" style="margin-top:10px">Tue 8:02  Rep: What is the refund window in GA?
+  [memory]   user.region = GA (stored Mon 9:14)
+  [retrieve] returns_policy_v7.md § 3.2  (0.86)
+             returns_policy_v7.md § 1.0  (0.61)
+          Bot: 30 days for Georgia customers.
+               Source: Returns Policy v7, §3.2,
+               effective 2026-07-01.             ✓</div>
+      <p class="small" style="margin-top:10px">Two different mechanisms did two different jobs: <b>memory</b> carried a durable fact about this user across sessions; <b>retrieval</b> pulled the current policy text into the prompt at question time — and returned a source the rep can click.</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>The through-line for the week:</b> a model's parameters are frozen at its training cutoff, and they never contained your contracts, your tickets, or your policies. You do not fix that by making the model bigger. You fix it by <b>storing</b> what matters and <b>retrieving</b> it at the moment of the question.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">This week's pages</div>
+  <h2>Work through in order</h2>
+  <div class="navcards">
+    <a class="navcard" href="memory.html">
+      <span class="num">01</span>
+      <span><b>Agent memory</b><span class="small">Context vs memory · the four types (working, episodic, semantic, procedural) · write policies and read policies · sort four real items into the right store · why a memory store is regulated data.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="rag.html">
+      <span class="num">02</span>
+      <span><b>RAG — retrieval-augmented generation</b><span class="small">Meaning as geometry · chunk → embed → index → retrieve → augment → generate, clickable · step one real query through the whole pipeline · grounding and citations · agentic RAG · RAG vs fine-tuning.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="exercises.html">
+      <span class="num">03</span>
+      <span><b>Practice &amp; case</b><span class="small">Chunk a policy document · autopsy a retrieval failure · the HR-benefits bot that cited a superseded plan · interview check · readings · <b>Quiz 3 scope + five sample questions</b>.</span></span>
+      <span class="go">→</span>
+    </a>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Why managers care</div>
+  <h2>Knowledge that lives in one chat is worthless to the org</h2>
+  <div class="grid3">
+    <div class="card"><span class="kicker">Leverage</span><p class="small" style="margin-top:8px">A fact your best rep taught the agent on Monday should be available to every rep on Tuesday. Without a memory or knowledge layer, each session re-learns the same things and each employee's discovery dies with their tab. Retrieval turns documents your company <em>already paid to write</em> into an answer surface.</p></div>
+    <div class="card"><span class="kicker">Trust &amp; auditability</span><p class="small" style="margin-top:8px">A retrieved answer can name its source: this document, this section, this version. That is the difference between "the bot said so" and "the policy says so, here it is." When the answer is wrong, you can point at the chunk that caused it — and fix the document instead of arguing with the model.</p></div>
+    <div class="card"><span class="kicker">Cost &amp; governance</span><p class="small" style="margin-top:8px">Retrieval updates by replacing a file, not by retraining; a policy change ships the same day. But the moment you store user facts or index internal documents, you own <b>data</b>: access control at retrieval time, consent, retention, and deletion. Memory is a feature <em>and</em> a liability — page 01 takes that seriously.</p></div>
+  </div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="../index.html"><span class="lab">← Course</span><b>All weeks</b></a>
+  <a href="memory.html" class="next"><span class="lab">Start →</span><b>01 · Agent memory</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 7 — Memory, RAG &amp; Knowledge<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

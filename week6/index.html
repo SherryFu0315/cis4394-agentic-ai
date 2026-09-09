@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CIS 4394 Week 6 — MCP &amp; A2A: The Interoperability Standards</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.nmwrap{display:grid;grid-template-columns:minmax(320px,560px) 1fr;gap:20px;align-items:start}
+.nmbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.nmbox svg{width:100%;height:auto;display:block}
+.nl{stroke:#c8102e;stroke-width:1;opacity:.42}
+.nl.hub{stroke:#0039a6;stroke-width:1.6;opacity:.85}
+.nbox rect{fill:#fff;stroke:var(--line2);stroke-width:1.2;rx:8}
+.nbox text{font-family:var(--sans);font-size:11px;font-weight:600;fill:var(--ink)}
+.hubbox rect{fill:var(--blue-soft);stroke:var(--blue);stroke-width:1.6;rx:10}
+.hubbox text{font-family:var(--sans);font-size:12.5px;font-weight:700;fill:var(--blue)}
+.colhead{font-family:var(--sans);font-size:10.5px;letter-spacing:.14em;font-weight:700;fill:var(--muted)}
+.sliderow{display:grid;grid-template-columns:120px 1fr 52px;gap:12px;align-items:center;margin-bottom:10px}
+.sliderow label{font-size:12.5px;font-weight:600;color:var(--muted)}
+.sliderow input{width:100%;accent-color:var(--blue)}
+.sliderow .v{font-family:var(--serif);font-style:italic;font-size:19px;text-align:right}
+.bigcount{font-family:var(--serif);font-weight:600;font-size:clamp(30px,3.4vw,46px);line-height:1;color:var(--blue)}
+.bigcount.red{color:var(--red)}
+@media(max-width:880px){.nmwrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 6</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="mcp.html"><span class="k">01</span>MCP</a>
+  <a href="a2a.html"><span class="k">02</span>A2A</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">Week 6 · Module 2 · Interoperability</div>
+  <h1>MCP &amp; A2A — the <em>standards</em> layer.</h1>
+  <p class="lede"><a href="../week5/mechanics.html">Week 5</a> you hand-wired tools into one agent. That works — once. Do it for five agents and twenty systems and you are maintaining a hundred pieces of custom glue. This week: the two open protocols that turn that multiplication into an addition — <b>MCP</b> for the tools and data underneath an agent, <b>A2A</b> for other agents beside it.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="callout blue"><b>📌 This week's logistics:</b> the <b>final-project proposal is DUE</b> — Tue Sept 29 (Wed section) / Wed Sept 30 (Thu section), 11:59 pm EST, on iCollege. See the <a href="exercises.html#proposal">proposal checklist</a> below before you submit. <b>Group Assignment 2</b> is in progress and is <b>due next week</b>. <b>No quiz this week.</b> The <a href="../week2/radar.html">Agent Radar</a> presenter slots continue — sign up for an open week.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The big question</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Your company builds five agents. Each one needs the CRM, the data warehouse, email, and the ticketing system. How many integrations does your team write — and how many do they <em>maintain</em> when the CRM changes its API?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">Written the hand-wired way: <b>5 × 4 = 20</b> integrations, and when the CRM ships a breaking change you fix it in <b>five</b> places — each written by a different team, at a different time, with different error handling. Written against a shared protocol: each agent speaks the protocol once and each system exposes a server once, so it is <b>5 + 4 = 9</b> pieces, and the CRM change is fixed in <b>one</b> place for everybody. That collapse — from a product to a sum — is the entire business case for MCP and A2A, and it is why this week is about plumbing rather than intelligence.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · the integration tax</div>
+  <h2>M × N, or M + N</h2>
+  <p class="lede">Move the sliders to size your organization, then flip between the two worlds. The red spaghetti is what every team builds first. The blue hub is what a standard buys you — the same connections, without the combinatorics.</p>
+  <div class="nmwrap">
+    <div class="nmbox">
+      <svg id="nmSvg" viewBox="0 0 520 340" aria-label="M by N integrations versus a shared protocol hub"></svg>
+      <p class="small" style="margin:10px 6px 4px" id="nmCap">Every red line is a bespoke integration somebody wrote, tested, and now owns.</p>
+    </div>
+    <div>
+      <div class="card">
+        <div class="sliderow"><label for="aSl">Agents / apps (M)</label><input id="aSl" type="range" min="2" max="6" value="5" /><span class="v" id="aVal">5</span></div>
+        <div class="sliderow"><label for="tSl">Tools / systems (N)</label><input id="tSl" type="range" min="2" max="8" value="4" /><span class="v" id="tVal">4</span></div>
+        <div class="simctl" style="margin-top:6px">
+          <button class="primary" id="btnMode">Show the shared protocol ▸</button>
+          <span class="hint" id="modeHint">Currently: bespoke integrations</span>
+        </div>
+      </div>
+      <div class="grid2" style="margin-top:14px">
+        <div class="card"><span class="kicker">Bespoke</span><div class="bigcount red" id="cntBespoke">20</div><p class="small" style="margin-top:8px">connections to build and maintain — one per agent-system pair.</p></div>
+        <div class="card"><span class="kicker">With a shared protocol</span><div class="bigcount" id="cntProto">9</div><p class="small" style="margin-top:8px">connections — M clients plus N servers, each written once.</p></div>
+      </div>
+      <div class="callout" id="nmVerdict" style="margin-top:14px"><b>That is a 55% smaller maintenance surface</b> — and the gap widens every time you add an agent or a system.</div>
+    </div>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>Read the arithmetic honestly.</b> A standard does not remove the <em>work</em> of connecting to a CRM; somebody still writes that connector. It removes the <b>combinatorics</b> — the reason the same connector gets written five times. The payoff is in reuse, so it compounds: at 2 agents × 4 systems you save a quarter of the surface; at 20 × 30 you are comparing 600 bespoke integrations to 50. <span class="small">(Illustrative arithmetic, not measured data.)</span></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The framing</div>
+  <h2>&ldquo;USB-C for AI&rdquo; — and where it breaks down</h2>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">The analogy</span>
+      <p class="small" style="margin-top:8px">Before USB-C, every device shipped its own charger and its own cable. The port did not make laptops better; it made <em>everything else</em> plug in. MCP is pitched the same way: one connector shape between an AI application and the tools and data it needs, so a connector built for one agent works for the next one. Anthropic used exactly this framing when it introduced MCP as an open standard in <b>November 2024</b> (<a class="doc" href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener">Anthropic, 2024 ↗</a>).</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Where the analogy leaks</span>
+      <p class="small" style="margin-top:8px">A USB-C cable cannot lie to you. An MCP server can: it runs code, it returns text your model will read as instruction-shaped input, and it sits <em>inside</em> your trust boundary the moment you connect it. Plugging in a charger is a hardware decision; plugging in a server is a <b>supply-chain</b> decision. Hold onto that difference — it is the security thread that runs through page 01 and the case on page 03.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Two standards, two directions</div>
+  <h2>One goes down. One goes sideways.</h2>
+  <p class="lede">The single most useful thing you can memorize this week: <b>MCP connects an agent to tools and data. A2A connects an agent to other agents.</b> They are complementary, not competing — a single agent can speak both at once.</p>
+  <div class="grid2">
+    <div class="card"><span class="kicker">MCP · vertical</span><h3 style="margin-top:6px">Agent ↔ tools &amp; data</h3>
+      <p class="small">Your agent reaches <em>down</em> into a filesystem, a database, a ticketing API, a document store. The thing on the other end is not intelligent — it exposes capabilities and data, and your agent decides what to do with them. Open standard, introduced by Anthropic (2024); broadly adopted across the industry during 2025.</p>
+      <p class="small" style="margin-top:10px"><a class="doc" href="mcp.html">Page 01 · How MCP works →</a></p></div>
+    <div class="card"><span class="kicker">A2A · horizontal</span><h3 style="margin-top:6px">Agent ↔ agent</h3>
+      <p class="small">Your agent reaches <em>sideways</em> to another agent — possibly built by another team, another vendor, another company — and <b>delegates</b> a task rather than calling a function. The other side has its own goals, its own tools, and its own judgment. Announced by Google in April 2025 and contributed to the Linux Foundation in June 2025.</p>
+      <p class="small" style="margin-top:10px"><a class="doc" href="a2a.html">Page 02 · How A2A works →</a></p></div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>And a third option people forget:</b> if both &ldquo;agents&rdquo; live inside <em>your own</em> application — two nodes in one LangGraph from <a href="../week4/langgraph.html">Week 4</a> — you need neither protocol. They are just edges in a graph you own. Reach for a protocol when you cross a boundary you do not control: another team's deployment, another vendor, another company.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">This week's pages</div>
+  <h2>Work through in order</h2>
+  <div class="navcards">
+    <a class="navcard" href="mcp.html">
+      <span class="num">01</span>
+      <span><b>MCP — the vertical plug</b><span class="small">Host, client, server (clickable) · the three primitives: tools, resources, prompts · how one call actually flows · stdio vs HTTP · why a server is a supply-chain decision.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="a2a.html">
+      <span class="num">02</span>
+      <span><b>A2A — the horizontal handshake</b><span class="small">Agent Cards and capability discovery · the task lifecycle, stepped through · MCP vs A2A vs plain graph edges · an honest note on how young this is.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="exercises.html">
+      <span class="num">03</span>
+      <span><b>Practice &amp; case</b><span class="small">Design the integration for a campus-services agent · triage a real server's tool list · the third-party grades-server case · interview check · readings · proposal checklist.</span></span>
+      <span class="go">→</span>
+    </a>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Why managers care</div>
+  <h2>Standards are an IS lever, not a developer preference</h2>
+  <div class="grid3">
+    <div class="card"><span class="kicker">Cost</span><p class="small" style="margin-top:8px">The line item that kills agent projects is rarely model spend — it is integration and the maintenance tail behind it. M+N is a budget argument before it is an architecture argument, and it is the one a CFO can check with arithmetic.</p></div>
+    <div class="card"><span class="kicker">Leverage</span><p class="small" style="margin-top:8px">If your sixty connectors are written against one vendor's proprietary format, your renewal conversation has no exit. If they are written against an open protocol, switching hosts is a configuration change. Optionality <em>is</em> negotiating power.</p></div>
+    <div class="card"><span class="kicker">Trust &amp; audit</span><p class="small" style="margin-top:8px">A protocol boundary is also a control point: one place to log every call, allow-list every server, pin every version, and put the human gate. Ad-hoc glue has no such place — which is why nobody can tell you what it did last Tuesday.</p></div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>🎯 Take it to your final project:</b> your proposal is due this week. Add one paragraph naming the boundary in your system — which capability could you expose as an MCP tool, or at minimum, what does your tool interface look like written down as a contract? Then name the one call in it that gets a human gate. Interoperability is a design habit you build early, not a migration you do later.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="../index.html"><span class="lab">← Course</span><b>All weeks</b></a>
+  <a href="mcp.html" class="next"><span class="lab">Start →</span><b>01 · MCP</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 6 — MCP &amp; A2A: The Interoperability Standards<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* ---- M x N interactive ---- */
+const AGENTS=['Support bot','Sales copilot','Ops agent','Analyst agent','HR assistant','Finance agent'];
+const TOOLS=['CRM','Data warehouse','Email','Ticketing','Calendar','Docs store','Payments','HR system'];
+const aSl=document.getElementById('aSl'), tSl=document.getElementById('tSl');
+const svg=document.getElementById('nmSvg');
+let hubMode=false;
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function drawNM(){
+  const M=+aSl.value, N=+tSl.value;
+  document.getElementById('aVal').textContent=M;
+  document.getElementById('tVal').textContent=N;
+  const topPad=52, span=262;
+  const ay=i=>topPad+span*(i+0.5)/M;
+  const ty=j=>topPad+span*(j+0.5)/N;
+  let s='<text class="colhead" x="22" y="32">AGENTS / APPS</text><text class="colhead" x="386" y="32">TOOLS / SYSTEMS</text>';
+  let lines='';
+  if(!hubMode){
+    for(let i=0;i<M;i++)for(let j=0;j<N;j++){
+      lines+='<line class="nl" x1="146" y1="'+ay(i).toFixed(1)+'" x2="374" y2="'+ty(j).toFixed(1)+'"/>';
+    }
+  }else{
+    for(let i=0;i<M;i++)lines+='<line class="nl hub" x1="146" y1="'+ay(i).toFixed(1)+'" x2="222" y2="183"/>';
+    for(let j=0;j<N;j++)lines+='<line class="nl hub" x1="298" y1="183" x2="374" y2="'+ty(j).toFixed(1)+'"/>';
+  }
+  s+=lines;
+  for(let i=0;i<M;i++){
+    s+='<g class="nbox"><rect x="22" y="'+(ay(i)-13).toFixed(1)+'" width="124" height="26"/><text x="84" y="'+(ay(i)+4).toFixed(1)+'" text-anchor="middle">'+esc(AGENTS[i])+'</text></g>';
+  }
+  for(let j=0;j<N;j++){
+    s+='<g class="nbox"><rect x="374" y="'+(ty(j)-13).toFixed(1)+'" width="124" height="26"/><text x="436" y="'+(ty(j)+4).toFixed(1)+'" text-anchor="middle">'+esc(TOOLS[j])+'</text></g>';
+  }
+  if(hubMode){
+    s+='<g class="hubbox"><rect x="222" y="163" width="76" height="40"/><text x="260" y="188" text-anchor="middle">protocol</text></g>';
+  }
+  svg.innerHTML=s;
+  const bes=M*N, pro=M+N;
+  document.getElementById('cntBespoke').textContent=bes;
+  document.getElementById('cntProto').textContent=pro;
+  const cut=Math.round((1-pro/bes)*100);
+  document.getElementById('nmVerdict').innerHTML=(cut>0
+    ? '<b>That is a '+cut+'% smaller maintenance surface</b> at '+M+' agents and '+N+' systems'
+    : '<b>At this size the standard saves nothing</b> ('+bes+' vs '+pro+')')+
+    ' — and the gap widens every time you add an agent or a system. Small shops rarely feel it; that is why the pitch lands with enterprises first.';
+  document.getElementById('nmCap').innerHTML=hubMode
+    ? 'Each agent speaks the protocol once; each system exposes one server. New agent? It gets all '+N+' systems for free.'
+    : 'Every red line is a bespoke integration somebody wrote, tested, and now owns.';
+}
+document.getElementById('btnMode').addEventListener('click',function(){
+  hubMode=!hubMode;
+  this.textContent=hubMode?'◂ Back to bespoke wiring':'Show the shared protocol ▸';
+  document.getElementById('modeHint').textContent='Currently: '+(hubMode?'one shared protocol':'bespoke integrations');
+  drawNM();
+});
+aSl.addEventListener('input',drawNM);
+tSl.addEventListener('input',drawNM);
+drawNM();
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

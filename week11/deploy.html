@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>02 · Shipping an Agent — CIS 4394 Week 11</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.bench{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.bench .card{border-top:3px solid var(--red)}
+.benchbar{margin-top:14px}
+.brow{display:grid;grid-template-columns:110px 1fr 62px;gap:12px;align-items:center;margin-top:9px;font-size:13px}
+.brow .bb{height:20px;border-radius:6px;background:var(--line);overflow:hidden}
+.brow .bb i{display:block;height:100%;border-radius:6px;background:var(--blue)}
+.brow.agent .bb i{background:var(--red)}
+.brow .v{font-family:var(--mono);font-size:12.5px;text-align:right;color:var(--muted)}
+.fitgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.pickset{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.pickset .kicker{display:block;margin-bottom:10px}
+.pickset button{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px 14px;margin:8px 0;font:inherit;font-size:14px;cursor:pointer}
+.pickset button:hover{border-color:var(--blue)}
+.pickset button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.pickset button span{display:block;font-size:12px;opacity:.75;margin-top:2px}
+.verdict{border:1px solid var(--line);border-radius:14px;padding:22px 24px;background:var(--panel);border-top:4px solid var(--line2)}
+.verdict.go{border-top-color:#2f7d4f}
+.verdict.care{border-top-color:#d99a1b}
+.verdict.stop{border-top-color:var(--red)}
+.verdict h3{font-family:var(--serif);font-size:26px;margin:0 0 8px;font-weight:600}
+.verdict .tagv{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.shift{display:grid;grid-template-columns:1fr 34px 1fr;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-top:10px;font-size:14px}
+.shift .ar{text-align:center;color:var(--line2);font-size:18px}
+.shift .b{font-weight:650}
+.eq{background:#101319;color:#e8eaf0;border-radius:12px;padding:22px;font-family:var(--mono);font-size:14.5px;text-align:center;line-height:2;margin:16px 0}
+.eq b{color:#e3c078;font-weight:600}
+@media(max-width:880px){.bench,.fitgrid{grid-template-columns:1fr}.shift{grid-template-columns:1fr;gap:4px}.shift .ar{display:none}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 11</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="commerce.html"><span class="k">01</span>Agents That Buy</a>
+  <a href="deploy.html" class="here"><span class="k">02</span>Shipping an Agent</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">02 · From notebook to production</div>
+  <h1>Shipping an <em>agent</em>.</h1>
+  <p class="lede">Two halves, one lesson. First: computer-use agents — the most general thing an agent can do, and the least reliable, according to the benchmarks built to measure it. Then: what actually changes when a working notebook becomes something that runs unattended, costs money per run, and has to be turned off at 2 a.m. by someone who did not write it.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">The general case</div>
+  <h2>Agents that use a computer like a person</h2>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Tool calling — Week 5</span>
+      <div class="codebox" style="margin-top:10px">place_order(sku="8812", qty=4)
+  -> {"order_id": "A-99213", "total": 54.20}
+
+Precise. Typed. Fails loudly.
+Limited to what somebody exposed
+as an API.</div>
+      <p class="small" style="margin-top:10px">A clean contract with the world. If the vendor never built an API, the agent cannot reach them.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Computer use</span>
+      <div class="codebox" style="margin-top:10px">screenshot()  -> [an image of a screen]
+click(x=612, y=344)
+type("4")
+screenshot()  -> did that work?
+
+Universal. Untyped. Fails quietly.
+Works with any software a person
+can operate.</div>
+      <p class="small" style="margin-top:10px">The agent perceives pixels and acts with a mouse and keyboard — no API required, and no schema to catch a mistake either.</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>Why anyone wants this.</b> Most enterprise software is not going to grow an agent-friendly API on your schedule. A computer-use agent is the universal adapter: if a person can do it in a browser or a desktop app, the agent can attempt it. That generality is exactly where the reliability goes. Anthropic shipped a computer-use capability for Claude in 2024; OpenAI followed with Operator in 2025. Both arrived explicitly framed as early, supervised, and limited — read them as previews of a capability, not as finished products.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Watch</div>
+  <h2>See it move</h2>
+  <div class="grid2">
+    <div class="card"><h3>Claude — computer use for automating operations</h3><p class="small">Anthropic's own short demo: the model looking at a screen, moving a cursor, filling fields. About two minutes, and worth watching for the rhythm — look at how much of the run is the agent checking whether its last action worked.</p>
+      <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/ODaHJzOyVCQ" title="Claude: Computer use for automating operations" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
+      <p class="small" style="margin-top:10px">Source: Anthropic (official channel).</p>
+    </div>
+    <div class="card"><h3>Operator — OpenAI's first computer-using agent</h3><p class="small">A longer third-party walkthrough (Developers Digest, roughly 16 minutes) of OpenAI's Operator browsing and acting on live sites. Watch it for the failure texture: hesitation, re-reads, and the places a human has to step in.</p>
+      <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/JJQUL85Ej40" title="Operator: OpenAI's First AI Agent" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
+      <p class="small" style="margin-top:10px">Third-party review, not an official OpenAI channel — useful as a demonstration, not as documentation.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The humbling part</div>
+  <h2>What the benchmarks say</h2>
+  <p class="lede">Two research benchmarks put agents in real computer environments and score whether the task actually got done. Both are worth knowing by name, because both are the standard reply to “we'll just let it run.”</p>
+  <div class="bench">
+    <div class="card"><span class="kicker">Desktop tasks</span>
+      <h3 style="margin-top:6px">OSWorld (Xie et al., 2024)</h3>
+      <p class="small">369 real tasks in real operating-system environments, executed and verified rather than graded on plausible-looking output. As reported in the paper at publication: humans completed above roughly 72% of the tasks, while the best model setup the authors evaluated finished around 12%.</p>
+      <div class="benchbar">
+        <div class="brow"><span>Humans</span><span class="bb"><i style="width:72%"></i></span><span class="v">~72%+</span></div>
+        <div class="brow agent"><span>Best agent</span><span class="bb"><i style="width:12%"></i></span><span class="v">~12%</span></div>
+      </div>
+      <p class="small" style="margin-top:12px"><a class="doc" href="https://arxiv.org/abs/2404.07972" target="_blank" rel="noopener">arXiv:2404.07972 ↗</a></p>
+    </div>
+    <div class="card"><span class="kicker">Web tasks</span>
+      <h3 style="margin-top:6px">WebArena (Zhou et al., 2023)</h3>
+      <p class="small">812 long-horizon tasks in a realistic, self-hosted web environment — shopping, a forum, a code host, a CMS — again scored on whether the end state is correct. As reported at publication: a GPT-4-based agent succeeded on roughly 14% of the tasks.</p>
+      <div class="benchbar">
+        <div class="brow agent"><span>Agent</span><span class="bb"><i style="width:14%"></i></span><span class="v">~14%</span></div>
+        <div class="brow"><span>Tasks</span><span class="bb"><i style="width:100%"></i></span><span class="v">812</span></div>
+      </div>
+      <p class="small" style="margin-top:12px"><a class="doc" href="https://arxiv.org/abs/2307.13854" target="_blank" rel="noopener">arXiv:2307.13854 ↗</a></p>
+    </div>
+  </div>
+  <div class="callout red" style="margin-top:20px"><b>Read these as dated, and say so out loud.</b> Each figure describes the systems that existed when that paper was published — 2023 for WebArena, 2024 for OSWorld — and reported scores on both benchmarks have moved since. Do not carry these percentages into a meeting in 2026 as current facts; go to the papers and their leaderboards, and quote what is there on the day you speak. What is durable is the <em>shape</em> of the finding: long, multi-step tasks in messy real environments are far harder for agents than short, bounded ones, because errors compound across steps — the same compounding-reliability argument from <a class="doc" href="../week8/index.html">Week 8</a>.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · the shipping decision</div>
+  <h2>Match autonomy to reliability × reversibility</h2>
+  <p class="lede">The benchmarks do not say “never ship.” They say the safe envelope is narrower than the demo suggests. Pick the two properties of your task and see where it lands.</p>
+  <div class="fitgrid">
+    <div>
+      <div class="pickset" id="pickRev"><span class="kicker">1 · If the agent gets it wrong, what does it cost?</span></div>
+      <div class="pickset" id="pickSup" style="margin-top:14px"><span class="kicker">2 · Who is watching?</span></div>
+    </div>
+    <div class="verdict" id="verdict">
+      <span class="tagv">Verdict</span>
+      <h3>Choose one from each list</h3>
+      <p style="margin:0">The rule underneath this widget is a single sentence worth memorizing: <b>autonomy is earned by reliability and bounded by reversibility.</b> An unreliable agent can still be shipped — on reversible work, with someone reviewing. A reliable one still should not run unattended on irreversible work.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The other half</div>
+  <h2>What changes from notebook to production</h2>
+  <div class="shift"><span><span class="b">One user — you</span></span><span class="ar">→</span><span><span class="b">Thousands of runs</span>, concurrent, at hours nobody chose</span></div>
+  <div class="shift"><span><span class="b">You are watching every run</span></span><span class="ar">→</span><span><span class="b">Nobody is watching</span> — unless you built something that watches</span></div>
+  <div class="shift"><span><span class="b">The happy path</span>, on inputs you picked</span><span class="ar">→</span><span><span class="b">Adversarial and weird inputs</span>, including deliberate ones</span></div>
+  <div class="shift"><span><span class="b">Cost is invisible</span> — a free tier, a few calls</span><span class="ar">→</span><span><span class="b">Cost is metered</span> and shows up on somebody's budget line</span></div>
+  <div class="shift"><span><span class="b">"It worked"</span></span><span class="ar">→</span><span><span class="b">A commitment</span>: how often, how fast, and what happens when it does not</span></div>
+  <div class="shift"><span><span class="b">No logs</span> beyond your terminal</span><span class="ar">→</span><span><span class="b">An audit trail</span> somebody else can read months later</span></div>
+  <div class="callout" style="margin-top:22px"><b>None of these are AI problems.</b> They are the ordinary operations problems of running software, arriving all at once because the demo skipped them. That is good news: this is the part of agent work with fifty years of practice behind it.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Money</div>
+  <h2>What does one run cost?</h2>
+  <p class="lede">Not “what does the model cost per million tokens” — that is a price, not a cost. The number a manager needs is the cost of one <em>completed</em> task, which is a different and larger thing.</p>
+  <div class="eq">cost per completed task  &asymp;  <b>tokens per step</b> &times; <b>price per token</b> &times; <b>steps per run</b> &times; <b>attempts per completed task</b></div>
+  <div class="grid2" style="align-items:start;margin-top:18px">
+    <div class="card"><span class="kicker">Why agents cost more than they look like they should</span>
+      <p class="small" style="margin-top:8px">Every step re-sends the conversation so far. Step 6 pays for steps 1 through 5 all over again, so tokens per run grow faster than steps do — the reason a multi-step agent can cost many times a single call for the same question. Add failed attempts, and the true denominator is completed tasks, not runs.</p>
+      <p class="small" style="margin-top:10px"><b>The honest way to get this number:</b> instrument a real run and read it off, then multiply by expected volume. Every estimate assembled from published prices and guessed step counts is a story; the meter is the fact.</p>
+    </div>
+    <div class="card"><span class="kicker">Four levers, in the order to pull them</span>
+      <ol class="steps" style="margin-top:10px">
+        <li><b>Cap the steps.</b> The single most effective lever, because it bounds the worst case rather than shaving the average. A run that cannot exceed N steps cannot produce a surprise invoice.</li>
+        <li><b>Right-size the model.</b> Not every step needs the strongest model. Classification, extraction and routing steps are often the cheap model's job; keep the expensive one for the hard decision.</li>
+        <li><b>Cut the round-trips.</b> Every tool call is a step, and every step re-pays for the context. Batch what can be batched; combine two tools a run always calls together.</li>
+        <li><b>Cache what repeats.</b> Stable instructions, schemas, and reference material get re-sent every step by default.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>The break-even question.</b> The comparison is never “agent vs zero.” It is agent vs whatever the work costs today: the person doing it, at their fully-loaded rate, at the current volume. Put the agent's fully-loaded cost on the other side — tokens plus infrastructure plus the human minutes spent reviewing approvals and cleaning up failures. If you cannot state both numbers, you do not yet have a business case; you have a demo.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Time</div>
+  <h2>The latency budget</h2>
+  <div class="grid2">
+    <div class="card"><span class="kicker">Steps are round-trips</span><p class="small" style="margin-top:8px">A multi-step agent is a sequence of network calls to a large model, each one waiting on the last. What feels instant in a notebook becomes tens of seconds in a product, and the user has no way to tell “thinking” from “broken.” Latency is a product decision before it is an engineering one: stream partial progress, show which step it is on, and pick a smaller model for the steps that do not need the big one.</p></div>
+    <div class="card"><span class="kicker">Rate limits are a real constraint</span><p class="small" style="margin-top:8px">Your provider caps requests and tokens per minute. One agent at a time never notices; a hundred concurrent runs discover it at once — as errors, in production, usually on the busiest day. Handle it deliberately: a queue, exponential backoff with jitter, and a concurrency limit you chose rather than one the provider imposes on you mid-run.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The hard one</div>
+  <h2>Retries, and why idempotency matters more than anything on this page</h2>
+  <p class="lede">Networks fail halfway. That is not an edge case; it is the normal condition of distributed systems. The question is only what your code does about it.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="codebox"># the bug that becomes a refund
+try:
+    place_order(sku, qty)          # times out
+except Timeout:
+    place_order(sku, qty)          # ...and now there are two
+
+# the fix: the caller decides the identity
+key = f"restock-{sku}-{qty}-{week_of(now)}"
+place_order(sku, qty, idempotency_key=key)
+# retry with the SAME key -> the vendor returns the
+# original order instead of creating a second one</div>
+    <div>
+      <div class="card"><span class="kicker">What an idempotency key is</span><p class="small" style="margin-top:8px">A caller-generated identifier for <em>this intended action</em>, sent with the request. If the same key arrives twice, the server returns the original result rather than performing the action again. It has to be generated <b>before</b> the first attempt and reused on every retry — a key generated inside the retry loop is a new key each time, which is the same bug wearing a hat.</p></div>
+      <div class="card" style="margin-top:14px"><span class="kicker">Where agents make this worse</span><p class="small" style="margin-top:8px">A retrying agent is not a retrying HTTP client. It may re-plan, decide the order “did not go through,” and place a subtly different one — different quantity, different vendor — which no idempotency key will catch, because it is a genuinely new request. So the loop needs the other half too: <b>read back the state of the world</b> before acting again. Check for an existing order before creating one.</p></div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Operations</div>
+  <h2>Watch it, roll it back, turn it off</h2>
+  <div class="grid3">
+    <div class="card"><span class="kicker">Monitoring &amp; alerting</span><p class="small" style="margin-top:8px">Log every run as a trace, and alert on the signals that mean something is wrong <em>before</em> a customer notices: cap-hits (an agent that keeps hitting the step limit is failing, not economizing), spend approaching the monthly limit, retry rate, approval-rejection rate, and success rate against your eval suite. Rising rejections at the gate is the most useful early warning you will get — humans are telling you the agent's judgment has drifted.</p></div>
+    <div class="card"><span class="kicker">Rollback</span><p class="small" style="margin-top:8px">A prompt change is a deploy. So is a model version change, and that one can happen without you touching anything. Keep prompts, tool definitions and model versions pinned and versioned, re-run the eval suite before promoting, and be able to return to the previous version in minutes. "Roll back the prompt" should be as ordinary as rolling back code.</p></div>
+    <div class="card"><span class="kicker">The kill switch and the human</span><p class="small" style="margin-top:8px">One flag that stops new runs immediately, reachable by someone who is not you, documented where they will look at 2 a.m. Then name the on-call person, and tell them what to do first: stop new runs, freeze the spend, pull the trace, notify whoever is affected. An unowned agent in production is an incident waiting for a volunteer.</p></div>
+  </div>
+  <div class="card" style="margin-top:22px"><span class="kicker">Deployment checklist</span>
+    <h3 style="margin-top:6px">Before this agent runs unattended</h3>
+    <div class="checklist">
+      <label><input type="checkbox" /> <span>An eval suite with known-good answers, and a recorded score I would be willing to show someone — not a single successful demo run.</span></label>
+      <label><input type="checkbox" /> <span>A hard step cap and a spend cap, enforced in the harness, that the model cannot argue past.</span></label>
+      <label><input type="checkbox" /> <span>Every irreversible action identified by name, and each one either gated by a human or bounded by a cap I would accept losing.</span></label>
+      <label><input type="checkbox" /> <span>Idempotency keys on every action that spends, sends, or creates — generated before the first attempt.</span></label>
+      <label><input type="checkbox" /> <span>Full traces stored, for at least as long as a dispute could plausibly arrive.</span></label>
+      <label><input type="checkbox" /> <span>Alerts on cap-hits, spend thresholds, retry spikes, and gate rejections — going somewhere a person actually reads.</span></label>
+      <label><input type="checkbox" /> <span>Pinned model version and versioned prompts, with a tested way back to the previous version.</span></label>
+      <label><input type="checkbox" /> <span>A kill switch that a non-author can find and use, documented in the runbook.</span></label>
+      <label><input type="checkbox" /> <span>A named accountable owner and an on-call path — a person, not a team inbox.</span></label>
+      <label><input type="checkbox" /> <span>A cost-per-completed-task number measured from real runs, and the manual baseline it is being compared against.</span></label>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Business framing</div>
+  <h2>The manager's four questions</h2>
+  <p class="lede">If you can answer these four in a meeting without hedging, you are ready to deploy. If you cannot, the missing answer is your next task.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><p style="margin:0;font-weight:600">1 · What does a run cost?</p><button class="revealbtn">What a good answer sounds like</button><div class="revealbox">A measured number per <b>completed task</b>, not per API call, with the arithmetic visible: tokens per step, steps per run, attempts per completion, plus the human review minutes. Then the comparison that makes it mean something — the fully-loaded cost of doing this work the way it is done today, at current volume. A good answer also names the largest lever and what it would save. A weak answer quotes a price per million tokens, which is not a cost and not per task.</div></div>
+    <div class="card"><p style="margin:0;font-weight:600">2 · What happens when it fails?</p><button class="revealbtn">What a good answer sounds like</button><div class="revealbox">Failure is a designed path, not a surprise. Name the modes — a tool errors, the model loops, the cap fires, a purchase half-completes — and say what the system does for each: retry with the same idempotency key, fall back to a simpler path, or stop and hand the task to a human with the trace attached. Say who finds out and how fast. The honest version includes the failure rate you actually measured and the tax it implies in rework.</div></div>
+    <div class="card"><p style="margin:0;font-weight:600">3 · Who is accountable?</p><button class="revealbtn">What a good answer sounds like</button><div class="revealbox">A person's name. Not "the AI team," not "the vendor." That person owns the eval numbers, the spend limits, the approval policy and the on-call rotation. Underneath the name sits the machinery that makes accountability possible: an audit trail linking each action to the authorization that permitted it, so "who decided this" has an answer that does not depend on memory. Accountability that cannot be evidenced is just blame waiting to be assigned.</div></div>
+    <div class="card"><p style="margin:0;font-weight:600">4 · How do we turn it off?</p><button class="revealbtn">What a good answer sounds like</button><div class="revealbox">One switch, documented, reachable by someone who did not build it, tested at least once. Say what it does precisely: stops new runs, and — separately — whether in-flight runs are drained or killed, because those need different answers when money is moving. Then the sequence after the switch: freeze spend, pull traces, assess what already executed, notify the affected parties, and roll back to the last known-good version. Practice this before you need it; the first time should not be during the incident.</div></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Concept check</div>
+  <h2>Three questions before you move on</h2>
+  <div id="ccheck"></div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="commerce.html"><span class="lab">← Previous</span><b>01 · Agents that buy</b></a>
+  <a href="exercises.html" class="next"><span class="lab">Next →</span><b>03 · Practice &amp; case</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 11 — Agentic Commerce<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* shipping-decision widget */
+const REV=[
+ {k:'r0',t:'Nothing — it is reversible',s:'A draft, a search, a suggestion nobody acts on until a human does'},
+ {k:'r1',t:'Time and goodwill',s:'A wrong ticket reply, a bad tag, a message that has to be corrected'},
+ {k:'r2',t:'Money that does not come back',s:'A purchase, a payment, a contract, an irreversible external commitment'}
+];
+const SUP=[
+ {k:'s0',t:'A human approves each action',s:'Nothing lands until someone reads the proposal'},
+ {k:'s1',t:'Sampled after the fact',s:'It runs on its own; a human reviews a share of runs'},
+ {k:'s2',t:'Nobody is watching',s:'Fully unattended, overnight, at volume'}
+];
+const VERD={
+ 'r0s0':['go','Ship it — but ask why the gate is there','Reversible work under full review is the safest square on the board, and also the least valuable: you are paying for a human on every run to protect against a mistake that costs nothing. Measure the approval rate. If humans approve nearly everything, move this to sampled review and spend the attention where it matters.'],
+ 'r0s1':['go','Ship it','This is the sweet spot for the current state of the technology: mistakes are cheap, sampling catches drift, and the agent earns more autonomy as the eval numbers hold. Keep the sample honest — random, not the runs that look interesting.'],
+ 'r0s2':['care','Ship it, with monitoring that counts as watching','Unattended is fine when errors are free, but "nobody is watching" must not mean nobody would notice. Alert on failure rate, cap-hits and volume anomalies, and keep the traces. Otherwise you learn about a month of silent nonsense from someone downstream.'],
+ 'r1s0':['go','Ship it','Costly-but-recoverable work with a human in front of every action is the classic assisted-agent deployment. Watch approval fatigue: if the reviewer is approving twenty an hour without reading, the gate has quietly stopped existing.'],
+ 'r1s1':['care','Ship it narrowly, and prove it before widening','Sampling means some bad outputs reach the world before anyone sees them. Acceptable if you can measure the rate, correct quickly, and bound the blast radius. Start with the narrowest slice of tasks that clears your eval bar, and widen only on measured results.'],
+ 'r1s2':['stop','Not yet','Unattended plus consequences plus no reviewer is how a small error rate becomes a large cleanup. Add one of: a human on the exceptions, a cap that limits how many can go wrong before the run halts, or an automated check that verifies the outcome rather than trusting the agent report.'],
+ 'r2s0':['care','Ship it — and design the approval screen as carefully as the agent','Irreversible actions behind a real human gate is the deployment this whole week is about. The risk has moved out of the model and into the screen: if the approval does not show the decision clearly, or fires so often that people stop reading, you have automation with a signature attached. Keep this rung small.'],
+ 'r2s1':['stop','No','Sampling reviews irreversible actions after the money has moved. By the time a sampled run reveals the problem, you are issuing refunds. Either put the human in front of the action, or bound it with a cap small enough that you would accept losing it every time.'],
+ 'r2s2':['stop','Absolutely not','Unattended, irreversible, unreviewed. This is the configuration the benchmark numbers above exist to argue against, and the one where a single prompt injection in a product listing becomes a real loss. If the business case truly requires it, the only responsible version is a hard cap on the amount at risk plus automated verification of every outcome — and even then, start with an amount you would be willing to lose.']
+};
+let selRev=null, selSup=null;
+function buildPicker(el,items,onPick){
+  items.forEach(it=>{
+    const b=document.createElement('button');
+    b.innerHTML=it.t+'<span>'+it.s+'</span>';
+    b.addEventListener('click',()=>{
+      el.querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');onPick(it.k);
+    });
+    el.appendChild(b);
+  });
+}
+function renderVerdict(){
+  if(!selRev||!selSup)return;
+  const v=VERD[selRev+selSup];
+  const box=document.getElementById('verdict');
+  box.className='verdict '+v[0];
+  box.innerHTML='<span class="tagv">Verdict</span><h3>'+v[1]+'</h3><p style="margin:0">'+v[2]+'</p>';
+}
+buildPicker(document.getElementById('pickRev'),REV,k=>{selRev=k;renderVerdict()});
+buildPicker(document.getElementById('pickSup'),SUP,k=>{selSup=k;renderVerdict()});
+
+/* concept check */
+const CC=[
+ {q:'Your agent calls place_order() and the request times out. What is the correct behaviour?',
+  o:['Call it again immediately — a timeout means it did not go through','Retry with the same idempotency key generated before the first attempt, and read back the order state before creating anything new','Give up and mark the task failed','Ask the model whether it thinks the order went through'],
+  a:1, why:'A timeout tells you nothing about whether the action happened. The key makes a repeat safe, and reading back the world state catches the case where the agent would otherwise re-plan into a subtly different order that no key would deduplicate. Asking the model is asking a witness with no evidence.'},
+ {q:'What do the OSWorld and WebArena results most directly imply for what you should ship?',
+  o:['Agents do not work; wait a few years','Long, unattended, high-stakes computer tasks are the wrong first deployment — start where tasks are short, bounded, reversible, and reviewed','Use a bigger model and the gap disappears','Benchmarks are academic and do not apply to business software'],
+  a:1, why:'The finding is about task shape, not about hopelessness: success falls off as tasks get long and messy because errors compound across steps. That is an argument for narrowing the envelope and matching autonomy to reversibility, not for abstaining. And remember both figures are dated — the shape survives, the digits do not.'},
+ {q:'Which production signal is the best early warning that your agent has quietly gotten worse?',
+  o:['Average response length','A rising rate of rejections at the human approval gate','Total token spend for the month','The number of tools registered'],
+  a:1, why:'Rejections are humans telling you, in production, that the agent proposals stopped being acceptable — usually before any customer complains. Cap-hit rate and eval-suite score are the other two worth alerting on. Spend tells you about volume, not about quality.'}
+];
+const cc=document.getElementById('ccheck');
+CC.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML='<div class="stmt">'+(i+1)+'. '+x.q+'</div><div class="opts" style="flex-direction:column;align-items:stretch">'+x.o.map((o,j)=>'<button data-v="'+j+'" style="text-align:left;border-radius:10px">'+String.fromCharCode(65+j)+'. '+o+'</button>').join('')+'</div><div class="fb"></div>';
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector('button[data-v="'+x.a+'"]').classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+String.fromCharCode(65+x.a)+'. ')+x.why;
+  }));
+  cc.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

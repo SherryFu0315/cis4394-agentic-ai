@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CIS 4394 Week 8 — Evaluation &amp; Reliability</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.runstrip{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 4px}
+.runchip{width:56px;height:56px;border-radius:12px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:var(--line2)}
+.runchip.pass{background:var(--good);border-color:var(--good-line);color:#2f6b3f}
+.runchip.fail{background:var(--bad);border-color:var(--bad-line);color:var(--red)}
+.runchip .n{font-size:10px;position:relative;top:-14px;left:-8px;color:var(--muted);font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 8</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="why.html"><span class="k">01</span>Why Demos Lie</a>
+  <a href="metrics.html"><span class="k">02</span>pass@k, pass^k &amp; Benchmarks</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">Week 8 · Module 3 · Evaluation</div>
+  <h1>It worked when I <em>demoed</em> it.</h1>
+  <p class="lede">One successful run tells you almost nothing about a system that will run a thousand times. This week you turn “it seemed to work” into a number a manager can act on — and learn why the number that sells a demo is not the number that ships a product. <b>Don't trust the demo; test the behavior.</b></p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="callout blue"><b>📝 This week's logistics:</b> <b>Quiz 3 is this week</b> — in class, closed-book, 5 multiple-choice. <b>Scope: the Weeks 6–8 readings.</b> Sample questions are on the <a href="../week7/exercises.html#quiz">Week 7 page</a>. <b>Group Assignment 3 releases this week</b>, and <b>capstone Milestone I releases</b> (due Week 9). <a href="../week2/radar.html">Agent Radar</a> continues — the presenter slot is open.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The big question</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Your agent completed the task perfectly when you demoed it to your manager. What is the chance it completes the <em>next eight</em> customer runs perfectly?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">From one run you cannot know — that's the whole point. One success is a sample of size 1 from a probabilistic system, and you chose the sample. But you can reason about it: if each run independently succeeds <b>90%</b> of the time — a number most teams would be thrilled with — then all eight succeeding is 0.9<sup>8</sup> = <b>0.4305, about 43%</b>. The customer who runs your agent eight times is more likely than not to see it fail at least once. That gap between “90% reliable” and “43% of customers get a clean week” is what this whole week is about, and page <a href="metrics.html">02</a> gives it a name: <b>pass^k</b>.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The hook</div>
+  <h2>The demo was run #1</h2>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">What your manager saw</span>
+      <div class="runstrip">
+        <div class="runchip pass">✓</div>
+      </div>
+      <p class="small" style="margin-top:10px">One run. Your laptop, your test input, your network, your eyes on the screen. It worked. You said “it works.” Everyone believed you — including you.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">What the next five runs looked like</span>
+      <div class="runstrip">
+        <div class="runchip pass">✓</div><div class="runchip pass">✓</div><div class="runchip fail">✗</div><div class="runchip pass">✓</div><div class="runchip fail">✗</div>
+      </div>
+      <p class="small" style="margin-top:10px">Same agent, same prompt, same task — five more times. Nothing broke, nothing was “deployed wrong.” The system is simply <b>non-deterministic</b>, and you had been quoting a sample of size one. Run it yourself on page <a href="why.html">01</a>.</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>The course line, one more time:</b> in Week 2 you evaluated an agent instead of admiring it; in Week 3 you proved a prompt change helped with a <a href="../week3/exercises.html">reliability check</a> instead of a vibe. This week that instinct becomes an engineering discipline with metrics, harnesses, and benchmarks — the thing that stands between a prototype and a deployment.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · click each gap</div>
+  <h2>Four reasons the demo lied to you</h2>
+  <p class="lede">A demo is not a small production run. It differs from production in four specific, nameable ways — and each one hides a class of failure that an average-accuracy number can never show you.</p>
+  <div class="arch-shell">
+    <div class="arch-list" id="gapList"></div>
+    <div class="arch-view" id="gapView"></div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>The umbrella term:</b> <b>distribution shift</b> — the inputs your agent meets in production are drawn from a different distribution than the ones you tested on. Evaluation is how you find out <em>how different</em>, before your customers do.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">This week's pages</div>
+  <h2>Work through in order</h2>
+  <div class="navcards">
+    <a class="navcard" href="why.html">
+      <span class="num">01</span>
+      <span><b>Why demos lie</b><span class="small">Why evaluating an agent is harder than evaluating a model · run the same task five times · compounding error across steps · what to log per step · outcome vs trajectory.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="metrics.html">
+      <span class="num">02</span>
+      <span><b>pass@k, pass^k &amp; benchmarks</b><span class="small">The two metrics people confuse · a calculator that shows one curve rising and the other collapsing · SWE-bench, τ-bench, WebArena · LLM-as-judge and its biases.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="exercises.html">
+      <span class="num">03</span>
+      <span><b>Practice &amp; case</b><span class="small">Write an eval set for your Week 2 agent · measure your own pass^5 · the 92%-demo support case · interview check · readings.</span></span>
+      <span class="go">→</span>
+    </a>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Why managers care</div>
+  <h2>Reliability is the gap between a tool people trust and one they turn off</h2>
+  <div class="grid3">
+    <div class="card"><span class="kicker">Cost</span><p class="small" style="margin-top:8px">Every failed run costs twice: the wasted tokens, and the human who now has to redo the work <em>and</em> check what the agent did. A 90%-reliable agent doesn't save 90% of the labor — it saves whatever is left after someone verifies all of it.</p></div>
+    <div class="card"><span class="kicker">Trust</span><p class="small" style="margin-top:8px">Adoption is not decided by your average. It's decided by each person's own experience of the tool. Users who hit two failures in their first week stop using it — and they tell their team, which is why quiet failure rates turn into abandoned deployments.</p></div>
+    <div class="card"><span class="kicker">Auditability</span><p class="small" style="margin-top:8px">“How often does it fail, and what does failure cost?” is a question a manager is entitled to ask before signing. Without an eval harness and stored traces, the honest answer is “we don't know” — which is a no.</p></div>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>The deployment gate:</b> evaluation isn't the homework you do after building. It's the control that decides whether the thing ships, at what level of autonomy, and with which <a href="../week4/loop.html">human gate</a> in the loop. If you can't measure it, you can't deploy it.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="../index.html"><span class="lab">← Course</span><b>All weeks</b></a>
+  <a href="why.html" class="next"><span class="lab">Start →</span><b>01 · Why demos lie</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 8 — Evaluation &amp; Reliability<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* four gaps explorer */
+const GAPS=[
+ {n:'Curation gap',
+  h:'You picked the input. Production does not.',
+  demo:'You demo the task you know works: a clean, well-formed request that resembles the examples you built against.',
+  prod:'Real users send typos, half-sentences, PDFs that are actually scanned images, and requests your agent has no tool for. Nobody filtered them for you.',
+  tell:'If every test case in your eval set was written by the person who built the agent, you have measured your own imagination, not the system.'},
+ {n:'Sampling gap',
+  h:'You ran it once. Production runs it a thousand times.',
+  demo:'One run, and it succeeded. Implicitly you reported a success rate of 100% from a sample of size one.',
+  prod:'The same request, sampled again and again from a probabilistic system, produces a distribution of behaviors — including the tail you never saw.',
+  tell:'Rerun the identical input five times before you report anything. If you have not done that, you do not have a rate; you have an anecdote.'},
+ {n:'Adversarial gap',
+  h:'Nobody in your demo was trying to break it.',
+  demo:'The demo input is cooperative. So is the environment: the tools respond, the API is up, the page has the field the agent expects.',
+  prod:'Somebody eventually sends the job posting with “ignore previous instructions” buried in it — your Week 2 <b>J004</b> case — or an API returns a 500, or a tool returns an empty list the agent treats as an answer.',
+  tell:'An eval set with no adversarial and no broken-tool cases cannot fail, which is exactly why it tells you nothing.'},
+ {n:'Oversight gap',
+  h:'You were watching. In production, nobody is.',
+  demo:'You were sitting there. When the agent drifted, you nudged it, retried, or quietly picked the good run to show.',
+  prod:'The agent runs unattended at 2 a.m. A wrong step at minute one silently poisons everything after it, and the first human to notice is the customer.',
+  tell:'Ask of every demo: what did the human in the room do that no one will do in production?'}
+];
+const gl=document.getElementById('gapList'), gv=document.getElementById('gapView');
+function showGap(i){
+  const g=GAPS[i];
+  gv.innerHTML=`<h3>${g.h}</h3>
+  <div class="grid2" style="margin-top:14px;align-items:start">
+    <div><span class="kicker">In the demo</span><p class="small" style="margin-top:6px">${g.demo}</p></div>
+    <div><span class="kicker">In production</span><p class="small" style="margin-top:6px">${g.prod}</p></div>
+  </div>
+  <div class="callout" style="margin-top:16px"><b>The tell:</b> ${g.tell}</div>`;
+  [...gl.children].forEach((b,j)=>b.classList.toggle('active',j===i));
+}
+GAPS.forEach((g,i)=>{
+  const b=document.createElement('button');b.className='arch-btn';
+  b.innerHTML=`<span class="n">0${i+1}</span>${g.n}`;
+  b.addEventListener('click',()=>showGap(i));
+  gl.appendChild(b);
+});
+showGap(0);
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

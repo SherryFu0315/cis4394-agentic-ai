@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>01 · Patterns — CIS 4394 Week 9</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.topowrap{display:grid;grid-template-columns:minmax(320px,480px) 1fr;gap:22px;align-items:start}
+.topowrap svg{width:100%;height:auto}
+.tp rect,.tp circle{fill:#fff;stroke:var(--line2);stroke-width:1.5}
+.tp .lead rect,.tp .lead circle{fill:var(--blue);stroke:var(--blue)}
+.tp .lead text{fill:#fff}
+.tp .mid rect{fill:#fff7ea;stroke:#dbb96a}
+.tp text{font-family:var(--mono);font-size:12px;font-weight:600;fill:var(--ink)}
+.tp .tiny{font-size:10.5px;font-weight:400;fill:var(--muted)}
+.tp line,.tp path{stroke:#cfccc2;stroke-width:1.5;fill:none}
+.tp .weak{stroke-dasharray:4 4}
+.toponote{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;min-height:230px}
+.toponote h3{margin:0 0 6px;font-size:18px}
+.toponote .uw{margin-top:14px;font-size:14px}
+.toponote .uw b{display:block;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;margin-bottom:3px}
+.toponote .good b{color:var(--blue)}
+.toponote .bad b{color:var(--red)}
+.codebox .cm{color:#8b909c}
+.codebox .ck{color:#8ab8ff}
+.codebox .cs{color:#9ad0a0}
+@media(max-width:880px){.topowrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 9</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="patterns.html" class="here"><span class="k">01</span>Patterns</a>
+  <a href="tradeoffs.html"><span class="k">02</span>The Honest Case</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">01 · Patterns</div>
+  <h1>Four topologies, one <em>decision</em>.</h1>
+  <p class="lede">A multi-agent system is not a new kind of intelligence. It is the same agent loop from Week 4, instantiated several times, with rules about who may talk to whom and what travels across each line. Those rules are the whole design — so learn the four shapes, and learn what each one breaks on.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Start here</div>
+  <h2>The default is one agent with good tools</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Pattern 0 — single agent, many tools</span>
+      <p class="small" style="margin-top:8px">One loop, one context, one trace. Every capability you want arrives as a <b>tool</b> (Week 5), not as a colleague. Nothing is handed off, so nothing can be dropped in a hand-off. When people say "we built an agent", this is almost always what they built — and it is what your Capstone Milestone I should be.</p>
+      <p class="small">It stops working for a specific, nameable reason: the context window fills with instructions and results for jobs that have nothing to do with each other, or the tool list gets long enough that the model picks wrong. Those are the symptoms worth measuring <em>before</em> you reach for a second agent.</p>
+    </div>
+    <div class="card"><span class="kicker">The rule for the rest of this page</span>
+      <p class="small" style="margin-top:8px">You are allowed to leave Pattern 0 when you can complete this sentence with evidence: <em>"The task splits into subtasks that can run <b>in parallel</b>, and each subtask's output can be <b>verified on its own</b>."</em></p>
+      <p class="small">If you cannot, the patterns below will make your system slower, costlier, and harder to debug while <em>looking</em> more sophisticated. That is the trap this week exists to prevent. Page 02 makes the case against in detail.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · the four shapes</div>
+  <h2>Click a topology</h2>
+  <p class="lede">Same four agents in every picture. What changes is who is allowed to talk to whom — and that single choice determines the failure modes you inherit.</p>
+  <div class="topowrap">
+    <div class="loopbox">
+      <svg class="tp" viewBox="0 0 460 300" aria-label="multi-agent topology diagram">
+        <g id="tpSingle">
+          <g class="lead"><circle cx="230" cy="95" r="46"/><text x="230" y="100" text-anchor="middle">agent</text></g>
+          <line x1="230" y1="141" x2="90" y2="196" /><line x1="230" y1="141" x2="183" y2="196" />
+          <line x1="230" y1="141" x2="277" y2="196" /><line x1="230" y1="141" x2="370" y2="196" />
+          <g><rect x="36" y="198" width="108" height="40" rx="9"/><text x="90" y="223" text-anchor="middle">search</text></g>
+          <g><rect x="152" y="198" width="62" height="40" rx="9"/><text x="183" y="223" text-anchor="middle">db</text></g>
+          <g><rect x="246" y="198" width="62" height="40" rx="9"/><text x="277" y="223" text-anchor="middle">calc</text></g>
+          <g><rect x="316" y="198" width="108" height="40" rx="9"/><text x="370" y="223" text-anchor="middle">write</text></g>
+          <text class="tiny" x="230" y="268" text-anchor="middle">one loop · one context · one trace</text>
+        </g>
+        <g id="tpSupervisor" style="display:none">
+          <g class="lead"><rect x="150" y="26" width="160" height="48" rx="11"/><text x="230" y="55" text-anchor="middle">supervisor</text></g>
+          <line x1="230" y1="74" x2="88" y2="168" /><line x1="230" y1="74" x2="230" y2="168" /><line x1="230" y1="74" x2="372" y2="168" />
+          <g><rect x="30" y="170" width="116" height="46" rx="10"/><text x="88" y="198" text-anchor="middle">worker A</text></g>
+          <g><rect x="172" y="170" width="116" height="46" rx="10"/><text x="230" y="198" text-anchor="middle">worker B</text></g>
+          <g><rect x="314" y="170" width="116" height="46" rx="10"/><text x="372" y="198" text-anchor="middle">worker C</text></g>
+          <text class="tiny" x="230" y="248" text-anchor="middle">workers never talk to each other — every result returns to the supervisor</text>
+          <text class="tiny" x="230" y="268" text-anchor="middle">3 channels, not 6 · each worker gets its own clean context window</text>
+        </g>
+        <g id="tpNetwork" style="display:none">
+          <line x1="120" y1="80" x2="340" y2="80" /><line x1="120" y1="210" x2="340" y2="210" />
+          <line x1="120" y1="80" x2="120" y2="210" /><line x1="340" y1="80" x2="340" y2="210" />
+          <line class="weak" x1="120" y1="80" x2="340" y2="210" /><line class="weak" x1="340" y1="80" x2="120" y2="210" />
+          <g><rect x="62" y="58" width="116" height="44" rx="10"/><text x="120" y="85" text-anchor="middle">agent A</text></g>
+          <g><rect x="282" y="58" width="116" height="44" rx="10"/><text x="340" y="85" text-anchor="middle">agent B</text></g>
+          <g><rect x="62" y="188" width="116" height="44" rx="10"/><text x="120" y="215" text-anchor="middle">agent C</text></g>
+          <g><rect x="282" y="188" width="116" height="44" rx="10"/><text x="340" y="215" text-anchor="middle">agent D</text></g>
+          <text class="tiny" x="230" y="268" text-anchor="middle">anyone may hand off to anyone · 6 channels · no single owner of the outcome</text>
+        </g>
+        <g id="tpHier" style="display:none">
+          <g class="lead"><rect x="164" y="18" width="132" height="42" rx="10"/><text x="230" y="45" text-anchor="middle">lead</text></g>
+          <line x1="230" y1="60" x2="128" y2="112" /><line x1="230" y1="60" x2="332" y2="112" />
+          <g class="mid"><rect x="66" y="114" width="124" height="42" rx="10"/><text x="128" y="141" text-anchor="middle">research sup.</text></g>
+          <g class="mid"><rect x="270" y="114" width="124" height="42" rx="10"/><text x="332" y="141" text-anchor="middle">writing sup.</text></g>
+          <line x1="128" y1="156" x2="70" y2="206" /><line x1="128" y1="156" x2="186" y2="206" />
+          <line x1="332" y1="156" x2="274" y2="206" /><line x1="332" y1="156" x2="390" y2="206" />
+          <g><rect x="24" y="208" width="92" height="40" rx="9"/><text x="70" y="233" text-anchor="middle">w1</text></g>
+          <g><rect x="140" y="208" width="92" height="40" rx="9"/><text x="186" y="233" text-anchor="middle">w2</text></g>
+          <g><rect x="228" y="208" width="92" height="40" rx="9"/><text x="274" y="233" text-anchor="middle">w3</text></g>
+          <g><rect x="344" y="208" width="92" height="40" rx="9"/><text x="390" y="233" text-anchor="middle">w4</text></g>
+          <text class="tiny" x="230" y="278" text-anchor="middle">supervisors of supervisors · each layer summarizes for the layer above</text>
+        </g>
+      </svg>
+      <div class="tabs" style="margin:12px 6px 0" id="tpTabs">
+        <button class="tab active" data-k="single">Single</button>
+        <button class="tab" data-k="supervisor">Supervisor</button>
+        <button class="tab" data-k="network">Network</button>
+        <button class="tab" data-k="hier">Hierarchical</button>
+      </div>
+    </div>
+    <div class="toponote" id="tpNote"></div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>Notice what is missing from all four pictures:</b> the arrows do not say <em>what</em> crosses them. That payload — the hand-off contract — is where multi-agent systems actually succeed or fail, and it is the subject of the next section.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The pattern that shows up in production</div>
+  <h2>Supervisor, in the wild</h2>
+  <p class="lede">Anthropic published how they built the multi-agent research system behind Claude's Research feature. It is the orchestrator-worker pattern, and the write-up is unusually honest about what it cost.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><span class="kicker">The architecture, as described</span>
+      <p class="small" style="margin-top:8px">A <b>lead agent</b> receives the user's query, thinks about how to approach it, and <b>spawns subagents that search in parallel</b>. Each subagent works in its own context window with its own tools, then returns findings to the lead, which decides whether to spawn more, and finally synthesizes an answer. The subagents do not talk to each other — a deliberate restriction, exactly the <em>n−1 channels</em> point from the week's home page.</p>
+      <p class="small">Why the pattern fits: open-ended research is <b>breadth-first</b>. "What are the board members of the top five companies in X?" is genuinely four or five independent lookups, each verifiable on its own. That is the canonical shape.</p>
+      <p class="small"><a class="doc" href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener">Anthropic Engineering — How we built our multi-agent research system ↗</a> (this week's reading)</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">The cost, as reported</span>
+      <p class="small" style="margin-top:8px">Anthropic reports that the multi-agent system used roughly <b>15× more tokens</b> than a chat interaction, and that it outperformed a single-agent baseline on their internal research evaluation by about <b>90%</b>. Both figures are as reported in their engineering post and are approximate — do not quote them as general laws of multi-agent systems. They describe <em>one</em> system on <em>one</em> internal eval.</p>
+      <p class="small">The right lesson is not "multi-agent is 15× worse" or "multi-agent is 90% better". It is: <b>the value has to be large enough to survive the multiplier</b>. Anthropic's own framing is that this only makes sense for tasks valuable enough to justify the spend. Most CRUD-shaped agent work is not.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The part everyone skips</div>
+  <h2>What actually gets shared: state vs messages</h2>
+  <p class="lede">Two agents can be connected in exactly two ways, and choosing between them is a bigger decision than choosing the topology.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><span class="kicker">Shared state</span>
+      <p class="small" style="margin-top:8px">Both agents read and write the same object — a plan, a draft, a scratchpad, a LangGraph state dict. Nothing is "sent"; changes are simply visible.</p>
+      <p class="small"><b>Buys:</b> no information is lost in translation; agents cannot hold contradictory pictures of a shared field.<br /><b>Costs:</b> the classic concurrency problems arrive with it — two agents editing the same field, last-write-wins, and an ever-growing shared blob that every agent must now read (which is the context problem you were trying to escape).</p>
+    </div>
+    <div class="card"><span class="kicker">Messages / hand-offs</span>
+      <p class="small" style="margin-top:8px">Agent A finishes and passes a payload to agent B. B's context contains only what A chose to send.</p>
+      <p class="small"><b>Buys:</b> clean, small contexts and clear boundaries — each agent's window holds one job.<br /><b>Costs:</b> whatever A did not put in the payload is <em>gone</em>. B re-derives it, guesses it, or silently works from a different assumption. This is <b>context fragmentation</b>, and it is the single most common cause of confidently contradictory multi-agent output.</p>
+    </div>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>Context isolation is a feature, not an accident.</b> In Week 3 you measured what happens when one window carries too much: retrieval degrades, earlier instructions decay, and the model starts answering the wrong question — <a href="../week3/context.html">context rot</a>. Giving a subagent a clean window for one narrow job is a direct fix for that. The trade is exact and worth memorizing: <b>isolation cures context rot and causes context fragmentation.</b> Every hand-off design is you choosing where on that line to sit.</div>
+  <div class="grid2" style="align-items:start;margin-top:20px">
+    <div>
+      <p class="small"><b>Write the hand-off contract before you write the agent.</b> A payload that reliably survives a hand-off names all four of these — anything left implicit is a bug waiting for production.</p>
+      <div class="codebox"><span class="cm"># the hand-off contract, as a schema</span>
+{
+  <span class="cs">"task"</span>:        <span class="cm"># what B must do, restated in full —</span>
+                  <span class="cm"># never "continue the above"</span>
+  <span class="cs">"constraints"</span>: <span class="cm"># budget, tone, format, hard limits</span>
+                  <span class="cm"># that A was given and B was not</span>
+  <span class="cs">"evidence"</span>:    <span class="cm"># the observations B needs, with</span>
+                  <span class="cm"># sources — not A's conclusions alone</span>
+  <span class="cs">"done_when"</span>:   <span class="cm"># the check B's output must pass,</span>
+                  <span class="cm"># so the result is verifiable alone</span>
+}</div>
+    </div>
+    <div class="card"><span class="kicker">The instruction-decay failure</span>
+      <p class="small" style="margin-top:8px">The user says "keep it under 400 words and cite every claim." The supervisor passes the topic to a writer but not the word limit. The writer produces 900 excellent words. A formatter agent trims to 400 by deleting the citations — the only instruction <em>it</em> was given was the length.</p>
+      <p class="small">No agent malfunctioned. Every agent did its job correctly on the input it received. The system still violated the user's requirement, because the requirement was never in the payload. That is a <b>specification and design</b> failure in the MAST taxonomy (Cemri et al., 2025) — and you will meet it again on page 02.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Watch</div>
+  <h2>Orchestration patterns that survive production</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><h3>From Chaos to Choreography (AI Engineer, 26m28s)</h3>
+      <p class="small">Sandipan Bhaumik surveys the orchestration patterns that hold up in real deployments and the ones that quietly fall over — the same four shapes you just clicked through, argued from production experience.</p>
+      <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/2czYyrTzILg" title="From Chaos to Choreography: Multi-Agent Orchestration Patterns That Actually Work" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
+    </div>
+    <div class="card"><h3>Fully local multi-agent systems with LangGraph (LangChain, 13m14s)</h3>
+      <p class="small">The vendor-official walkthrough, in the stack you already know from Week 4. Watch specifically for where the graph decides routing — in LangGraph, "which agent goes next" is just another conditional edge.</p>
+      <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/4oC1ZKa9-Hs" title="Fully local multi-agent systems with LangGraph" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Zoom out</div>
+  <h2>Frameworks are dialects</h2>
+  <p class="lede">Four popular libraries, one set of ideas. If you understand state, hand-offs, and who owns control flow, you can read any of them in an afternoon — and you should choose on operational grounds (observability, control, your team's language), not on which vocabulary sounds most impressive.</p>
+  <div class="compare" style="margin-top:16px">
+    <table>
+      <tr><th>Framework</th><th>Its vocabulary</th><th>Where control flow lives</th><th>What it is good at</th></tr>
+      <tr><td><b>LangGraph</b><br /><a class="doc" href="https://github.com/langchain-ai/langgraph" target="_blank" rel="noopener">repo ↗</a></td><td>State, nodes, edges — agents are nodes, hand-offs are edges</td><td><b>Explicitly yours.</b> The graph is the org chart; routing is a conditional edge you wrote (Week 4).</td><td>Auditable control flow, loops with guards, teams that need to show an auditor the diagram.</td></tr>
+      <tr><td><b>crewAI</b><br />(this week's course)</td><td>Agents with roles and goals, tasks, crews, processes (sequential or hierarchical)</td><td>In the crew configuration — you declare roles and a process, the library runs it.</td><td>Getting a role-based team running quickly; the clearest on-ramp to the mental model.</td></tr>
+      <tr><td><b>AutoGen</b><br />(Wu et al., 2023 · <a class="doc" href="https://arxiv.org/abs/2308.08155" target="_blank" rel="noopener">arXiv:2308.08155</a>)</td><td>Conversable agents exchanging messages; group chat with a chat manager</td><td>In the <b>conversation</b>: agents talk, and the message protocol drives the work.</td><td>Agent-to-agent messaging as the primitive; human-in-the-loop configurations. <a class="doc" href="https://github.com/microsoft/autogen" target="_blank" rel="noopener">repo ↗</a></td></tr>
+      <tr><td><b>MetaGPT</b><br />(Hong et al., 2023 · <a class="doc" href="https://arxiv.org/abs/2308.00352" target="_blank" rel="noopener">arXiv:2308.00352</a>)</td><td>Roles from a software company (PM, architect, engineer) with standardized operating procedures</td><td>In the encoded <b>SOP</b>: the procedure constrains what each role may produce and hand on.</td><td>Its argument is worth the read on its own — structured, standardized hand-off artifacts as a defense against cascading errors.</td></tr>
+    </table>
+  </div>
+  <div class="callout" style="margin-top:18px"><b>The MetaGPT idea, stated plainly:</b> if free-form hand-offs are where multi-agent systems lose information, then constrain the hand-off to a <em>standard artifact</em> — a spec document, a design doc, a typed record — instead of a paragraph of prose. That is the same instinct as the hand-off contract above, and the same instinct as a schema on a tool call in Week 5.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Concept check</div>
+  <h2>Which pattern, and why?</h2>
+  <div id="ccheck"></div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="index.html"><span class="lab">← Back</span><b>Week 9 home</b></a>
+  <a href="tradeoffs.html" class="next"><span class="lab">Next →</span><b>02 · The honest case</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 9 — Multi-Agent Systems<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* clickable topology */
+var TP={
+ single:{svg:'tpSingle',h:'Single agent, many tools',
+  d:'One loop, one context window, one trace. Capabilities arrive as tools, not as colleagues. There are zero hand-offs, so there is zero hand-off loss — and exactly one place to look when something goes wrong.',
+  use:'The default for essentially every first version, and for anything where the steps depend on each other. Also the baseline you must measure against before you are allowed to claim a team helped.',
+  brk:'When one window has to hold instructions and results for several unrelated jobs at once (context rot), or when the tool list grows long enough that selection accuracy drops. Note that both symptoms are measurable — measure them before you split.'},
+ supervisor:{svg:'tpSupervisor',h:'Supervisor (orchestrator-worker)',
+  d:'One agent owns the control flow: it decomposes the request, decides which worker gets which slice and what context travels with it, then aggregates the results into one answer. Workers are specialists with narrow tools and clean context windows, and they never talk to each other.',
+  use:'Breadth-first work: several subtasks that can run at the same time and be checked independently. Parallel research, fanning one query across several data sources, running the same analysis over several documents. This is the pattern in Anthropic’s research system.',
+  brk:'When the subtasks are not really independent. If worker B needs to see what worker A decided, the supervisor must carry that context across — and every fact it forgets to carry becomes a contradiction later. It is also a single point of failure: a supervisor that decomposes badly poisons every branch at once.'},
+ network:{svg:'tpNetwork',h:'Network (peer-to-peer)',
+  d:'Any agent may hand off to any other agent, deciding for itself who should act next. There is no coordinator — the routing is emergent.',
+  use:'Genuinely useful when the next step is unknowable in advance and each peer knows best who to call — and, importantly, across organizational boundaries, where two companies’ agents interoperate as peers over a protocol rather than one being a subprocess of the other (the agent-to-agent framing from Week 6).',
+  brk:'Everywhere else. n(n−1)/2 channels means every pair is a place for context to diverge; nobody owns the outcome, so nobody detects a contradiction; and work gets duplicated because two peers each think they picked up the task. Termination is a real problem — peers can ping-pong until a cap fires. If you are reaching for this inside one application, you almost certainly want a supervisor.'},
+ hier:{svg:'tpHier',h:'Hierarchical (supervisors of supervisors)',
+  d:'A supervisor tree. The lead delegates to mid-level supervisors, each of which runs its own pool of workers and summarizes results upward.',
+  use:'Large decompositions where the top level genuinely cannot hold the detail — a research branch and a writing branch, each with its own workers, is the standard example. Summarizing at each layer keeps every window small.',
+  brk:'Every layer summarizes, and every summary throws information away. Requirements decay as they travel down; evidence decays as it travels up; and by the time the lead sees a two-line summary of a two-line summary, it is making decisions on a rumor. Latency and cost both stack per layer. Add a layer only when you can say precisely what each layer is allowed to drop.'}
+};
+var tpNote=document.getElementById('tpNote'),tpTabs=document.getElementById('tpTabs');
+function tpShow(k){
+  var x=TP[k],i;
+  for(var m in TP)document.getElementById(TP[m].svg).style.display=(m===k?'':'none');
+  tpNote.innerHTML='<h3>'+x.h+'</h3><p class="small">'+x.d+'</p>'
+    +'<div class="uw good"><b>Use when</b>'+x.use+'</div>'
+    +'<div class="uw bad"><b>Breaks when</b>'+x.brk+'</div>';
+  var b=tpTabs.querySelectorAll('button');
+  for(i=0;i<b.length;i++)b[i].classList.toggle('active',b[i].dataset.k===k);
+}
+tpTabs.addEventListener('click',function(e){var b=e.target.closest('button');if(b)tpShow(b.dataset.k)});
+tpShow('single');
+
+/* concept check */
+const CC=[
+ {q:'A compliance team wants one brief summarizing how six different regulators define "high-risk AI". Six independent lookups, six checkable summaries, one synthesis at the end. Best fit?',
+  o:['Single agent','Supervisor','Network'], a:1,
+  why:'Six subtasks that are genuinely independent and each verifiable on its own — the canonical supervisor case. The lead decomposes, six workers search in parallel with clean context windows, and the lead synthesizes. Nothing here needs worker 3 to know what worker 5 found.'},
+ {q:'A drafting agent and an editing agent both revise the same document, in turns, until it is good. What is the real risk?',
+  o:['Too few channels between the two agents','Not enough parallelism to be worth it','Shared mutable state — conflicting edits and no single owner of the current version'], a:2,
+  why:'Nothing here runs in parallel and nothing is independently verifiable — it is one artifact, edited in sequence. Two agents writing to the same mutable object is exactly where you get conflicting decisions and last-write-wins. Cognition’s argument applies directly: this is a case to collapse back into one agent (or one agent with a critique step), not to split.'},
+ {q:'Your supervisor hands a writer the topic but not the user’s "cite every claim" requirement. The writer produces an uncited draft. Whose bug is this?',
+  o:['The hand-off contract — the constraint was never in the payload','The writer agent — it should have known','The model provider — a better model would have inferred it'], a:0,
+  why:'Every agent behaved correctly on the input it received; the system still failed. Constraints that live only in the original user turn must be explicitly carried into each payload, because a subagent’s clean context window is clean of your requirements too. That is the isolation/fragmentation trade, and in MAST terms (Cemri et al., 2025) it is a specification-and-design failure — not an agent being "dumb".'}
+];
+const cc=document.getElementById('ccheck');
+CC.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML=`<div class="stmt">${i+1}. ${x.q}</div><div class="opts" style="flex-direction:column;align-items:stretch">${x.o.map((o,j)=>`<button data-v="${j}" style="text-align:left;border-radius:10px">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div><div class="fb"></div>`;
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector(`button[data-v="${x.a}"]`).classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+String.fromCharCode(65+x.a)+'. ')+x.why;
+  }));
+  cc.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

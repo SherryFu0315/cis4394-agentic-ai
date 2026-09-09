@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>03 · Practice &amp; Case — CIS 4394 Week 7</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.tracebox{background:#101319;color:#dfe3ec;border-radius:14px;padding:20px 24px;font-family:var(--mono);font-size:12.5px;line-height:1.85;white-space:pre-wrap}
+.tracebox .hd{color:#e3c078}
+.tracebox .sec{color:#8ab8ff}
+.tracebox .meta{color:#8b909c}
+.tracebox .warn{color:#ff9d9d}
+.optrow{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.optcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;border-top:3px solid var(--line2)}
+.optcard b{display:block;font-size:15px;margin-bottom:6px}
+@media(max-width:880px){.optrow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 7</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="memory.html"><span class="k">01</span>Agent Memory</a>
+  <a href="rag.html"><span class="k">02</span>RAG</a>
+  <a href="exercises.html" class="here"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">03 · Practice</div>
+  <h1>Cut it up. Break it. Then <em>prove</em> it.</h1>
+  <p class="lede">Retrieval quality is destiny, and retrieval quality is decided by unglamorous choices: where you cut a document, what metadata you keep, and what your system does when the top match is stale. Three activities, then the interview check, the readings, and the Quiz 3 scope.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Exercise A · fictional teaching case</div>
+  <h2>Chunk it</h2>
+  <div class="grouptask"><span class="gk">👥 Group task · Pairs · ~15 minutes</span>
+    <p>Below is a one-page policy from <b>Lakeside Supply Co.</b> (fictional). You are indexing it for a support-agent RAG system. <b>(1)</b> Mark your chunk boundaries on a copy — decide how many chunks and where each one starts and ends. <b>(2)</b> For every chunk, list the <b>metadata</b> you would store alongside the text. <b>(3)</b> Write one realistic customer question that each chunk should <em>win</em> — that is, be the top hit for. <b>(4)</b> Find the one place in this document where a naive fixed-size split would produce an answer that is confidently wrong.</p>
+    <p class="prod"><b>Produce:</b> your chunk list with metadata, one winning query per chunk, and the one sentence describing the dangerous split.</p>
+  </div>
+  <div class="tracebox"><span class="hd">LAKESIDE SUPPLY CO. — RETURNS &amp; REFUNDS POLICY</span>
+<span class="meta">Document: returns_policy_v7.md · Version 7 · Effective 2026-07-01
+Owner: Customer Operations · Classification: Public · Supersedes: Version 6</span>
+
+<span class="sec">1.0 Scope and precedence</span>
+This policy governs all consumer returns and refunds for orders placed on
+lakesidesupply.example and in company-owned stores. It supersedes Returns
+Policy v6 in all regions. Where a state law grants a longer window than the
+one stated here, the state law controls.
+
+<span class="sec">2.0 Definitions</span>
+"Delivery date" means the date the carrier marks the order as delivered.
+"Unopened" means the manufacturer seal is intact.
+"Store credit" means a non-expiring credit issued to the customer account.
+
+<span class="sec">3.0 Return windows</span>
+3.1 General merchandise: 45 days from the delivery date, opened or unopened.
+3.2 Electronics, Georgia customers: 30 days from the delivery date, unopened.
+3.3 Electronics, all other states: 21 days from the delivery date, unopened.
+3.4 Clearance items: not returnable, except where section 5.0 applies.
+
+<span class="sec">4.0 How a return is processed</span>
+Refunds are issued to the original payment method within 7 business days of
+receipt at the returns center. Orders paid with store credit are refunded as
+store credit. Shipping charges are refunded only when section 5.0 applies.
+
+<span class="sec">5.0 Damaged, defective, or mis-shipped orders</span>
+A customer who reports a damaged, defective, or mis-shipped item within 14
+days of the delivery date is entitled to a full refund including shipping,
+regardless of the windows in section 3.0 and regardless of clearance status.
+
+<span class="sec">6.0 Exceptions and escalation</span>
+Supervisors may extend any window in section 3.0 by up to 15 days once per
+customer per year. Extensions beyond that require Customer Operations
+approval and must be logged in the ticket.
+
+<span class="warn">Related documents: shipping_policy_v3.md · store_credit_terms_v2.md</span></div>
+  <div class="card" style="margin-top:16px">
+    <button class="revealbtn">Debrief — a reference answer</button>
+    <div class="revealbox">
+      <p><b>How many chunks?</b> Structure beats arithmetic here: this document has clean section headings, so chunk on them. A reasonable answer is <b>seven to nine chunks</b> — one per numbered section, with 3.0 either kept whole or split into 3.1–3.4 as four short chunks, each carrying the parent heading "3.0 Return windows" so it still makes sense alone. Anything much smaller fragments a rule; anything much larger means a question about clearance items retrieves four rules the customer did not ask about.</p>
+      <p><b>Metadata every chunk should carry:</b> <code>doc_id</code> (returns_policy_v7), <code>version</code> (7), <code>effective_date</code> (2026-07-01), <code>supersedes</code> (v6), <code>status</code> (current), <code>section</code> (3.2), <code>title</code>, <code>region</code> (GA / other / all), <code>product_category</code> (electronics / general / clearance), <code>classification</code> (public), <code>owner</code>, and <code>last_reviewed</code>. The region and category fields are what let you filter before ranking; <code>status</code> and <code>effective_date</code> are what keep version 6 out of tomorrow's answers.</p>
+      <p><b>Queries each chunk should win:</b> 1.0 → "does this replace the old policy?"; 2.0 → "what counts as unopened?"; 3.1 → "how long do I have to return a jacket?"; 3.2 → "how long do I have to return a laptop in Georgia?"; 3.3 → "return window for a monitor in Florida"; 3.4 → "can I return a clearance item?"; 4.0 → "when will my refund appear?"; 5.0 → "my order arrived broken"; 6.0 → "can you make an exception for me?" If two chunks would tie on a query, they probably want to be one chunk.</p>
+      <p><b>The dangerous split:</b> cutting between <b>3.4 and 5.0</b>. Section 3.4 says clearance items are "not returnable, except where section 5.0 applies." Retrieved alone, that chunk answers "can I return this damaged clearance lamp?" with a flat no — which is wrong, and confidently so, because the exception lives in a different chunk that the query never pulled. Fixes, in order: keep the cross-reference text inside the chunk, add a small overlap so the exception clause travels with the rule, and store a <code>see_also: 5.0</code> field so the retriever can pull the referenced section too. The general lesson: <b>a chunk must be true when read alone</b>, because that is exactly how it will be read. Section 2.0's definitions have the same property — "unopened" is defined once and used three times.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Exercise B</div>
+  <h2>Failure autopsy — the answer was last year's policy</h2>
+  <div class="grouptask"><span class="gk">👥 Group task · Trios · ~15 minutes</span>
+    <p>Lakeside's support bot has been live for a month. A Georgia customer asks about returning a sealed laptop on day 25. The bot answers: <em>"Your return window has expired — Georgia electronics must be returned within 14 days."</em> That is version <b>6</b> of the policy. Version 7 (30 days) was published on July 1 and is also in the index. The customer complains; a supervisor issues the refund.</p>
+    <p>Work backwards through the pipeline from page 02 and decide, as a team, <b>where the primary fix belongs</b> — and what the other two layers should do as backstops. Then answer the question below before revealing.</p>
+    <p class="prod"><b>Produce:</b> a one-page autopsy — the failing stage, the primary fix, two backstops, and the single log line that would have caught this in testing.</p>
+  </div>
+  <div class="optrow">
+    <div class="optcard" style="border-top-color:var(--blue)"><b>Option 1 · Fix at ingestion</b><p class="small">When v7 is indexed, delete or archive every chunk of v6 so a superseded document is not in the searchable corpus at all.</p></div>
+    <div class="optcard" style="border-top-color:var(--red)"><b>Option 2 · Fix at retrieval</b><p class="small">Keep both versions, but filter on <code>status = current</code> before ranking — and, when two chunks describe the same rule, prefer the later <code>effective_date</code>.</p></div>
+    <div class="optcard" style="border-top-color:#8a6d1d"><b>Option 3 · Fix at generation</b><p class="small">Tell the model in the prompt: "If two sources conflict, use the one with the most recent effective date, and state that date in your answer."</p></div>
+  </div>
+  <div style="margin-top:20px">
+    <div class="bigq"><span class="qlabel">Discussion question</span>Which option is the primary fix — and what is wrong with treating either of the other two as the primary fix?</div>
+    <button class="revealbtn">See the answer</button>
+    <div class="revealbox"><b>Primary fix: Option 2, at retrieval — with Option 1 as the policy that makes it easy.</b> Retrieval is where governance actually bites, because it is the last point where you control what enters the prompt. A <code>status = current</code> metadata filter applied <em>before</em> ranking makes the failure structurally impossible rather than statistically unlikely, and it survives the next document, the next region, and the next model.<br /><br /><b>Why not Option 1 alone?</b> Deleting superseded documents is the right default for a customer-facing index, and if you can do it, do — but many organizations must retain prior versions for audit, disputes, and "what did the policy say in March?" questions. If retention is required, the versions stay in the corpus and you need the filter anyway. Deletion also fails the moment someone re-uploads an old PDF into the shared drive your indexer watches; a filter driven by metadata keeps working, an assumption about corpus hygiene does not.<br /><br /><b>Why not Option 3 alone?</b> Because it asks the <em>model</em> to enforce a rule you could have enforced in code — and it only works if the conflicting chunk was retrieved at all. Here, if v6 outranks v7 and <em>k</em> = 3, v7 may never appear in the prompt: there is no conflict for the model to resolve, just one confident wrong source. Prompt instructions are probabilistic; a metadata filter is deterministic. The model proposes, the harness disposes — the same lesson as the max-iteration guard in Week 4. Option 3 is still worth having as a cheap backstop, together with a rule that every answer states the effective date it relied on.<br /><br /><b>The log line that would have caught it:</b> the retrieved chunk IDs with their scores <em>and their status field</em> — <code>[R6-3.2] score 0.71 status=superseded</code> in a passing test is a red flag even when the answer happens to look fine. Add a standing evaluation case for every superseded document: ask the question it used to answer, and assert that no superseded chunk appears in the retrieval set. Retrieval is testable separately from generation, and it should be — that is next week's topic.</div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Case study · fictional teaching case</div>
+  <h2>The benefits bot that quoted the old plan</h2>
+  <p class="lede">Peachtree Health Group (fictional) — 4,000 employees, an HR team drowning in open-enrollment questions — deploys a RAG assistant over the benefits SharePoint. It answers instantly, cites its sources, and is popular. In February, three employees learn that the plan document it cited was replaced in November.</p>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">What the bot did</span>
+      <p class="small" style="margin-top:8px">Asked "what is my deductible for the PPO plan?", it retrieved <em>PPO Summary of Benefits — Plan Year 2025</em>, which is still in the SharePoint folder alongside the 2026 version, and answered with the 2025 figure. It cited the document by name. Three employees planned their spending on that number; one deferred a procedure.</p></div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">What made it worse</span>
+      <p class="small" style="margin-top:8px">The citation made the answer <em>more</em> convincing, not less — it looked checked. The employees who followed the link saw a document that did say what the bot said. Nothing in the answer, and nothing in the file name, signalled that a newer plan year existed. HR only learned about the problem in February, from a complaint.</p></div>
+  </div>
+  <div style="margin-top:18px">
+    <div class="bigq"><span class="qlabel">Discussion question 1</span>Freshness. What has to be true about the index — not the model — before this assistant can be trusted for open enrollment next year?</div>
+    <button class="revealbtn">See the answer</button>
+    <div class="revealbox"><b>Every chunk needs a plan year, an effective window, and a status, and retrieval must filter on them.</b> Concretely: (a) an <code>effective_from</code> / <code>effective_to</code> pair and a <code>plan_year</code> field on every benefits chunk, populated at ingestion — if the source folder cannot supply it, the document does not get indexed; (b) a default retrieval filter of "in effect today," with historical plan years reachable only when the user explicitly asks about a past year; (c) an <b>owner and a review date</b> per document, so an un-reviewed document past its date is flagged rather than silently served; (d) re-indexing wired to the actual publication process — the moment HR posts the 2026 summary, the index changes, rather than waiting on a quarterly job nobody owns. Note what is <em>not</em> on this list: a better model, a bigger context window, or a smarter prompt. This is a data-governance problem that happens to be wearing an AI costume, and the fix is metadata plus a pipeline someone owns. The deeper organizational lesson: RAG makes your document hygiene load-bearing. A shared drive where old and new versions sit side by side was survivable when only humans read it — humans notice "2025" in a header. An index does not, unless you tell it to.</div>
+  </div>
+  <div style="margin-top:18px">
+    <div class="bigq"><span class="qlabel">Discussion question 2</span>Citation UI. The answer already cited a source and that did not save anyone. What should the answer have shown instead?</div>
+    <button class="revealbtn">See the answer</button>
+    <div class="revealbox"><b>A citation is only useful if it lets a reader judge whether to trust it.</b> "PPO Summary of Benefits" is an identifier; what the employee needed was <em>provenance</em>: document title <b>plus version or plan year</b>, effective date, last-updated date, and a deep link to the exact section — not the file. Four additions would have prevented all three incidents. <b>(1) Show the date next to the claim</b>, in the sentence: "your deductible is $X <em>under the 2025 plan year, effective 2025-01-01</em>." A stale answer becomes self-evidently stale. <b>(2) Warn on staleness</b>: if the retrieved chunk's effective window does not include today, the interface says so in the answer, prominently, rather than in a tooltip. <b>(3) Show the passage,</b> not just the link — the retrieved text inline, so the employee sees exactly what the answer was built from. <b>(4) Show when a newer version exists</b> and link it. There is also a design ethic here: citations increase trust, so a system that cites badly is <em>more</em> dangerous than one that does not cite at all. Do not ship the trust signal without the accuracy that earns it.</div>
+  </div>
+  <div style="margin-top:18px">
+    <div class="bigq"><span class="qlabel">Discussion question 3</span>Escalation. Which benefits questions should this assistant never answer on its own, and what rule decides that at run time?</div>
+    <button class="revealbtn">See the answer</button>
+    <div class="revealbox"><b>Two different triggers, and you need both.</b> <b>(1) A confidence trigger, decided per query:</b> if the top similarity score is below your threshold, or the top chunks disagree with each other, or no chunk passes the freshness filter, the assistant must not generate an answer at all — it says "I don't have a current document that answers this" and hands off to HR with the question and the search attempt attached. An index that always returns its nearest three chunks will answer <em>everything</em>, including questions your corpus cannot support; the floor is what buys you the honest "I don't know." <b>(2) A stakes trigger, decided per topic and set in advance:</b> some categories route to a human regardless of confidence — eligibility determinations, appeals and denials, anything about a specific person's claim or medical situation, anything with a legal deadline, and anything where acting on a wrong answer is irreversible (declining coverage, deferring a procedure). That is the Week 4 human gate applied to <em>assertions</em> rather than to actions: the gate goes in front of the class of answer whose consequences you cannot undo. Two supporting practices make it real: log every escalation with the retrieved chunks so HR can see what the bot nearly said, and give the assistant an explicit, approved failure sentence — a model with no permitted way to fail will invent one.</div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Job-interview level</div>
+  <h2>Interview check</h2>
+  <p class="lede">Five questions a data or AI-engineering interview would actually probe this week. Try answering out loud before revealing.</p>
+  <div id="iv"></div>
+</div></section>
+
+<section id="readings"><div class="wrap">
+  <div class="eyebrow">Readings &amp; resources</div>
+  <h2>This week's readings</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="readings card">
+      <a href="https://www.deeplearning.ai/short-courses/retrieval-augmented-generation-rag/" target="_blank" rel="noopener"><b>DeepLearning.AI — Retrieval Augmented Generation (RAG)</b><br /><span class="small">Free short course. Work the pipeline end to end: chunking, embeddings, retrieval, and grounded generation. This is the core reading for the RAG questions on Quiz 3.</span></a>
+      <a href="https://huggingface.co/learn/agents-course" target="_blank" rel="noopener"><b>Hugging Face — Agents Course: memory &amp; agentic RAG units</b><br /><span class="small">Free and open (Apache-2.0). Read the units on agent memory and on retrieval as a tool — they map directly onto pages 01 and 02.</span></a>
+      <a href="https://www.ibm.com/think/topics/ai-agent-memory" target="_blank" rel="noopener"><b>IBM Think — What is AI agent memory?</b><br /><span class="small">Short explainer; the working / episodic / semantic / procedural taxonomy used on page 01.</span></a>
+      <a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener"><b>Skim · Lewis et al. (2020) — Retrieval-Augmented Generation</b><br /><span class="small">The paper the whole week rests on. Abstract, introduction, and Figure 1 are enough to see the architecture.</span></a>
+    </div>
+    <div class="card"><span class="kicker">Go deeper (all free)</span>
+      <p class="small" style="margin-top:8px">
+      <a class="doc" href="https://www.ibm.com/think/topics/retrieval-augmented-generation" target="_blank" rel="noopener">IBM Think — What is retrieval-augmented generation? ↗</a><br />
+      <a class="doc" href="https://arxiv.org/abs/2004.04906" target="_blank" rel="noopener">Karpukhin et al. (2020) — Dense Passage Retrieval ↗</a> — where the "embed the question, embed the passages, take the nearest" design comes from<br />
+      <a class="doc" href="https://github.com/microsoft/ai-agents-for-beginners" target="_blank" rel="noopener">Microsoft — AI Agents for Beginners (MIT) ↗</a> — the agentic-RAG and agent-memory lessons<br />
+      <a class="doc" href="https://academy.langchain.com/" target="_blank" rel="noopener">LangChain Academy ↗</a> — the memory modules of the LangGraph course, if you are extending your Week 4 agent<br />
+      <a class="doc" href="https://huggingface.co/learn/agents-course" target="_blank" rel="noopener">Hugging Face Agents Course ↗</a></p>
+      <div class="callout blue" style="margin-top:14px;margin-bottom:0"><b>📌 Reminder:</b> <b>Group Assignment 2 is due this week</b> — your section's due date and the submission link are on iCollege. <b>Quiz 3 is next week</b>; scope and samples are directly below.</div>
+    </div>
+  </div>
+</div></section>
+
+<section id="quiz"><div class="wrap">
+  <div class="eyebrow">Next week</div>
+  <h2>Quiz 3 — protocols, memory &amp; retrieval</h2>
+  <p class="lede"><b>Five multiple-choice questions</b>, closed-book, in class next week. <b>Scope: everything assigned since Quiz 2 — the Week 6 readings (both MCP/A2A LinkedIn Learning courses), the Week 7 readings above (DeepLearning.AI RAG course · Hugging Face memory / agentic-RAG units), and the Week 8 readings (Google/Kaggle Agents Companion whitepaper · the pass^k / τ-bench reading) — plus the core ideas of Weeks 6–8.</b> The LinkedIn Learning courses are free with your GSU login through the <a class="doc" href="https://technology.gsu.edu/technology-services/technology-professional-training/linkedin-learning/" target="_blank" rel="noopener">GSU portal ↗</a>. Try the samples below before revealing; the real quiz is the same style and difficulty.</p>
+  <div class="card"><h3>Five sample questions</h3><p class="small">Same style and difficulty as the real thing.</p>
+    <div id="sampleQuiz"></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="callout" style="margin-top:22px"><b>Next week:</b> Evaluation &amp; Reliability — why demos lie, pass@1 vs pass^k, benchmark literacy, and LLM-as-judge. <b>Quiz 3 is next week</b> — in class, closed-book, 5 multiple-choice. <b>Scope: Weeks 6–8 readings</b> (both MCP/A2A LinkedIn courses · the RAG course &amp; HF unit above · next week's Agents Companion whitepaper + pass^k/τ-bench reading). Sample questions: <a class="doc" href="#quiz">above on this page ↑</a>. <b>Group Assignment 3 + capstone Milestone I release next week.</b><br /><br />
+<b>Week 8 readings:</b><br />
+· <a class="doc" href="https://www.kaggle.com/whitepaper-agent-companion" target="_blank" rel="noopener">Google/Kaggle — Agents Companion whitepaper (free) ↗</a><br />
+· <a class="doc" href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noopener">τ-bench — the pass^k paper (Yao et al., 2024; skim §1–3) ↗</a><br />
+Full list on the Week 8 site.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="rag.html"><span class="lab">← Previous</span><b>02 · RAG</b></a>
+  <a href="../index.html" class="next"><span class="lab">Done →</span><b>Back to the course</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 7 — Memory, RAG &amp; Knowledge<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* sample quiz — Quiz 3 */
+const SQ=[
+ {q:'Before MCP, wiring M agent applications to N tools and data sources meant building roughly M×N bespoke integrations. What does the Model Context Protocol change?',
+  o:['It makes the model itself larger so it needs fewer tools',
+     'It defines one open protocol for the agent-to-tool connection: each tool or data source exposes one server, each application implements one client, so integrations become additive instead of multiplicative',
+     'It fine-tunes the model on each API so the model memorizes the endpoints',
+     'It encrypts tool calls so agents can share credentials safely'],
+  a:1, why:'MCP standardizes the interface between an agent application and the tools, data sources, and capabilities it uses. A tool vendor writes one MCP server; a client application implements MCP once and can then reach every MCP server. The M×N integration problem becomes roughly M+N. It changes nothing about the model weights (C), is not primarily a security or encryption scheme (D), and has nothing to do with model size (A).'},
+ {q:'Your agent must (i) read documents out of your company SharePoint and (ii) hand a finished draft to a partner firm\'s review agent, built by another team on another framework. Which protocol covers which?',
+  o:['MCP for both — it is the general-purpose agent protocol',
+     'A2A for both — anything crossing an organizational boundary is agent-to-agent',
+     'MCP for (i), the vertical agent-to-tool/data connection; A2A for (ii), the horizontal agent-to-agent connection',
+     'Neither — both are just alternative names for a model API'],
+  a:2, why:'The two protocols run in different directions and are complementary. MCP is vertical: one agent reaching down to tools, data sources, and their capabilities — SharePoint documents are a data source. A2A is horizontal: independent, peer agents — possibly from different vendors, teams, or frameworks — discovering one another and exchanging tasks and messages, which is exactly case (ii). An agent commonly uses both at once.'},
+ {q:'Which sequence describes a basic RAG system?',
+  o:['The documents are added to the model\'s weights so it memorizes them, then it answers from memory',
+     'The model generates an answer first, then searches the web to check itself, then rewrites',
+     'Offline: documents are chunked, embedded, and indexed. Live: the question is embedded, the top-k nearest chunks are retrieved, pasted into the prompt (augment), and the model generates an answer grounded in them',
+     'The user uploads a document with every question, and the model reads it from scratch each time'],
+  a:2, why:'Chunk → embed → index happens once, offline, per document; embed the question → retrieve top-k → augment → generate happens live, per question (Lewis et al., 2020). Option A describes training or fine-tuning — precisely what RAG avoids, which is why RAG answers can be fresh and citable. Option B is post-hoc verification, a different technique. Option D is just pasting a file into the context window: workable for one document, but it does not scale to a corpus and gives you no way to find the relevant passage.'},
+ {q:'A travel agent stores three items after a run: (1) "this user prefers aisle seats"; (2) "the 2026-06-03 booking failed because the card was declined"; (3) "always confirm the cost center before holding a fare." In the standard agent-memory taxonomy these are, in order:',
+  o:['working, working, working',
+     'semantic, episodic, procedural',
+     'episodic, semantic, procedural',
+     'procedural, semantic, episodic'],
+  a:1, why:'Semantic memory holds durable facts about the world or the user, detached from the event that taught them — a seat preference. Episodic memory holds a record of a specific past event with its context and outcome — a dated failure and its cause. Procedural memory holds learned how-to: rules and skills that shape how the agent operates. None of the three is working memory, which is the context window for the current run and disappears when the run ends — that is exactly why these three were written to a store in the first place.'},
+ {q:'Your commission rules change every quarter and every answer must name the rule it used. Why is retrieval the right tool here rather than fine-tuning?',
+  o:['Fine-tuned models are always more expensive per token at inference time',
+     'Because the weights are fixed once training ends: a fine-tuned model reproduces what it was trained on and cannot name a source, while a retrieval system reads the current document at question time — so an update means replacing a document, and the answer can cite the version it used',
+     'Because RAG systems use larger models, and larger models are more accurate on policy questions',
+     'Because fine-tuning cannot change a model\'s tone or output format'],
+  a:1, why:'The two deciding variables are freshness and provenance. Fine-tuning bakes behavior into frozen weights, so every quarterly change would require a new training run plus a full evaluation pass, and the resulting claim could not be traced to a document. Retrieval leaves the weights alone and changes what the model sees, so a policy update is an indexing job and the answer can cite the section and version it relied on. Option A misstates the cost picture, which varies by setup. Option D is backwards: tone and format are exactly what fine-tuning is good at — which is why "RAG for knowledge, fine-tune for behavior" is the working heuristic.'}
+];
+const sq=document.getElementById('sampleQuiz');
+SQ.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';d.style.marginTop='14px';
+  d.innerHTML=`<div class="stmt">${i+1}. ${x.q}</div><div class="opts" style="flex-direction:column;align-items:stretch">${x.o.map((o,j)=>`<button data-v="${j}" style="text-align:left;border-radius:10px">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div><div class="fb"></div>`;
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector(`button[data-v="${x.a}"]`).classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+String.fromCharCode(65+x.a)+'. ')+x.why;
+  }));
+  sq.appendChild(d);
+});
+
+/* interview check */
+const IV=[
+ {q:'1 · Distinguish short-term and long-term memory in an agent. What actually persists between sessions, and where does it live?',
+  a:'Strong answers separate the <b>context window</b> — working memory, assembled fresh for every model call and gone when the run ends — from <b>stores you write to</b>: a database row, a document, a vector index. Nothing persists unless your harness explicitly writes it and explicitly reads it back; the model cannot save anything itself. Then they name the long-term types and give an example of each: episodic (a dated record of what happened), semantic (a durable fact about the user or the world), procedural (a learned rule that shapes how the agent works). Bonus points for naming the two policies as separate design decisions — the write policy (is it durable, reusable, expensive to recompute, and allowed?) and the read policy (load a bounded profile at session start, retrieve by relevance mid-run, pull episodes on failure, and cap how much can enter the prompt).'},
+ {q:'2 · What is an embedding, and why does cosine similarity find documents that keyword search misses?',
+  a:'An embedding model maps text to a vector of a few hundred numbers, trained so that text with similar meaning points in a similar direction. Cosine similarity measures the angle between two such vectors, so "find related text" becomes "find nearby vectors" — which is why "can I send this back?" can match "return window: 30 days" with no shared words, where a keyword index returns nothing. Strong answers add the two operational consequences: the query and the corpus must be embedded by the <b>same</b> model or the distances are meaningless (changing embedding models means re-embedding everything), and <b>similarity is not truth</b> — the nearest chunk is the one most about the topic, which may be a superseded version. Freshness and permissions are enforced with metadata filters, not with geometry.'},
+ {q:'3 · Walk me through the RAG system you would build over 400 policy PDFs. Where does it break first?',
+  a:'Expect the pipeline in two halves. Offline: collect the documents, chunk them on structure rather than a fixed character count, embed each chunk, and store vectors with metadata — source, section, version, effective date, region, access level. Live: embed the question, filter by metadata, retrieve the top k, assemble a prompt that says answer only from this context and cite the chunk id, generate, and log the retrieved ids with their scores. Then the honest part: <b>it breaks at retrieval first.</b> Named failure modes — a chunk split that separates a rule from its exception; a stale version outranking the current one; a question whose vocabulary does not match any chunk; and the silent one, an index that always returns its nearest k chunks and therefore never says "nothing here." Strong candidates say they would evaluate retrieval separately from generation, and would set a similarity floor with an approved "I don\'t know" path.'},
+ {q:'4 · A stakeholder wants to fine-tune a model so it "knows our policies." How do you respond?',
+  a:'Reframe the choice: retrieval changes what the model <b>sees</b>; fine-tuning changes what the model <b>is</b>. Then ask the two questions that settle it — how often do these facts change, and does the answer have to cite a source? Policies change and must be attributable, so they belong in a retrieval corpus: updating means replacing a document, and the answer can name the version it used. Fine-tuning bakes behavior into frozen weights: no freshness, no provenance, no per-user access control (whatever was in the training data is in the model for everyone), and a full evaluation pass on every update. Strong answers land on "both, for different jobs" — fine-tune for house voice and output format if the prompt overhead genuinely justifies it, retrieve for every fact — and mention that a fine-tuned model that states a policy confidently and cannot cite it is a governance problem, not just an accuracy one.'},
+ {q:'5 · What has to be true before you let a RAG assistant answer HR benefits questions without a human?',
+  a:'This is a governance question and should be answered as one. <b>Access control enforced at retrieval time</b>, filtering by the asker\'s permissions before ranking — a document nobody should see must not be retrievable, and an index that ignores permissions is a data-leak generator with good manners. <b>Freshness as metadata</b>: effective windows and a status field on every chunk, with a default filter of "in effect today," plus re-indexing tied to the actual publication process. <b>Provenance in the answer</b>: title, version, effective date, the passage itself, and a warning when the source is out of its effective window. <b>An approved way to fail</b>: a similarity floor below which the system escalates instead of generating. <b>A stakes-based gate</b>: eligibility, appeals, anything about an individual\'s claim, or anything with a legal deadline routes to a human regardless of confidence. And <b>logs</b> — question, retrieved chunk ids and scores, what was kept, and the answer — because "prove the bot answered from the current plan" has to be a query, not a promise.'}
+];
+const iv=document.getElementById('iv');
+IV.forEach(x=>{
+  const d=document.createElement('div');d.className='card';d.style.marginBottom='12px';
+  d.innerHTML=`<p style="margin:0;font-weight:600">${x.q}</p><button class="revealbtn">What a strong answer covers</button><div class="revealbox">${x.a}</div>`;
+  iv.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

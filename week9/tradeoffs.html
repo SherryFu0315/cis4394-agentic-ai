@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>02 · The Honest Case — CIS 4394 Week 9</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.mastgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.mastgrid .card{border-top:3px solid var(--red)}
+.mastgrid .card:nth-child(2){border-top-color:#8a6d1d}
+.mastgrid .card:nth-child(3){border-top-color:var(--blue)}
+.scorepill{display:inline-block;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 18px;font-weight:650;font-size:14px;margin-top:14px}
+@media(max-width:880px){.mastgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 9</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="patterns.html"><span class="k">01</span>Patterns</a>
+  <a href="tradeoffs.html" class="here"><span class="k">02</span>The Honest Case</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">02 · The honest case</div>
+  <h1>The case <em>against</em> your multi-agent system.</h1>
+  <p class="lede">Page 01 taught you the patterns. This page tries to talk you out of using them. That is not contrarianism — it is the actual state of the practice: the people who have shipped these systems, including the ones who ship them successfully, agree that the boundary is narrow and that most teams cross it too early.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Two essays, one boundary</div>
+  <h2>The argument, from both sides</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Cognition — "Don't build multi-agents"</span>
+      <p class="small" style="margin-top:8px">The engineering team behind Devin argues against the default multi-agent design, and their reasoning is structural rather than stylistic. Two principles anchor it: <b>share context</b>, and treat <b>every action as carrying an implicit decision</b>.</p>
+      <p class="small">When you split work across subagents, each one sees a fragment. Each fragment leads to a locally reasonable choice. Those choices are made with no visibility into one another — so the pieces come back <b>conflicting</b>, and nobody in the system is in a position to notice. Worse, the conflicts are <em>plausible</em>: two agents produce two coherent halves of an incoherent whole. Their prescription is to keep one continuous thread of context and, when a task is too long for one window, to compress deliberately rather than to fragment accidentally.</p>
+      <p class="small"><a class="doc" href="https://cognition.com/blog/dont-build-multi-agents" target="_blank" rel="noopener">Cognition — Don't build multi-agents ↗</a></p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">LangChain — "How and when to build multi-agent systems"</span>
+      <p class="small" style="margin-top:8px">LangChain answers from the other direction, and lands on a compatible boundary. Multi-agent earns its cost when the work genuinely divides: subtasks that can run <b>in parallel</b> and whose outputs are <b>independently verifiable</b>. Read-heavy research is the clean case — several searches, several checkable findings, one synthesis.</p>
+      <p class="small">Write-heavy work is the dirty case. When agents must produce a single coherent artifact, or make decisions that depend on each other's decisions, parallelism is fictional and verification is impossible in isolation — you can only judge the pieces by looking at the whole, which is precisely what no individual agent can see.</p>
+      <p class="small"><a class="doc" href="https://www.langchain.com/blog/how-and-when-to-build-multi-agent-systems" target="_blank" rel="noopener">LangChain — How and when to build multi-agent systems ↗</a></p>
+    </div>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>Notice they do not actually disagree.</b> Anthropic built a multi-agent system for open-ended <em>search</em>; Cognition warns against multi-agent systems for coherent <em>construction</em>; LangChain names the dividing line. All three point at the same thing: <b>context fragmentation</b>. Where fragments can be checked independently, splitting works. Where the answer only makes sense as a whole, splitting breaks it. When an interviewer asks you "are you pro or anti multi-agent?", this paragraph is the answer.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The taxonomy</div>
+  <h2>Why multi-agent systems fail</h2>
+  <p class="lede">Cemri et al. (2025) studied a large set of multi-agent LLM traces and organized what went wrong into the <b>MAST</b> taxonomy: fourteen failure modes grouped into three categories. The value of a taxonomy is that it turns "it broke" into a diagnosis you can act on — so learn the three categories, and use them as your debugging checklist.</p>
+  <div class="mastgrid" style="margin-top:18px">
+    <div class="card"><span class="kicker">Category 1</span><h3 style="margin-top:6px">Specification &amp; system design</h3>
+      <p class="small">The failure was baked in before the run started: a role defined too vaguely to constrain behavior, a task description missing the constraint that mattered, an agent that ignores its instructions, or a design with no termination condition. The instruction-decay example on page 01 lives here.</p>
+      <p class="small"><b>Tell:</b> every agent did exactly what it was told, and the result is still wrong.</p></div>
+    <div class="card"><span class="kicker">Category 2</span><h3 style="margin-top:6px">Inter-agent misalignment</h3>
+      <p class="small">The failure happened <em>between</em> agents: a hand-off that dropped context, agents working from incompatible assumptions, conversations that go in circles, duplicated work, or one agent quietly derailing another's task. This is Cognition's fragmentation argument, catalogued.</p>
+      <p class="small"><b>Tell:</b> each agent's output looks fine in isolation; put two of them side by side and they contradict.</p></div>
+    <div class="card"><span class="kicker">Category 3</span><h3 style="margin-top:6px">Task verification &amp; termination</h3>
+      <p class="small">The failure was one nobody checked for: work ended prematurely, verification was absent, or the "verifier" was itself an LLM glancing at the output and declaring it good. A reviewer agent that agrees with everything is a rubber stamp with a token bill.</p>
+      <p class="small"><b>Tell:</b> the system says "done" and is confidently wrong — and no artifact in the trace records what "done" was supposed to mean.</p></div>
+  </div>
+  <p class="small" style="margin-top:14px"><a class="doc" href="https://arxiv.org/abs/2503.13657" target="_blank" rel="noopener">Cemri et al. (2025) — Why Do Multi-Agent LLM Systems Fail? (arXiv:2503.13657) ↗</a></p>
+  <div class="callout" style="margin-top:18px"><b>The uncomfortable pattern in that list:</b> hardly any of the failure modes are "the model was not smart enough." They are specification failures, protocol failures, and missing checks — engineering problems, in the seams you added. A better model does not fix a constraint you never passed along.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Cost</div>
+  <h2>Parallel search buys breadth, not savings</h2>
+  <div class="grid2" style="align-items:start">
+    <div>
+      <p class="small">Adding an agent is not like adding a function call. Each agent is a full model invocation carrying its own system prompt, its own tool definitions, and its own accumulated context — and the supervisor pays again to write each hand-off and read each result back. The overhead is per-run and permanent.</p>
+      <p class="small">The one public number we can cite precisely: Anthropic reports that their multi-agent research system used about <b>15× more tokens</b> than a chat interaction, alongside roughly a <b>90%</b> improvement over a single-agent baseline on their internal research evaluation. Both figures are as reported in their engineering post, approximate, and specific to that system and that eval — they are not a general multiplier for multi-agent systems, and you should not quote them as one.</p>
+      <p class="small">The transferable lesson is the shape, not the number: <b>you pay a large multiple, up front and every run, for breadth.</b> If the task's value does not clear that bar, the correct architecture is one agent.</p>
+      <p class="small"><a class="doc" href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener">Anthropic Engineering — How we built our multi-agent research system ↗</a></p>
+    </div>
+    <div class="card"><span class="kicker">The manager's version of this slide</span>
+      <p class="small" style="margin-top:8px">Three questions to put to any team proposing a multi-agent architecture, in order:</p>
+      <ol class="steps" style="margin-top:10px">
+        <li><b>What does the single-agent baseline score?</b> If there is no baseline, there is no claim. You cannot know a team helped without the number it beat.</li>
+        <li><b>What is the per-run cost of each design, at expected volume?</b> Not the demo cost — the monthly cost at the volume you actually plan to run.</li>
+        <li><b>What breaks that we would not have been able to debug before?</b> If the answer is "we would read the trace", ask which trace — per-agent, per-hand-off, or the aggregate that hides both.</li>
+      </ol>
+      <p class="small" style="margin-top:10px">Latency deserves a footnote: parallel workers can genuinely finish a breadth-first task faster in wall-clock time, even while burning more tokens. Speed and cost move in opposite directions here, so be explicit about which one you are buying.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · the decision drill</div>
+  <h2>Split, or don't?</h2>
+  <p class="lede">Five situations. For each, apply the test: <b>do the subtasks run in parallel, and can each output be verified on its own?</b> Answer before you reveal — this is the exact judgment Milestone I asks you to defend in writing.</p>
+  <div id="splitQ"></div>
+  <div class="scorepill" id="splitScore">Answered 0 of 5</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Evaluation</div>
+  <h2>Whose fault was that?</h2>
+  <p class="lede">In Week 8 you built the discipline of evaluating an agent: fixed cases, a scored run, a number that moves when you change something. Multi-agent breaks the easy part of that — not the scoring, but the <b>attribution</b>.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">What goes wrong</span>
+      <p class="small" style="margin-top:8px">The aggregate score drops three points. Which of your five agents caused it? With only an end-to-end trace, you cannot say — and the natural response, changing prompts until the number recovers, is not engineering. It is also expensive: each experiment now costs a full multi-agent run.</p>
+      <p class="small">Worse, failures compound quietly. Agent 2 hands agent 3 a subtly wrong fact; agent 3 reasons impeccably from it; agent 5 writes it up beautifully. The output is confidently wrong and every individual step looks defensible. This is why "the answer looked good" is not evidence in a multi-agent system.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">What to log — per agent, per hand-off</span>
+      <p class="small" style="margin-top:8px">Each agent gets the Week 2 evidence standard in full: <em>state before → observation → available actions → selected action → result → state after</em>. On top of that, multi-agent adds three things a single-agent trace never needed:</p>
+      <ol class="steps" style="margin-top:10px">
+        <li><b>The hand-off payload itself</b> — verbatim, both what was sent and what the receiver actually had in context. Most fragmentation bugs are invisible unless you can diff those two.</li>
+        <li><b>Per-agent cost and step count</b>, so "which agent is expensive" and "which agent is looping" are queries, not guesses.</li>
+        <li><b>The verification verdict at each boundary</b> — who checked this result, against what, and what did they conclude. An unchecked boundary is where MAST category 3 lives.</li>
+      </ol>
+      <p class="small" style="margin-top:10px"><b>Budget the observability before you add the agent.</b> Retrofitting per-hand-off logging onto a running five-agent system is how teams end up rewriting it as one agent.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Discussion</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Your five-agent pipeline scores worse than the single agent it replaced, but the demo is far more impressive and the team is attached to it. What is the smallest change that would tell you whether the team is worth keeping — and what would justify collapsing it back to one agent?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">The smallest useful change is <b>not</b> another agent, another prompt, or a bigger model. It is <b>instrumentation plus an ablation</b>. First, log per-agent traces, hand-off payloads, and per-agent cost so failures can be attributed at all. Then run the fixed eval set with agents removed one at a time — the classic ablation. An agent whose removal does not lower the score is coordination cost with no payoff, and it should go; a critic that agrees with everything is the usual first casualty. <b>Collapse back to one agent when</b> the diagnosis says fragmentation: the failures cluster at the seams (dropped constraints, contradictory outputs, duplicated work) rather than inside any one agent, or when the subtasks turn out not to be independently verifiable after all — you can only judge the pieces by reading the whole. That is Cognition's argument, and "we merged five agents into one and the score went up" is a perfectly respectable engineering result. Keep the team only where the ablation shows each member earning its tokens, and be honest that an impressive demo is a claim about the demo, not about the eval.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="patterns.html"><span class="lab">← Previous</span><b>01 · Patterns</b></a>
+  <a href="exercises.html" class="next"><span class="lab">Next →</span><b>03 · Practice &amp; case</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 9 — Multi-Agent Systems<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* split-or-not decision drill */
+const OPTS=['Split it — multiple agents','Keep one agent','Neither — this is agent-to-agent across an organizational boundary'];
+const SPL=[
+ {q:'A market-research agent must survey what twelve named competitors have publicly announced this quarter, then write one summary.',
+  a:0, why:'Split. Twelve lookups that do not depend on each other, each producing a finding you can check on its own against its source — parallel and independently verifiable, both halves of the test. This is the breadth-first research shape that Anthropic’s system was built for, and the one case where the token multiple usually clears the bar. The synthesis stays with the supervisor.'},
+ {q:'An agent must refactor one Python module: read it, change three functions in a consistent style, update the callers, run the tests, fix what breaks.',
+  a:1, why:'Keep one agent. Every step depends on the previous one, so there is no parallelism to harvest, and no intermediate output is verifiable alone — a function is only "right" relative to the callers and the tests. Splitting it hands each agent a fragment of a decision that has to be made coherently, which is precisely Cognition’s objection. One agent, one context, good tools.'},
+ {q:'Your firm’s procurement agent needs a price and lead time from a supplier company that runs its own agent. The two companies do not share systems, data, or a codebase.',
+  a:2, why:'Neither. This is not a decomposition of your task — it is two independently owned systems interoperating across a trust boundary, the agent-to-agent case from Week 6. The supplier’s agent is not your subagent: you cannot inspect its context, set its instructions, or be liable for its reasoning. What you design here is an interface — a protocol, an identity and authentication story, an audit record of the exchange, and treatment of anything it returns as untrusted input. "Add it as a worker in my supervisor graph" is a category error.'},
+ {q:'Three agents co-author one contract, all editing the same draft until everyone is satisfied.',
+  a:1, why:'Keep one agent. Shared mutable state is the anti-pattern: concurrent edits to one artifact give you conflicting decisions, last-write-wins, and no owner of the current version. The work is also not independently verifiable — clause 4 is only correct relative to clause 9. If you need a second perspective, add a critique step inside one agent’s loop (Week 4 reflection), where the critique lands in the same context that produced the draft, instead of splitting the pen three ways.'},
+ {q:'A claims agent must, for one submitted claim, (a) validate the policy is active, (b) check the incident date against coverage, and (c) screen the claimant against a sanctions list — three separate systems, three yes/no answers, then a decision.',
+  a:0, why:'Split — cautiously. The three checks touch different systems, run at the same time, and each returns an answer you can verify on its own against its source of record, so the test is satisfied. Two honest caveats: at this small a scale, three tool calls inside one agent may well be the better engineering (parallel tool calls, one context, one trace) — the test tells you a split is defensible, not that it is required. And a regulated decision needs the decision itself, the three verdicts, and the human gate all recorded together.'}
+];
+const spl=document.getElementById('splitQ'),splScore=document.getElementById('splitScore');
+let splDone=0,splRight=0;
+SPL.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML=`<div class="stmt">${i+1}. ${x.q}</div><div class="opts" style="flex-direction:column;align-items:stretch">${OPTS.map((o,j)=>`<button data-v="${j}" style="text-align:left;border-radius:10px">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div><div class="fb"></div>`;
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector(`button[data-v="${x.a}"]`).classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+String.fromCharCode(65+x.a)+'. ')+x.why;
+    splDone++;if(ok)splRight++;
+    splScore.textContent='Answered '+splDone+' of 5 — '+splRight+' correct'+(splDone===5?(splRight===5?' · you have the test.':' · re-read the ones you missed; the test is the same every time.'):'');
+  }));
+  spl.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

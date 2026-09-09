@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CIS 4394 Week 9 — Multi-Agent Systems</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.linkwrap{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px;align-items:start}
+.linkwrap svg{width:100%;height:auto}
+.lkline{stroke:#cfccc2;stroke-width:1.4}
+.lknode circle{fill:#fff;stroke:var(--blue);stroke-width:1.8}
+.lknode text{font-family:var(--mono);font-size:11px;font-weight:700;fill:var(--ink)}
+.lkcount{font-family:var(--serif);font-size:30px;font-weight:600;line-height:1.1}
+@media(max-width:880px){.linkwrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 9</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="patterns.html"><span class="k">01</span>Patterns</a>
+  <a href="tradeoffs.html"><span class="k">02</span>The Honest Case</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">Week 9 · Module 3 · Systems</div>
+  <h1>Multi-agent systems — and when <em>not</em> to build one.</h1>
+  <p class="lede">Every overloaded agent tempts you with the same fix: <b>add more agents</b>. Sometimes that is exactly right. More often you have just bought yourself coordination overhead, a bigger token bill, and a new class of failure that is much harder to debug. This week you learn the patterns — and the honest test for whether you need them.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="callout blue"><b>📌 This week's logistics:</b> <b>Capstone Milestone I is due this week</b> — submit on iCollege in your own section (details in the section below). <b>📝 Quiz 4 is next week</b> — in class, closed-book, 5 multiple-choice; the scope and five sample questions are at the bottom of this week's <a href="exercises.html#quiz">Practice page</a>. <b>Group Assignment 3 is in progress</b> — due Week 11. <b>Capstone Milestone II releases next week.</b></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The big question</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Your agent is overloaded: too many tools, a context window stuffed with three jobs' worth of instructions, and results that drift. Is the right move to split it into four agents?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">Only if the work actually <b>decomposes</b>. Ask one question, not "how many agents": <b>can this task be cut into subtasks that run in parallel and can each be verified on their own?</b> If yes — breadth-first research, four independent searches, four checkable answers — splitting buys you real parallelism and clean context per worker. If the subtasks form one dependent chain, or if they all read and write the same evolving artifact, splitting buys you nothing and costs you a great deal: every hand-off is a place for context to be dropped, and every agent is another full model call. "My agent is overloaded" is often a <em>context engineering</em> problem (Week 3) or a <em>tool design</em> problem (Week 5) wearing an org-chart costume.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The honest headline</div>
+  <h2>More agents = more coordination</h2>
+  <div class="grid3">
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">What you gain</span><p class="small" style="margin-top:8px"><b>Specialization</b> (a narrow role with a narrow tool set), <b>context isolation</b> (each worker gets a clean window instead of one bloated one), and <b>parallelism</b> (four searches at once instead of four in a row). These are real. They are why Anthropic's own research system is multi-agent.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">What you pay</span><p class="small" style="margin-top:8px"><b>Coordination:</b> every hand-off is a contract that can be under-specified. <b>Context fragmentation:</b> two agents holding different pictures of the same task make confidently conflicting decisions. <b>Tokens:</b> each agent is a full model call with its own prompt overhead.</p></div>
+    <div class="card" style="border-top:3px solid #8a6d1d"><span class="kicker">What gets harder</span><p class="small" style="margin-top:8px"><b>Attribution.</b> A single-agent run has one trace to read. A five-agent run fails somewhere in the seams, and "whose fault was that?" becomes a research question — unless you paid, up front, for per-agent and per-hand-off logging (Week 8's evaluation discipline).</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · the arithmetic of a team</div>
+  <h2>Click a team size</h2>
+  <p class="lede">Capability grows roughly with the number of agents. The number of <b>relationships</b> that can go wrong grows faster. This is the oldest result in organization design, and it did not stop being true when the workers became language models.</p>
+  <div class="linkwrap">
+    <div class="loopbox">
+      <svg viewBox="0 0 320 300" aria-label="agents and the links between them">
+        <g id="lkEdges"></g><g id="lkNodes"></g>
+      </svg>
+      <div class="tabs" style="margin:12px 6px 0" id="lkTabs"></div>
+    </div>
+    <div>
+      <div class="card">
+        <span class="kicker">If every agent can talk to every other</span>
+        <div class="lkcount" id="lkCount" style="margin-top:6px">—</div>
+        <p class="small" id="lkNote" style="margin-top:10px">Pick a team size.</p>
+      </div>
+      <div class="callout blue" style="margin-top:14px"><b>Read this honestly.</b> n(n−1)/2 is the <em>upper bound</em> — the number of pairs. A supervisor design deliberately refuses most of those links: workers talk only to the supervisor, so you are back to n−1 channels. That restriction <em>is</em> the design. Topologies are not decoration; they are how you choose which relationships are allowed to exist.</div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">This week's pages</div>
+  <h2>Work through in order</h2>
+  <div class="navcards">
+    <a class="navcard" href="patterns.html">
+      <span class="num">01</span>
+      <span><b>Patterns</b><span class="small">Single agent with many tools · supervisor / orchestrator-worker · network · hierarchical — a clickable topology diagram with "use when / breaks when" · what actually gets shared: state vs messages · frameworks as dialects.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="tradeoffs.html">
+      <span class="num">02</span>
+      <span><b>The honest case</b><span class="small">Cognition's "Don't build multi-agents" vs LangChain's "how and when" · the MAST failure taxonomy · what multi-agent costs in tokens · a five-scenario "split or not?" decision drill · why evaluation gets harder.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="exercises.html">
+      <span class="num">03</span>
+      <span><b>Practice &amp; case</b><span class="small">Decompose-or-not on a conference-planning agent · assign blame on a three-agent failure trace · the contradictory-memos case · interview check · readings · <b>Quiz 4 scope + 5 sample questions</b>.</span></span>
+      <span class="go">→</span>
+    </a>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Why managers care</div>
+  <h2>An agent team is a hiring decision</h2>
+  <div class="grid3">
+    <div class="card"><span class="kicker">Cost</span><p class="small" style="margin-top:8px">Each agent is a recurring per-run expense, not a one-time build cost. Anthropic reports that their multi-agent research system consumed roughly <b>15× the tokens</b> of a chat interaction (Anthropic Engineering, 2025 — figure as reported, approximate). Parallel search buys <em>breadth</em>, not savings. A second agent has to earn that line item.</p></div>
+    <div class="card"><span class="kicker">Trust</span><p class="small" style="margin-top:8px">Two agents that disagree do not announce it — they produce two confident, incompatible outputs and let a human discover the contradiction. Your users cannot see the seam. That is a trust failure before it is a technical one.</p></div>
+    <div class="card"><span class="kicker">Auditability</span><p class="small" style="margin-top:8px">"Why did the system do that?" has a clean answer only if every agent's trace carries the Week 2 evidence standard — <em>state before → observation → available actions → selected action → result → state after</em> — plus the hand-off payload. Budget observability <b>before</b> you add the agent.</p></div>
+  </div>
+</div></section>
+
+<section id="milestone"><div class="wrap">
+  <div class="eyebrow">Due this week</div>
+  <h2>Capstone Milestone I</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><span class="kicker">What it is</span><p class="small" style="margin-top:8px">Your first working capstone checkpoint: a <b>single agent</b> that runs end to end on your chosen task, plus the <b>start of an evaluation harness</b> — a handful of cases you can re-run to tell whether a change made things better or worse. Submit on iCollege in your own section; the full brief and rubric live in the Milestone I dropbox.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">This week's rule, applied to your capstone</span><p class="small" style="margin-top:8px"><b>Do not add a second agent to Milestone I without a written justification.</b> "It felt cleaner" is not one. The justification you owe is the test from page 02: name the subtasks, show that they can run in parallel, and say how each one is verified on its own. A single agent with well-designed tools is the correct default — and it is the baseline you will need in order to prove that a second agent helped.</p></div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>Looking ahead:</b> Milestone II releases next week. If you are already sure your capstone needs a team of agents, spend this week on page 02 first — the decision drill there is exactly the argument you will have to make in writing.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="../index.html"><span class="lab">← Course</span><b>All weeks</b></a>
+  <a href="patterns.html" class="next"><span class="lab">Start →</span><b>01 · Patterns</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 9 — Multi-Agent Systems<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* coordination-link visualiser */
+var LKNOTE={
+ 1:'One agent. Zero hand-offs, zero context fragmentation, one trace to read. This is the default you must beat.',
+ 2:'One link. A writer and a critic, or a researcher and a summarizer. Small enough that you can write the hand-off contract by hand and actually test it.',
+ 3:'Three links. Still legible on a whiteboard — but now there is a pair that never talks directly, and that is where duplicated work starts.',
+ 4:'Six links. More relationships than agents. Debugging is no longer "read the trace"; it is "read six traces and find the disagreement".',
+ 5:'Ten links. Anthropic’s research system solves this by refusing the mesh entirely: the lead agent talks to each subagent, and the subagents never talk to each other.',
+ 6:'Fifteen links. If you cannot draw this on one page and name what crosses each line, you cannot debug it either. This is the point where the design has to shrink or become hierarchical.'
+};
+var lkE=document.getElementById('lkEdges'),lkN=document.getElementById('lkNodes'),
+    lkC=document.getElementById('lkCount'),lkT=document.getElementById('lkNote'),lkTabs=document.getElementById('lkTabs');
+function lkDraw(n){
+  var cx=160,cy=145,r=(n===1?0:100),pts=[],i,j;
+  for(i=0;i<n;i++){var a=-Math.PI/2+(2*Math.PI*i)/n;pts.push([cx+r*Math.cos(a),cy+r*Math.sin(a)])}
+  var e='',g='';
+  for(i=0;i<n;i++)for(j=i+1;j<n;j++){e+='<line class="lkline" x1="'+pts[i][0].toFixed(1)+'" y1="'+pts[i][1].toFixed(1)+'" x2="'+pts[j][0].toFixed(1)+'" y2="'+pts[j][1].toFixed(1)+'" />'}
+  for(i=0;i<n;i++){g+='<g class="lknode"><circle cx="'+pts[i][0].toFixed(1)+'" cy="'+pts[i][1].toFixed(1)+'" r="26"/><text x="'+pts[i][0].toFixed(1)+'" y="'+(pts[i][1]+4).toFixed(1)+'" text-anchor="middle">A'+(i+1)+'</text></g>'}
+  lkE.innerHTML=e;lkN.innerHTML=g;
+  var links=n*(n-1)/2;
+  lkC.innerHTML=n+' agent'+(n===1?'':'s')+' &rarr; '+links+' link'+(links===1?'':'s');
+  lkT.textContent=LKNOTE[n];
+  var b=lkTabs.querySelectorAll('button');
+  for(i=0;i<b.length;i++)b[i].classList.toggle('active',+b[i].dataset.n===n);
+}
+(function(){
+  var h='';
+  for(var n=1;n<=6;n++)h+='<button class="tab" data-n="'+n+'">'+n+' agent'+(n===1?'':'s')+'</button>';
+  lkTabs.innerHTML=h;
+  lkTabs.addEventListener('click',function(e){var b=e.target.closest('button');if(b)lkDraw(+b.dataset.n)});
+  lkDraw(1);
+})();
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

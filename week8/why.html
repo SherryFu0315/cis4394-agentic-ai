@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>01 · Why Demos Lie — CIS 4394 Week 8</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.runstrip{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px}
+.runchip{width:62px;height:62px;border-radius:12px;border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:21px;font-weight:700;color:var(--line2)}
+.runchip small{font-family:var(--sans);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.runchip.pass{background:var(--good);border-color:var(--good-line);color:#2f6b3f}
+.runchip.fail{background:var(--bad);border-color:var(--bad-line);color:var(--red)}
+.runchip.demo{box-shadow:inset 0 0 0 2px var(--blue)}
+.scorebox{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.scorebox .sb{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.scorebox .sb b{display:block;font-family:var(--serif);font-size:26px;color:var(--blue);line-height:1.1;margin-top:4px}
+.scorebox .sb.hot b{color:var(--red)}
+.compgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:16px}
+.bigpct{font-family:var(--serif);font-size:clamp(30px,4vw,46px);line-height:1;font-weight:600}
+.bigpct.v{color:var(--blue)}.bigpct.r{color:var(--red)}
+.logfield{display:grid;grid-template-columns:1fr;gap:0}
+.stepwrap{display:grid;grid-template-columns:minmax(280px,1fr) 1.2fr;gap:20px;align-items:start}
+@media(max-width:880px){.compgrid,.stepwrap{grid-template-columns:1fr}.scorebox{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 8</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="why.html" class="here"><span class="k">01</span>Why Demos Lie</a>
+  <a href="metrics.html"><span class="k">02</span>pass@k, pass^k &amp; Benchmarks</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">01 · Why demos lie</div>
+  <h1>Evaluating an agent is <em>harder</em> than evaluating a model.</h1>
+  <p class="lede">A model produces one output you can grade. An agent produces a <b>path</b>: a dozen decisions, each one able to poison everything downstream, none of them guaranteed to repeat. Before you can pick a metric, you have to understand what makes the measurement hard.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">The four difficulties</div>
+  <h2>What breaks the ordinary testing playbook</h2>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">1 · Non-determinism</span>
+      <p class="small" style="margin-top:8px">Ordinary software is a function: the same input gives the same output, so one passing test <em>is</em> proof. An agent samples from a distribution — same input, different path, sometimes a different answer. A single passing run proves the system <b>can</b> succeed, never that it <b>will</b>.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">2 · Multi-step compounding</span>
+      <p class="small" style="margin-top:8px">One wrong step doesn't cost you one step. It poisons every step after it: the agent reasons confidently on top of a bad observation, and the trace still <em>looks</em> coherent. Reliability multiplies down the chain — see the calculator below.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">3 · No single right answer</span>
+      <p class="small" style="margin-top:8px">“Summarize this ticket,” “draft a reply,” “research three vendors” have no unique correct string to diff against. Exact-match tests, the cheapest and most trustworthy kind, simply don't apply to most of what agents produce — so you need graders that are themselves fallible.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">4 · Stateful and interactive</span>
+      <p class="small" style="margin-top:8px">The agent changes the world as it goes: it writes files, sends messages, books things. You can't rerun step 7 in isolation, and a “correct” final answer reached by an unacceptable route (six needless paid API calls, a policy violation, a lucky guess) is not actually a pass.</p></div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>Put plainly:</b> unit tests ask “is this output right?” Agent evaluation has to ask “is this output right, <em>how often</em>, and did it get there <em>acceptably</em>?” Three questions, three kinds of measurement — and only the first one looks like software testing.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · same task, five runs</div>
+  <h2>Run the identical task five times</h2>
+  <p class="lede">Below is a fixed, scripted episode of the <a href="../week2/build.html">Week 2 Job Search Agent</a> on <b>one identical input</b> — the same posting, the same prompt, the same tools. Press <b>Run the task</b> five times. Everyone in the class sees the same five outcomes, because the lesson shouldn't depend on your luck.</p>
+  <div class="stepwrap">
+    <div>
+      <div class="simctl" style="margin-bottom:12px">
+        <button class="primary" id="btnRun">Run the task ▸</button>
+        <button class="ghost" id="btnRunAll">Run all 5</button>
+        <button class="ghost" id="btnRunReset">Reset</button>
+      </div>
+      <div class="runstrip" id="chips"></div>
+      <div class="scorebox" id="scores"></div>
+      <p class="small" id="verdict" style="margin-top:14px"></p>
+    </div>
+    <div>
+      <div class="term" id="runlog"><span class="t-dim">No runs yet. Press “Run the task” — run #1 is the one you would have demoed.</span></div>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>Read what just happened:</b> nothing was misconfigured and nothing crashed. Runs 3 and 5 failed for reasons that live inside normal agent behavior — an empty tool result treated as an answer, and a loop that burned its <a href="../week4/langgraph.html">step cap</a> on pagination. Both failures returned <em>confident-looking output</em>. That is the failure mode evaluation exists to catch: agents rarely fail loudly.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · the compounding problem</div>
+  <h2>Per-step reliability is not task reliability</h2>
+  <p class="lede">Suppose every single step of your agent is independently reliable at some rate. Drag the number of steps and watch what happens to the probability that the <b>whole task</b> comes out clean. Two agents: one with 95% steps, one with 99% steps.</p>
+  <div class="dialwrap">
+    <label class="small" for="stepSlider" style="font-weight:700;color:var(--ink)">Steps in the task: <span id="stepOut" style="color:var(--blue)">10</span></label>
+    <input type="range" id="stepSlider" min="1" max="20" step="1" value="10" />
+    <div class="diallabels"><span>1 step</span><span>10 steps</span><span>20 steps</span></div>
+    <div class="compgrid">
+      <div class="card"><span class="kicker">Agent A — each step 95% reliable</span>
+        <div class="bigpct v" id="pA">59.9%</div>
+        <div class="riskbar v" style="margin-top:10px"><i id="barA"></i></div>
+        <p class="small" style="margin-top:10px">Whole-task success = 0.95<sup id="expA">10</sup></p></div>
+      <div class="card"><span class="kicker">Agent B — each step 99% reliable</span>
+        <div class="bigpct r" id="pB">90.4%</div>
+        <div class="riskbar r" style="margin-top:10px"><i id="barB"></i></div>
+        <p class="small" style="margin-top:10px">Whole-task success = 0.99<sup id="expB">10</sup></p></div>
+    </div>
+    <p class="small" id="compNote" style="margin-top:16px"></p>
+  </div>
+  <div class="grid2" style="margin-top:20px;align-items:start">
+    <div class="card"><span class="kicker">Worked example · a 5-step refund agent</span>
+      <p class="small" style="margin-top:8px">Steps aren't all equally reliable. Say: read the ticket <b>0.99</b> → look up the order <b>0.97</b> → check the refund policy <b>0.95</b> → compute the amount <b>0.98</b> → issue the refund <b>0.96</b>.</p>
+      <div class="codebox" style="margin-top:10px">0.99 x 0.97 x 0.95 x 0.98 x 0.96
+  = 0.8583
+
+whole-task success  ~ 86%
+failure rate        ~ 14%   (about 1 in 7)</div>
+      <p class="small">Every step looks fine in isolation. Nobody on the team would flag a 0.95. The product still fails roughly one refund in seven. <em>(Illustrative per-step numbers — an original teaching example, not measured data.)</em></p></div>
+    <div class="card"><span class="kicker">The MIS takeaway</span>
+      <p class="small" style="margin-top:8px">Reliability is engineered <b>per step</b> and experienced <b>per task</b>. Two design consequences follow, and both are decisions you own rather than model choices:</p>
+      <p class="small" style="margin-top:8px"><b>Shorten the chain.</b> Fewer steps means fewer multiplications. A deterministic tool or a plain workflow branch that replaces three agent steps buys more reliability than a bigger model usually does.</p>
+      <p class="small" style="margin-top:8px"><b>Verify inside the chain.</b> A check after the fragile step (did the lookup return anything? does the amount match the policy?) stops the poison from propagating. That's the <a href="../week4/patterns.html">reflection pattern</a> from Week 4 in its most boring, most valuable form.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Interactive · click each field</div>
+  <h2>What you have to log, per step</h2>
+  <p class="lede">You cannot evaluate what you did not record. This is the <b>evidence standard</b> from <a href="../week2/evaluate.html">Week 2</a>, and it is the minimum unit of an agent trace: six fields, every step, every run. Click each one for what it buys you.</p>
+  <div class="tabs" id="logTabs"></div>
+  <div class="card" id="logPanel" style="min-height:190px"></div>
+  <div class="callout blue" style="margin-top:20px"><b>Vocabulary:</b> the full recording of one run is a <b>trace</b>; each nested unit inside it (one model call, one tool call) is a <b>span</b>, with its own inputs, outputs, tokens, latency, and cost. <b>Observability</b> is the practice of collecting traces from real production runs so you can debug, watch for drift, track spend, and answer an auditor. It is the difference between “the agent did something weird last Tuesday” and a replayable record of exactly what it did.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Watch</div>
+  <h2>Observability and evals, in fifteen minutes</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><h3>Observability and Evals for AI Agents (LangChain, 14m44s)</h3>
+      <p class="small">Why agent debugging needs traces and spans rather than classic metrics and log lines — and how an eval set gets wired to them. Watch this before page 02.</p>
+      <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/FDVdLrloFOw" title="Observability and Evals for AI Agents" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
+    </div>
+    <div class="card"><span class="kicker">While you watch — three things to catch</span>
+      <p class="small" style="margin-top:8px"><b>1.</b> What a span contains that an ordinary log line does not, and why nesting matters when one bad observation sits eight steps upstream of the wrong answer.</p>
+      <p class="small" style="margin-top:8px"><b>2.</b> Where the <b>dataset</b> of test cases lives relative to the running agent — the harness anatomy you'll build on page 03: <code>dataset → agent under test → evaluator → report</code>.</p>
+      <p class="small" style="margin-top:8px"><b>3.</b> How an eval turns into a <b>regression test</b>: the same dataset, rerun on every prompt or code change, so “I improved it” becomes a claim with evidence instead of a memory of one good run.</p>
+      <div class="callout" style="margin-top:14px;margin-bottom:0"><b>Tooling note:</b> the mechanics are the same whichever platform you use. What transfers is the shape — cases, evaluator, repeat runs, a report you can hand someone.</div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Two things to grade</div>
+  <h2>Outcome evaluation vs trajectory evaluation</h2>
+  <div class="compare"><table class="plain">
+    <tr><th></th><th>Outcome (final-response) eval</th><th>Trajectory (path) eval</th></tr>
+    <tr><td><b>Question asked</b></td><td>Is the final answer right?</td><td>Did it get there acceptably?</td></tr>
+    <tr><td><b>Typical checks</b></td><td>Exact match, numeric match, required fields present, rubric score on the reply</td><td>Which tools were called, in what order, with what arguments; steps used; whether a forbidden action was taken; whether the policy was followed</td></tr>
+    <tr><td><b>Catches</b></td><td>Plainly wrong output</td><td>Right answer for the wrong reason; wasted or duplicated calls; policy and safety violations; the lucky guess</td></tr>
+    <tr><td><b>Misses</b></td><td>Everything about <em>how</em> — including a run that got lucky, and one that quietly cost 10× more</td><td>A beautiful, policy-perfect path to a wrong answer</td></tr>
+    <tr><td><b>Cost of running</b></td><td>Cheap — you already have the answer</td><td>Needs the full trace stored and a way to assert over it</td></tr>
+  </table></div>
+  <div class="grid3" style="margin-top:20px">
+    <div class="card"><span class="kicker">Also measure · latency</span><p class="small" style="margin-top:8px">A correct answer that arrives after the customer left is a failure with good manners. Latency belongs in the eval report, not in a separate performance ticket.</p></div>
+    <div class="card"><span class="kicker">Also measure · cost</span><p class="small" style="margin-top:8px">Tokens and tool calls per run. An agent that is 2 points more accurate and 5× more expensive is a business decision, not an obvious upgrade — and you can only have that conversation with numbers.</p></div>
+    <div class="card"><span class="kicker">Together</span><p class="small" style="margin-top:8px">Four dimensions — final-response quality, trajectory and tool use, latency, cost (<i>Agents Companion</i>, Google/Kaggle). Right, efficient, <em>and</em> affordable. Reporting only the first is how teams ship something nobody can pay for.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Discussion</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Your agent returned the correct final answer on all 20 test cases — but on 6 of them it called the paid enrichment API twice, and on 2 it read a customer record it had no business touching. Your outcome eval says 20/20. What should the report actually say, and what would you have needed to log to say it?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">The report should say <b>outcome 20/20, trajectory 12/20</b> — and treat the trajectory number as the one that governs deployment. Two distinct defects hide behind a perfect outcome score: a <b>cost defect</b> (duplicate paid calls, which scale linearly with volume and will show up as a bill, not as a bug report) and a <b>policy defect</b> (an access violation, which is a compliance incident regardless of whether the answer was right). Neither is visible from the final answer alone.<br /><br />To assert either one you need the per-step record: <b>selected action + arguments</b> (to detect the duplicate call and the record it read), <b>available actions</b> (to show the agent had a compliant alternative), and <b>state before/after</b> (to prove what it actually touched). That's the six-field evidence standard above — and the reason it is worth the storage. The deeper lesson: an eval set that only grades outputs will happily certify an agent that is expensive and non-compliant.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Concept check</div>
+  <h2>Three questions before you move on</h2>
+  <div id="ccheck"></div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="index.html"><span class="lab">← Back</span><b>Week 8 home</b></a>
+  <a href="metrics.html" class="next"><span class="lab">Next →</span><b>02 · pass@k, pass^k &amp; benchmarks</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 8 — Evaluation &amp; Reliability<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+/* ---------- same task, five runs (deterministic script) ---------- */
+const RUNS=[
+ {ok:true, tag:'DEMO',
+  log:[['t-obs','RUN 1'],['','Fetched posting -> parsed 11 requirements -> matched resume -> 3 gaps found.'],['t-dim','9 steps - 41s - summary written, gaps ranked. PASS. (This is the run you would have demoed.)']]},
+ {ok:true, tag:'RUN 2',
+  log:[['t-obs','RUN 2'],['','Same input. Agent searched the company page first, then parsed the posting.'],['t-dim','13 steps - 68s - same 3 gaps, correct summary. PASS - but a different path and ~40% more tokens.']]},
+ {ok:false, tag:'RUN 3',
+  log:[['t-hitl','RUN 3'],['','The requirements-extraction tool returned an EMPTY list (a formatting quirk in the posting).'],['t-dim','Agent read the empty result as "no stated requirements" and wrote: "You meet all listed requirements."'],['t-hitl','FAIL - confidently wrong, no error raised, output looks fine.']]},
+ {ok:true, tag:'RUN 4',
+  log:[['t-obs','RUN 4'],['','Clean run. 10 steps - 44s - 3 gaps, correct summary. PASS.']]},
+ {ok:false, tag:'RUN 5',
+  log:[['t-hitl','RUN 5'],['','Agent followed a "see more requirements" pagination link and looped on it.'],['t-dim','Hit the max-iteration guard at step 15 and returned a PARTIAL summary (1 of 3 gaps).'],['t-hitl','FAIL - the guard saved the budget; it did not save the answer.']]}
+];
+let rIdx=0;
+const chipsEl=document.getElementById('chips'), logEl=document.getElementById('runlog'),
+      scoreEl=document.getElementById('scores'), verdictEl=document.getElementById('verdict');
+function renderChips(){
+  chipsEl.innerHTML=RUNS.map((r,i)=>{
+    if(i>=rIdx)return '<div class="runchip">?<small>run '+(i+1)+'</small></div>';
+    return '<div class="runchip '+(r.ok?'pass':'fail')+(i===0?' demo':'')+'">'+(r.ok?'✓':'✗')+'<small>run '+(i+1)+'</small></div>';
+  }).join('');
+}
+function renderScores(){
+  if(rIdx===0){scoreEl.innerHTML='';verdictEl.innerHTML='';return}
+  const passed=RUNS.slice(0,rIdx).filter(r=>r.ok).length;
+  const rate=Math.round(passed/rIdx*100);
+  const anyPass=passed>0, allPass=passed===rIdx;
+  scoreEl.innerHTML=
+   '<div class="sb"><span class="kicker">Runs so far</span><b>'+passed+' / '+rIdx+'</b><span class="small">observed success rate '+rate+'%</span></div>'+
+   '<div class="sb"><span class="kicker">At least one passed?</span><b>'+(anyPass?'Yes':'No')+'</b><span class="small">the generous reading of these runs</span></div>'+
+   '<div class="sb '+(allPass?'':'hot')+'"><span class="kicker">Did ALL '+rIdx+' pass?</span><b>'+(allPass?'Yes':'No')+'</b><span class="small">the reading a customer lives in</span></div>';
+  if(rIdx<5){
+    verdictEl.innerHTML='Keep going — you have '+(5-rIdx)+' run'+(5-rIdx>1?'s':'')+' left.';
+  }else{
+    verdictEl.innerHTML='<b>Five runs, one identical input: 3 passed, 2 failed.</b> If you had stopped after run 1 you would have reported 100%. The honest single-run number is <b>60%</b>. And the number a customer who runs it five times actually experiences — all five clean — is <b>0 out of 1 attempts here</b>. Page <a href="metrics.html">02</a> names these two readings: <b>pass@k</b> (at least one) and <b>pass^k</b> (all of them).';
+  }
+}
+function doRun(){
+  if(rIdx>=RUNS.length)return;
+  if(rIdx===0)logEl.innerHTML='';
+  const r=RUNS[rIdx];
+  const d=document.createElement('div');
+  d.style.marginBottom='8px';
+  d.innerHTML=r.log.map(([c,t])=>'<span class="'+c+'">'+t+'</span>').join('  ');
+  logEl.appendChild(d);
+  logEl.scrollTop=logEl.scrollHeight;
+  rIdx++;
+  renderChips();renderScores();
+  document.getElementById('btnRun').disabled=rIdx>=RUNS.length;
+  document.getElementById('btnRun').style.opacity=rIdx>=RUNS.length?'.45':'1';
+}
+document.getElementById('btnRun').addEventListener('click',doRun);
+document.getElementById('btnRunAll').addEventListener('click',()=>{while(rIdx<RUNS.length)doRun()});
+document.getElementById('btnRunReset').addEventListener('click',()=>{
+  rIdx=0;logEl.innerHTML='<span class="t-dim">No runs yet. Press “Run the task” — run #1 is the one you would have demoed.</span>';
+  renderChips();renderScores();
+  const b=document.getElementById('btnRun');b.disabled=false;b.style.opacity='1';
+});
+renderChips();renderScores();
+
+/* ---------- compounding slider ---------- */
+const sl=document.getElementById('stepSlider');
+function comp(){
+  const n=+sl.value;
+  const a=Math.pow(0.95,n), b=Math.pow(0.99,n);
+  document.getElementById('stepOut').textContent=n;
+  document.getElementById('expA').textContent=n;
+  document.getElementById('expB').textContent=n;
+  document.getElementById('pA').textContent=(a*100).toFixed(1)+'%';
+  document.getElementById('pB').textContent=(b*100).toFixed(1)+'%';
+  document.getElementById('barA').style.width=(a*100).toFixed(1)+'%';
+  document.getElementById('barB').style.width=(b*100).toFixed(1)+'%';
+  const gap=((b-a)*100).toFixed(1);
+  document.getElementById('compNote').innerHTML='At <b>'+n+' step'+(n===1?'':'s')+'</b>, a four-point difference in per-step reliability (95% vs 99%) becomes a <b>'+gap+'-point</b> difference in whole-task success. At 20 steps it is roughly <b>36% vs 82%</b> — the same agent architecture, two completely different products. This is why "just add another step" is never free.';
+}
+sl.addEventListener('input',comp);comp();
+
+/* ---------- evidence standard tabs ---------- */
+const LOGF=[
+ {t:'state before',
+  d:'Everything the agent believed and controlled entering the step: the goal, the accumulated facts, the remaining budget, the step counter, any flags. Without it you cannot tell whether a bad action came from a bad decision or from a state that was already corrupted three steps earlier.',
+  k:'Lets you localize the poison. The first step whose state-before is already wrong tells you where the run actually broke.'},
+ {t:'observation',
+  d:'What the agent saw at this step: the tool result, the API payload, the page text, the user message. Stored verbatim, including empties and errors.',
+  k:'Run 3 in the simulator above is invisible without this field. The tool returned an empty list; the answer looked fine; only the observation shows why.'},
+ {t:'available actions',
+  d:'The set of tools and options the agent could have chosen at this step, given its current permissions and state.',
+  k:'This is what turns a trace into an argument. "It had a compliant option and did not take it" and "it had no option but to guess" are different findings, and only this field distinguishes them.'},
+ {t:'selected action',
+  d:'The one thing it chose, with its exact arguments: tool name, parameters, target record, amount.',
+  k:'The unit of trajectory evaluation and of every policy check. Duplicate paid calls, forbidden record reads, and out-of-policy amounts are all assertions over this field.'},
+ {t:'result',
+  d:'What came back, including errors, timeouts, and status codes — plus the tokens, latency, and cost of the step.',
+  k:'Where cost and latency evaluation live. It also separates "the agent was wrong" from "the environment was down," which are fixed by completely different teams.'},
+ {t:'state after',
+  d:'The updated state: what was learned, what changed in the world, what budget remains.',
+  k:'Chained together, the state-after fields are the audit trail. "The agent never exceeded the budget" becomes a query you can run over the trace rather than a promise you make in a meeting.'}
+];
+const lt=document.getElementById('logTabs'), lp=document.getElementById('logPanel');
+function showLog(i){
+  const f=LOGF[i];
+  lp.innerHTML='<span class="kicker">Field '+(i+1)+' of 6</span><h3 style="margin-top:8px;font-family:var(--mono);font-size:17px">'+f.t+'</h3><p class="small">'+f.d+'</p><div class="callout blue" style="margin-bottom:0"><b>Why you need it:</b> '+f.k+'</div>';
+  [...lt.children].forEach((b,j)=>b.classList.toggle('active',j===i));
+}
+LOGF.forEach((f,i)=>{
+  const b=document.createElement('button');b.className='tab';b.textContent=f.t;
+  b.addEventListener('click',()=>showLog(i));lt.appendChild(b);
+});
+showLog(0);
+
+/* ---------- concept check ---------- */
+const CC=[
+ {q:'Your agent passes a test case on the first try. Your teammate says "great, that case is covered." The most useful correction is:',
+  o:['It is covered — one pass is a pass','One pass shows the agent CAN succeed on that case; you need repeated runs before you can state a rate','Rewrite the case to be harder'],
+  a:1, why:'Non-determinism means a single run is a sample of size one. "Covered" is a claim about a rate, and rates need repeats. Rerun each case k times and report how many were clean every time.'},
+ {q:'An agent takes 12 steps. Every step is independently 95% reliable. Roughly how often does the whole task come out clean?',
+  o:['About 95%','About 88%','About 54%','About 12%'],
+  a:2, why:'0.95 to the 12th power is about 0.54. Per-step reliability multiplies, so a number that sounds excellent per step becomes a coin flip per task. Shorten the chain or verify inside it.'},
+ {q:'Your outcome eval is 18/20. Your trajectory eval is 11/20. Which do you report to the manager deciding on unattended deployment?',
+  o:['Outcome — it is what the user sees','Both, and lead with the trajectory number','Trajectory only — outcome is irrelevant'],
+  a:1, why:'The user sees outcomes, so 18/20 belongs in the report. But unattended deployment is a bet on the path: the 7 runs with an unacceptable trajectory are the cost overruns, policy violations, and lucky guesses that will not stay lucky. Lead with the number that governs the decision.'}
+];
+const cc=document.getElementById('ccheck');
+CC.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML='<div class="stmt">'+(i+1)+'. '+x.q+'</div><div class="opts" style="flex-direction:column;align-items:stretch">'+x.o.map((o,j)=>'<button data-v="'+j+'" style="text-align:left;border-radius:10px">'+String.fromCharCode(65+j)+'. '+o+'</button>').join('')+'</div><div class="fb"></div>';
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector('button[data-v="'+x.a+'"]').classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+String.fromCharCode(65+x.a)+'. ')+x.why;
+  }));
+  cc.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

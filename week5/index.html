@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CIS 4394 Week 5 — Tool Use &amp; Function Calling</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 5</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="mechanics.html"><span class="k">01</span>Function Calling</a>
+  <a href="design.html"><span class="k">02</span>Schemas, Errors &amp; Gates</a>
+  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">Week 5 · Module 2 · Tools &amp; Protocols</div>
+  <h1>Tool use &amp; function <em>calling</em>.</h1>
+  <p class="lede">Last week you built the loop. This week you build the <b>Act</b> arrow. A tool is how a language model reaches something outside itself — a calculator, a database, a payment API — and it is simultaneously the moment your agent stops being a chat window and starts being able to do damage. Tools are <b>capability plus risk surface</b>, and this week is about designing that surface on purpose.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="callout blue"><b>📌 This week's logistics:</b> <b>📝 Quiz 2 is this week</b> — in class, closed-book, 5 multiple-choice. <b>Scope: the Week 4 readings + the Week 5 reading</b> (Ponnambalam, <em>Build AI Agents and Chatbots with LangGraph</em>). Sample questions are on the <a href="../week4/exercises.html#quiz">Week 4 practice page ↓</a>. <b>Group Assignment 2 releases this week</b> on iCollege. And the <a href="../week2/radar.html">Agent Radar</a> continues — check your presenter slot.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The big question</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>When an agent “calls a tool,” what does the language model <em>actually</em> produce — and who runs the code?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">The model produces <b>a structured request and nothing else</b>: a small block of JSON naming a function and its arguments, e.g. <code>{"name":"calculator","arguments":{"expression":"4817*293*1.18"}}</code>. It does not execute anything — it cannot. <b>Your harness</b> receives that request, validates the arguments against the schema you wrote, decides whether the call is even allowed, runs the function, and hands the result back as the next observation. Same division of labour as Week 4's loop: <a href="../week4/loop.html">the model proposes, the harness disposes</a>. Everything valuable this week follows from taking that sentence literally — because if the harness is the only thing that executes, the harness is the only place you need to put controls.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The hook</div>
+  <h2>Arithmetic a model gets wrong</h2>
+  <p class="lede">Your Berlin supplier invoiced <b>4,817 units at €293 each</b>, plus <b>18% VAT</b>. What is the euro total? Ask a language model to do it in its head, and ask it again with a calculator attached.</p>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Model alone — illustrative</span>
+      <div class="codebox" style="margin-top:10px">Q: 4817 × 293 × 1.18 = ?
+
+Model (predicting tokens, not computing):
+"That comes to about 1.68 million euros."
+
+  fluent · confident · unverifiable · wrong</div>
+      <p class="small" style="margin-top:10px">Nothing in the model <em>multiplied</em> anything. It produced the most plausible-looking continuation, which for long multiplication is a number of roughly the right size. Nobody downstream can tell the difference between this and a right answer.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Model + one tool</span>
+      <div class="codebox" style="margin-top:10px">Model emits:
+{"name": "calculator",
+ "arguments": {"expression":
+   "4817*293*1.18"}}
+
+Harness runs it →  1665429.58
+
+Answer: €1,665,429.58
+  exact · deterministic · reproducible · logged</div>
+      <p class="small" style="margin-top:10px">The tool is about ten lines of Python. The model did not get smarter — it got a <b>calculator</b>, plus a line in the log saying exactly what was computed and with what inputs.</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>Be honest about why this works.</b> Modern models are much better at arithmetic than early ones, and many will get this particular product right. That is not the point. The point is that a token predictor is <em>non-deterministic</em> and <em>unauditable</em>: you cannot promise a controller that the number will be right next month, and you cannot show the work. A tool call gives you exactness, repeatability, and a trace — three things a finance team will actually ask for.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Bridge from Week 4</div>
+  <h2>The “Act” arrow, opened up</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><span class="kicker">Week 4 · the loop</span>
+      <div class="codebox" style="margin-top:10px">Observe → Reason → <b>ACT</b> → Update state
+                       ↑
+                  (a black box)</div>
+      <p class="small" style="margin-top:10px">Last week “Act” was a label on an arrow. You stepped through episodes where the agent “called Search” and a result appeared, and we deliberately did not ask how.</p>
+    </div>
+    <div class="card"><span class="kicker">Week 5 · inside the arrow</span>
+      <div class="codebox" style="margin-top:10px">model emits {name, arguments}
+   → harness VALIDATES the arguments
+   → harness DECIDES: run / constrain / ask a human
+   → tool executes
+   → result returns as an OBSERVATION</div>
+      <p class="small" style="margin-top:10px">Five steps, four of which are ordinary software you write and test. Pages 01 and 02 take them one at a time.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Why tools at all</div>
+  <h2>Four gaps a raw model cannot close</h2>
+  <div class="grid2">
+    <div class="card"><span class="kicker">Gap 1 · Knowledge cutoff</span><p class="small" style="margin-top:8px">A model's weights were frozen on a date. It cannot know your Q3 numbers, today's outage, or a policy you published last Tuesday. <b>Closed by:</b> a retrieval or search tool.</p></div>
+    <div class="card"><span class="kicker">Gap 2 · Private &amp; live data</span><p class="small" style="margin-top:8px">Your CRM, your ticket queue, your inventory table were never in anyone's training data — and should not have been. <b>Closed by:</b> a read tool against your own systems.</p></div>
+    <div class="card"><span class="kicker">Gap 3 · True computation</span><p class="small" style="margin-top:8px">Predicting the next token is not arithmetic, and it is certainly not running a SQL query or a pricing model. <b>Closed by:</b> a calculator, a code runner, a query tool.</p></div>
+    <div class="card"><span class="kicker">Gap 4 · Actions in the world</span><p class="small" style="margin-top:8px">Text cannot file a ticket, send an email, or issue a refund. <b>Closed by:</b> write tools — and this is exactly where the risk arrives.</p></div>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>The framing:</b> Anthropic's engineering guide calls this the <b>augmented LLM</b> — a model extended with tools, retrieval, and memory as its basic building block (Anthropic, 2024, <a class="doc" href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building Effective Agents ↗</a>). This week is the <em>tools</em> corner of that picture; retrieval and memory come later in the semester.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">This week's pages</div>
+  <h2>Work through in order</h2>
+  <div class="navcards">
+    <a class="navcard" href="mechanics.html">
+      <span class="num">01</span>
+      <span><b>Function calling — the mechanics</b><span class="small">What the model emits, what your code does with it · step through a full tool-call round trip, including a failed call · the schema as interface · ReAct and Toolformer.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="design.html">
+      <span class="num">02</span>
+      <span><b>Schemas, errors &amp; gates</b><span class="small">Writing a description the model can act on · errors as observations, not crashes · the auto-run / constrain / gate decision · classify eight real tools yourself · ToolNode in LangGraph.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="exercises.html">
+      <span class="num">03</span>
+      <span><b>Practice &amp; case</b><span class="small">Map a tool boundary · break your own agent with a bad tool description and fix it · the expense-report case · interview check · readings.</span></span>
+      <span class="go">→</span>
+    </a>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Why managers care</div>
+  <h2>Tools = capability + risk surface</h2>
+  <div class="grid3">
+    <div class="card"><span class="kicker">Capability</span><p class="small" style="margin-top:8px">A model without tools is a very expensive autocomplete. Every tool you add is a verb the agent acquires: <em>read</em>, <em>compute</em>, <em>file</em>, <em>send</em>, <em>pay</em>. The business value of an agent is almost entirely the value of its verbs.</p></div>
+    <div class="card"><span class="kicker">Risk</span><p class="small" style="margin-top:8px">Every verb is also a way to be wrong at scale. A read tool leaks; a write tool destroys; a spend tool costs money. The schema you write is where “what is this agent permitted to do?” actually gets answered — in code, not in a policy document.</p></div>
+    <div class="card"><span class="kicker">Auditability</span><p class="small" style="margin-top:8px">Because every tool call is a structured record — name, arguments, result, timestamp — a tool-using agent is far easier to audit than one that “just knows.” When compliance asks what happened, you replay the calls.</p></div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>The manager's version of this week:</b> you do not decide whether an agent is “safe” in the abstract. You decide, tool by tool, which calls run automatically, which run only inside limits you encoded, and which stop and wait for a person. Page 02 turns that into a table you can actually fill in.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="../index.html"><span class="lab">← Course</span><b>All weeks</b></a>
+  <a href="mechanics.html" class="next"><span class="lab">Start →</span><b>01 · Function calling</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 5 — Tool Use &amp; Function Calling<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

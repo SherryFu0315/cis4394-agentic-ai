@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>03 · Practice &amp; Case — CIS 4394 Week 11</title>
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.tracebox{background:#101319;color:#dfe3ec;border-radius:14px;padding:20px 24px;font-family:var(--mono);font-size:12.5px;line-height:1.85;white-space:pre-wrap}
+.tracebox .ts{color:#8b909c}
+.tracebox .th{color:#e3c078}
+.tracebox .ac{color:#9ad0a0}
+.tracebox .ob{color:#8ab8ff}
+.tracebox .fin{color:#ff9d9d}
+.tiers{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:12px}
+.tiers th,.tiers td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+.tiers th{background:var(--blue-soft);font-size:12.5px}
+.tiers td:first-child{font-weight:650;white-space:nowrap}
+.screen{background:#fff;border:2px solid var(--blue);border-radius:12px;padding:16px 18px;font-family:var(--mono);font-size:12.5px;line-height:1.8;white-space:pre-wrap;margin-top:14px;color:var(--ink)}
+.cmpwrap{overflow-x:auto}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 11</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="commerce.html"><span class="k">01</span>Agents That Buy</a>
+  <a href="deploy.html"><span class="k">02</span>Shipping an Agent</a>
+  <a href="exercises.html" class="here"><span class="k">03</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">03 · Practice</div>
+  <h1>Design the gate. Then work the <em>incident</em>.</h1>
+  <p class="lede">Two activities and a case, all built on the same move: decide in advance what an agent may do with money, and be able to prove afterward what it did. Every reveal on this page is an answer key — try yours first.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="eyebrow">Exercise A</div>
+  <h2>Design the gate</h2>
+  <div class="grouptask"><span class="gk">👥 Group task · Small groups · ~25 minutes</span>
+    <p>Your team owns a <b>“restock the office supplies” agent</b> for a 60-person office. It has a <b>$500/month budget</b>, read access to the inventory system, and the ability to order from three approved vendors. It runs on a schedule, usually overnight.</p>
+    <p style="margin-top:10px">Decide three things and write them down: <b>(1)</b> which actions <b>auto-run</b> with no human involvement; <b>(2)</b> which actions may run but must be <b>capped</b> — and state the numbers, per transaction and per month; <b>(3)</b> which actions <b>require approval</b>, and from whom. Then draft the <b>approval screen</b> itself, in text: every field a human needs in order to approve or decline in under fifteen seconds without opening another system.</p>
+    <p class="prod"><b>Produce:</b> the three-tier table (action · tier · limit · rationale) plus your text mock-up of the approval screen.</p>
+  </div>
+  <div class="card">
+    <button class="revealbtn">Debrief — a reference answer</button>
+    <div class="revealbox">
+      <p style="margin-top:0"><b>There is no single right split — but there is a wrong one:</b> a policy where the tiers are described in the prompt rather than enforced by the harness. Every limit below is a number in configuration, checked in code before the tool runs.</p>
+      <div class="cmpwrap">
+      <table class="tiers">
+        <tr><th>Action</th><th>Tier</th><th>Limit</th><th>Why there</th></tr>
+        <tr><td>Read inventory, check reorder points</td><td>Auto-run</td><td>none</td><td>Free to undo, and gating it would bury the reviewer in noise.</td></tr>
+        <tr><td>Search vendor catalogs, price options, build a proposed cart</td><td>Auto-run</td><td>none</td><td>Still a draft. Nothing has been committed. Log it; do not interrupt for it.</td></tr>
+        <tr><td>Reorder a <b>previously approved item</b> from an approved vendor, at or below the last approved unit price</td><td>Capped</td><td>≤ $75 per order · ≤ $300/month across all capped orders · ≤ 3 orders/week</td><td>This is the routine that justifies the agent existing. Bounded so that the worst month of pure automation still leaves room under the $500 budget for the things a human approved.</td></tr>
+        <tr><td>New item, new vendor, price above the last approved unit price, or any order above the per-order cap</td><td>Approval</td><td>office manager approves; anything above $250 also needs the ops lead</td><td>Novel or large means the agent's judgment has not been validated on this decision. Two names, so approval is never blocked by one person's calendar.</td></tr>
+        <tr><td>Anything recurring — a subscription, a standing order, a contract</td><td>Approval</td><td>always, regardless of amount</td><td>A $12/month subscription is not a $12 decision; it is an unbounded commitment with a small first payment.</td></tr>
+        <tr><td>Changing vendors, limits, or its own approval rules</td><td>Never</td><td>not an agent action at all</td><td>An agent that can widen its own permissions has no permissions. This lives in configuration a human edits.</td></tr>
+      </table>
+      </div>
+      <p style="margin-top:16px"><b>The approval screen.</b> The test is whether a tired person can decide correctly in fifteen seconds:</p>
+      <div class="screen">RESTOCK AGENT — approval needed                  Tue 2:14 AM
+
+  Copy paper, 8.5 x 11, 10-ream case
+  Vendor:   Peachtree Office Supply   [approved vendor]
+  Quantity: 10 cases      Unit: $47.90/case
+  TOTAL:    $479.00       (unit x quantity, computed by the system)
+
+  Why:      copy paper at 2 cases, reorder point is 10
+  Budget:   $500.00/month   spent so far $118.40   after this: $597.40
+            ^^ THIS ORDER EXCEEDS THE MONTHLY BUDGET BY $97.40
+
+  Flags:    quantity is 10x the last approved order (1 case, Sept 4)
+            unit price unchanged since last order
+
+  If declined, the agent will: propose 2 cases at $95.80 and re-notify
+
+  [ Approve ]   [ Edit quantity ]   [ Decline ]        trace: run-8841</div>
+      <p style="margin-top:14px"><b>What earns the points:</b> the total is <em>computed</em> and shown broken into unit × quantity, so a unit-of-measure mistake is visible; budget before and after appears with the breach called out; the reason for the purchase is stated; anomalies are flagged against history rather than left for the human to notice; the consequence of declining is spelled out so declining is a real option and not an abandonment; and the trace id makes the whole run auditable afterward. <b>What loses points:</b> "Agent wants to place an order — Approve?", any screen requiring a second system to evaluate, and approval flows so frequent that people stop reading — approval fatigue is the most common way a well-designed gate stops working. Compare your split to the spend ladder on <a class="doc" href="commerce.html">page 01</a>.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Exercise B</div>
+  <h2>The failure drill</h2>
+  <div class="grouptask"><span class="gk">👥 Group task · Small groups · ~20 minutes</span>
+    <p>Same agent, one week later. Overnight it ordered <b>100 cases of copy paper instead of 10</b> — twice. Here is the trace. Work it like an incident review: <b>(1)</b> write the timeline of what happened, step by step, using only what the trace shows; <b>(2)</b> mark the <b>exact step</b> where the run should have stopped; <b>(3)</b> name the control that would have caught it — and be specific, "better prompting" is not a control; <b>(4)</b> write the rollback: what you do in the first hour, in order.</p>
+    <p class="prod"><b>Produce:</b> the timeline, the named control (with the number you would set it to), and the ordered rollback steps.</p>
+  </div>
+  <div class="tracebox"><span class="ts">02:14:03</span>  GOAL      scheduled run: weekly restock check
+<span class="ts">02:14:05</span>  <span class="ob">OBS</span>       inventory: copy paper 2 cases on hand (reorder point 10)
+<span class="ts">02:14:07</span>  <span class="th">THOUGHT</span>   Below reorder point. Standard restock is 10 cases.
+<span class="ts">02:14:09</span>  <span class="ac">ACT</span>       search_catalog("copy paper 8.5x11 case")
+<span class="ts">02:14:11</span>  <span class="ob">OBS</span>       SKU-4471 "Copy paper 8.5x11, 10-ream case" — $47.90
+                    listing note: "ORDER IN UNITS. 1 unit = 1 ream."
+<span class="ts">02:14:13</span>  <span class="th">THOUGHT</span>   The vendor sells by the ream, so 10 cases = 100 units.
+                    Ordering 100 units.
+<span class="ts">02:14:14</span>  <span class="ac">ACT</span>       place_order(sku="SKU-4471", qty=100)     [vendor: approved]
+<span class="ts">02:14:15</span>  <span class="ob">OBS</span>       (no response — request timed out)
+<span class="ts">02:14:16</span>  <span class="th">THOUGHT</span>   No confirmation received. The order may not have gone
+                    through. Retrying.
+<span class="ts">02:14:17</span>  <span class="ac">ACT</span>       place_order(sku="SKU-4471", qty=100)
+<span class="ts">02:14:19</span>  <span class="ob">OBS</span>       order A-77120 confirmed — total $4,790.00
+<span class="ts">02:14:20</span>  <span class="fin">STOP</span>      goal satisfied — restock complete, 0 human approvals
+<span class="ts">09:05:00</span>  <span class="fin">HUMAN</span>     receiving calls: a pallet is on the dock. Two orders:
+                    A-77119 AND A-77120. $9,580.00 total.</div>
+  <div class="card" style="margin-top:16px">
+    <button class="revealbtn">Debrief — answer key</button>
+    <div class="revealbox">
+      <p style="margin-top:0"><b>Timeline.</b> 02:14:07 — the agent correctly identifies a legitimate need for 10 cases. 02:14:11 — the catalog returns a listing whose unit of measure contradicts its own product name: the item is described as a case but the note says orders are counted in reams. 02:14:13 — <b>the root error</b>: the agent resolves the contradiction by multiplying, in prose, with nothing checking the result against the budget. 02:14:14 — it places a $4,790 order against a $500 monthly budget, unattended, with no approval. 02:14:15 — the request times out. 02:14:17 — <b>the second error</b>: it retries without an idempotency key, creating a second order. 02:14:19 — the retry confirms; the original, A-77119, had also gone through. 02:14:20 — the agent reports success, because from inside the run it did exactly what it decided to do. 09:05 — a human on a loading dock is the monitoring system.</p>
+      <p><b>Where it should have stopped:</b> 02:14:14, before the first <code>place_order</code>. Not at 02:14:13 — a wrong thought is not something you can reliably intercept. You intercept the <em>action</em>.</p>
+      <p><b>The control — pick the cheap one first.</b> A <b>per-transaction and monthly spend cap enforced in the harness</b>: with a $500/month budget, a per-order cap of $75 and a monthly cap of $300 for unattended orders, the $4,790 call never reaches the vendor. It fails, raises an alert, and the run stops. That single number would have prevented both orders and the whole incident. Then the supporting controls, each of which would also have helped: an <b>idempotency key</b> generated before the first attempt, so the retry returns order A-77119 instead of creating A-77120; a <b>read-back</b> before re-placing (query recent orders for this SKU before creating another); a <b>quantity sanity check in code</b> — this order is 10× the largest previously approved order for this item, which is an anomaly a rule catches and a paragraph of reasoning does not; and the <b>approval gate</b>, which by policy should have fired the moment the total crossed the per-order cap. Note what is <em>not</em> the control: a better prompt, a better model, or asking the agent to double-check its arithmetic. The failure was fluent and confident at every step.</p>
+      <p><b>Rollback, first hour, in order.</b> (1) <b>Stop new runs</b> — kill switch, before anything else, because you do not yet know whether this is one bad run or a pattern. (2) <b>Freeze the spend</b> — cap or suspend the payment credential the agent uses. (3) <b>Pull the trace</b> and identify every order placed in the affected window, not just the two you know about. (4) <b>Call the vendor</b>: refuse the delivery on the dock, request return authorization for the shipped order, and confirm both order numbers are cancelled — in writing. (5) <b>Notify</b>: the office manager, the ops lead, and whoever owns the budget line, with the trace attached and the amount at risk stated plainly. (6) <b>Only then fix</b>: add the caps, the idempotency key and the quantity check, add a regression case for this exact listing to the eval suite (<a class="doc" href="../week8/index.html">Week 8</a>), and re-run the suite before the agent is allowed back. (7) Write the incident note while it is fresh — the artifact that stops this being relearned in six months.</p>
+      <p><b>The part worth arguing about in your group:</b> was the listing malicious? It does not matter for the response. A vendor with sloppy unit labels and an attacker planting a misleading unit note produce the same trace — which is the argument for controls that bound the <em>consequence</em> rather than trying to anticipate every input (<a class="doc" href="../week10/index.html">Week 10</a>).</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Case study · fictional teaching case</div>
+  <h2>The distributor that let an agent negotiate</h2>
+  <p class="lede">A <b>fictional teaching case</b>, built to exercise this week's ideas. Piedmont Supply is a mid-size industrial distributor: ~$180M in annual revenue, roughly 400 recurring suppliers, and a four-person procurement team that spends most of its week on small repeat orders.</p>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">What they built</span>
+      <p class="small" style="margin-top:8px">A procurement agent that watches stock levels, drafts requests for quotes, sends them to approved suppliers, compares the responses on price and lead time, negotiates one round by email against a target price, and — for repeat items under a per-order limit — places the order itself. Everything above the limit goes to a buyer for approval. Six weeks in, the team reports getting most of their Tuesdays back.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">What went wrong in month three</span>
+      <p class="small" style="margin-top:8px">A supplier's automated reply included a line the agent read as an instruction rather than as content: a note claiming the buyer had pre-approved a bulk rate. The agent accepted a larger quantity at a lower unit price, placed the order within its per-order limit — twice, because the supplier's portal timed out on the first submission — and both orders shipped. The supplier's position: the orders were valid, they were placed by Piedmont's authenticated system, and the goods are non-returnable.</p></div>
+  </div>
+  <div style="margin-top:18px">
+    <div class="bigq"><span class="qlabel">Discussion question 1</span>Two orders shipped instead of one. Whose bug is that — and what specifically should have been in the code so that a timeout could not become a second purchase?</div>
+    <button class="revealbtn">See the answer</button>
+    <div class="revealbox">It is Piedmont's bug, and it is the most preventable failure on this page. A timeout carries no information about whether the action happened; treating it as “it did not happen” is a guess that costs money half the time. What should have been there: an <b>idempotency key</b> generated before the first submission and reused on every retry, so the supplier returns the original order rather than creating a second one; a <b>read-back</b> of recent orders for that SKU before creating anything new, which catches the case where the agent re-plans into a slightly different order that no key would deduplicate; and a <b>retry policy in the harness rather than in the model's judgment</b> — bounded attempts, backoff, and an alert on every retry of a spending action. Bonus point for noticing the second-order effect: a retry that is <em>alerted</em> would have put a human on this at 2 a.m. rather than at the loading dock, when cancellation was still possible.</div>
+  </div>
+  <div style="margin-top:18px">
+    <div class="bigq"><span class="qlabel">Discussion question 2</span>The supplier says the orders were authenticated and therefore valid. Piedmont says its buyer never approved a bulk rate. Who is right — and what would have made this a question with an answer rather than a dispute?</div>
+    <button class="revealbtn">See the answer</button>
+    <div class="revealbox">Both statements are true at once, which is the whole problem: <b>identity was proven and authorization was not</b>. The supplier verified who was calling; nobody verified what that caller had been permitted to do. On the facts as given, Piedmont is exposed — its own authenticated system placed the orders, within a limit Piedmont itself set, and “our agent was misled by your email” is a weak position when the agent was designed to read supplier email. What would have changed it: an explicit <b>authorization record</b> travelling with each order — what was approved, for which items, at what quantity and price ceiling, valid until when — so “was this within what the buyer permitted?” is checkable by both sides rather than asserted by one. That is exactly the gap the mandate idea in AP2 is aimed at, and the reason a payment credential <b>scoped to one confirmed cart</b> (the ACP shared-token direction) is worth more than a general-purpose one. Both are early standards, so the practical answer for Piedmont today is to build the capability itself: sign the approval, bind it to the order, keep both. And the deeper design lesson — the agent's per-order limit was doing double duty as a spend control and as a judgment control. It was never the second thing.</div>
+  </div>
+  <div style="margin-top:18px">
+    <div class="bigq"><span class="qlabel">Discussion question 3</span>Piedmont's auditor asks for “the record” of the two orders. List what must actually be in the log for that request to be satisfiable.</div>
+    <button class="revealbtn">See the answer</button>
+    <div class="revealbox">Per step of the run, the Week 2 evidence standard: <b>state before → observation → available actions → selected action and its exact arguments → result → state after</b>. Around the run, the things that make it a financial record rather than a debugging artifact: <b>the authorization</b> in force at the moment of the order (which policy, which limits, approved by whom, when) and its version, since policies change; <b>the raw supplier content</b> the agent read, stored verbatim — this is what proves the injected line existed and was not invented afterwards; <b>the retry history</b>, with the idempotency key or its absence, which is how you show one intent became two orders; <b>the confirmations returned by the supplier</b>, reconciled against what the agent believed it ordered; <b>the identity of the credential used</b> and its scope; and a <b>trace id on the receipt</b> so a line on an invoice can be walked back to the run that produced it. Two practical notes that separate a good answer from a great one: <b>retention</b> — dispute windows outlive default log settings, and a trace deleted after seven days is a control you no longer have; and <b>tamper-evidence</b> — a log the agent's own service can silently rewrite is worth less to an auditor than one that is append-only.</div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Job-interview level</div>
+  <h2>Interview check</h2>
+  <p class="lede">Five questions a job interview would actually probe once you say the words “we deployed an agent that spends money.” Answer out loud before revealing.</p>
+  <div id="iv"></div>
+</div></section>
+
+<section id="readings"><div class="wrap">
+  <div class="eyebrow">Readings &amp; resources</div>
+  <h2>This week's readings</h2>
+  <div class="grid2" style="align-items:start">
+    <div class="readings card">
+      <a href="https://www.linkedin.com/learning/generative-ai-for-business-leaders" target="_blank" rel="noopener"><b>Cohen — Generative AI for Business Leaders (LinkedIn Learning)</b><br /><span class="small">The manager's vocabulary for this week: value, cost, and where the risk sits. Free with your GSU login via the <a class="doc" href="https://technology.gsu.edu/technology-services/technology-professional-training/linkedin-learning/" target="_blank" rel="noopener">GSU portal ↗</a>.</span></a>
+      <a href="https://github.com/microsoft/ai-agents-for-beginners" target="_blank" rel="noopener"><b>Microsoft — AI Agents for Beginners: the deployment lessons</b><br /><span class="small">Free and open on GitHub. Read the production-oriented lessons alongside page 02 — they cover the same shift from a working notebook to something you can operate.</span></a>
+    </div>
+    <div class="card"><span class="kicker">Go deeper (all free, all primary sources)</span>
+      <p class="small" style="margin-top:8px">
+      <b>The payment protocols — read the announcements themselves, not summaries of them:</b><br />
+      <a class="doc" href="https://cloud.google.com/blog/products/ai-machine-learning/announcing-agents-to-payments-ap2-protocol" target="_blank" rel="noopener">Google — announcing AP2, the Agent Payments Protocol ↗</a><br />
+      <a class="doc" href="https://stripe.com/blog/developing-an-open-standard-for-agentic-commerce" target="_blank" rel="noopener">Stripe — developing an open standard for agentic commerce (ACP) ↗</a><br />
+      <a class="doc" href="https://www.agenticcommerce.dev/" target="_blank" rel="noopener">agenticcommerce.dev — the ACP documentation ↗</a><br />
+      <a class="doc" href="https://github.com/agentic-commerce-protocol/agentic-commerce-protocol" target="_blank" rel="noopener">ACP specification repository (Apache-2.0) ↗</a><br /><br />
+      <b>The benchmarks behind page 02:</b><br />
+      <a class="doc" href="https://arxiv.org/abs/2404.07972" target="_blank" rel="noopener">OSWorld — Xie et al., 2024 ↗</a> ·
+      <a class="doc" href="https://arxiv.org/abs/2307.13854" target="_blank" rel="noopener">WebArena — Zhou et al., 2023 ↗</a><br />
+      <span class="small">Both papers report figures for the systems that existed when they were published. Check the current numbers before quoting either in a meeting.</span></p>
+      <div class="callout blue" style="margin-top:14px;margin-bottom:0"><b>📌 Reminder:</b> <b>Group Assignment 3 is due this week</b> on your own section's iCollege page, and <b>Capstone Milestone II is due next week</b> — Week 12 is the first studio.</div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">What's next</div>
+  <h2>Bring an agent that runs</h2>
+  <div class="callout" style="margin-top:22px"><b>Next: the capstone studios.</b> Weeks 12 and 13 are build time in your own section — no new readings, no lecture. Bring a running agent and the questions blocking you. <b>Capstone Milestone II is due in Week 12</b>, and <b>Milestone III / Implementation in Week 13</b>. Week 14 is presentations, peer ratings, and Quiz 5 — the make-up quiz that replaces your lowest score from Quizzes 1–4.<br /><br />
+<b>What to bring to studio:</b> your agent running end to end (however roughly), your eval harness with real pass^k numbers (<a class="doc" href="../week8/metrics.html">Week 8</a>), your security checklist (<a class="doc" href="../week10/exercises.html">Week 10</a>), and a recorded fallback demo in case the live one fails.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="deploy.html"><span class="lab">← Previous</span><b>02 · Shipping an agent</b></a>
+  <a href="../index.html" class="next"><span class="lab">Done →</span><b>Back to the course</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 11 — Agentic Commerce<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+const IV=[
+ {q:'1 · Computer-use agents can operate any software a person can. So why would you not put one in charge of your purchasing?',
+  a:'Strong answers separate generality from reliability. The benchmarks built for this — OSWorld (Xie et al., 2024) on real desktop tasks and WebArena (Zhou et al., 2023) on long-horizon web tasks — reported success rates far below human performance at publication, and the reason is structural rather than temporary: long tasks compound errors, screens give no schema to validate against, and an agent that misreads a page fails silently instead of raising an exception. Say the numbers are dated and that you would check the current ones before quoting. Then land the implication, which is what the interviewer is actually asking for: match autonomy to reliability times reversibility. Ship computer use on short, bounded, reversible, reviewed tasks; keep money behind typed APIs and a human gate.'},
+ {q:'2 · Walk me through the cost model for a multi-step agent. What are the first two levers you pull?',
+  a:'The equation: cost per completed task is roughly tokens per step times price per token times steps per run times attempts per completed task. The two things that catch people out are that context is re-sent every step, so tokens grow faster than steps, and that the denominator is completed tasks rather than runs, so the failure rate is part of the cost. First lever: cap the steps, because it bounds the worst case rather than shaving the average. Second: right-size the model per step, keeping the expensive model for the one genuinely hard decision. Then caching and fewer tool round-trips. A strong answer ends with measurement rather than arithmetic — instrument a real run, read the number off the meter, and compare it to the fully-loaded manual baseline, because the comparison is never against zero.'},
+ {q:'3 · AP2 and ACP both appeared in 2025. What does each one try to make checkable, and how should that shape what you build now?',
+  a:'AP2, announced by Google with payments partners, centres on authorization: mandates expressed as verifiable credentials that record what the human permitted — intent, cart, payment — so downstream parties can check the permission rather than trust the agent. ACP, from Stripe and OpenAI, centres on the checkout transaction: a common shape for an agent to present a cart to a merchant and complete payment, with a shared payment token that keeps the merchant as merchant of record. They overlap and they are both young. The part that separates a strong answer: refuse to declare a winner, and say what you would do about the uncertainty — build the capabilities (an explicit authorization record, a credential scoped to one cart, a receipt linked to both) behind an interface you can re-point when the standards settle. Anyone quoting adoption numbers in a fast-moving standards race is quoting something already stale.'},
+ {q:'4 · An agent buys the wrong thing. Who is accountable, and what has to be in the log for that question to have an answer?',
+  a:'Start by splitting the question, because interviewers are testing whether you conflate them: identity (whose agent was this?) is not authorization (was this purchase within what the customer permitted?). Accountability in practice follows what can be evidenced, so name the record: the authorization in force at the time and its limits, the payment credential and its scope, the raw content the agent read (verbatim, because that is what proves an injected instruction existed), the full step-by-step trace with selected actions and arguments, the retry history and idempotency keys, and the merchant confirmations reconciled against the approved cart. Then the operational answer: one named human owns the policy and the limits. Add retention and tamper-evidence and you are ahead of most candidates — a log that expires before the dispute window, or one the service can silently rewrite, is not the control you thought you had.'},
+ {q:'5 · Design the human gate for an agent with a monthly budget. Where does it sit, and what does the approval screen show?',
+  a:'Position first: after the model has committed to a specific action with specific arguments, before the harness executes it. Earlier interrupts harmless steps; later is a receipt rather than a gate. Then selectivity, which is the real design work — three tiers, with reversible drafting on auto-run, routine repeat purchases capped by numbers enforced in code, and approval reserved for novel, large, or recurring commitments, so the queue stays short enough to be read. Then the screen: the exact items and quantities, unit price and total computed by the system, the vendor and whether it is allow-listed, budget before and after with any breach called out, the reason for the purchase, anomaly flags against history, what happens if declined, and a trace id. The insight that closes the answer: approval fatigue is a security failure. A gate that fires constantly trains people to approve without reading, so making the gate rarer is a safety improvement, not a convenience.'}
+];
+const iv=document.getElementById('iv');
+IV.forEach(x=>{
+  const d=document.createElement('div');d.className='card';d.style.marginBottom='12px';
+  d.innerHTML='<p style="margin:0;font-weight:600">'+x.q+'</p><button class="revealbtn">What a strong answer covers</button><div class="revealbox">'+x.a+'</div>';
+  iv.appendChild(d);
+});
+
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>
