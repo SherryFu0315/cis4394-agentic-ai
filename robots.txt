@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sherryfu0315.github.io/cis4394-agentic-ai/sitemap.xml
