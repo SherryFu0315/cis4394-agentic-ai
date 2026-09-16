@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>03 · Build It Locally with Ollama — CIS 4394 Week 5</title>
+<meta name="description" content="Last week you installed Ollama and downloaded a model. This page turns that model into an agent that calls real Python tools — no API key, no cost, nothing…" />
+<meta name="author" content="Dr. Xinyu Fu" />
+<link rel="canonical" href="https://sherryfu0315.github.io/cis4394-agentic-ai/week5/local.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="CIS 4394 Agentic AI · Georgia State University" />
+<meta property="og:title" content="03 · Build It Locally with Ollama — CIS 4394 Week 5" />
+<meta property="og:description" content="Last week you installed Ollama and downloaded a model. This page turns that model into an agent that calls real Python tools — no API key, no cost, nothing…" />
+<meta property="og:url" content="https://sherryfu0315.github.io/cis4394-agentic-ai/week5/local.html" />
+<meta property="og:image" content="https://sherryfu0315.github.io/cis4394-agentic-ai/assets/social-card.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="03 · Build It Locally with Ollama — CIS 4394 Week 5" />
+<meta name="twitter:description" content="Last week you installed Ollama and downloaded a model. This page turns that model into an agent that calls real Python tools — no API key, no cost, nothing…" />
+<meta name="twitter:image" content="https://sherryfu0315.github.io/cis4394-agentic-ai/assets/social-card.png" />
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.codebox .cm{color:#8b909c}
+.codebox .ck{color:#8ab8ff}
+.codebox .cs{color:#9ad0a0}
+.codebox .cn{color:#e3c078}
+.codebox .hl{background:rgba(227,192,120,.18);border-radius:3px}
+.term2{background:#101319;color:#dfe3ec;border-radius:12px;padding:14px 18px;font-family:var(--mono);font-size:12.5px;line-height:1.7;white-space:pre-wrap;overflow-x:auto;margin:10px 0}
+.term2 .p{color:#8b909c}
+.term2 .ok{color:#9ad0a0}
+.term2 .bad{color:#ff9d9d}
+.term2 .ask{color:#e3c078}
+table.plain td,table.plain th{font-size:13.5px}
+.res{font-family:var(--mono);font-weight:700;white-space:nowrap}
+.res.good{color:#2f6b3f}.res.poor{color:var(--red)}
+.os{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:880px){.os{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 5</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="mechanics.html"><span class="k">01</span>Function Calling</a>
+  <a href="design.html"><span class="k">02</span>Schemas, Errors &amp; Gates</a>
+  <a href="local.html" class="here"><span class="k">03</span>Build It Locally</a>
+  <a href="exercises.html"><span class="k">04</span>Practice &amp; Case</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">03 · Hands-on lab</div>
+  <h1>Build a tool-calling agent on <em>your own</em> laptop.</h1>
+  <p class="lede">Last week you installed Ollama and downloaded a model. This page turns that model into an agent that calls real Python tools — no API key, no cost, nothing leaves your machine. Then you measure how reliable it actually is, and use tool design to make it better.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="callout blue" style="margin-top:0"><b>📦 Download the starter code:</b> <a class="doc" href="../materials/CIS4394_Week5_Ollama_Starter.zip">CIS4394_Week5_Ollama_Starter.zip ↓</a> — four short Python scripts, a <code>requirements.txt</code>, and a README. Or view the files one by one in <a class="doc" href="../materials/week5_ollama_starter/README.txt">the materials folder</a>.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Step 0</div>
+  <h2>Check that your model can call tools</h2>
+  <p class="lede">Most of you have <code>qwen2.5:0.5b</code>; some of you picked a different model to fit your laptop and your final project. Either is fine — but first confirm the model supports tool calling.</p>
+  <div class="term2"><span class="p">$</span> ollama list
+<span class="p">$</span> ollama show qwen2.5:0.5b        <span class="p"># use your exact model name from `ollama list`</span>
+
+  Capabilities
+    completion
+    <span class="ok">tools</span>                         <span class="p">&lt;- this line must be here</span></div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="card"><span class="kicker">No "tools" line?</span><p class="small" style="margin-top:8px">That model cannot take part in this lab. Pull one that lists <code>tools</code> — for example <code>ollama pull qwen2.5:0.5b</code> (398 MB). If you downloaded a model from Hugging Face, prefer a name containing <b>Instruct</b>: a base model has not been trained to follow the tool-call format.</p></div>
+    <div class="card"><span class="kicker">"tools" is listed — are you done?</span><p class="small" style="margin-top:8px">No. The line means the model's chat template <em>knows the format</em>. It does not mean the model will <em>use</em> tools well. In our tests below, one model listed <code>tools</code> and never called a single tool. You find out by measuring — Step 3.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Step 1</div>
+  <h2>Set up once</h2>
+  <ol class="steps">
+    <li><b>Make sure Ollama is running.</b> Open the Ollama app (or run <code>ollama serve</code> in a terminal).</li>
+    <li><b>Unzip the starter code</b> and open a terminal in that folder.</li>
+    <li><b>Create a virtual environment and install the three packages</b> (<code>ollama</code>, <code>langgraph</code>, <code>langchain-ollama</code>). Tested on Python 3.11.
+      <div class="os" style="margin-top:10px">
+        <div class="term2" style="margin:0"><span class="p"># Mac / Linux</span>
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt</div>
+        <div class="term2" style="margin:0"><span class="p"># Windows PowerShell</span>
+python -m venv venv
+venv\Scripts\Activate.ps1
+pip install -r requirements.txt</div>
+        <div class="term2" style="margin:0"><span class="p"># Windows cmd</span>
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt</div>
+      </div>
+    </li>
+    <li><b>Using a model other than qwen2.5:0.5b?</b> Open <code>1_agent_raw.py</code> and <code>3_agent_langgraph.py</code> and change the <code>MODEL = ...</code> line near the top to your model's exact name. Scripts 2 and 4 take the model name on the command line.</li>
+  </ol>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Step 2 · 1_agent_raw.py</div>
+  <h2>The whole agent loop, in plain Python</h2>
+  <p class="lede">No framework. Everything from <a href="mechanics.html">page 01</a> is visible in about twenty lines: the model <em>requests</em> a tool, your code <em>runs</em> it, the result goes back as an observation, and the loop repeats until the model answers without asking for a tool.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="codebox"><span class="ck">import</span> ollama
+
+<span class="ck">def</span> <span class="cn">calculator</span>(expression: <span class="cs">str</span>) -&gt; <span class="cs">str</span>:
+    <span class="cs">"""Evaluate an arithmetic expression and return
+    the exact result.
+
+    Args:
+        expression: e.g. '4817 * 293'
+    """</span>
+    ...
+
+TOOLS = {<span class="cs">"calculator"</span>: calculator,
+         <span class="cs">"get_exchange_rate"</span>: get_exchange_rate}
+
+<span class="ck">for</span> step <span class="ck">in</span> range(1, MAX_STEPS + 1):  <span class="cm"># step cap</span>
+    <span class="hl">resp = ollama.chat(model=MODEL, messages=messages,
+                       tools=list(TOOLS.values()))</span>
+    msg = resp.message
+    messages.append(msg)
+
+    <span class="ck">if not</span> msg.tool_calls:                <span class="cm"># model chose to FINISH</span>
+        <span class="ck">return</span> msg.content
+
+    <span class="ck">for</span> call <span class="ck">in</span> msg.tool_calls:           <span class="cm"># model chose to ACT</span>
+        name, args = call.function.name, call.function.arguments
+        <span class="ck">try</span>:
+            <span class="hl">result = TOOLS[name](**args)</span>     <span class="cm"># YOUR code runs it</span>
+        <span class="ck">except</span> Exception <span class="ck">as</span> e:
+            result = <span class="cs">f"ERROR calling {name}: {e}"</span>
+        <span class="hl">messages.append({<span class="cs">"role"</span>: <span class="cs">"tool"</span>,
+                         <span class="cs">"content"</span>: result,
+                         <span class="cs">"tool_name"</span>: name})</span></div>
+    <div>
+      <div class="card"><span class="kicker">Read it against page 01</span>
+        <p class="small" style="margin-top:8px"><b>The docstring is the tool description.</b> Passing a Python function in <code>tools=[...]</code> makes the <code>ollama</code> library build the JSON schema from its name, type hints, and docstring. Vague docstring, vague tool — <a href="design.html">page 02</a>.</p>
+        <p class="small" style="margin-top:8px"><b>The model never runs anything.</b> It only returns <code>tool_calls</code>: a name and arguments. The highlighted line <code>TOOLS[name](**args)</code> is the only place a tool executes — and it is your code.</p>
+        <p class="small" style="margin-top:8px"><b>Errors become observations.</b> The <code>try/except</code> sends a failure back to the model as text instead of crashing the run, so the model can repair its call.</p>
+        <p class="small" style="margin-top:8px"><b>The harness decides when to stop.</b> <code>MAX_STEPS</code> is Week 4's max-iteration guard.</p>
+      </div>
+      <p class="small" style="margin-top:14px"><b>Run it:</b></p>
+      <div class="term2"><span class="p">$</span> python 1_agent_raw.py "What is 4817 * 293?"
+
+<span class="ask">[step 1] model requests -&gt; calculator({'expression': '4817 * 293'})</span>
+<span class="ok">          harness ran it   &lt;- 1411381</span>
+
+[step 2] FINAL ANSWER:
+The result of 4817 * 293 is 1411381.</div>
+      <p class="small">Real output from <code>qwen2.5:0.5b</code>. Now run it with no question — the default is a harder, multi-step invoice question — and compare.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Concept check</div>
+  <h2>Map the code to the round trip</h2>
+  <div id="ccheck"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Step 3 · 2_pass_k.py</div>
+  <h2>Don't trust one run. Measure.</h2>
+  <p class="lede">A single successful run tells you almost nothing (Week 8 makes this formal). This script asks the multi-step invoice question <i>k</i> times and checks each final answer against the exact value, <b>1,798,663.95 USD</b> (4817 × 293 × 1.18 × 1.08).</p>
+  <div class="term2"><span class="p">$</span> python 2_pass_k.py qwen2.5:0.5b 3      <span class="p"># your model name, number of runs</span></div>
+  <p class="small" style="margin-top:14px"><b>What we measured</b> — same question, same starter code, default settings, run on the instructor's laptop in September 2026. Speed depends on your hardware; correctness depends mostly on the model.</p>
+  <div style="overflow-x:auto"><table class="plain">
+    <thead><tr><th>Model</th><th>Download</th><th>Invoice question</th><th>What went wrong</th></tr></thead>
+    <tbody>
+      <tr><td><code>qwen2.5:0.5b</code></td><td>398 MB</td><td class="res poor">0 / 16</td><td>Calls tools, but plans the math wrong — "plus 18% tax" became <code>+ 18/100</code> or <code>+ 1800</code> — and usually skips the exchange rate.</td></tr>
+      <tr><td><code>llama3.2</code> (3B)</td><td>2.0 GB</td><td class="res poor">0 / 5</td><td>Skips the calculator and does the arithmetic in its head (wrongly); sometimes writes the tool call as plain text instead of making it.</td></tr>
+      <tr><td><code>deepseek-r1:14b</code></td><td>9.0 GB</td><td class="res poor">0 / 3</td><td>Lists <code>tools</code> in its capabilities — and never called one. It reasoned the whole problem out in text.</td></tr>
+      <tr><td>a 27B Qwen-family model</td><td>16 GB</td><td class="res good">3 / 3</td><td>The same clean path every time: calculator → exchange rate → calculator. Too large for most laptops.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout" style="margin-top:16px"><b>Read this table carefully.</b> Every model here "supports tools." Only one completed the task. The mechanics of tool calling working is not the same as the agent being reliable — and the only way to know which one you have is to measure it on your task.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Step 4 · 4_tool_design_ladder.py</div>
+  <h2>Can tool design rescue a small model?</h2>
+  <p class="lede">The small model failed at <b>planning</b>, not at calling tools. So what if the tool did the planning? This script runs three setups on your model and reports two numbers for each: did a tool produce the right number, and is the final answer right.</p>
+  <div class="term2"><span class="p">$</span> python 4_tool_design_ladder.py qwen2.5:0.5b 3</div>
+  <div style="overflow-x:auto"><table class="plain" style="margin-top:12px">
+    <thead><tr><th>Setup</th><th>Tools the model gets</th><th>qwen2.5:0.5b, measured</th></tr></thead>
+    <tbody>
+      <tr><td><b>A.</b> Single step — "What is 4817 × 293?"</td><td><code>calculator</code>, <code>get_exchange_rate</code></td><td class="res good">16 / 16</td></tr>
+      <tr><td><b>B.</b> Multi-step invoice question</td><td>same two fine-grained tools</td><td class="res poor">0 / 16</td></tr>
+      <tr><td><b>C.</b> Same invoice question</td><td>one coarse tool: <code>invoice_total(units, unit_price, tax_rate_percent, from_currency, to_currency)</code></td><td><span class="res good">tool right 12 / 15</span><br /><span class="res poor">final answer right 6 / 23</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="small" style="margin-top:10px">Pooled over several runs. Your numbers will vary from run to run — that variation is itself a result worth reporting.</p>
+  <p class="small" style="margin-top:10px">Look at setup C closely. The model filled in all five arguments correctly almost every time, and the tool returned <code>1798663.95</code>. Then, writing its final answer, the model reported <b>179,866.39</b> or <b>17,986,639.50</b> — it moved the decimal point while copying the number.</p>
+
+  <div class="bigq" style="margin-top:22px"><span class="qlabel">Discussion question 1</span>In setup C the tool returned the right number and the model still reported a wrong one. Where should the final number come from?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">From the <b>tool</b>, not from the model's retelling of it. Critical values — money, dates, IDs, quantities — should be shown to the user straight from the tool's output (or returned as a structured field your code reads), with the model only writing the sentence around them. A second defense is a check in the harness: compare every number in the final answer against the tool results in the trace and flag any that do not match. Small models are good at choosing and filling in a tool; do not also make them responsible for copying digits.</div>
+
+  <div class="bigq" style="margin-top:22px"><span class="qlabel">Discussion question 2</span>Setup C moved the plan — multiply, add tax, convert — out of the model and into your Python function. Is this still an agent, or has it become a workflow?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">For <em>this</em> question, it is much closer to a workflow: you, the developer, decided the steps, and the model only recognizes the request and fills in five arguments. That is not a defeat — Week 1's rule is to choose the <b>lowest level of autonomy that solves the problem</b>, and a small local model plus a well-designed tool is cheap and far more reliable than setup B. The agentic part comes back when the requests vary and the model has to decide <em>which</em> of several tools to use, in what order, and when to stop. The design question for your project is how much planning to leave to your model, given what you measured it can do.</div>
+
+  <div class="bigq" style="margin-top:22px"><span class="qlabel">Discussion question 3</span><code>ollama show</code> lists "tools" for your model. Is that enough to build your final project on it?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">No. The capability line means the chat template supports the tool-call format. <code>deepseek-r1:14b</code> lists it and never called a tool on our task. The evidence you need is a pass rate on <em>your</em> project's own questions, measured over several runs — which is exactly what scripts 2 and 4 give you, once you swap in your tools and your questions.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Group task</div>
+  <div class="grouptask"><span class="gk">👥 Group task · Groups of 3–4 · ~25 minutes</span>
+    <p><b>Pool your models.</b> Each person runs <code>python 4_tool_design_ladder.py &lt;your-model&gt; 3</code> on their own laptop — the group will likely have <code>qwen2.5:0.5b</code> plus a few different models. Combine the results into one table: model, download size, and the A / B / C numbers. Then answer together: <b>(1)</b> Which model would you build your final project on, and what evidence from the table supports it? <b>(2)</b> For the weakest model in your group, name one tool-design change that would raise its score, in the spirit of setup C.</p>
+    <p class="prod"><b>Produce:</b> the pooled table, plus three sentences: your model choice with its evidence, and one design change for the weakest model.</p>
+  </div>
+  <div class="card">
+    <button class="revealbtn">What a strong answer looks like</button>
+    <div class="revealbox">A strong group <b>chooses on evidence, not on the model's name or size</b>: "we pick X because it scored 3/3 on setup B on two different laptops," or "we pick the 0.5B model because our project only needs single-step tool calls, where it scored 16/16." It names the trade-off: a bigger model plans better but may be too slow or too large for a teammate's laptop. And its design change is concrete — merge two tools that always run together into one; replace a free-text argument with a fixed set of allowed values; or have the harness print the tool's number instead of the model's copy of it.</div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Step 5 · 3_agent_langgraph.py</div>
+  <h2>The same agent in LangGraph</h2>
+  <p class="lede">The loop you just read by hand is exactly the graph from <a href="../week4/langgraph.html">Week 4</a>: a model node, a tools node, a conditional edge, and one edge back that makes it a loop. That page uses Gemini; running locally, the <b>only line that changes</b> is the model.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="codebox"><span class="ck">from</span> langchain_ollama <span class="ck">import</span> ChatOllama
+
+<span class="cm"># Week 4 (cloud):</span>
+<span class="cm"># llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")</span>
+
+<span class="cm"># Week 5 (local):</span>
+<span class="hl">llm = ChatOllama(model=MODEL, temperature=0)</span>
+llm = llm.bind_tools(tools)
+
+g.add_node(<span class="cs">"model"</span>, call_model)
+g.add_node(<span class="cs">"tools"</span>, ToolNode(tools))
+g.add_edge(START, <span class="cs">"model"</span>)
+g.add_conditional_edges(<span class="cs">"model"</span>, guarded)  <span class="cm"># tool call, finish, or step cap</span>
+g.add_edge(<span class="cs">"tools"</span>, <span class="cs">"model"</span>)           <span class="cm"># &lt;- the loop</span></div>
+    <div>
+      <div class="term2" style="margin-top:0"><span class="p">$</span> python 3_agent_langgraph.py</div>
+      <div class="card" style="margin-top:12px"><span class="kicker">When to use which</span>
+        <p class="small" style="margin-top:8px"><b>Plain loop (script 1)</b> is best for seeing and debugging exactly what happens. <b>LangGraph (script 3)</b> earns its place as the agent grows: several tools, a human-approval step, memory, and a trace you can replay. Both call the same local model through the same Ollama server.</p>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">🎯 Take it to your final project</div>
+  <h2>Choosing your model, on evidence</h2>
+  <div class="callout blue" style="margin-top:0">Pick the model you can <b>run comfortably</b> on the laptops your team will demo on — as a rule of thumb, the download size should fit in your computer's memory with plenty to spare — and then <b>measure it on your own task</b>: swap your tools and questions into script 2 and report the pass rate. If a small model fails at multi-step planning, you have two honest options: design coarser tools so it has less to plan (setup C), or use a larger model on a machine that can run it. Either choice is fine if your numbers support it.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Troubleshooting</div>
+  <h2>If something goes wrong</h2>
+  <div class="card">
+    <button class="revealbtn">An error about failing to connect to Ollama</button>
+    <div class="revealbox">The Ollama server is not running. Open the Ollama app, or run <code>ollama serve</code> in a separate terminal, then try again.</div>
+  </div>
+  <div class="card" style="margin-top:10px">
+    <button class="revealbtn">An error saying the model "does not support tools"</button>
+    <div class="revealbox">Your model's template has no tool-calling format. Check with <code>ollama show &lt;model&gt;</code>; if <code>tools</code> is not under Capabilities, pull a model that has it, such as <code>qwen2.5:0.5b</code>.</div>
+  </div>
+  <div class="card" style="margin-top:10px">
+    <button class="revealbtn">"model not found"</button>
+    <div class="revealbox">The name must match <code>ollama list</code> exactly, including the tag after the colon — <code>qwen2.5:0.5b</code>, not <code>qwen2.5</code>.</div>
+  </div>
+  <div class="card" style="margin-top:10px">
+    <button class="revealbtn"><code>No module named 'ollama'</code></button>
+    <div class="revealbox">Your virtual environment is not active, or the packages are not installed in it. Activate it (Step 1) and run <code>pip install -r requirements.txt</code> again.</div>
+  </div>
+  <div class="card" style="margin-top:10px">
+    <button class="revealbtn">The answer contains JSON that looks like a tool call, but no tool ran</button>
+    <div class="revealbox">The model wrote the tool call as ordinary text instead of making a structured call, so the harness had nothing to execute. This is a common small-model failure, not a bug in your code — count that run as a failure in your measurements.</div>
+  </div>
+  <div class="card" style="margin-top:10px">
+    <button class="revealbtn">It is extremely slow, or my laptop freezes</button>
+    <div class="revealbox">The model is too large for your computer's memory. Try a smaller model, close other applications, and use a smaller <i>k</i> (for example 2) while you are testing.</div>
+  </div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="design.html"><span class="lab">← Previous</span><b>02 · Schemas, errors &amp; gates</b></a>
+  <a href="exercises.html" class="next"><span class="lab">Next →</span><b>04 · Practice &amp; case</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 5 — Tool Use &amp; Function Calling<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Measured results are from one laptop in September 2026; rerun them on yours.</div>
+</div></footer>
+
+<script>
+const CC=[
+ {q:'Which line is the model "requesting" a tool — without running anything?',
+  o:['TOOLS[name](**args)','resp = ollama.chat(..., tools=...) returning msg.tool_calls','messages.append({"role": "tool", ...})'],
+  a:1, why:'ollama.chat sends the conversation and the tool descriptions to the model. What comes back in msg.tool_calls is only a request: a tool name and arguments. Nothing has executed yet.'},
+ {q:'Which line actually executes the tool?',
+  o:['TOOLS[name](**args)','msg = resp.message','if not msg.tool_calls: return msg.content'],
+  a:0, why:'This is the only place a tool runs, and it is your Python code. That is why guardrails such as argument checks or a human-approval prompt belong right before this line.'},
+ {q:'How does the model find out what the tool returned?',
+  o:['The ollama library shares memory with the tool','The result is appended to messages with role "tool", and the next ollama.chat call sends it','The model re-runs the tool itself'],
+  a:1, why:'The result goes back as an observation in the conversation. On the next loop turn the model reads it and decides what to do next — call another tool or finish.'},
+ {q:'The model keeps calling tools and never finishes. What stops the run?',
+  o:['The model eventually gets tired','for step in range(1, MAX_STEPS + 1) — the harness caps the loop','Ollama cancels long conversations'],
+  a:1, why:'The step cap is Week 4’s max-iteration guard. The model proposes another step; the harness decides whether to grant it.'}
+];
+const cc=document.getElementById('ccheck');
+CC.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='q3';
+  d.innerHTML=`<div class="stmt">${i+1}. ${x.q}</div><div class="opts" style="flex-direction:column;align-items:stretch">${x.o.map((o,j)=>`<button data-v="${j}" style="text-align:left;border-radius:10px"><code>${String.fromCharCode(65+j)}.</code> ${o.replace(/</g,'&lt;')}</button>`).join('')}</div><div class="fb"></div>`;
+  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(d.dataset.done)return;d.dataset.done=1;
+    const ok=+b.dataset.v===x.a;
+    b.classList.add(ok?'good':'bad');
+    if(!ok)d.querySelector(`button[data-v="${x.a}"]`).classList.add('good');
+    d.querySelector('.fb').textContent=(ok?'Correct. ':'Answer: '+String.fromCharCode(65+x.a)+'. ')+x.why;
+  }));
+  cc.appendChild(d);
+});
+document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>

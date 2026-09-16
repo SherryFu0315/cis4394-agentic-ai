@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>03 · Practice &amp; Case — CIS 4394 Week 5</title>
+<title>04 · Practice &amp; Case — CIS 4394 Week 5</title>
 <meta name="description" content="Three activities that turn this week&#x27;s ideas into a skill you can demonstrate: draw the tool boundary of an agent you already use, deliberately sabotage a…" />
 <meta name="author" content="Dr. Xinyu Fu" />
 <link rel="canonical" href="https://sherryfu0315.github.io/cis4394-agentic-ai/week5/exercises.html" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="CIS 4394 Agentic AI · Georgia State University" />
-<meta property="og:title" content="03 · Practice &amp; Case — CIS 4394 Week 5" />
+<meta property="og:title" content="04 · Practice &amp; Case — CIS 4394 Week 5" />
 <meta property="og:description" content="Three activities that turn this week&#x27;s ideas into a skill you can demonstrate: draw the tool boundary of an agent you already use, deliberately sabotage a…" />
 <meta property="og:url" content="https://sherryfu0315.github.io/cis4394-agentic-ai/week5/exercises.html" />
 <meta property="og:image" content="https://sherryfu0315.github.io/cis4394-agentic-ai/assets/social-card.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="03 · Practice &amp; Case — CIS 4394 Week 5" />
+<meta name="twitter:title" content="04 · Practice &amp; Case — CIS 4394 Week 5" />
 <meta name="twitter:description" content="Three activities that turn this week&#x27;s ideas into a skill you can demonstrate: draw the tool boundary of an agent you already use, deliberately sabotage a…" />
 <meta name="twitter:image" content="https://sherryfu0315.github.io/cis4394-agentic-ai/assets/social-card.png" />
 <link rel="icon" href="../assets/gsu-flame.png" />
@@ -48,12 +48,13 @@
   <a href="../index.html">⌂ Course</a>
   <a href="mechanics.html"><span class="k">01</span>Function Calling</a>
   <a href="design.html"><span class="k">02</span>Schemas, Errors &amp; Gates</a>
-  <a href="exercises.html" class="here"><span class="k">03</span>Practice &amp; Case</a>
+  <a href="local.html"><span class="k">03</span>Build It Locally</a>
+  <a href="exercises.html" class="here"><span class="k">04</span>Practice &amp; Case</a>
 </div></div>
 <div class="progress"><span id="progressBar"></span></div>
 
 <header class="pagehead"><div class="wrap">
-  <div class="eyebrow">03 · Practice</div>
+  <div class="eyebrow">04 · Practice</div>
   <h1>Map a boundary. Break a tool. <em>Fix</em> it.</h1>
   <p class="lede">Three activities that turn this week's ideas into a skill you can demonstrate: draw the tool boundary of an agent you already use, deliberately sabotage a tool description and watch a real model misbehave, and argue an expense-report case the way a controller would.</p>
 </div></header>
@@ -89,9 +90,9 @@
 <section><div class="wrap">
   <div class="eyebrow">Exercise B · hands-on</div>
   <h2>Break your own agent with a bad description</h2>
-  <p class="lede">The claim from <a href="mechanics.html">page 01</a> — <em>the docstring is the interface</em> — is easy to nod at and much more convincing when you watch a real model misuse a tool you sabotaged on purpose. This runs on the same free Gemini tier and the same LangGraph agent you built in <a href="../week4/langgraph.html">Week 4</a>.</p>
+  <p class="lede">The claim from <a href="mechanics.html">page 01</a> — <em>the docstring is the interface</em> — is easy to nod at and much more convincing when you watch a real model misuse a tool you sabotaged on purpose. It runs locally on your own Ollama model, starting from the <a href="local.html">page 03 starter code</a> — no API key.</p>
   <div class="grouptask"><span class="gk">👥 Group task · Pairs, at a laptop · ~25 minutes</span>
-    <p><b>(1) Start from your Week 4 agent</b> (model node + <code>ToolNode</code> + <code>tools_condition</code>). <b>(2) Add the bad version</b> of a new tool, below, and bind it. <b>(3) Ask the agent three questions</b>: one that clearly needs the tool, one that clearly does not, and one ambiguous. Record which questions triggered a call and with what arguments. <b>(4) Rewrite the description and signature</b> into the good version, restart, and ask the identical three questions. <b>(5) Diff the two traces.</b></p>
+    <p><b>(1) Start from the starter agent</b> on <a href="local.html">page 03</a>: <code>1_agent_raw.py</code> (delete the <code>@tool</code> line and add the function to the <code>TOOLS</code> dictionary) or <code>3_agent_langgraph.py</code> (keep <code>@tool</code> and add it to the <code>tools</code> list). <b>(2) Add the bad version</b> of a new tool, below. <b>(3) Ask the agent three questions</b>: one that clearly needs the tool, one that clearly does not, and one ambiguous. Record which questions triggered a call and with what arguments. <b>(4) Rewrite the description and signature</b> into the good version, restart, and ask the identical three questions. <b>(5) Diff the two traces.</b></p>
     <p class="prod"><b>Produce:</b> the before/after message traces for all three questions, plus two sentences — which specific words in your rewrite changed the behaviour, and which failure mode from page 02 (over-triggering, wrong-tool selection, missing arguments) you actually reproduced.</p>
   </div>
   <div class="grid2" style="align-items:start;margin-top:20px">
@@ -247,7 +248,7 @@
 </div></section>
 
 <div class="wrap pager">
-  <a href="design.html"><span class="lab">← Previous</span><b>02 · Schemas, errors &amp; gates</b></a>
+  <a href="local.html"><span class="lab">← Previous</span><b>03 · Build it locally</b></a>
   <a href="../index.html" class="next"><span class="lab">Done →</span><b>Back to the course</b></a>
 </div>
 

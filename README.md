@@ -16,7 +16,7 @@ Each week of the course ships as an **interactive mini-site** — clickable arch
 | **2** | Learning from the Best: Unpacking Coding Agents | [week2/](https://sherryfu0315.github.io/cis4394-agentic-ai/week2/) | Reverse-engineer Codex layer by layer · the same architecture lens on Claude Code · build a Job Search Agent three ways (Google Opal, LangSmith Fleet, or Codex + Python) with four behavior tests including a prompt-injection case, real human-approval gates, and a path-neutral rubric |
 | **3** | Prompting & Context Engineering | [week3/](https://sherryfu0315.github.io/cis4394-agentic-ai/week3/) | A clickable annotated prompt · few-shot, chain-of-thought, structured JSON output · an interactive temperature dial · the context-window packing game · context rot · the $1 Chevy Tahoe case study |
 | **4** | Reasoning, Planning & the Agent Loop | [week4/](https://sherryfu0315.github.io/cis4394-agentic-ai/week4/) | A step-through agent loop · ReAct, plan-then-execute, reflection and Tree of Thoughts with the papers · the cost of thinking harder · prompting vs fine-tuning shown on visible weights · a minimal LangGraph agent with a max-iteration guard |
-| **5** | Tool Use & Function Calling | [week5/](https://sherryfu0315.github.io/cis4394-agentic-ai/week5/) | The function-calling round trip, step by step · schemas as interfaces · errors as observations the model can act on · the auto-run / constrain / human-gate decision · a tool-boundary mapping exercise |
+| **5** | Tool Use & Function Calling | [week5/](https://sherryfu0315.github.io/cis4394-agentic-ai/week5/) | The function-calling round trip, step by step · schemas as interfaces · errors as observations the model can act on · the auto-run / constrain / human-gate decision · a local tool-calling agent on Ollama (no API key), with measured pass rates across model sizes |
 | **6** | MCP & A2A — the interoperability standards | [week6/](https://sherryfu0315.github.io/cis4394-agentic-ai/week6/) | The N×M integration problem, before and after · a clickable MCP architecture · A2A and Agent Cards · which standard when · why a third-party server sits inside your trust boundary |
 | **7** | Memory, RAG & Knowledge | [week7/](https://sherryfu0315.github.io/cis4394-agentic-ai/week7/) | Working, episodic, semantic and procedural memory · the RAG pipeline as a step-through · embeddings as geometry · grounding and citations · RAG vs fine-tuning, decided on the evidence |
 | **8** | Evaluation & Reliability | [week8/](https://sherryfu0315.github.io/cis4394-agentic-ai/week8/) | Why demos lie · outcome vs trajectory evaluation · pass@k vs pass^k with a calculator you can push · benchmark literacy (SWE-bench, WebArena, τ-bench) · LLM-as-judge and its biases |
@@ -37,7 +37,7 @@ Downloadable materials (lecture deck, lab starter kits) live in [`materials/`](m
 
 ## Tech
 
-The sites are dependency-free static HTML/CSS/JS (no build step, no framework) — view source is part of the pedagogy. Design system: GSU palette, Fraunces/Inter/JetBrains Mono.
+The sites are dependency-free static HTML/CSS/JS (no build step, no framework) — view source is part of the pedagogy. Design system: GSU palette, Arial.
 
 ## License & reuse
 
