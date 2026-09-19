@@ -62,7 +62,7 @@ table.plain td,table.plain th{font-size:13.5px}
 </div></header>
 
 <section><div class="wrap">
-  <div class="callout blue" style="margin-top:0"><b>📦 Download the starter code:</b> <a class="doc" href="../materials/CIS4394_Week5_Ollama_Starter.zip">CIS4394_Week5_Ollama_Starter.zip ↓</a> — four short Python scripts, a <code>requirements.txt</code>, and a README. Or view the files one by one in <a class="doc" href="../materials/week5_ollama_starter/README.txt">the materials folder</a>.</div>
+  <div class="callout blue" style="margin-top:0"><b>📦 Download the starter code:</b> <a class="doc" href="../materials/CIS4394_Week5_Ollama_Starter.zip">CIS4394_Week5_Ollama_Starter.zip ↓</a> — five short Python scripts, a <code>requirements.txt</code>, and a README. Or view the files one by one in <a class="doc" href="../materials/week5_ollama_starter/README.txt">the materials folder</a>.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -230,7 +230,66 @@ The result of 4817 * 293 is 1411381.</div>
 </div></section>
 
 <section><div class="wrap">
-  <div class="eyebrow">Step 5 · 3_agent_langgraph.py</div>
+  <div class="eyebrow">Step 5 · 5_demo_order_agent.py</div>
+  <h2>Two tools, two risk levels, one human gate</h2>
+  <p class="lede">The invoice agent had one job. A real agent carries several tools, and the model has to pick — which is where <a href="design.html">page 02</a>’s triage becomes concrete. This one is a customer-service assistant for an online store:</p>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Auto-run</span><h3 style="margin-top:6px"><code>lookup_order(order_id)</code></h3><p class="small">Read-only. It cannot change anything, so waiting for a human would only slow the customer down. The harness just runs it.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Human gate</span><h3 style="margin-top:6px"><code>issue_refund(order_id, amount_usd, reason)</code></h3><p class="small">It moves money and cannot be undone. The harness stops, prints exactly what is about to happen, and waits for a person to type <code>y</code>.</p></div>
+  </div>
+  <p class="small" style="margin-top:16px"><b>Run all three cases</b> and watch which tool the model picks — and where it is made to wait:</p>
+  <div class="term2"><span class="p">$</span> python 5_demo_order_agent.py "Where is my order ORD-004411?"
+
+<span class="ask">[step 1] model requests -&gt; lookup_order({'order_id': 'ORD-004411'})</span>
+<span class="ok">          result &lt;- status=shipped, items=2, total=$84.20</span>
+
+[step 2] FINAL ANSWER:
+Your order ORD-004411 is shipped, 2 items, total $84.20.</div>
+  <div class="term2"><span class="p">$</span> python 5_demo_order_agent.py "I want a refund for order ORD-004412, it arrived damaged. It was $19.99."
+
+<span class="ask">[step 1] model requests -&gt; issue_refund({'order_id': 'ORD-004412', 'amount_usd': 19.99, 'reason': 'damaged'})</span>
+
+  ┌─ APPROVAL NEEDED ─────────────────────────────
+  │ action     : issue_refund
+  │ order_id   : ORD-004412
+  │ amount_usd : 19.99
+  │ reason     : damaged
+  └───────────────────────────────────────────────
+  <span class="ask">Approve? [y/N]</span> y
+<span class="ok">          result &lt;- REFUNDED $19.99 on ORD-004412 (damaged)</span></div>
+  <div class="term2"><span class="p">$</span> <span class="p"># same question, but this time answer n</span>
+  <span class="ask">Approve? [y/N]</span> n
+<span class="bad">          result &lt;- DENIED by the human reviewer. Do not retry; tell the customer a person will follow up.</span>
+
+[step 2] FINAL ANSWER:
+I can’t process that refund — a person will follow up with you.</div>
+  <div class="callout blue"><b>Look at what the denial actually is:</b> the refusal goes back into the conversation as an <em>observation</em>, exactly like a tool result. The model is not overruled in secret — it is told what happened and has to carry on from there. That is the whole shape of a human gate: the model proposes, a person disposes, and the agent keeps its trace either way.</div>
+
+  <h3 style="margin-top:30px">Getting a small model to choose well: four attempts</h3>
+  <p class="small" style="max-width:860px">This agent did not work on the first try. The numbers below are real runs of the three cases on <code>qwen2.5:0.5b</code>, changing only the instructions — no change to the model, no change to the tool code.</p>
+  <div style="overflow-x:auto"><table class="plain" style="margin-top:12px">
+    <thead><tr><th>What was changed</th><th>“Where is my order?”<br /><span class="small">should call lookup_order</span></th><th>“I want a refund”<br /><span class="small">should call issue_refund</span></th><th>“What’s your return policy?”<br /><span class="small">should call NOTHING</span></th></tr></thead>
+    <tbody>
+      <tr><td>1 · Plain description, plain system prompt</td><td class="res poor">1 / 4</td><td class="res good">4 / 4</td><td class="res good">4 / 4</td></tr>
+      <tr><td>2 · Stronger tool docstring (“never answer from memory”)</td><td class="res poor">2 / 6</td><td>—</td><td class="res good">6 / 6</td></tr>
+      <tr><td>3 · System prompt: “you MUST call lookup_order”</td><td class="res good">5 / 6</td><td class="res good">6 / 6</td><td class="res poor">2 / 6</td></tr>
+      <tr><td>4 · Same, plus “if there is no order number, do NOT call any tool”</td><td class="res good">5 / 6</td><td class="res good">6 / 6</td><td class="res good">6 / 6</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small" style="margin-top:10px">Attempt 3 is the trap. Pushing the model to call tools fixed the question it was ignoring and broke the question it had been getting right — it started offering refunds to people who only asked about the return policy. That is <b>over-triggering</b>, named on <a href="design.html">page 02</a>, and the fix was not a louder instruction but an explicit rule for when <em>not</em> to act.</p>
+
+  <div class="bigq" style="margin-top:24px"><span class="qlabel">Discussion question</span>The same final instructions were run on <code>llama3.2</code>, a model five times larger. It scored <b>12 / 24</b>, against <b>22 / 24</b> for the 0.5B model — it called a tool for almost every message, including the general questions. Why might a bigger model do worse here, and what does that mean for choosing one?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox">Nothing about “bigger” guarantees better tool discipline. Models differ in how eagerly they reach for a tool — a tendency that comes from how each was trained and tuned, not from parameter count — and a prompt tuned to push one model over the line can push another well past it. The practical lesson is the same one Week 8 makes formal: <b>a model is a choice you test, not a choice you rank by size</b>. Run your own three or four representative messages, including at least one that should call <em>no</em> tool, and count. The message that should trigger nothing is the one most teams forget to test, and it is where over-triggering shows up.</div>
+
+  <div class="grouptask" style="margin-top:24px"><span class="gk">👥 Group task · Pairs · ~15 minutes</span>
+    <p><b>Break it, then fix it.</b> Open <code>5_demo_order_agent.py</code> and delete the last line of the system prompt — the one that says not to call a tool when there is no order number. Ask all three questions again, three times each, and record which tool got called. Then put the line back and confirm the behaviour returns. Finally, add a <b>third tool</b> of your own (for example <code>cancel_order</code>, which should also be gated) and test whether the model still picks correctly among three.</p>
+    <p class="prod"><b>Produce:</b> your before/after counts for the three questions, and one sentence on what adding a third tool did to the model's accuracy.</p>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Step 6 · 3_agent_langgraph.py</div>
   <h2>The same agent in LangGraph</h2>
   <p class="lede">The loop you just read by hand is exactly the graph from <a href="../week4/langgraph.html">Week 4</a>: a model node, a tools node, a conditional edge, and one edge back that makes it a loop. That page uses Gemini; running locally, the <b>only line that changes</b> is the model.</p>
   <div class="grid2" style="align-items:start">

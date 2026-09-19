@@ -21,6 +21,10 @@ THE FILES
                             python 3_agent_langgraph.py
   4_tool_design_ladder.py   Can tool design rescue a small model? Three setups, measured.
                             python 4_tool_design_ladder.py qwen2.5:0.5b 3
+  5_demo_order_agent.py     A customer-service agent with two tools: lookup_order runs
+                            automatically, issue_refund STOPS and asks a human first.
+                            python 5_demo_order_agent.py
+                            python 5_demo_order_agent.py "I want a refund for ORD-004412, it was damaged. $19.99"
 
 USING A DIFFERENT MODEL
   Scripts 2 and 4 take the model name as the first argument.
