@@ -67,6 +67,7 @@
 </div></header>
 
 <section><div class="wrap">
+  <div class="callout blue" style="margin-top:0"><b>Fast path.</b> This is the longest page of the week. If you are reading it on your own, three sections carry the load: <b>the schema anatomy</b>, <b>errors are observations</b>, and <b>auto-run / constrain / gate</b> — the last one is the single most useful table in Week 5. The rest (too many tools, idempotency, frameworks) is depth you can come back for.</div>
   <div class="eyebrow">Start here</div>
   <h2>A schema is a two-sided contract</h2>
   <div class="grid2">
@@ -269,9 +270,9 @@
 </div></section>
 
 <section><div class="wrap">
-  <div class="eyebrow">In the framework</div>
-  <h2>Tools in LangGraph — and where the gate attaches</h2>
-  <p class="lede">Week 4's graph, with the pieces of this page slotted in. Four names do all the work: <code>@tool</code>, <code>bind_tools</code>, <code>ToolNode</code>, <code>tools_condition</code>.</p>
+  <div class="eyebrow">Optional · if you use a framework later</div>
+  <h2>The same four ideas, once a framework is involved</h2>
+  <p class="lede"><b>You do not need this for page 03.</b> There, the loop and the gate are a few lines of plain Python you can read end to end. But when a project outgrows one loop, frameworks give these same ideas names — <code>@tool</code>, <code>bind_tools</code>, <code>ToolNode</code>, <code>tools_condition</code> — and the gate attaches at exactly the place you would expect. Skim it now; come back when you need it.</p>
   <div class="grid2" style="align-items:start">
     <div class="codebox"><span class="ck">from</span> langgraph.prebuilt <span class="ck">import</span> ToolNode, tools_condition
 <span class="ck">from</span> langgraph.graph <span class="ck">import</span> StateGraph, START, END

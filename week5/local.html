@@ -291,7 +291,7 @@ I can’t process that refund — a person will follow up with you.</div>
 <section><div class="wrap">
   <div class="eyebrow">Step 6 · 3_agent_langgraph.py</div>
   <h2>The same agent in LangGraph</h2>
-  <p class="lede">The loop you just read by hand is exactly the graph from <a href="../week4/langgraph.html">Week 4</a>: a model node, a tools node, a conditional edge, and one edge back that makes it a loop. That page uses Gemini; running locally, the <b>only line that changes</b> is the model.</p>
+  <p class="lede">Everything above works without a framework, and that is deliberate — you can read the whole loop. This step is your <b>first look at LangGraph</b>, which gives those same pieces names: a model node, a tools node, a conditional edge, and one edge back that makes it a loop. Compare it to the plain version and decide for yourself what the framework bought. Reference: <a href="../week4/langgraph.html">the Week 4 LangGraph page</a> (written for Gemini — running locally, the <b>only line that changes</b> is the model).</p>
   <div class="grid2" style="align-items:start">
     <div class="codebox"><span class="ck">from</span> langchain_ollama <span class="ck">import</span> ChatOllama
 

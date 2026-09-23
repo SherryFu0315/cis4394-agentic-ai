@@ -186,8 +186,8 @@
 
 <section><div class="wrap">
   <div class="eyebrow">The code</div>
-  <h2>A tool, in the framework you already know</h2>
-  <p class="lede">In LangChain and LangGraph, defining a tool is defining a function. The type hints become the parameter types; the docstring becomes the description. You saw <code>bind_tools</code> in <a href="../week4/langgraph.html">Week 4</a> — here is what it is binding.</p>
+  <h2>A tool is just a function</h2>
+  <p class="lede">Whatever you build with, defining a tool means defining an ordinary function: the <b>type hints</b> become the parameter types and the <b>docstring</b> becomes the description the model reads. In plain Python you hand the function straight to the model — that is what you will do on <a href="local.html">page 03</a>. The version below adds a framework decorator, which changes nothing about the idea.</p>
   <div class="grid2" style="align-items:start">
     <div class="codebox"><span class="ck">from</span> langchain_core.tools <span class="ck">import</span> tool
 
