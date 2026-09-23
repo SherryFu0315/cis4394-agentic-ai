@@ -118,6 +118,14 @@ ls                <span class="cm"># what's in here?</span></div></div>
   <div><div class="lab">Windows — PowerShell</div><div class="codebox" style="margin:0">cd Desktop        <span class="cm"># move into the folder</span>
 dir               <span class="cm"># what's in here?</span></div></div>
 </div>
+<p style="margin:10px 0 0"><b>How to tell it worked:</b> look at the prompt itself — it shows the folder you are standing in.</p>
+<div class="codebox" style="margin:8px 0">xinyufu@MacBook <span class="cs">~</span> %  cd Desktop        <span class="cm"># before: you are home</span>
+xinyufu@MacBook <span class="cs">Desktop</span> %  ls           <span class="cm"># after: the prompt changed. You are there.</span></div>
+<p style="margin:0"><b>Two errors everyone hits once:</b></p>
+<ul style="margin:6px 0 0 18px">
+<li><code>cd: no such file or directory: Desktop</code> — you are <b>already in</b> Desktop and tried to go in again. Look at the prompt; if it says <code>Desktop</code>, you are done. Type <code>cd ~</code> to go home if you want to start over.</li>
+<li><code>ls</code> prints <b>nothing</b> — the folder is empty, so the file is not downloaded yet. Do that first, then run <code>ls</code> again and look for <code>1_agent_raw.py</code>.</li>
+</ul>
 <p style="margin:8px 0 0"><b>You should see <code>1_agent_raw.py</code> listed.</b> If you do, every command below will work. Three more things worth knowing:</p>
 <ul style="margin:6px 0 0 18px">
 <li><code>cd ..</code> goes back up one folder. <code>cd ~</code> (Mac) or <code>cd ~</code> (Windows) returns you home so you can start over.</li>
