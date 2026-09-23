@@ -40,6 +40,19 @@
 .ladder li::before{content:counter(l);position:absolute;left:0;top:-2px;width:34px;height:34px;border-radius:9px;background:var(--red-soft);color:var(--red);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
 .ladder li:last-child{padding-bottom:0}
 @media(max-width:880px){.schemawrap{grid-template-columns:1fr}}
+
+.xgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;margin-top:16px}
+.xlab{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.xcode{background:#101319;color:#dfe3ec;border-radius:12px;padding:16px 18px;font-family:var(--mono);font-size:12.2px;line-height:1.75;white-space:pre-wrap;overflow-x:auto}
+.xl{display:block;border-radius:4px;padding:0 4px;margin:0 -4px;cursor:pointer;transition:background .15s}
+.xl:hover{background:rgba(138,184,255,.14)}
+.xl.on{background:#0039a6;color:#fff}
+.xchips{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.xchip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 13px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer}
+.xchip:hover{border-color:var(--blue);color:var(--blue)}
+.xchip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.xnote{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-top:12px;font-size:14.5px;min-height:76px}
+@media(max-width:980px){.xgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -313,33 +326,58 @@
 
 <section><div class="wrap">
   <div class="eyebrow">Optional · if you use a framework later</div>
-  <h2>The same four ideas, once a framework is involved</h2>
+  <h2>The same eight moves, once a framework is involved</h2>
   <p class="lede"><b>You do not need this for page 03.</b> There, the loop and the gate are a few lines of plain Python you can read end to end. But when a project outgrows one loop, frameworks give these same ideas names — <code>@tool</code>, <code>bind_tools</code>, <code>ToolNode</code>, <code>tools_condition</code> — and the gate attaches at exactly the place you would expect. Skim it now; come back when you need it.</p>
-  <div class="grid2" style="align-items:start">
-    <div class="codebox"><span class="ck">from</span> langgraph.prebuilt <span class="ck">import</span> ToolNode, tools_condition
-<span class="ck">from</span> langgraph.graph <span class="ck">import</span> StateGraph, START, END
+  <p class="lede" style="margin-top:6px">Click any line — <b>the matching line on the other side lights up too</b>. Nothing new happens in the right-hand column; the same moves have simply been given names.</p>
+  <div class="xchips" id="xChips"></div>
+  <div class="xgrid">
+    <div><div class="xlab">Plain Python — what you run on page 03</div>
+      <div class="xcode" id="xPlain"><span class="xl" data-k="tools">TOOLS = {"calculator": calculator,
+         "issue_refund": issue_refund}</span>
 
-TOOLS = [lookup_order, calculator, issue_refund]
+<span class="xl" data-k="loop">for step in range(1, MAX_STEPS + 1):</span>
+<span class="xl" data-k="ask">    msg = ollama.chat(model=MODEL,
+                      messages=messages,
+                      tools=list(TOOLS.values())).message</span>
+    messages.append(msg)
 
-llm_tools = llm.bind_tools(TOOLS)   <span class="cm"># schemas -> model</span>
+<span class="xl" data-k="decide">    if not msg.tool_calls:</span>
+<span class="xl" data-k="end">        return msg.content          # done</span>
 
-<span class="ck">def</span> call_model(state):
-    <span class="ck">return</span> {<span class="cs">"messages"</span>: [llm_tools.invoke(state[<span class="cs">"messages"</span>])]}
+    for call in msg.tool_calls:
+        name, args = call.function.name, call.function.arguments
+<span class="xl" data-k="gate">        if name in NEEDS_APPROVAL and not approve(name, args):
+            result = "DENIED by a human reviewer."
+        else:</span>
+<span class="xl" data-k="exec">            result = TOOLS[name](**args)</span>
+<span class="xl" data-k="obs">        messages.append({"role": "tool",
+                         "content": result,
+                         "tool_name": name})</span></div></div>
+    <div><div class="xlab">LangGraph — the same moves, named</div>
+      <div class="xcode" id="xGraph"><span class="xl" data-k="tools">TOOLS = [calculator, issue_refund]
+llm_tools = llm.bind_tools(TOOLS)</span>
+
+<span class="xl" data-k="ask">def call_model(state):
+    return {"messages":
+            [llm_tools.invoke(state["messages"])]}</span>
 
 g = StateGraph(State)
-g.add_node(<span class="cs">"model"</span>, call_model)
-g.add_node(<span class="cs">"tools"</span>, ToolNode(TOOLS))   <span class="cm"># runs what was asked</span>
-g.add_edge(START, <span class="cs">"model"</span>)
-g.add_conditional_edges(<span class="cs">"model"</span>, tools_condition)
-g.add_edge(<span class="cs">"tools"</span>, <span class="cs">"model"</span>)          <span class="cm"># the loop</span>
+<span class="xl" data-k="ask">g.add_node("model", call_model)</span>
+<span class="xl" data-k="exec">g.add_node("tools", ToolNode(TOOLS))</span>
+<span class="xl" data-k="obs"># ToolNode also appends each result to state["messages"]</span>
+g.add_edge(START, "model")
+<span class="xl" data-k="decide">g.add_conditional_edges("model", tools_condition)</span>
+<span class="xl" data-k="loop">g.add_edge("tools", "model")</span>
 
-<span class="cm"># the gate: pause before the tools node runs</span>
-agent = g.compile(interrupt_before=[<span class="cs">"tools"</span>])</div>
-    <div>
-      <div class="card"><span class="kicker">Read the last line carefully</span><p class="small" style="margin-top:8px"><code>interrupt_before=["tools"]</code> stops the graph <b>after</b> the model has committed to a call and <b>before</b> anything executes — precisely the window from page 01. Your application then shows the pending call to a person and resumes the graph only on approval. A blunt version gates every tool; a real one checks which tool was requested and interrupts only for the gated ones.</p></div>
-      <div class="card" style="margin-top:14px"><span class="kicker">The docstring is the schema</span><p class="small" style="margin-top:8px">There is no separate schema file in this code. <code>bind_tools</code> reads your function signatures and docstrings and generates the JSON the model sees. Which means every rule on this page — enums, ranges, “use this when…”, “do not use this for…” — is written as ordinary Python type hints and prose.</p></div>
-      <div class="card" style="margin-top:14px"><span class="kicker">🎯 Take it to your final project</span><p class="small" style="margin-top:8px">Define two tools with clean schemas, return errors as data, and put a human gate on anything irreversible. That sentence is the headline Week 5 skill and it is what Group Assignment 2 grades.</p></div>
-    </div>
+<span class="xl" data-k="gate">agent = g.compile(interrupt_before=["tools"])</span>
+<span class="xl" data-k="end"># tools_condition routes to END when no tool was asked for</span></div></div>
+  </div>
+  <div class="xnote" id="xNote">Click a line in either column, or pick a move above.</div>
+
+  <div class="grid3" style="margin-top:22px">
+    <div class="card"><span class="kicker">Read the last line carefully</span><p class="small" style="margin-top:8px"><code>interrupt_before=["tools"]</code> stops the graph <b>after</b> the model has committed to a call and <b>before</b> anything executes — precisely the window from page 01. Your application then shows the pending call to a person and resumes the graph only on approval. A blunt version gates every tool; a real one checks which tool was requested and interrupts only for the gated ones.</p></div>
+    <div class="card" style="margin-top:14px"><span class="kicker">The docstring is the schema</span><p class="small" style="margin-top:8px">There is no separate schema file in this code. <code>bind_tools</code> reads your function signatures and docstrings and generates the JSON the model sees. Which means every rule on this page — enums, ranges, “use this when…”, “do not use this for…” — is written as ordinary Python type hints and prose.</p></div>
+    <div class="card" style="margin-top:14px"><span class="kicker">🎯 Take it to your final project</span><p class="small" style="margin-top:8px">Define two tools with clean schemas, return errors as data, and put a human gate on anything irreversible. That sentence is the headline Week 5 skill and it is what Group Assignment 2 grades.</p></div>
   </div>
   <p class="small" style="margin-top:16px">Framework reference: <a class="doc" href="https://python.langchain.com/docs/concepts/tool_calling/" target="_blank" rel="noopener">LangChain — Tool calling ↗</a></p>
 </div></section>
@@ -432,6 +470,32 @@ TOOLS.forEach((x,i)=>{
   }));
   cf.appendChild(d);
 });
+
+
+/* plain-Python <-> LangGraph line linker */
+(function(){
+  const NOTE={
+   tools:['The tool list','Both sides do the same job: turn your Python functions into JSON schemas the model can read. Plain Python keeps a dict so it can look a tool up by name; LangGraph takes a list and <code>bind_tools</code> attaches the schemas to the model. Either way, the docstring you wrote becomes the description the model sees.'],
+   ask:['Ask the model','One call that sends the conversation plus the tool schemas and gets back either an answer or a tool request. In LangGraph the identical call is wrapped in a function and registered as the <code>model</code> node — a node is just a function.'],
+   decide:['Tool call, or finished?','The only branch in the whole agent. Plain Python reads <code>msg.tool_calls</code> with an <code>if</code>. LangGraph moves that same test into a <b>conditional edge</b>: <code>tools_condition</code> looks at the last message and routes to the tools node or to END.'],
+   exec:['Execute the tool','The one place anything actually runs, and on both sides it is your code. <code>ToolNode</code> is a prebuilt node that does exactly what your <code>TOOLS[name](**args)</code> line does — look up the requested function and call it with the arguments.'],
+   obs:['Return the result as an observation','The tool output has to go back into the conversation or the model never sees it. Plain Python appends a message with <code>role: "tool"</code>; ToolNode appends the same thing to the graph state for you. This is the step people forget when hand-rolling a loop.'],
+   loop:['The loop','Plain Python loops because the <code>for</code> statement comes around again. LangGraph loops because of one edge pointing backwards: <code>tools → model</code>. Delete that edge and the identical graph becomes a one-shot pipeline.'],
+   gate:['The human gate','Plain Python checks the tool name and asks a person before running it. LangGraph compiles with <code>interrupt_before=["tools"]</code>, which stops the graph after the model has committed to a call and before anything executes — the window from page 01. Your app then shows the pending call and resumes only on approval.'],
+   end:['Stopping','The run ends when the model answers without requesting a tool. Plain Python returns; LangGraph routes to END. Separately, both need a cap so a confused agent cannot loop forever: <code>range(1, MAX_STEPS+1)</code> here, <code>recursion_limit</code> there.']
+  };
+  const panes=[document.getElementById('xPlain'),document.getElementById('xGraph')];
+  if(!panes[0]||!panes[1])return;
+  const chips=document.getElementById('xChips'), note=document.getElementById('xNote');
+  const order=['tools','ask','decide','exec','obs','loop','gate','end'];
+  order.forEach(k=>{const b=document.createElement('button');b.className='xchip';b.dataset.k=k;b.textContent=NOTE[k][0];chips.appendChild(b)});
+  function select(k){
+    document.querySelectorAll('.xl').forEach(e=>e.classList.toggle('on',e.dataset.k===k));
+    document.querySelectorAll('.xchip').forEach(e=>e.classList.toggle('on',e.dataset.k===k));
+    note.innerHTML='<b>'+NOTE[k][0]+'.</b> '+NOTE[k][1];
+  }
+  document.addEventListener('click',e=>{const t=e.target.closest('.xl,.xchip');if(t&&t.dataset.k)select(t.dataset.k)});
+})();
 
 document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
 const progress=document.getElementById('progressBar');
