@@ -37,6 +37,19 @@ table.plain td,table.plain th{font-size:13.5px}
 .oscmd .lab{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
 .os{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 @media(max-width:880px){.os{grid-template-columns:1fr}}
+
+.ylab{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.ycode{background:#101319;color:#dfe3ec;border-radius:12px;padding:16px 18px;font-family:var(--mono);font-size:12.2px;line-height:1.75;white-space:pre-wrap;overflow-x:auto}
+.yl{display:block;border-radius:4px;padding:0 4px;margin:0 -4px;cursor:pointer;transition:background .15s}
+.yl:hover{background:rgba(138,184,255,.14)}
+.yl.on{background:#0039a6;color:#fff}
+.ynote{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:14.5px;min-height:250px}
+.ynote h4{margin:0 0 8px;font-size:15.5px;color:var(--blue)}
+.ynote .flow{background:#101319;color:#dfe3ec;border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:11.3px;line-height:1.6;white-space:pre;overflow-x:auto;margin:10px 0 0}
+.ychips{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}
+.ychip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 12px;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.ychip:hover{border-color:var(--blue);color:var(--blue)}
+.ychip.on{background:var(--blue);border-color:var(--blue);color:#fff}
 </style>
 </head>
 <body>
@@ -136,47 +149,53 @@ xinyufu@MacBook <span class="cs">Desktop</span> %  ls           <span class="cm"
   <div class="callout" style="margin-top:12px"><b>Before every command below.</b> Your terminal must be <b>in the folder with the scripts</b> — if you opened a new window, <code>cd</code> back into it first. And where the blocks say <code>python</code>, type <b><code>python3</code> on Mac</b> or <b><code>py -3</code> on Windows</b>. If you built a virtual environment in Step 1, either activate it or call it directly, e.g. <code>./venv/bin/python 1_agent_raw.py …</code> on Mac.</div>
   <div class="eyebrow">Step 2 · 1_agent_raw.py</div>
   <h2>The whole agent loop, in plain Python</h2>
-  <p class="lede">No framework. Everything from <a href="mechanics.html">page 01</a> is visible in about twenty lines: the model <em>requests</em> a tool, your code <em>runs</em> it, the result goes back as an observation, and the loop repeats until the model answers without asking for a tool.</p>
+  <p class="lede">No framework. The whole agent is about twenty lines. <b>Click any part of the code</b> — the panel beside it explains what that piece does and why it is there.</p>
+  <div class="ychips" id="yChips"></div>
   <div class="grid2" style="align-items:start">
-    <div class="codebox"><span class="ck">import</span> ollama
+    <div>
+      <div class="ylab">1_agent_raw.py — click a line</div>
+      <div class="ycode" id="yCode"><span class="ck">import</span> ollama
 
-<span class="ck">def</span> <span class="cn">calculator</span>(expression: <span class="cs">str</span>) -&gt; <span class="cs">str</span>:
+<span class="yl" data-k="fn"><span class="ck">def</span> <span class="cn">calculator</span>(expression: <span class="cs">str</span>) -&gt; <span class="cs">str</span>:
     <span class="cs">"""Evaluate an arithmetic expression and return
     the exact result.
 
     Args:
         expression: e.g. '4817 * 293'
     """</span>
-    ...
+    ...</span>
 
-TOOLS = {<span class="cs">"calculator"</span>: calculator,
-         <span class="cs">"get_exchange_rate"</span>: get_exchange_rate}
+<span class="yl" data-k="registry">TOOLS = {<span class="cs">"calculator"</span>: calculator,
+         <span class="cs">"get_exchange_rate"</span>: get_exchange_rate}</span>
 
-<span class="ck">for</span> step <span class="ck">in</span> range(1, MAX_STEPS + 1):  <span class="cm"># step cap</span>
-    <span class="hl">resp = ollama.chat(model=MODEL, messages=messages,
+<span class="yl" data-k="loop"><span class="ck">for</span> step <span class="ck">in</span> range(1, MAX_STEPS + 1):  <span class="cm"># step cap</span></span>
+<span class="yl" data-k="ask">    resp = ollama.chat(model=MODEL, messages=messages,
                        tools=list(TOOLS.values()))</span>
     msg = resp.message
     messages.append(msg)
 
-    <span class="ck">if not</span> msg.tool_calls:                <span class="cm"># model chose to FINISH</span>
-        <span class="ck">return</span> msg.content
+<span class="yl" data-k="finish">    <span class="ck">if not</span> msg.tool_calls:          <span class="cm"># model chose to FINISH</span>
+        <span class="ck">return</span> msg.content</span>
 
-    <span class="ck">for</span> call <span class="ck">in</span> msg.tool_calls:           <span class="cm"># model chose to ACT</span>
-        name, args = call.function.name, call.function.arguments
-        <span class="ck">try</span>:
-            <span class="hl">result = TOOLS[name](**args)</span>     <span class="cm"># YOUR code runs it</span>
-        <span class="ck">except</span> Exception <span class="ck">as</span> e:
-            result = <span class="cs">f"ERROR calling {name}: {e}"</span>
-        <span class="hl">messages.append({<span class="cs">"role"</span>: <span class="cs">"tool"</span>,
+<span class="yl" data-k="request">    <span class="ck">for</span> call <span class="ck">in</span> msg.tool_calls:      <span class="cm"># model chose to ACT</span>
+        name, args = call.function.name, call.function.arguments</span>
+<span class="yl" data-k="err">        <span class="ck">try</span>:</span>
+<span class="yl" data-k="exec">            result = TOOLS[name](**args)  <span class="cm"># YOUR code runs it</span></span>
+<span class="yl" data-k="err">        <span class="ck">except</span> Exception <span class="ck">as</span> e:
+            result = <span class="cs">f"ERROR calling {name}: {e}"</span></span>
+<span class="yl" data-k="obs">        messages.append({<span class="cs">"role"</span>: <span class="cs">"tool"</span>,
                          <span class="cs">"content"</span>: result,
                          <span class="cs">"tool_name"</span>: name})</span></div>
+    </div>
     <div>
-      <div class="card"><span class="kicker">Read it against page 01</span>
-        <p class="small" style="margin-top:8px"><b>The docstring is the tool description.</b> Passing a Python function in <code>tools=[...]</code> makes the <code>ollama</code> library build the JSON schema from its name, type hints, and docstring. Vague docstring, vague tool — <a href="design.html">page 02</a>.</p>
-        <p class="small" style="margin-top:8px"><b>The model never runs anything.</b> It only returns <code>tool_calls</code>: a name and arguments. The highlighted line <code>TOOLS[name](**args)</code> is the only place a tool executes — and it is your code.</p>
-        <p class="small" style="margin-top:8px"><b>Errors become observations.</b> The <code>try/except</code> sends a failure back to the model as text instead of crashing the run, so the model can repair its call.</p>
-        <p class="small" style="margin-top:8px"><b>The harness decides when to stop.</b> <code>MAX_STEPS</code> is Week 4's max-iteration guard.</p>
-      </div>
+      <div class="ynote" id="yNote"><h4>Start anywhere</h4><p style="margin:0">Click a line on the left, or pick a step above. Nine pieces make up the entire agent — nothing else is hiding.</p></div>
+      <div class="callout blue" style="margin-top:14px"><b>Four sentences that survive this page.</b>
+      <ol style="margin:8px 0 0 18px">
+        <li><b>The model requests; your code executes.</b></li>
+        <li><b>Tool results go back into the conversation</b> as observations.</li>
+        <li><b>The loop continues until the model stops asking for tools.</b></li>
+        <li><b>Your code — not the model — controls the boundaries:</b> the step cap, error handling, which tools exist, who approves.</li>
+      </ol></div>
       <p class="small" style="margin-top:14px"><b>Run it:</b></p>
       <div class="term2"><span class="p">$</span> python 1_agent_raw.py "What is 4817 * 293?"
 
@@ -418,6 +437,32 @@ CC.forEach((x,i)=>{
   }));
   cc.appendChild(d);
 });
+
+/* page 03 · click the code, read the explanation */
+(function(){
+  const N={
+   fn:['A tool is an ordinary function','There is no AI in these lines. <code>calculator("4817 * 293")</code> returns <code>1411381</code> whether a model is involved or not. What makes it a <i>tool</i> is that the <code>ollama</code> library can read its <b>name</b>, its <b>parameter names and types</b>, and its <b>docstring</b>, and turn all of that into the JSON schema the model sees. Which is why a vague docstring produces a vague tool — <a href="design.html">page 02</a>.'],
+   registry:['The tool registry — a plain dictionary','Nothing clever: a name pointing at a function.<div class="flow">"calculator"  ──►  calculator()</div>When the model later says “I want to call <code>calculator</code>”, this is how your code finds the actual function to run. It is also your allow-list: a tool that is not in this dictionary cannot be called, no matter what the model asks for.'],
+   loop:['The loop, and the cap','This is the agent loop. Each pass sends the conversation to the model, runs whatever it asks for, and comes back around.<div class="flow">model → act → observe → model → …</div>The cap is why it says <code>range(1, MAX_STEPS + 1)</code> and not <code>while True</code>: a confused model can request tools forever, and <b>you</b> decide how many turns it gets. Week 4 called this the max-iteration guard.'],
+   ask:['Ask the model — and tell it what it may use','One call does two things: it sends the whole conversation (<code>messages</code>) and it sends the tool schemas (<code>tools=…</code>). Conceptually the model receives:<div class="flow">User: "What is 4817 * 293?"\n\nTools you may use:\n  calculator(expression: str)\n    Evaluate an arithmetic expression.\n  get_exchange_rate(base, quote)\n    Look up an exchange rate.</div>Then it decides on its own which one fits.'],
+   finish:['No tool requested → the run is over','The model answered in prose instead of asking for a tool, so there is nothing left to do: return the answer. This single <code>if</code> is the entire stop condition of the agent.'],
+   request:['What the model actually returned','This is the line people misread. The model did <b>not</b> run anything — it produced a request:<div class="flow">name = "calculator"\nargs = {"expression": "4817 * 293"}</div>Text, nothing more. Because it is only a request, your code can still validate it, refuse it, or show it to a person before anything happens.'],
+   exec:['The one line where anything actually runs','<b>This is the most important line on the page.</b> Everything before it was the model asking; here your Python looks the function up in the registry and calls it with the arguments the model supplied:<div class="flow">TOOLS["calculator"](expression="4817 * 293")</div>An agent’s ability to act comes from this line — from your harness — not from the model. Which is also why every guardrail belongs right here.'],
+   err:['Errors become observations, not crashes','If the model passes something the function cannot handle, a normal script would crash. Here the failure is caught and turned into text that goes back to the model:<div class="flow">Tool: ERROR calling calculator: …\nModel: I passed a bad argument — let me retry.</div>That is a real difference between an agent and a script: <b>failure can become the input to the next round of reasoning</b>.'],
+   obs:['Send the result back as an observation','The return value is appended to the conversation with <code>role: "tool"</code>, so the next pass of the loop shows the model what happened:<div class="flow">USER:  What is 4817 * 293?\nMODEL: call calculator("4817 * 293")\nTOOL:  1411381</div>Forget this step and the model never learns the answer — it will just ask for the same tool again. Then the loop repeats, the model sees <code>1411381</code>, and this time it replies without a tool call, so the run ends.']
+  };
+  const code=document.getElementById('yCode'), note=document.getElementById('yNote'), chips=document.getElementById('yChips');
+  if(!code||!note||!chips)return;
+  const order=[['fn','1 · the function'],['registry','2 · the registry'],['loop','3 · the loop'],['ask','4 · ask the model'],['finish','5 · finished?'],['request','6 · the request'],['exec','7 · execute'],['err','8 · errors'],['obs','9 · observation']];
+  order.forEach(([k,label])=>{const b=document.createElement('button');b.className='ychip';b.dataset.k=k;b.textContent=label;chips.appendChild(b)});
+  function sel(k){
+    document.querySelectorAll('.yl').forEach(e=>e.classList.toggle('on',e.dataset.k===k));
+    document.querySelectorAll('.ychip').forEach(e=>e.classList.toggle('on',e.dataset.k===k));
+    note.innerHTML='<h4>'+N[k][0]+'</h4><p style="margin:0">'+N[k][1]+'</p>';
+  }
+  document.addEventListener('click',e=>{const t=e.target.closest('.yl,.ychip');if(t&&t.dataset.k)sel(t.dataset.k)});
+})();
+
 document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});
 const progress=document.getElementById('progressBar');
 addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
