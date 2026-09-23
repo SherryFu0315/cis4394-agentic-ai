@@ -108,6 +108,7 @@ pip install -r requirements.txt</div>
 </div></section>
 
 <section><div class="wrap">
+  <div class="callout blue" style="margin-top:0"><b>Before every command below.</b> Your terminal must be <b>in the folder with the scripts</b> — if you opened a new window, <code>cd</code> back into it first. And where the blocks say <code>python</code>, type <b><code>python3</code> on Mac</b> or <b><code>py -3</code> on Windows</b>. If you built a virtual environment in Step 1, either activate it or call it directly, e.g. <code>./venv/bin/python 1_agent_raw.py …</code> on Mac.</div>
   <div class="eyebrow">Step 2 · 1_agent_raw.py</div>
   <h2>The whole agent loop, in plain Python</h2>
   <p class="lede">No framework. Everything from <a href="mechanics.html">page 01</a> is visible in about twenty lines: the model <em>requests</em> a tool, your code <em>runs</em> it, the result goes back as an observation, and the loop repeats until the model answers without asking for a tool.</p>

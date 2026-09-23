@@ -19,6 +19,11 @@
 <meta name="twitter:image" content="https://sherryfu0315.github.io/cis4394-agentic-ai/assets/social-card.png" />
 <link rel="icon" href="../assets/gsu-flame.png" />
 <link rel="stylesheet" href="../assets/site.css" />
+<style>
+.oscmd{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0}
+.oscmd .lab{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+@media(max-width:880px){.oscmd{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 
@@ -64,6 +69,7 @@
   <div class="grouptask"><span class="gk">👥 Group task · Pairs, at a laptop · ~12 minutes</span>
     <p><b>Run each round several times</b> and write down every answer you get. Do not fix anything, do not help the model — just record what happens. The four rounds change one thing at a time.</p>
     <p class="prod"><b>Produce:</b> the filled table below, and one sentence for each round: what changed, and why you think it changed.</p>
+    <p class="small" style="margin-top:8px"><b>Before you start:</b> Rounds 1 and 2 use <code>ollama</code> and work from any folder. Rounds 3 and 4 run a Python file, so your terminal must be <b>in the folder where you saved <code>1_agent_raw.py</code></b> — the commands below assume your Desktop. Download it first from <a href="../materials/week5_ollama_starter/1_agent_raw.py">here</a>, and install the one package you need: <code>python3 -m pip install ollama</code> on Mac, <code>py -3 -m pip install ollama</code> on Windows.</p>
   </div>
 
   <h3 style="margin-top:22px">Round 1 · Ask the model directly — run it 5 times</h3>
@@ -75,11 +81,21 @@
   <p class="small">No wording to interpret, no percentages to reason about — just one multiplication. Does that fix it?</p>
 
   <h3 style="margin-top:18px">Round 3 · Same formula, but give it a calculator — run it 5 times</h3>
-  <div class="codebox">python3 1_agent_raw.py "What is 4817 * 293 * 1.18?"      # Windows: py -3 1_agent_raw.py "..."</div>
+  <div class="oscmd">
+    <div><div class="lab">Mac — Terminal</div><div class="codebox" style="margin:0">cd ~/Desktop
+python3 1_agent_raw.py "What is 4817 * 293 * 1.18?"</div></div>
+    <div><div class="lab">Windows — PowerShell</div><div class="codebox" style="margin:0">cd ~\Desktop
+py -3 1_agent_raw.py "What is 4817 * 293 * 1.18?"</div></div>
+  </div>
   <p class="small">Same model, same laptop. The only difference is that a ten-line Python function is now available to it. Watch the two lines it prints: what the model <em>asks for</em>, and what your code <em>returns</em>.</p>
 
   <h3 style="margin-top:18px">Round 4 · Calculator, but ask in words again — run it 5 times</h3>
-  <div class="codebox">python3 1_agent_raw.py "An invoice is 4817 units at 293 EUR each, plus 18% VAT. What is the euro total?"</div>
+  <div class="oscmd">
+    <div><div class="lab">Mac — Terminal</div><div class="codebox" style="margin:0">cd ~/Desktop
+python3 1_agent_raw.py "An invoice is 4817 units at 293 EUR each, plus 18% VAT. What is the euro total?"</div></div>
+    <div><div class="lab">Windows — PowerShell</div><div class="codebox" style="margin:0">cd ~\Desktop
+py -3 1_agent_raw.py "An invoice is 4817 units at 293 EUR each, plus 18% VAT. What is the euro total?"</div></div>
+  </div>
   <p class="small">This time, look closely at the <code>expression</code> the model sends to the calculator — not just the final answer.</p>
 
   <div style="overflow-x:auto;margin-top:18px"><table class="plain">
