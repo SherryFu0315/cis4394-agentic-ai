@@ -61,14 +61,19 @@
   <h2>Arithmetic a model gets wrong</h2>
   <p class="lede">Your Berlin supplier invoiced <b>4,817 units at €293 each</b>, plus <b>18% VAT</b>. What is the euro total? Ask a language model to do it in its head, and ask it again with a calculator attached.</p>
   <div class="grid2">
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Model alone — illustrative</span>
-      <div class="codebox" style="margin-top:10px">Q: 4817 × 293 × 1.18 = ?
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Model alone — five real runs</span>
+      <div class="codebox" style="margin-top:10px">$ ollama run qwen2.5:0.5b
+  "An invoice is 4817 units at 293 EUR each,
+   plus 18% VAT. What is the euro total?"
 
-Model (predicting tokens, not computing):
-"That comes to about 1.68 million euros."
+run 1 →     1,378,861 EUR
+run 2 →         5,182 EUR
+run 3 →   127,797,491 EUR
+run 4 →     1,336,588 EUR
+run 5 →           346 EUR
 
-  fluent · confident · unverifiable · wrong</div>
-      <p class="small" style="margin-top:10px">Nothing in the model <em>multiplied</em> anything. It produced the most plausible-looking continuation, which for long multiplication is a number of roughly the right size. Nobody downstream can tell the difference between this and a right answer.</p>
+correct →   1,665,429.58 EUR</div>
+      <p class="small" style="margin-top:10px">Five runs, five different answers, spanning five orders of magnitude, <b>none of them right</b>. Nothing in the model <em>multiplied</em> anything — it produced a plausible-looking continuation each time. Note run 4: it even set up the right formula and still missed. Nobody downstream can tell any of these from a correct answer.</p>
     </div>
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Model + one tool</span>
       <div class="codebox" style="margin-top:10px">Model emits:
@@ -79,11 +84,13 @@ Model (predicting tokens, not computing):
 Harness runs it →  1665429.58
 
 Answer: €1,665,429.58
+
+5 runs → 5 identical answers
   exact · deterministic · reproducible · logged</div>
-      <p class="small" style="margin-top:10px">The tool is about ten lines of Python. The model did not get smarter — it got a <b>calculator</b>, plus a line in the log saying exactly what was computed and with what inputs.</p>
+      <p class="small" style="margin-top:10px">The tool is about ten lines of Python. The model did not get smarter — it got a <b>calculator</b>, plus a line in the log saying exactly what was computed and with what inputs. Same model, same laptop, five runs, one answer.</p>
     </div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>Be honest about why this works.</b> Modern models are much better at arithmetic than early ones, and many will get this particular product right. That is not the point. The point is that a token predictor is <em>non-deterministic</em> and <em>unauditable</em>: you cannot promise a controller that the number will be right next month, and you cannot show the work. A tool call gives you exactness, repeatability, and a trace — three things a finance team will actually ask for.</div>
+  <div class="callout" style="margin-top:20px"><b>What the tool fixes, and what it does not.</b> The calculator is always exact and always logged. What it cannot do is decide <em>what to compute</em>: asked for "plus 18% VAT" in words, this same small model often hands the calculator a wrong expression — <code>4817*293 + 18/100</code> in one run, <code>4817*293 + 18*293</code> in another. Arithmetic moved into the tool; <b>planning stayed with the model</b>, and that is what <a href="local.html">page 03</a> measures. Bigger models get this particular product right more often, which is also not the point: a token predictor is <em>non-deterministic</em> and <em>unauditable</em>: you cannot promise a controller that the number will be right next month, and you cannot show the work. A tool call gives you exactness, repeatability, and a trace — three things a finance team will actually ask for.</div>
 </div></section>
 
 <section><div class="wrap">
