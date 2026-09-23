@@ -59,6 +59,24 @@
   <button class="revealbtn">See the answer</button>
   <div class="revealbox">The model produces <b>a structured request and nothing else</b> — a small block of JSON naming a function and its arguments:<div class="codebox" style="margin:12px 0">{"name": "calculator",
  "arguments": {"expression": "4817*293*1.18"}}</div>It does not execute anything — it cannot. <b>Your harness</b> receives that request, validates the arguments against the schema you wrote, decides whether the call is even allowed, runs the function, and hands the result back as the next observation. Same division of labour as Week 4's loop: <a href="../week4/loop.html">the model proposes, the harness disposes</a>. Everything valuable this week follows from taking that sentence literally — because if the harness is the only thing that executes, the harness is the only place you need to put controls.</div>
+  <p class="small" style="margin-top:18px"><b>Week 4 called this step “Act” and left it as a black box. Here it is, opened:</b></p>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><span class="kicker">Week 4 · the loop</span>
+      <div class="codebox" style="margin-top:10px">Observe → Reason → <b>ACT</b> → Update state
+                       ↑
+                  (a black box)</div>
+      <p class="small" style="margin-top:10px">Last week “Act” was a label on an arrow. You stepped through episodes where the agent “called Search” and a result appeared, and we deliberately did not ask how.</p>
+    </div>
+    <div class="card"><span class="kicker">Week 5 · inside the arrow</span>
+      <div class="codebox" style="margin-top:10px">model emits {name, arguments}
+   → harness VALIDATES the arguments
+   → harness DECIDES: run / constrain / ask a human
+   → tool executes
+   → result returns as an OBSERVATION</div>
+      <p class="small" style="margin-top:10px">Five steps, four of which are ordinary software you write and test. Pages 01 and 02 take them one at a time.</p>
+    </div>
+  </div>
+
 </div></section>
 
 <section><div class="wrap">
@@ -113,38 +131,9 @@ run 3 →   127,797,491</div>
   <div class="callout" style="margin-top:20px"><b>What the tool fixes, and what it does not.</b> The calculator is always exact and always logged. What it cannot do is decide <em>what to compute</em>: asked for "plus 18% VAT" in words, this same small model often hands the calculator a wrong expression — <code>4817*293 + 18/100</code> in one run, <code>4817*293 + 18*293</code> in another. Arithmetic moved into the tool; <b>planning stayed with the model</b>, and that is what <a href="local.html">page 03</a> measures. Bigger models get this particular product right more often, which is also not the point: a token predictor is <em>non-deterministic</em> and <em>unauditable</em>: you cannot promise a controller that the number will be right next month, and you cannot show the work. A tool call gives you exactness, repeatability, and a trace — three things a finance team will actually ask for.</div>
 </div></section>
 
-<section><div class="wrap">
-  <div class="eyebrow">Bridge from Week 4</div>
-  <h2>The “Act” arrow, opened up</h2>
-  <div class="grid2" style="align-items:start">
-    <div class="card"><span class="kicker">Week 4 · the loop</span>
-      <div class="codebox" style="margin-top:10px">Observe → Reason → <b>ACT</b> → Update state
-                       ↑
-                  (a black box)</div>
-      <p class="small" style="margin-top:10px">Last week “Act” was a label on an arrow. You stepped through episodes where the agent “called Search” and a result appeared, and we deliberately did not ask how.</p>
-    </div>
-    <div class="card"><span class="kicker">Week 5 · inside the arrow</span>
-      <div class="codebox" style="margin-top:10px">model emits {name, arguments}
-   → harness VALIDATES the arguments
-   → harness DECIDES: run / constrain / ask a human
-   → tool executes
-   → result returns as an OBSERVATION</div>
-      <p class="small" style="margin-top:10px">Five steps, four of which are ordinary software you write and test. Pages 01 and 02 take them one at a time.</p>
-    </div>
-  </div>
-</div></section>
 
-<section><div class="wrap">
-  <div class="eyebrow">Why tools at all</div>
-  <h2>Four gaps a raw model cannot close</h2>
-  <div class="grid2">
-    <div class="card"><span class="kicker">Gap 1 · Knowledge cutoff</span><p class="small" style="margin-top:8px">A model's weights were frozen on a date. It cannot know your Q3 numbers, today's outage, or a policy you published last Tuesday. <b>Closed by:</b> a retrieval or search tool.</p></div>
-    <div class="card"><span class="kicker">Gap 2 · Private &amp; live data</span><p class="small" style="margin-top:8px">Your CRM, your ticket queue, your inventory table were never in anyone's training data — and should not have been. <b>Closed by:</b> a read tool against your own systems.</p></div>
-    <div class="card"><span class="kicker">Gap 3 · True computation</span><p class="small" style="margin-top:8px">Predicting the next token is not arithmetic, and it is certainly not running a SQL query or a pricing model. <b>Closed by:</b> a calculator, a code runner, a query tool.</p></div>
-    <div class="card"><span class="kicker">Gap 4 · Actions in the world</span><p class="small" style="margin-top:8px">Text cannot file a ticket, send an email, or issue a refund. <b>Closed by:</b> write tools — and this is exactly where the risk arrives.</p></div>
-  </div>
-  <div class="callout blue" style="margin-top:20px"><b>The framing:</b> Anthropic's engineering guide calls this the <b>augmented LLM</b> — a model extended with tools, retrieval, and memory as its basic building block (Anthropic, 2024, <a class="doc" href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building Effective Agents ↗</a>). This week is the <em>tools</em> corner of that picture; retrieval and memory come later in the semester.</div>
-</div></section>
+
+
 
 <section><div class="wrap">
   <div class="eyebrow">This week's pages</div>
@@ -182,6 +171,19 @@ run 3 →   127,797,491</div>
     <div class="card"><span class="kicker">Auditability</span><p class="small" style="margin-top:8px">Because every tool call is a structured record — name, arguments, result, timestamp — a tool-using agent is far easier to audit than one that “just knows.” When compliance asks what happened, you replay the calls.</p></div>
   </div>
   <div class="callout" style="margin-top:20px"><b>The manager's version of this week:</b> you do not decide whether an agent is “safe” in the abstract. You decide, tool by tool, which calls run automatically, which run only inside limits you encoded, and which stop and wait for a person. Page 02 turns that into a table you can actually fill in.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Optional · read on your own</div>
+  <h2>Four gaps a raw model cannot close</h2>
+  <p class="small" style="max-width:820px;margin-top:-4px">Background, not a prerequisite — you can do pages 01–03 without it. It answers the question one step behind this week: <em>why give a model tools at all?</em></p>
+  <div class="grid2">
+    <div class="card"><span class="kicker">Gap 1 · Knowledge cutoff</span><p class="small" style="margin-top:8px">A model's weights were frozen on a date. It cannot know your Q3 numbers, today's outage, or a policy you published last Tuesday. <b>Closed by:</b> a retrieval or search tool.</p></div>
+    <div class="card"><span class="kicker">Gap 2 · Private &amp; live data</span><p class="small" style="margin-top:8px">Your CRM, your ticket queue, your inventory table were never in anyone's training data — and should not have been. <b>Closed by:</b> a read tool against your own systems.</p></div>
+    <div class="card"><span class="kicker">Gap 3 · True computation</span><p class="small" style="margin-top:8px">Predicting the next token is not arithmetic, and it is certainly not running a SQL query or a pricing model. <b>Closed by:</b> a calculator, a code runner, a query tool.</p></div>
+    <div class="card"><span class="kicker">Gap 4 · Actions in the world</span><p class="small" style="margin-top:8px">Text cannot file a ticket, send an email, or issue a refund. <b>Closed by:</b> write tools — and this is exactly where the risk arrives.</p></div>
+  </div>
+  <div class="callout blue" style="margin-top:20px"><b>The framing:</b> Anthropic's engineering guide calls this the <b>augmented LLM</b> — a model extended with tools, retrieval, and memory as its basic building block (Anthropic, 2024, <a class="doc" href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building Effective Agents ↗</a>). This week is the <em>tools</em> corner of that picture; retrieval and memory come later in the semester.</div>
 </div></section>
 
 <div class="wrap pager">
