@@ -59,37 +59,54 @@
 <section><div class="wrap">
   <div class="eyebrow">The hook</div>
   <h2>Arithmetic a model gets wrong</h2>
-  <p class="lede">Your Berlin supplier invoiced <b>4,817 units at €293 each</b>, plus <b>18% VAT</b>. What is the euro total? Ask a language model to do it in its head, and ask it again with a calculator attached.</p>
-  <div class="grid2">
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Model alone — five real runs</span>
-      <div class="codebox" style="margin-top:10px">$ ollama run qwen2.5:0.5b
-  "An invoice is 4817 units at 293 EUR each,
-   plus 18% VAT. What is the euro total?"
+  <p class="lede">Your Berlin supplier invoiced <b>4,817 units at €293 each</b>, plus <b>18% VAT</b>. What is the euro total? Before anyone tells you the answer, <b>find out for yourself</b> what a local model does with this question.</p>
 
-run 1 →     1,378,861 EUR
-run 2 →         5,182 EUR
-run 3 →   127,797,491 EUR
-run 4 →     1,336,588 EUR
-run 5 →           346 EUR
-
-correct →   1,665,429.58 EUR</div>
-      <p class="small" style="margin-top:10px">Five runs, five different answers, spanning five orders of magnitude, <b>none of them right</b>. Nothing in the model <em>multiplied</em> anything — it produced a plausible-looking continuation each time. Note run 4: it even set up the right formula and still missed. Nobody downstream can tell any of these from a correct answer.</p>
-    </div>
-    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Model + one tool</span>
-      <div class="codebox" style="margin-top:10px">Model emits:
-{"name": "calculator",
- "arguments": {"expression":
-   "4817*293*1.18"}}
-
-Harness runs it →  1665429.58
-
-Answer: €1,665,429.58
-
-5 runs → 5 identical answers
-  exact · deterministic · reproducible · logged</div>
-      <p class="small" style="margin-top:10px">The tool is about ten lines of Python. The model did not get smarter — it got a <b>calculator</b>, plus a line in the log saying exactly what was computed and with what inputs. Same model, same laptop, five runs, one answer.</p>
-    </div>
+  <div class="grouptask"><span class="gk">👥 Group task · Pairs, at a laptop · ~12 minutes</span>
+    <p><b>Run each round several times</b> and write down every answer you get. Do not fix anything, do not help the model — just record what happens. The four rounds change one thing at a time.</p>
+    <p class="prod"><b>Produce:</b> the filled table below, and one sentence for each round: what changed, and why you think it changed.</p>
   </div>
+
+  <h3 style="margin-top:22px">Round 1 · Ask the model directly — run it 5 times</h3>
+  <div class="codebox">ollama run qwen2.5:0.5b "An invoice is 4817 units at 293 EUR each, plus 18% VAT. What is the euro total?"</div>
+  <p class="small">Run the identical command five times. Write down all five answers.</p>
+
+  <h3 style="margin-top:18px">Round 2 · Hand it the exact formula — run it 5 times</h3>
+  <div class="codebox">ollama run qwen2.5:0.5b "What is 4817 * 293 * 1.18? Reply with just the number."</div>
+  <p class="small">No wording to interpret, no percentages to reason about — just one multiplication. Does that fix it?</p>
+
+  <h3 style="margin-top:18px">Round 3 · Same formula, but give it a calculator — run it 5 times</h3>
+  <div class="codebox">python3 1_agent_raw.py "What is 4817 * 293 * 1.18?"      # Windows: py -3 1_agent_raw.py "..."</div>
+  <p class="small">Same model, same laptop. The only difference is that a ten-line Python function is now available to it. Watch the two lines it prints: what the model <em>asks for</em>, and what your code <em>returns</em>.</p>
+
+  <h3 style="margin-top:18px">Round 4 · Calculator, but ask in words again — run it 5 times</h3>
+  <div class="codebox">python3 1_agent_raw.py "An invoice is 4817 units at 293 EUR each, plus 18% VAT. What is the euro total?"</div>
+  <p class="small">This time, look closely at the <code>expression</code> the model sends to the calculator — not just the final answer.</p>
+
+  <div style="overflow-x:auto;margin-top:18px"><table class="plain">
+    <thead><tr><th style="width:70px">Run</th><th>Round 1<br /><span class="small">model alone, words</span></th><th>Round 2<br /><span class="small">model alone, formula</span></th><th>Round 3<br /><span class="small">calculator, formula</span></th><th>Round 4<br /><span class="small">calculator, words — write the expression it sent</span></th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>2</td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>3</td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>4</td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>5</td><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="bigq" style="margin-top:22px"><span class="qlabel">Discussion question</span>Rounds 1 and 2 both failed, but for the same reason or for different reasons? And in Round 4, which part of the system was wrong — the calculator, or the model?</div>
+  <button class="revealbtn">Compare with the instructor's runs</button>
+  <div class="revealbox">
+    <p style="margin-top:0"><b>Round 1 — model alone, asked in words.</b> Five runs, five different answers, spanning five orders of magnitude, none of them correct (the answer is <b>1,665,429.58</b>):</p>
+    <div class="codebox" style="margin:8px 0">run 1 →     1,378,861      run 4 →     1,336,588
+run 2 →         5,182      run 5 →           346
+run 3 →   127,797,491</div>
+    <p>Run 4 is the interesting one: it wrote the right formula, <code>4817 * 293 * (1 + 0.18)</code>, and still produced a wrong number.</p>
+    <p><b>Round 2 — model alone, handed the formula.</b> Still wrong every time, and now the wrong answers cluster near the right size — which is worse, because they look believable: <code>999,999.8 · 1,286,483.4 · 1,240,908.4 · 115,085.4 · 1,194,414.8</code>. So this was never a wording problem. <b>Nothing in the model multiplies anything</b>; it predicts the most plausible-looking continuation, and for long multiplication that is a number of roughly the right magnitude.</p>
+    <p><b>Round 3 — with a calculator.</b> Five runs, five identical answers: <b>1,665,429.58</b>. The model did not get smarter. It got a tool, plus a line in the log saying exactly what was computed and with what inputs.</p>
+    <p><b>Round 4 — calculator, asked in words.</b> The calculator was exact every single time. The <em>expression</em> was not: <code>4817*293 + 18/100</code> in one run, <code>4817*293 + 18*293</code> in another, and the correct <code>4817*293 + 18*4817*293/100</code> in a third. The tool fixed the arithmetic; it did not fix deciding <b>what to compute</b>.</p>
+    <p style="margin-bottom:0"><b>So the two failures are different.</b> Rounds 1–2 are a <em>computation</em> failure, and a tool removes it completely. Round 4 is a <em>planning</em> failure, which lives in the model and is what <a href="local.html">page 03</a> measures — and what tool design can partly work around.</p>
+  </div>
+
   <div class="callout" style="margin-top:20px"><b>What the tool fixes, and what it does not.</b> The calculator is always exact and always logged. What it cannot do is decide <em>what to compute</em>: asked for "plus 18% VAT" in words, this same small model often hands the calculator a wrong expression — <code>4817*293 + 18/100</code> in one run, <code>4817*293 + 18*293</code> in another. Arithmetic moved into the tool; <b>planning stayed with the model</b>, and that is what <a href="local.html">page 03</a> measures. Bigger models get this particular product right more often, which is also not the point: a token predictor is <em>non-deterministic</em> and <em>unauditable</em>: you cannot promise a controller that the number will be right next month, and you cannot show the work. A tool call gives you exactness, repeatability, and a trace — three things a finance team will actually ask for.</div>
 </div></section>
 
