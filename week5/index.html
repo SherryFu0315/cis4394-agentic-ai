@@ -52,7 +52,8 @@
   <div class="eyebrow">The big question</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>When an agent “calls a tool,” what does the language model <em>actually</em> produce — and who runs the code?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">The model produces <b>a structured request and nothing else</b>: a small block of JSON naming a function and its arguments, e.g. <code>{"name":"calculator","arguments":{"expression":"4817*293*1.18"}}</code>. It does not execute anything — it cannot. <b>Your harness</b> receives that request, validates the arguments against the schema you wrote, decides whether the call is even allowed, runs the function, and hands the result back as the next observation. Same division of labour as Week 4's loop: <a href="../week4/loop.html">the model proposes, the harness disposes</a>. Everything valuable this week follows from taking that sentence literally — because if the harness is the only thing that executes, the harness is the only place you need to put controls.</div>
+  <div class="revealbox">The model produces <b>a structured request and nothing else</b> — a small block of JSON naming a function and its arguments:<div class="codebox" style="margin:12px 0">{"name": "calculator",
+ "arguments": {"expression": "4817*293*1.18"}}</div>It does not execute anything — it cannot. <b>Your harness</b> receives that request, validates the arguments against the schema you wrote, decides whether the call is even allowed, runs the function, and hands the result back as the next observation. Same division of labour as Week 4's loop: <a href="../week4/loop.html">the model proposes, the harness disposes</a>. Everything valuable this week follows from taking that sentence literally — because if the harness is the only thing that executes, the harness is the only place you need to put controls.</div>
 </div></section>
 
 <section><div class="wrap">
