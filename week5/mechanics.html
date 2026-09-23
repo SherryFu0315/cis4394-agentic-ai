@@ -214,8 +214,31 @@
   </div>
 </div></section>
 
+
+
+
+
 <section><div class="wrap">
-  <div class="eyebrow">Where this comes from</div>
+  <div class="eyebrow">Discussion</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>A vendor tells your CIO that their agent “runs Python, queries the warehouse, and emails customers.” Using this page's vocabulary, what is the <em>one</em> question that tells you how much you should worry?</div>
+  <button class="revealbtn">See the answer</button>
+  <div class="revealbox"><b>“Show me the tool schemas, and show me who validates the arguments.”</b> The impressive verb list is just the tool inventory — it tells you the agent's <em>capability</em>, and nothing about its <em>limits</em>. What matters is the shape of each schema and where the checks live: does <code>query_warehouse</code> accept arbitrary SQL or a table name from an enum? Does <code>email_customer</code> accept any address, or only addresses already attached to the ticket? Is the validation inside the vendor's harness (auditable, versioned, testable) or inside the prompt (a polite request the model can ignore)? A secondary question worth asking in the same breath: <b>what happens on failure?</b> An agent that crashes on a bad argument is annoying; an agent that silently retries a write tool is a duplicate-payment incident. You are looking for the same ownership split as this page: model proposes, harness disposes, every call logged.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Concept check</div>
+  <h2>Who does what?</h2>
+  <div id="ccheck"></div>
+</div></section>
+
+<section style="background:var(--panel-2,transparent);border-top:1px solid var(--line)"><div class="wrap">
+  <div class="eyebrow">Beyond the core</div>
+  <h2>Optional — read these when you have time</h2>
+  <p class="lede">Nothing below is needed to do pages 02 and 03, or to pass the quiz. It is context, and it is good context.</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Optional · where this comes from</div>
   <h2>Two papers worth knowing by name</h2>
   <div class="grid2">
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">The pattern</span><h3 style="margin-top:6px">ReAct (Yao et al., 2022)</h3>
@@ -227,7 +250,7 @@
 </div></section>
 
 <section><div class="wrap">
-  <div class="eyebrow">Watch</div>
+  <div class="eyebrow">Optional · watch</div>
   <h2>Tool calling, explained in five minutes</h2>
   <div class="grid2" style="align-items:start">
     <div class="card"><h3>What is Tool Calling? Connecting LLMs to Your Data (IBM Technology, ~4m56s)</h3>
@@ -241,19 +264,6 @@
       <p class="small" style="margin-top:12px">Reference explainer if you want the same material as text: <a class="doc" href="https://www.ibm.com/think/topics/tool-calling" target="_blank" rel="noopener">IBM Think — What Is Tool Calling? ↗</a> · Framework docs: <a class="doc" href="https://python.langchain.com/docs/concepts/tool_calling/" target="_blank" rel="noopener">LangChain — Tool calling ↗</a></p>
     </div>
   </div>
-</div></section>
-
-<section><div class="wrap">
-  <div class="eyebrow">Discussion</div>
-  <div class="bigq"><span class="qlabel">Discussion question</span>A vendor tells your CIO that their agent “runs Python, queries the warehouse, and emails customers.” Using this page's vocabulary, what is the <em>one</em> question that tells you how much you should worry?</div>
-  <button class="revealbtn">See the answer</button>
-  <div class="revealbox"><b>“Show me the tool schemas, and show me who validates the arguments.”</b> The impressive verb list is just the tool inventory — it tells you the agent's <em>capability</em>, and nothing about its <em>limits</em>. What matters is the shape of each schema and where the checks live: does <code>query_warehouse</code> accept arbitrary SQL or a table name from an enum? Does <code>email_customer</code> accept any address, or only addresses already attached to the ticket? Is the validation inside the vendor's harness (auditable, versioned, testable) or inside the prompt (a polite request the model can ignore)? A secondary question worth asking in the same breath: <b>what happens on failure?</b> An agent that crashes on a bad argument is annoying; an agent that silently retries a write tool is a duplicate-payment incident. You are looking for the same ownership split as this page: model proposes, harness disposes, every call logged.</div>
-</div></section>
-
-<section><div class="wrap">
-  <div class="eyebrow">Concept check</div>
-  <h2>Who does what?</h2>
-  <div id="ccheck"></div>
 </div></section>
 
 <div class="wrap pager">
