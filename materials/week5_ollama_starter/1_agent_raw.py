@@ -1,6 +1,6 @@
 """
 Week 5 starter: a tool-calling agent on a LOCAL model (Ollama). No API key, no cost.
-Run:  pip install -r requirements.txt   then   python 1_agent_raw.py "What is 4817 * 293?"
+Run:  pip install ollama   then   python 1_agent_raw.py "What is 4817 * 293?"
 """
 import os, sys
 import ollama
