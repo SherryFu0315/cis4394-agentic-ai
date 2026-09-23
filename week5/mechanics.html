@@ -165,24 +165,7 @@
   <div class="callout blue" style="margin-top:20px"><b>The description is a prompt.</b> The model chooses between tools by reading their descriptions, in the same way it reads any other instruction. A vague description (<em>“handles currency stuff”</em>) produces vague behaviour: wrong tool, missing arguments, silent non-use. In Python you usually write that description as a docstring — which means <b>the docstring is the interface</b>, and it deserves the same care as an API contract. Page 02 makes this concrete, and you will break it deliberately in the <a href="exercises.html">hands-on exercise</a>.</div>
 </div></section>
 
-<section><div class="wrap">
-  <div class="eyebrow">The same episode, as a transcript</div>
-  <h2>Who said what</h2>
-  <p class="lede">The simulator above with the machinery stripped out — this is what actually sits in the model's message history at the end of the run. Four roles, strictly alternating.</p>
-  <div class="rolegrid">
-    <div class="r"><div class="who">user</div><div class="what">Berlin supplier invoice: 4,817 units at EUR 293 each, plus 18% VAT. Total in USD?</div></div>
-    <div class="r model"><div class="who">model</div><div class="what">tool_call: calculator(expression="4817*293*1.18")</div></div>
-    <div class="r run"><div class="who">runtime</div><div class="what">tool: calculator -> "1665429.58"</div></div>
-    <div class="r model"><div class="who">model</div><div class="what">tool_call: fx_rate(base="euro", quote="USD")</div></div>
-    <div class="r run"><div class="who">runtime</div><div class="what">tool: fx_rate -> "ToolArgError: base must be one of [EUR, GBP, JPY, USD]; got 'euro'"</div></div>
-    <div class="r model"><div class="who">model</div><div class="what">tool_call: fx_rate(base="EUR", quote="USD")</div></div>
-    <div class="r run"><div class="who">runtime</div><div class="what">tool: fx_rate -> "1.08"   (stub tool, illustrative fixed rate)</div></div>
-    <div class="r model"><div class="who">model</div><div class="what">tool_call: calculator(expression="1665429.58*1.08")</div></div>
-    <div class="r run"><div class="who">runtime</div><div class="what">tool: calculator -> "1798663.9464"</div></div>
-    <div class="r model"><div class="who">model</div><div class="what">USD 1,798,663.95 — EUR 1,665,429.58 converted at 1.08. (no tool call -> loop ends)</div></div>
-  </div>
-  <div class="callout" style="margin-top:20px"><b>Exact, deterministic, auditable.</b> Every number in that answer came from a function, and every function call is a row you can query. Ask this transcript “what rate did we use, and when?” and it answers. Ask the same question of a model that did the conversion in its head, and you get a shrug.</div>
-</div></section>
+
 
 <section><div class="wrap">
   <div class="eyebrow">The code</div>

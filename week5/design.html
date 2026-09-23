@@ -315,7 +315,7 @@
 <section style="border-top:1px solid var(--line)"><div class="wrap">
   <div class="eyebrow">Beyond the core</div>
   <h2>Optional — depth you can come back for</h2>
-  <p class="lede">The three sections above — the schema anatomy, errors as observations, and auto-run / constrain / gate — carry this page. Everything below is worth reading before you design your capstone tools, but you can do page 03 and the quiz without it.</p>
+  <p class="lede">The three sections above — the schema anatomy, errors as observations, and auto-run / constrain / gate — carry this page. Everything below is worth reading before you design your capstone tools, but you can do page 03 and the quiz without it. Two topics that used to live here have moved to where they pay off: <b>idempotency and safe retries</b> are covered in <a href="../week11/deploy.html">Week 11</a>, where a duplicate call means a duplicate charge, and the <b>plain-Python&nbsp;↔&nbsp;LangGraph comparison</b> opens <a href="../week9/patterns.html">Week 9</a>, where we take frameworks seriously.</p>
 </div></section>
 
 <section><div class="wrap">
@@ -329,79 +329,9 @@
   <div class="callout blue" style="margin-top:20px"><b>Week 3 callback:</b> tool schemas live in the context window. Every description you add is context budget spent on <em>every single turn</em> of the loop. “Add another tool” is never free — it costs tokens, it costs selection accuracy, and it widens the risk surface. Curate the inventory the way you curate a prompt (see <a href="../week3/context.html">context engineering</a>).</div>
 </div></section>
 
-<section><div class="wrap">
-  <div class="eyebrow">Optional · the one property people forget</div>
-  <h2>Idempotency &amp; side-effect safety</h2>
-  <div class="grid2">
-    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Idempotent — safe to repeat</span>
-      <p class="small" style="margin-top:8px"><code>lookup_order(id)</code> · <code>get_balance(account)</code> · <code>set_status(ticket, "closed")</code> — calling it five times leaves the world in the same state as calling it once. Retry freely.</p></div>
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Not idempotent — repeats accumulate</span>
-      <p class="small" style="margin-top:8px"><code>charge_card(amount)</code> · <code>send_email(to, body)</code> · <code>append_row(sheet, values)</code> · <code>create_ticket(...)</code> — every call adds a new effect. A timeout plus an automatic retry is two charges, two emails, two tickets.</p></div>
-  </div>
-  <div class="grid3" style="margin-top:18px">
-    <div class="card"><span class="kicker">Idempotency keys</span><p class="small" style="margin-top:8px">The tool accepts a caller-supplied key and refuses to act twice on the same one. This is why <code>idempotency_key</code> is in the refund schema above — and why it is <code>required</code>.</p></div>
-    <div class="card"><span class="kicker">Duplicate checks</span><p class="small" style="margin-top:8px">Before acting, ask the system whether this effect already exists: “has a refund been issued on this order in the last hour?” Slower, but it works for tools you do not own.</p></div>
-    <div class="card"><span class="kicker">Prefer a gate over a blind retry</span><p class="small" style="margin-top:8px">When money moves and the outcome is genuinely unknown, do not guess. Stop and show a person: “the charge timed out; I do not know whether it went through.” Ambiguity is a human's job.</p></div>
-  </div>
-</div></section>
 
-<section><div class="wrap">
-  <div class="eyebrow">Optional · if you use a framework later</div>
-  <h2>The same eight moves, once a framework is involved</h2>
-  <p class="lede"><b>You do not need this for page 03.</b> There, the loop and the gate are a few lines of plain Python you can read end to end. But when a project outgrows one loop, frameworks give these same ideas names — <code>@tool</code>, <code>bind_tools</code>, <code>ToolNode</code>, <code>tools_condition</code> — and the gate attaches at exactly the place you would expect. Skim it now; come back when you need it.</p>
-  <p class="lede" style="margin-top:6px">Click any line — <b>the matching line on the other side lights up too</b>. Nothing new happens in the right-hand column; the same moves have simply been given names.</p>
-  <div class="xchips" id="xChips"></div>
-  <div class="xgrid">
-    <div><div class="xlab">Plain Python — what you run on page 03</div>
-      <div class="xcode" id="xPlain"><span class="xl" data-k="tools">TOOLS = {"calculator": calculator,
-         "issue_refund": issue_refund}</span>
 
-<span class="xl" data-k="loop">for step in range(1, MAX_STEPS + 1):</span>
-<span class="xl" data-k="ask">    msg = ollama.chat(model=MODEL,
-                      messages=messages,
-                      tools=list(TOOLS.values())).message</span>
-    messages.append(msg)
 
-<span class="xl" data-k="decide">    if not msg.tool_calls:</span>
-<span class="xl" data-k="end">        return msg.content          # done</span>
-
-    for call in msg.tool_calls:
-        name, args = call.function.name, call.function.arguments
-<span class="xl" data-k="gate">        if name in NEEDS_APPROVAL and not approve(name, args):
-            result = "DENIED by a human reviewer."
-        else:</span>
-<span class="xl" data-k="exec">            result = TOOLS[name](**args)</span>
-<span class="xl" data-k="obs">        messages.append({"role": "tool",
-                         "content": result,
-                         "tool_name": name})</span></div></div>
-    <div><div class="xlab">LangGraph — the same moves, named</div>
-      <div class="xcode" id="xGraph"><span class="xl" data-k="tools">TOOLS = [calculator, issue_refund]
-llm_tools = llm.bind_tools(TOOLS)</span>
-
-<span class="xl" data-k="ask">def call_model(state):
-    return {"messages":
-            [llm_tools.invoke(state["messages"])]}</span>
-
-g = StateGraph(State)
-<span class="xl" data-k="ask">g.add_node("model", call_model)</span>
-<span class="xl" data-k="exec">g.add_node("tools", ToolNode(TOOLS))</span>
-<span class="xl" data-k="obs"># ToolNode also appends each result to state["messages"]</span>
-g.add_edge(START, "model")
-<span class="xl" data-k="decide">g.add_conditional_edges("model", tools_condition)</span>
-<span class="xl" data-k="loop">g.add_edge("tools", "model")</span>
-
-<span class="xl" data-k="gate">agent = g.compile(interrupt_before=["tools"])</span>
-<span class="xl" data-k="end"># tools_condition routes to END when no tool was asked for</span></div></div>
-  </div>
-  <div class="xnote" id="xNote">Click a line in either column, or pick a move above.</div>
-
-  <div class="grid3" style="margin-top:22px">
-    <div class="card"><span class="kicker">Read the last line carefully</span><p class="small" style="margin-top:8px"><code>interrupt_before=["tools"]</code> stops the graph <b>after</b> the model has committed to a call and <b>before</b> anything executes — precisely the window from page 01. Your application then shows the pending call to a person and resumes the graph only on approval. A blunt version gates every tool; a real one checks which tool was requested and interrupts only for the gated ones.</p></div>
-    <div class="card" style="margin-top:14px"><span class="kicker">The docstring is the schema</span><p class="small" style="margin-top:8px">There is no separate schema file in this code. <code>bind_tools</code> reads your function signatures and docstrings and generates the JSON the model sees. Which means every rule on this page — enums, ranges, “use this when…”, “do not use this for…” — is written as ordinary Python type hints and prose.</p></div>
-    <div class="card" style="margin-top:14px"><span class="kicker">🎯 Take it to your final project</span><p class="small" style="margin-top:8px">Define two tools with clean schemas, return errors as data, and put a human gate on anything irreversible. That sentence is the headline Week 5 skill and it is what Group Assignment 2 grades.</p></div>
-  </div>
-  <p class="small" style="margin-top:16px">Framework reference: <a class="doc" href="https://python.langchain.com/docs/concepts/tool_calling/" target="_blank" rel="noopener">LangChain — Tool calling ↗</a></p>
-</div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">Optional · watch</div>
