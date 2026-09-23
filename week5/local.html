@@ -33,6 +33,8 @@
 table.plain td,table.plain th{font-size:13.5px}
 .res{font-family:var(--mono);font-weight:700;white-space:nowrap}
 .res.good{color:#2f6b3f}.res.poor{color:var(--red)}
+.oscmd{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0}
+.oscmd .lab{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
 .os{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 @media(max-width:880px){.os{grid-template-columns:1fr}}
 </style>
@@ -108,7 +110,21 @@ pip install -r requirements.txt</div>
 </div></section>
 
 <section><div class="wrap">
-  <div class="callout blue" style="margin-top:0"><b>Never used a terminal? Use the double-click launcher.</b> Download <a class="doc" href="../materials/CIS4394_Week5_Ollama_Starter.zip">the starter zip ↓</a>, unzip it, and double-click <b><code>run_mac.command</code></b> (Mac) or <b><code>run_windows.bat</code></b> (Windows). It finds its own folder, checks Python, installs the one package it needs, and then just asks you for a question — type one, press Enter, watch. Type <code>q</code> to quit. <span class="small">(Mac: if macOS refuses to open it, right-click the file → Open → Open.)</span><br /><br /><b>If you would rather type commands</b>, open a terminal <em>inside</em> the folder: on <b>Mac</b>, type <code>cd</code> and a space, then drag the folder from Finder into the Terminal window and press Enter. On <b>Windows</b>, open the folder in File Explorer, click the address bar, type <code>powershell</code> and press Enter. Then the commands below will work as written.</div>
+  <div class="callout blue" style="margin-top:0"><b>First, a 60-second terminal skill you will use all semester.</b>
+<p style="margin:8px 0 6px">A terminal is always <b>standing inside one folder</b>. Commands act on that folder. When you open it, it starts in your <b>home folder</b> — and your Desktop is inside your home folder. So if you save the file to your Desktop, getting there is one word:</p>
+<div class="oscmd">
+  <div><div class="lab">Mac — Terminal</div><div class="codebox" style="margin:0">cd Desktop        <span class="cm"># move into the folder</span>
+ls                <span class="cm"># what's in here?</span></div></div>
+  <div><div class="lab">Windows — PowerShell</div><div class="codebox" style="margin:0">cd Desktop        <span class="cm"># move into the folder</span>
+dir               <span class="cm"># what's in here?</span></div></div>
+</div>
+<p style="margin:8px 0 0"><b>You should see <code>1_agent_raw.py</code> listed.</b> If you do, every command below will work. Three more things worth knowing:</p>
+<ul style="margin:6px 0 0 18px">
+<li><code>cd ..</code> goes back up one folder. <code>cd ~</code> (Mac) or <code>cd ~</code> (Windows) returns you home so you can start over.</li>
+<li><b>Shortcut:</b> type <code>cd</code> and a space, then drag the folder from Finder / File Explorer into the terminal window — the full path types itself.</li>
+<li><b>Windows note:</b> if <code>cd Desktop</code> says it cannot find the path, your Desktop is synced to OneDrive. Open the folder in File Explorer, click the address bar, type <code>powershell</code>, press Enter — that opens a terminal already inside it.</li>
+</ul>
+<p class="small" style="margin:10px 0 0"><b>Stuck anyway?</b> The starter zip also contains <code>run_mac.command</code> and <code>run_windows.bat</code> — double-click one and it does all of this for you. Use it to keep moving, then come back and learn the two commands above; you will need them for your final project.</p></div>
   <div class="callout" style="margin-top:12px"><b>Before every command below.</b> Your terminal must be <b>in the folder with the scripts</b> — if you opened a new window, <code>cd</code> back into it first. And where the blocks say <code>python</code>, type <b><code>python3</code> on Mac</b> or <b><code>py -3</code> on Windows</b>. If you built a virtual environment in Step 1, either activate it or call it directly, e.g. <code>./venv/bin/python 1_agent_raw.py …</code> on Mac.</div>
   <div class="eyebrow">Step 2 · 1_agent_raw.py</div>
   <h2>The whole agent loop, in plain Python</h2>
