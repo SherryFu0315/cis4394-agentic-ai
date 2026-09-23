@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Week 5 Summary — CIS 4394</title>
+<meta name="description" content="Four things on this page: what you should be able to do after Week 5, how to self-enroll in a group for Group Assignment 2, the build paths you can choose from, and the proposal that is due next week." />
+<meta name="author" content="Dr. Xinyu Fu" />
+<link rel="canonical" href="https://sherryfu0315.github.io/cis4394-agentic-ai/week5/summary.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="CIS 4394 Agentic AI · Georgia State University" />
+<meta property="og:title" content="Week 5 Summary — CIS 4394" />
+<meta property="og:description" content="Four things on this page: what you should be able to do after Week 5, how to self-enroll in a group for Group Assignment 2, the build paths you can choose from, and the proposal that is due next week." />
+<meta property="og:url" content="https://sherryfu0315.github.io/cis4394-agentic-ai/week5/summary.html" />
+<meta property="og:image" content="https://sherryfu0315.github.io/cis4394-agentic-ai/assets/social-card.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Week 5 Summary — CIS 4394" />
+<meta name="twitter:description" content="Four things on this page: what you should be able to do after Week 5, how to self-enroll in a group for Group Assignment 2, the build paths you can choose from, and the proposal that is due next week." />
+<meta name="twitter:image" content="https://sherryfu0315.github.io/cis4394-agentic-ai/assets/social-card.png" />
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.recaptable td{font-size:13.5px;vertical-align:top}
+.pathcard{border-top:3px solid var(--line2)}
+.pathcard.blue{border-top-color:var(--blue)}
+.mustlist{padding-left:18px;font-size:14.5px;margin:12px 0 0;line-height:1.9}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 5</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="summary.html" class="here">Week 5 Summary</a>
+  <a href="#recap">Recap</a>
+  <a href="#ga2">GA2 groups</a>
+  <a href="#paths">Build paths</a>
+  <a href="#proposal">Proposal</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">After class · Week 5</div>
+  <h1>Week 5, wrapped — and what’s next.</h1>
+  <p class="lede">Four things on this page: a <b>recap</b> of what you should now be able to do, how to <b>self-enroll in a group</b> for Group Assignment 2 (<b>new groups</b> — and I want to see new names together), the <b>build paths</b> you can choose from, and the <b>proposal that is due next week</b>.</p>
+</div></header>
+
+<section id="recap"><div class="wrap">
+  <div class="eyebrow">Recap</div>
+  <h2>Week 5 in one sentence per page</h2>
+  <p class="lede">The model <b>proposes</b> a tool call; your harness <b>disposes</b>. Everything this week followed from taking that one sentence literally — because if your code is the only thing that executes, your code is the only place controls need to live.</p>
+  <div style="overflow:auto"><table class="plain recaptable"><thead><tr><th>Page</th><th>The one thing to remember</th></tr></thead><tbody>
+    <tr><td><b><a class="doc" href="mechanics.html">01 · Function calling</a></b></td><td>A “tool call” is <b>two objects in order</b>: the <b>schema</b> you write first (name, typed parameters, description), and the <b>call</b> the model emits second — a small JSON block naming a function and its arguments. The model never executes. Your harness parses, validates, runs, and appends the return value as the next observation.</td></tr>
+    <tr><td><b><a class="doc" href="design.html">02 · Schemas, errors &amp; gates</a></b></td><td><b>A rule in the prompt is a request. A rule in the schema is a wall.</b> Three rails: least privilege (expose the narrowest tool that does the job), constrain the inputs (enum, min/max, required), separate duties (never one tool that both decides and pays). Then sort every tool by blast radius: auto-run · constrain · human-gate.</td></tr>
+    <tr><td><b><a class="doc" href="local.html">03 · Build it locally</a></b></td><td>You ran a real agent loop on your own laptop, free, with no API key. A 0.5B model can call a tool correctly and still fail the task — and the fix was <b>never “a bigger model.”</b> It was a coarser tool, a tighter docstring, and a negative rule. <b>Tool design is the lever.</b></td></tr>
+    <tr><td><b><a class="doc" href="exercises.html">04 · Practice &amp; case</a></b></td><td>Gate the <b>effect</b>, not the input. Reading hostile data is survivable; acting on it is not. And gate <b>selectively</b> — a gate nobody reads is not a control, it is a rubber stamp.</td></tr>
+  </tbody></table></div>
+  <div class="callout blue" style="margin-top:18px"><b>If you keep only one line from this week:</b> <em>define two tools with clean schemas, return errors as data, and put a human gate on anything irreversible.</em> That is the headline skill — and it is close to a list of what Group Assignment 2 grades.</div>
+</div></section>
+
+<section id="ga2"><div class="wrap">
+  <div class="eyebrow">Action required</div>
+  <h2>Enroll in a group for Group Assignment 2</h2>
+  <p class="lede">GA2 is released on <b>iCollege</b> — build a <b>tool-using agent</b>: a loop, at least <b>two tools</b> with real schemas, a <b>max-iteration guard</b>, one clean <b>execution trace</b>, and a one-page <b>design note</b>. It is submitted as a group, and you must <b>self-enroll</b> in a group yourself.</p>
+
+  <div class="grouptask"><span class="gk">👥 New groups for GA2 — you do not keep your GA1 team</span>
+    <p style="margin:10px 0 0"><b>Your GA1 group does not carry over.</b> The GA2 groups on iCollege are empty and separate, so everyone enrolls again from scratch. You <em>may</em> re-form your GA1 team if you want to — but I would rather you didn’t.</p>
+    <p style="margin:10px 0 0"><b>Work with at least one person you have not worked with yet.</b> Two selfish reasons, not just a nice sentiment: (1) GA2 is the assignment where <b>skill mix decides the grade</b> — the design note and the failure-mode analysis are worth as much as the code, and a team of all-coders or all-non-coders usually loses points on the half they are weaker at; (2) this is the last group assignment before you commit to <b>capstone teams</b>, so it is a low-cost way to find out who you actually want to build with for the rest of the semester.</p>
+  </div>
+
+  <div class="grid2" style="align-items:start;margin-top:20px">
+    <div class="card">
+      <h3>How to enroll (2 minutes)</h3>
+      <ol class="steps" style="margin-top:14px">
+        <li>Open your section’s course on <a class="doc" href="https://gastate.view.usg.edu/" target="_blank" rel="noopener">iCollege ↗</a>.</li>
+        <li>Go to <b>Assessments → Groups</b>.</li>
+        <li>In the dropdown, pick the <b>Group Assignment 2</b> category — not the GA1 one.</li>
+        <li>Click <b>View Available Groups</b>.</li>
+        <li>Find a group with space and click <b>Join Group</b>.</li>
+        <li>Confirm your name appears in the member list.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>The rules</h3>
+      <ul class="mustlist">
+        <li><b>3–5 members.</b> Coordinate with the people you mean to team up with <em>before</em> anyone clicks Join.</li>
+        <li><b>Different teammates are encouraged</b> — same team as GA1 is allowed, a new mix is better.</li>
+        <li><b>Your own section only.</b> Groups do not transfer between sections, and I cannot grade you through the other section.</li>
+        <li><b>Don’t save seats</b> in multiple groups. Join once, join the group you mean.</li>
+        <li><b>One team submission</b> — plus <b>each member’s own peer-evaluation form</b>. Team grades can be adjusted for uneven contribution.</li>
+        <li><b>Due date:</b> the two sections are a day apart — <b>check iCollege for your section’s due date</b>. You have roughly two weeks; GA2 is due in Week 7.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:20px"><b>Can’t find teammates?</b> Post in the iCollege discussion board with what you bring (code / writing / domain idea) and what you want to build, or come find me after class — I will pair you up. <b>Nobody works alone on GA2</b>, and nobody gets left without a group.</div>
+</div></section>
+
+<section id="paths"><div class="wrap">
+  <div class="eyebrow">Your choice</div>
+  <h2>Two paths — and a third if you have a favourite tool</h2>
+  <p class="lede">GA2 is graded on <b>agent design</b>, not on which framework you typed it into. Both official paths are held to the <b>same standard</b>: no-code is not graded easier, and it does not excuse you from the design thinking. Pick <b>one path per team</b> and name it in the first line of your design note.</p>
+
+  <div class="grid3" style="margin-top:6px">
+    <div class="card pathcard blue"><span class="kicker">🅐 Code path</span>
+      <h3 style="margin-top:6px">Write the loop</h3>
+      <p class="small">Use whatever you are fastest in:</p>
+      <ul class="mustlist" style="font-size:14px">
+        <li><b>Plain Python + Ollama</b> — exactly what you ran in class this week. Free, local, no API key. Start from <a class="doc" href="local.html">page 03</a> and the starter kit.</li>
+        <li><b>LangGraph</b> — the framework version of the same loop, on the <b>Gemini free tier</b>. We give it a proper treatment in <a class="doc" href="../week9/patterns.html">Week 9</a>.</li>
+        <li>Any other SDK you already know.</li>
+      </ul>
+      <p class="small" style="margin-top:10px">Deliver: the code, a <code>README</code> with exact run steps, sample inputs. <b>No API key in the repo.</b></p>
+    </div>
+    <div class="card pathcard blue"><span class="kicker">🅑 No-code path</span>
+      <h3 style="margin-top:6px">Build the flow</h3>
+      <p class="small">If your team would rather not write code, build the same agent in a visual builder — <b><a class="doc" href="https://smith.langchain.com/" target="_blank" rel="noopener">LangSmith Fleet ↗</a></b> (free tier) is the supported default, and you met it in Week 2.</p>
+      <p class="small" style="margin-top:10px">The requirements are <b>identical</b>: two tools, a loop with a stop condition, one trace, the design note. You will not be graded easier for going no-code — and you cannot use it to skip the tool/gate/failure-mode thinking.</p>
+      <p class="small" style="margin-top:10px">Deliver: the exported flow or a shareable link, plus screenshots of the tool config and the loop/guard settings.</p>
+    </div>
+    <div class="card pathcard"><span class="kicker">🅒 Your own tool</span>
+      <h3 style="margin-top:6px">Something else you like</h3>
+      <p class="small">Google ADK, OpenAI Agents SDK, CrewAI, n8n, Opal, Copilot Studio, a local model through some other runner — <b>all fine</b>. If you already have a tool you enjoy, use it.</p>
+      <p class="small" style="margin-top:10px">Two conditions, and they are the whole catch: it must be <b>free</b> (if it asks for a card, you are on the wrong plan), and it must let you show the <b>five required things</b> in the box below. Some pretty builders hide the loop and will not give you a real trace — check that <em>before</em> you build, not the night before it is due.</p>
+      <p class="small" style="margin-top:10px">Not sure whether your tool qualifies? Ask me — one message, before you invest a weekend in it.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px;border-left:3px solid var(--blue)">
+    <span class="kicker">Path-independent</span>
+    <h3 style="margin-top:6px">Whatever you build in, the grader must be able to see these five things</h3>
+    <ul class="mustlist">
+      <li><b>Two or more distinct tools</b>, each with a real schema — a name, a description that says <em>when to use it</em>, typed parameters, and constraints. Two tools that do different work, not one tool wearing two hats.</li>
+      <li><b>An auto-run / constrain / gate decision per tool</b>, with the reason. Anything irreversible — money, email, deletion — is gated.</li>
+      <li><b>A loop with a working max-iteration guard</b> that stops <em>gracefully</em> and says it could not finish. A missing or fake guard is an automatic heavy deduction.</li>
+      <li><b>One clean execution trace</b>: reasoning → tool call with arguments → observation → … → final answer. A final answer with no visible tool calls proves nothing.</li>
+      <li><b>A one-page design note</b>: tools, loop, <b>three specific failure modes</b> with mitigations, and your AI-use disclosure. “The AI could be wrong” is not a failure mode.</li>
+    </ul>
+    <p class="small" style="margin-top:12px">Full instructions and the point-by-point rubric are on <b>iCollege</b> — if anything here differs, iCollege wins.</p>
+  </div>
+
+  <div class="callout blue" style="margin-top:18px"><b>🎯 Why this one is worth doing properly:</b> GA2 is essentially your <b>capstone Milestone I</b> — a single agent, running end to end, with a real tool and a stop condition. The schemas, the loop and the guard all carry forward. Build it well now as a team and Milestone I is largely already written.</div>
+</div></section>
+
+<section id="proposal"><div class="wrap">
+  <div class="eyebrow">Due next week</div>
+  <h2>Your final-project proposal</h2>
+  <p class="lede">The proposal is <b>due next week</b>, submitted on <b>iCollege in your own section</b>. The two sections’ deadlines are a day apart, so <b>check iCollege for your section’s due date</b>. The official prompt and rubric live on iCollege — this is just a last pass before you submit.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="card">
+      <h3>Before you submit, check</h3>
+      <ul class="mustlist">
+        <li><b>One scoped task</b>, named in a sentence. Who the user is, and what “done” looks like for a single run.</li>
+        <li><b>Why an agent</b> and not a single prompt or a fixed script — what genuinely needs a loop.</li>
+        <li><b>At least two tools</b>, written down as contracts, not as vibes.</li>
+        <li><b>The one call that gets a human gate</b>, and why that one.</li>
+        <li><b>How you will know it worked</b> — the beginning of an evaluation story (we sharpen this in Week 8).</li>
+        <li><b>What data</b> you will use and where it comes from. Nothing sensitive, nothing you can’t legally hold.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Two notes worth reading twice</h3>
+      <p class="small" style="margin-top:8px"><b>The proposal is individual to your capstone, not to GA2.</b> They are different deliverables on different clocks — do not let the proposal deadline hide GA2, and do not let GA2 eat the proposal. Both are live right now.</p>
+      <p class="small" style="margin-top:10px"><b>Narrow beats ambitious.</b> Every semester the strongest capstones are the ones that scoped down early. A refund helper that really works beats a “universal business assistant” that demos once and falls over.</p>
+      <p class="small" style="margin-top:10px">A fuller checklist is on the <a class="doc" href="../week6/exercises.html#proposal">Week 6 practice page →</a></p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:20px"><b>📌 Everything live at once, in one list:</b> <b>Group Assignment 2</b> — enroll in a group now, due Week 7. <b>Final-project proposal</b> — due next week. <b>No quiz next week.</b> <a href="../week2/radar.html">Agent Radar</a> presenter slots for the coming weeks are still open. All deadlines: <b>your own section’s iCollege</b>.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Next week</div>
+  <h2>From your boundary to a standard</h2>
+  <p class="lede">This week you built a tool boundary by hand: schemas you wrote, validation you wrote, gates you placed. Next week that hand-built boundary meets the protocols designed to standardise it — so any tool can plug into any agent, and agents can talk to each other.</p>
+  <div class="callout" style="margin-top:22px"><b>Next week:</b> MCP &amp; A2A — the interoperability standards. <b>Your final-project proposal is due next week</b> (own section, iCollege). <b>No quiz next week.</b><br /><br />
+  <b>Week 6 readings:</b><br />
+  · <a class="doc" href="https://www.linkedin.com/learning/model-context-protocol-mcp-hands-on-with-agentic-ai" target="_blank" rel="noopener">Rand-Hendriksen — Model Context Protocol (MCP): Hands-On with Agentic AI (LinkedIn Learning) ↗</a><br />
+  · <a class="doc" href="https://www.linkedin.com/learning/hands-on-ai-building-ai-agents-with-model-context-protocol-mcp-and-agent2agent-a2a" target="_blank" rel="noopener">Ponnambalam — Building AI Agents with MCP &amp; A2A (LinkedIn Learning) ↗</a><br />
+  Both free with your GSU login via the <a class="doc" href="https://technology.gsu.edu/technology-services/technology-professional-training/linkedin-learning/" target="_blank" rel="noopener">GSU portal ↗</a> — start there, or you will hit a paywall. Full list on the <a class="doc" href="../week6/index.html">Week 6 site</a>.</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="exercises.html"><span class="lab">← Previous</span><b>04 · Practice &amp; case</b></a>
+  <a href="../week6/index.html" class="next"><span class="lab">Next week →</span><b>Week 6 · MCP &amp; A2A</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 5 Summary — Tool Use &amp; Function Calling<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>
