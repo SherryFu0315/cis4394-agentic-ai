@@ -74,7 +74,49 @@
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Facing the model</span><p class="small" style="margin-top:8px">It says <em>what this tool is for, when to reach for it, and what you must supply.</em> The model reads it the way it reads any instruction — so a bad description produces bad behaviour, and no amount of clever system prompting fixes a tool whose own description is vague.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Facing your systems</span><p class="small" style="margin-top:8px">It says <em>what arguments are legal.</em> Types, ranges, patterns, and enums are executable policy: a call outside them never reaches your database, your mail server, or your payment processor. This is the boundary a security reviewer will actually read.</p></div>
   </div>
-  <div class="callout blue" style="margin-top:20px"><b>So schema design is interface design — and access control.</b> Grant least privilege (expose <code>issue_refund</code>, not <code>run_sql</code>), constrain the inputs (a cap, an enum, a pattern), and separate duties (a tool that <em>drafts</em> is a different tool from one that <em>sends</em>). Everything you learn here comes back in the governance week.</div>
+  <div class="callout blue" style="margin-top:20px"><b>So schema design is interface design — and access control at the same time.</b> The same few lines that tell the model <em>how to use</em> your tool also decide <em>what it is able to do at all</em>. That is unusual, and it is the reason this page matters more than it looks.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">The idea to take away from this page</div>
+  <h2>A rule in the prompt is a request. A rule in the schema is a wall.</h2>
+  <p class="lede">You can write “never refund more than $500” in your system prompt, and a good model will usually obey. <b>Usually</b> is the problem. Write it as <code>"maximum": 500</code> in the schema and the call is rejected before it reaches your payment system — by a model having a bad day, by a customer who argues well, by a web page carrying a hidden instruction. Three moves turn a schema into a permission system.</p>
+
+  <div class="rails" style="margin-top:20px">
+    <div class="rail"><h3>1 · Least privilege</h3>
+      <p class="small"><b>Expose the verb, not the engine.</b></p>
+      <div class="codebox" style="font-size:12px">✗ run_sql(query: str)
+✓ lookup_order(order_id: str)</div>
+      <p class="small">One tool can read any row in any table, including salaries; the other can read one order. Same model, same prompt — completely different worst case. Ask of every tool: <b>if an attacker chose the arguments, what is the worst thing that happens?</b></p>
+    </div>
+    <div class="rail"><h3>2 · Constrain the inputs</h3>
+      <p class="small"><b>This is where policy becomes executable.</b></p>
+      <div class="codebox" style="font-size:12px">✗ amount: number
+✓ amount: {type: number,
+           minimum: 0.01,
+           maximum: 500}
+✓ reason: {enum: [damaged,
+           late, wrong_item]}</div>
+      <p class="small">The second version is your refund policy, written where it cannot be talked out of. A bonus: the enum makes rejections <em>explainable</em> — the harness can tell the model exactly which values are legal, so it repairs its own call instead of failing.</p>
+    </div>
+    <div class="rail"><h3>3 · Separate duties</h3>
+      <p class="small"><b>Split the reversible half from the irreversible half.</b></p>
+      <div class="codebox" style="font-size:12px">✗ email_customer(body: str)
+
+✓ draft_reply(body: str)   # auto
+✓ send_email(draft_id: str) # gate</div>
+      <p class="small">As one tool, you must gate every email or none. As two, drafting runs freely and only sending waits for a person — the same safety with a fraction of the interruptions. Fewer approvals means the approvals that remain get <b>read</b>.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:22px"><b>Why this is the week's most transferable idea.</b> Almost every agent incident you will read about is one of these three missing: a tool that was too powerful, an argument that was not bounded, or an irreversible action with no gate in front of it. You cannot prompt your way out of any of them — and you do not have to, because all three are ordinary software decisions you make while writing a function signature.</p>
+  <p style="margin:10px 0 0">Three questions to ask of every tool in your capstone, and the ones <b>Group Assignment 2 grades</b>:</p>
+  <ol class="steps" style="margin-top:10px">
+    <li><b>What is the worst call an attacker could make with this schema?</b> If the answer is bad, the tool is too broad — split it or narrow it.</li>
+    <li><b>Which limits live in the schema rather than in the prompt?</b> Anything that matters — money, recipients, tables, file paths — belongs in the schema.</li>
+    <li><b>Is anything irreversible bundled with something harmless?</b> If so, separate them so the gate lands only where it must.</li>
+  </ol>
+  <p class="small" style="margin-top:12px">You will meet all three again in <a href="../week10/index.html">Week 10</a>, where the same decisions are called least privilege, input validation and separation of duties — the vocabulary auditors use. Learning them here, as function signatures, is the easier order.</p></div>
 </div></section>
 
 <section><div class="wrap">
