@@ -127,23 +127,10 @@
 
 <section><div class="wrap">
   <div class="eyebrow">Anatomy</div>
-  <h2>Two objects: the call, and the schema</h2>
+  <h2>Two objects, in the order they happen</h2>
   <div class="grid2" style="align-items:start">
     <div>
-      <p class="small"><b>1 · What the model emits.</b> A name and a bag of arguments. That is the whole payload. Different vendors wrap it differently, but every one of them reduces to this.</p>
-      <div class="codebox">{
-  <span class="cn">"name"</span>: <span class="cs">"fx_rate"</span>,
-  <span class="cn">"arguments"</span>: {
-    <span class="cn">"base"</span>:  <span class="cs">"EUR"</span>,
-    <span class="cn">"quote"</span>: <span class="cs">"USD"</span>
-  }
-}
-<span class="cm"># A REQUEST, not an execution.</span>
-<span class="cm"># Nothing has happened to any system yet.</span></div>
-      <p class="small">Because it is a request, three useful things are possible before anything runs: you can <b>validate</b> it, you can <b>refuse</b> it, and you can <b>show it to a human</b>. Page 02 is entirely about using that window.</p>
-    </div>
-    <div>
-      <p class="small"><b>2 · What the model sees.</b> Before the conversation starts, your harness sends the model a list of tool schemas. This is the only thing the model knows about your systems.</p>
+      <p class="small"><b>① First — the schema.</b> <span style="color:var(--muted)">You → model, before the conversation starts.</span> Your harness sends the model a list of tool schemas. <b>This is the only thing the model knows about your systems</b> — the menu you hand it: what it may order, and which choices are legal.</p>
       <div class="codebox">{
   <span class="cn">"name"</span>: <span class="cs">"fx_rate"</span>,
   <span class="cn">"description"</span>: <span class="cs">"Return the current exchange</span>
@@ -160,6 +147,19 @@
   <span class="cn">"required"</span>: [<span class="cs">"base"</span>, <span class="cs">"quote"</span>]
 }</div>
       <p class="small">Name, description, typed parameters, required list. Notice that the <code>enum</code> is what made the simulator's error message useful: the harness could tell the model precisely what the legal values were.</p>
+    </div>
+    <div>
+      <p class="small"><b>② Then — the call.</b> <span style="color:var(--muted)">Model → you, during the conversation.</span> Having read the menu, the model writes an order slip: a name and a bag of arguments. That is the whole payload. Different vendors wrap it differently, but every one of them reduces to this.</p>
+      <div class="codebox">{
+  <span class="cn">"name"</span>: <span class="cs">"fx_rate"</span>,
+  <span class="cn">"arguments"</span>: {
+    <span class="cn">"base"</span>:  <span class="cs">"EUR"</span>,
+    <span class="cn">"quote"</span>: <span class="cs">"USD"</span>
+  }
+}
+<span class="cm"># A REQUEST, not an execution.</span>
+<span class="cm"># Nothing has happened to any system yet.</span></div>
+      <p class="small">Because it is a request, three useful things are possible before anything runs: you can <b>validate</b> it, you can <b>refuse</b> it, and you can <b>show it to a human</b>. Page 02 is entirely about using that window.</p>
     </div>
   </div>
   <div class="callout blue" style="margin-top:20px"><b>The description is a prompt.</b> The model chooses between tools by reading their descriptions, in the same way it reads any other instruction. A vague description (<em>“handles currency stuff”</em>) produces vague behaviour: wrong tool, missing arguments, silent non-use. In Python you usually write that description as a docstring — which means <b>the docstring is the interface</b>, and it deserves the same care as an API contract. Page 02 makes this concrete, and you will break it deliberately in the <a href="exercises.html">hands-on exercise</a>.</div>
