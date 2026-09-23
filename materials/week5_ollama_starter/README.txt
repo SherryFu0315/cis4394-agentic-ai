@@ -7,6 +7,19 @@ BEFORE YOU START
      -> the "Capabilities" list must include "tools"
   3. Python 3 (tested on 3.11)
 
+EASIEST WAY - NO TERMINAL NEEDED
+  Mac:      double-click  run_mac.command
+  Windows:  double-click  run_windows.bat
+  It finds its own folder, checks Python, installs the one package it needs, and then
+  just asks you for a question. Type one, press Enter, and watch. Type  q  to quit.
+  (Mac: if macOS refuses to open it, right-click the file and choose Open, then Open again.)
+
+HOW TO OPEN A TERMINAL IN THIS FOLDER (if you prefer typing commands)
+  Mac:      open Terminal, type  cd  and a space, then DRAG this folder from Finder
+            into the Terminal window and press Enter.
+  Windows:  open this folder in File Explorer, click the address bar at the top,
+            type  powershell  and press Enter.
+
 SETUP (once)
   python -m venv venv
   source venv/bin/activate          (Windows: venv\Scripts\activate)
