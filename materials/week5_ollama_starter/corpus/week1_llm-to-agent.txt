@@ -1,0 +1,94 @@
+01 · Foundations
+
+ From LLM to agent .
+
+ Just enough about language models to see why they can’t act alone — then the loop that turns a text predictor into something that gets work done.
+
+ Just enough LLM
+
+ A language model predicts the next token
+
+ That’s the whole trick
+
+ Input text goes in; the model outputs a probability distribution over possible next tokens ; one gets sampled; repeat. Everything impressive an LLM does is built from that single operation at scale.
+
+ “The capital of France is” →
+ Paris ████████████ 92%
+ Lyon █ 3%
+ the ▌ 1%
+ …
+
+ Good at / bad at
+
+ Strong Weak 
+
+ Language: summarize, draft, translate, explain Knowing what it doesn’t know — can be confidently wrong 
+
+ Pattern recognition across huge context Fresh or private information past its training data 
+
+ Code and structured text Math it can’t verify; precise multi-step state 
+
+ Following instructions in context Doing anything — it can only emit text 
+
+ The limits in the right column are exactly what tools, memory, and the loop exist to fix.
+
+ Ask a bare LLM to “book me the cheapest flight to Chicago on Friday” and it can only write words about booking. It can’t check prices, compare options, or click purchase — it needs to act, observe, and decide.
+
+ The mental model
+
+ The four parts of an agent
+
+ Model + Tools + Loop + Memory (Wiesinger, Marlow & Vuskovic, 2024). The research literature decomposes the same idea as profile, memory, planning, and action (Wang et al., 2023, arXiv:2308.11432).
+
+ Model
+ The reasoning engine. Interprets observations, weighs options, proposes the next action.
+
+ Tools
+ The hands. Structured functions — search, calendar, database, code — that turn intent into effect.
+
+ Loop
+ The heartbeat. Reason → act → observe → repeat, until a stop condition is met.
+
+ Memory
+ The thread. State that persists across turns so the agent doesn’t start over each step.
+
+ See it move
+
+ Watch a full agent trace
+
+ One concrete episode: “Schedule a 30-minute meeting with Maya this week.” Step through it. Watch which node is active, what the tools return, how state accumulates — and where the loop stops .
+
+ Observe 
+ Reason 
+ Act (tool call) 
+ Update state 
+ Human gate / Stop 
+
+ The loop closes — until the stop condition is met or a human gate interrupts. An agent without a stop condition is a bug with a budget.
+
+ Step ▸ 
+ Auto-play 
+ Reset 
+ Episode: schedule a meeting · step 0 of 12 
+
+ Press Step to begin the episode… 
+
+ Agent state 
+
+ Read the trace like an examiner: every step is either an observation, a decision, an action with a recorded result, or a state update. That structure — not the fancy output — is what makes it an agent. You will hand-trace one of these yourself in Exercise B .
+
+ Scholarly anchor
+
+ The research view of the same loop
+
+ The academic survey literature describes agent architecture as four modules — the same idea in formal dress.
+
+ Profile Who the agent is: role, goals, constraints, persona.
+
+ Memory Short-term context + long-term store the agent reads and writes.
+
+ Planning Decomposing goals, choosing next steps, revising on feedback.
+
+ Action Tool calls and outputs that change the environment.
+
+ Wang et al. (2024), A Survey on LLM-based Autonomous Agents , Frontiers of Computer Science 18(6), arXiv:2308.11432 · Yao et al. (2023), ReAct , ICLR, arXiv:2210.03629 — the observe→reason→act formulation.

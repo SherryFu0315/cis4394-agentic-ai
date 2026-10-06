@@ -1,0 +1,110 @@
+00 · Before class
+
+ Arrive ready to build .
+
+ You may choose your final path in class, but class time is for building and testing — not account recovery or installation. Get your chosen path working before you arrive.
+
+ Checklist
+
+ Everyone brings
+
+ The basics
+
+ Laptop + charger 
+ The fictional Jordan Lee résumé downloaded (default classroom input) 
+ 2–3 target job roles (e.g., Data Analyst, Business Analyst) 
+ 3–5 preferences / hard constraints (location, remote, experience level) 
+ Optional: one manually saved public job posting 
+
+ Privacy default
+
+ Use the fictional résumé — you do not need your real identity for this lab. If you choose to use your own résumé, first remove your home address, phone number, student ID, date of birth, and any government IDs before uploading it to any cloud service.
+
+ Never scrape login-protected job boards or automate real job applications in this lab.
+
+ Accounts & installs
+
+ Path-specific preflight
+
+ Pick the path you are most likely to use and verify it works end-to-end. Verifying takes five minutes now; debugging it in class costs you the build sprint.
+
+ Path A · Google Opal no-code · experimental 
+
+ Use a personal Google Account — not your GSU account (Labs is blocked on school accounts)
+
+ You must be 18 or older
+
+ Currently English-only, computer only
+
+ Verify: open Gemini on a computer → Gems → confirm you can create a Gem from Google Labs
+
+ Account requirements ↗ 
+
+ Path B · LangSmith Fleet agent builder 
+
+ Create a free LangSmith account
+
+ Open LangSmith → Switch to Fleet 
+
+ Verify: complete one small test run
+
+ Free tier ≈ 5 Fleet LCUs per org/month; runs pause when exhausted — don’t burn runs before class
+
+ Fleet docs ↗  ·  Pricing ↗ 
+
+ Path C · Codex + Python code 
+
+ Codex is included across ChatGPT plans, including Free (limits vary). Sign in with ChatGPT — not a paid API key.
+
+ python3 --version # need 3.10+ 
+curl -fsSL https://chatgpt.com/codex/install.sh | sh
+codex --version
+codex login # choose “Sign in with ChatGPT” 
+
+ Windows: use the Windows tab in the official docs instead of the curl command.
+
+ Codex CLI docs ↗ 
+
+ If preflight fails: don’t panic, and don’t spend class time on it. Every path has a fallback — the local Python starter runs offline with zero accounts.
+
+ Reading · 30–40 minutes
+
+ Guided reading: meet a real agent
+
+ Class starts by reverse-engineering Codex. Skim these three sources first, hunting for the answers below — you do not need to understand the code.
+
+ Required 1 · Read the Instructions Given to the Agent 
+ Codex’s actual system prompt — what the harness tells the model about tools, planning, sandboxing, and permissions. Primary-source evidence for the nine layers. 
+ Required 2 · Planning for Long-Horizon Agents 
+ How Codex plans and executes multi-step work (OpenAI Cookbook) — the loop and state in practice. 
+ Required 3 · Compare with Claude Code 
+ Anthropic engineering on Claude Code’s autonomy — does the same architecture explain a competing agent? 
+
+ Scavenger hunt — bring answers
+
+ Name one way Codex observes its environment.
+
+ Name one action/tool Codex can use.
+
+ What role do repository instructions play?
+
+ Why are sandboxing / approval boundaries necessary?
+
+ What makes Codex an agent rather than merely an LLM chatbot?
+
+ Bring your answers — in class we check them against the real prompt, line by line, on the Unpack Codex page .
+
+ See suggested answers (try yours first) 
+
+ 1 · Observes: files in the workspace, search results, and the output of commands and tests it runs.
+
+ 2 · Actions/tools: shell commands, apply_patch for editing files, update_plan for tracking progress.
+
+ 3 · Repository instructions: AGENTS.md files let humans leave standing rules for the agent — conventions, how to test — scoped to the directory tree they sit in.
+
+ 4 · Sandboxing / approvals: because the agent’s words become real commands on a real machine; risky calls are escalated to the user for approval before they run.
+
+ 5 · Agent, not chatbot: it doesn’t just answer — it acts on an environment, observes results, updates state, and keeps going until the task is resolved, under bounded permissions.
+
+ Bring one mystery
+ Find one file, folder, function, or design choice you do not understand. Bring it to class. The goal is not mastery — it is learning how to inspect a real agent system.

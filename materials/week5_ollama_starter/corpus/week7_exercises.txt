@@ -1,0 +1,169 @@
+03 · Practice
+
+ Cut it up. Break it. Then prove it.
+
+ Retrieval quality is destiny, and retrieval quality is decided by unglamorous choices: where you cut a document, what metadata you keep, and what your system does when the top match is stale. Three activities, then the interview check, the readings, and the Quiz 3 scope.
+
+ Exercise A · fictional teaching case
+
+ Chunk it
+
+ 👥 Group task · Pairs · ~15 minutes 
+ Below is a one-page policy from Lakeside Supply Co. (fictional). You are indexing it for a support-agent RAG system. (1) Mark your chunk boundaries on a copy — decide how many chunks and where each one starts and ends. (2) For every chunk, list the metadata you would store alongside the text. (3) Write one realistic customer question that each chunk should win — that is, be the top hit for. (4) Find the one place in this document where a naive fixed-size split would produce an answer that is confidently wrong.
+
+ Produce: your chunk list with metadata, one winning query per chunk, and the one sentence describing the dangerous split.
+
+ LAKESIDE SUPPLY CO. — RETURNS & REFUNDS POLICY 
+ Document: returns_policy_v7.md · Version 7 · Effective 2026-07-01
+Owner: Customer Operations · Classification: Public · Supersedes: Version 6 
+
+ 1.0 Scope and precedence 
+This policy governs all consumer returns and refunds for orders placed on
+lakesidesupply.example and in company-owned stores. It supersedes Returns
+Policy v6 in all regions. Where a state law grants a longer window than the
+one stated here, the state law controls.
+
+ 2.0 Definitions 
+"Delivery date" means the date the carrier marks the order as delivered.
+"Unopened" means the manufacturer seal is intact.
+"Store credit" means a non-expiring credit issued to the customer account.
+
+ 3.0 Return windows 
+3.1 General merchandise: 45 days from the delivery date, opened or unopened.
+3.2 Electronics, Georgia customers: 30 days from the delivery date, unopened.
+3.3 Electronics, all other states: 21 days from the delivery date, unopened.
+3.4 Clearance items: not returnable, except where section 5.0 applies.
+
+ 4.0 How a return is processed 
+Refunds are issued to the original payment method within 7 business days of
+receipt at the returns center. Orders paid with store credit are refunded as
+store credit. Shipping charges are refunded only when section 5.0 applies.
+
+ 5.0 Damaged, defective, or mis-shipped orders 
+A customer who reports a damaged, defective, or mis-shipped item within 14
+days of the delivery date is entitled to a full refund including shipping,
+regardless of the windows in section 3.0 and regardless of clearance status.
+
+ 6.0 Exceptions and escalation 
+Supervisors may extend any window in section 3.0 by up to 15 days once per
+customer per year. Extensions beyond that require Customer Operations
+approval and must be logged in the ticket.
+
+ Related documents: shipping_policy_v3.md · store_credit_terms_v2.md 
+
+ Debrief — a reference answer 
+
+ How many chunks? Structure beats arithmetic here: this document has clean section headings, so chunk on them. A reasonable answer is seven to nine chunks — one per numbered section, with 3.0 either kept whole or split into 3.1–3.4 as four short chunks, each carrying the parent heading "3.0 Return windows" so it still makes sense alone. Anything much smaller fragments a rule; anything much larger means a question about clearance items retrieves four rules the customer did not ask about.
+
+ Metadata every chunk should carry: doc_id (returns_policy_v7), version (7), effective_date (2026-07-01), supersedes (v6), status (current), section (3.2), title , region (GA / other / all), product_category (electronics / general / clearance), classification (public), owner , and last_reviewed . The region and category fields are what let you filter before ranking; status and effective_date are what keep version 6 out of tomorrow's answers.
+
+ Queries each chunk should win: 1.0 → "does this replace the old policy?"; 2.0 → "what counts as unopened?"; 3.1 → "how long do I have to return a jacket?"; 3.2 → "how long do I have to return a laptop in Georgia?"; 3.3 → "return window for a monitor in Florida"; 3.4 → "can I return a clearance item?"; 4.0 → "when will my refund appear?"; 5.0 → "my order arrived broken"; 6.0 → "can you make an exception for me?" If two chunks would tie on a query, they probably want to be one chunk.
+
+ The dangerous split: cutting between 3.4 and 5.0 . Section 3.4 says clearance items are "not returnable, except where section 5.0 applies." Retrieved alone, that chunk answers "can I return this damaged clearance lamp?" with a flat no — which is wrong, and confidently so, because the exception lives in a different chunk that the query never pulled. Fixes, in order: keep the cross-reference text inside the chunk, add a small overlap so the exception clause travels with the rule, and store a see_also: 5.0 field so the retriever can pull the referenced section too. The general lesson: a chunk must be true when read alone , because that is exactly how it will be read. Section 2.0's definitions have the same property — "unopened" is defined once and used three times.
+
+ Exercise B
+
+ Failure autopsy — the answer was last year's policy
+
+ 👥 Group task · Trios · ~15 minutes 
+ Lakeside's support bot has been live for a month. A Georgia customer asks about returning a sealed laptop on day 25. The bot answers: "Your return window has expired — Georgia electronics must be returned within 14 days." That is version 6 of the policy. Version 7 (30 days) was published on July 1 and is also in the index. The customer complains; a supervisor issues the refund.
+
+ Work backwards through the pipeline from page 02 and decide, as a team, where the primary fix belongs — and what the other two layers should do as backstops. Then answer the question below before revealing.
+
+ Produce: a one-page autopsy — the failing stage, the primary fix, two backstops, and the single log line that would have caught this in testing.
+
+ Option 1 · Fix at ingestion When v7 is indexed, delete or archive every chunk of v6 so a superseded document is not in the searchable corpus at all.
+
+ Option 2 · Fix at retrieval Keep both versions, but filter on status = current before ranking — and, when two chunks describe the same rule, prefer the later effective_date .
+
+ Option 3 · Fix at generation Tell the model in the prompt: "If two sources conflict, use the one with the most recent effective date, and state that date in your answer."
+
+ Discussion question Which option is the primary fix — and what is wrong with treating either of the other two as the primary fix?
+
+ See the answer 
+ Primary fix: Option 2, at retrieval — with Option 1 as the policy that makes it easy. Retrieval is where governance actually bites, because it is the last point where you control what enters the prompt. A status = current metadata filter applied before ranking makes the failure structurally impossible rather than statistically unlikely, and it survives the next document, the next region, and the next model.
+
+ Why not Option 1 alone? Deleting superseded documents is the right default for a customer-facing index, and if you can do it, do — but many organizations must retain prior versions for audit, disputes, and "what did the policy say in March?" questions. If retention is required, the versions stay in the corpus and you need the filter anyway. Deletion also fails the moment someone re-uploads an old PDF into the shared drive your indexer watches; a filter driven by metadata keeps working, an assumption about corpus hygiene does not.
+
+ Why not Option 3 alone? Because it asks the model to enforce a rule you could have enforced in code — and it only works if the conflicting chunk was retrieved at all. Here, if v6 outranks v7 and k = 3, v7 may never appear in the prompt: there is no conflict for the model to resolve, just one confident wrong source. Prompt instructions are probabilistic; a metadata filter is deterministic. The model proposes, the harness disposes — the same lesson as the max-iteration guard in Week 4. Option 3 is still worth having as a cheap backstop, together with a rule that every answer states the effective date it relied on.
+
+ The log line that would have caught it: the retrieved chunk IDs with their scores and their status field — [R6-3.2] score 0.71 status=superseded in a passing test is a red flag even when the answer happens to look fine. Add a standing evaluation case for every superseded document: ask the question it used to answer, and assert that no superseded chunk appears in the retrieval set. Retrieval is testable separately from generation, and it should be — that is next week's topic.
+
+ Case study · fictional teaching case
+
+ The benefits bot that quoted the old plan
+
+ Peachtree Health Group (fictional) — 4,000 employees, an HR team drowning in open-enrollment questions — deploys a RAG assistant over the benefits SharePoint. It answers instantly, cites its sources, and is popular. In February, three employees learn that the plan document it cited was replaced in November.
+
+ What the bot did 
+ Asked "what is my deductible for the PPO plan?", it retrieved PPO Summary of Benefits — Plan Year 2025 , which is still in the SharePoint folder alongside the 2026 version, and answered with the 2025 figure. It cited the document by name. Three employees planned their spending on that number; one deferred a procedure.
+
+ What made it worse 
+ The citation made the answer more convincing, not less — it looked checked. The employees who followed the link saw a document that did say what the bot said. Nothing in the answer, and nothing in the file name, signalled that a newer plan year existed. HR only learned about the problem in February, from a complaint.
+
+ Discussion question 1 Freshness. What has to be true about the index — not the model — before this assistant can be trusted for open enrollment next year?
+
+ See the answer 
+ Every chunk needs a plan year, an effective window, and a status, and retrieval must filter on them. Concretely: (a) an effective_from / effective_to pair and a plan_year field on every benefits chunk, populated at ingestion — if the source folder cannot supply it, the document does not get indexed; (b) a default retrieval filter of "in effect today," with historical plan years reachable only when the user explicitly asks about a past year; (c) an owner and a review date per document, so an un-reviewed document past its date is flagged rather than silently served; (d) re-indexing wired to the actual publication process — the moment HR posts the 2026 summary, the index changes, rather than waiting on a quarterly job nobody owns. Note what is not on this list: a better model, a bigger context window, or a smarter prompt. This is a data-governance problem that happens to be wearing an AI costume, and the fix is metadata plus a pipeline someone owns. The deeper organizational lesson: RAG makes your document hygiene load-bearing. A shared drive where old and new versions sit side by side was survivable when only humans read it — humans notice "2025" in a header. An index does not, unless you tell it to.
+
+ Discussion question 2 Citation UI. The answer already cited a source and that did not save anyone. What should the answer have shown instead?
+
+ See the answer 
+ A citation is only useful if it lets a reader judge whether to trust it. "PPO Summary of Benefits" is an identifier; what the employee needed was provenance : document title plus version or plan year , effective date, last-updated date, and a deep link to the exact section — not the file. Four additions would have prevented all three incidents. (1) Show the date next to the claim , in the sentence: "your deductible is $X under the 2025 plan year, effective 2025-01-01 ." A stale answer becomes self-evidently stale. (2) Warn on staleness : if the retrieved chunk's effective window does not include today, the interface says so in the answer, prominently, rather than in a tooltip. (3) Show the passage, not just the link — the retrieved text inline, so the employee sees exactly what the answer was built from. (4) Show when a newer version exists and link it. There is also a design ethic here: citations increase trust, so a system that cites badly is more dangerous than one that does not cite at all. Do not ship the trust signal without the accuracy that earns it.
+
+ Discussion question 3 Escalation. Which benefits questions should this assistant never answer on its own, and what rule decides that at run time?
+
+ See the answer 
+ Two different triggers, and you need both. (1) A confidence trigger, decided per query: if the top similarity score is below your threshold, or the top chunks disagree with each other, or no chunk passes the freshness filter, the assistant must not generate an answer at all — it says "I don't have a current document that answers this" and hands off to HR with the question and the search attempt attached. An index that always returns its nearest three chunks will answer everything , including questions your corpus cannot support; the floor is what buys you the honest "I don't know." (2) A stakes trigger, decided per topic and set in advance: some categories route to a human regardless of confidence — eligibility determinations, appeals and denials, anything about a specific person's claim or medical situation, anything with a legal deadline, and anything where acting on a wrong answer is irreversible (declining coverage, deferring a procedure). That is the Week 4 human gate applied to assertions rather than to actions: the gate goes in front of the class of answer whose consequences you cannot undo. Two supporting practices make it real: log every escalation with the retrieved chunks so HR can see what the bot nearly said, and give the assistant an explicit, approved failure sentence — a model with no permitted way to fail will invent one.
+
+ Job-interview level
+
+ Interview check
+
+ Five questions a data or AI-engineering interview would actually probe this week. Try answering out loud before revealing.
+
+ Readings & resources
+
+ This week's readings
+
+ DeepLearning.AI — Retrieval Augmented Generation (RAG) 
+ Free short course. Work the pipeline end to end: chunking, embeddings, retrieval, and grounded generation. This is the core reading for the RAG questions on Quiz 3. 
+ Hugging Face — Agents Course: memory & agentic RAG units 
+ Free and open (Apache-2.0). Read the units on agent memory and on retrieval as a tool — they map directly onto pages 01 and 02. 
+ IBM Think — What is AI agent memory? 
+ Short explainer; the working / episodic / semantic / procedural taxonomy used on page 01. 
+ Skim · Lewis et al. (2020) — Retrieval-Augmented Generation 
+ The paper the whole week rests on. Abstract, introduction, and Figure 1 are enough to see the architecture. 
+
+ Go deeper (all free) 
+
+ IBM Think — What is retrieval-augmented generation? ↗ 
+
+ Karpukhin et al. (2020) — Dense Passage Retrieval ↗ — where the "embed the question, embed the passages, take the nearest" design comes from
+
+ Microsoft — AI Agents for Beginners (MIT) ↗ — the agentic-RAG and agent-memory lessons
+
+ LangChain Academy ↗ — the memory modules of the LangGraph course, if you are extending your Week 4 agent
+
+ Hugging Face Agents Course ↗ 
+
+ 📌 Reminder: Group Assignment 2 is due this week — your section's due date and the submission link are on iCollege. Quiz 3 is next week ; scope and samples are directly below.
+
+ Next week
+
+ Quiz 3 — protocols, memory & retrieval
+
+ Five multiple-choice questions , closed-book, in class next week. Scope: everything assigned since Quiz 2 — the Week 6 readings (both MCP/A2A LinkedIn Learning courses), the Week 7 readings above (DeepLearning.AI RAG course · Hugging Face memory / agentic-RAG units), and the Week 8 readings (Google/Kaggle Agents Companion whitepaper · the pass^k / τ-bench reading) — plus the core ideas of Weeks 6–8. The LinkedIn Learning courses are free with your GSU login through the GSU portal ↗ . Try the samples below before revealing; the real quiz is the same style and difficulty.
+
+ Five sample questions
+ Same style and difficulty as the real thing.
+
+ Next week: Evaluation & Reliability — why demos lie, pass@1 vs pass^k, benchmark literacy, and LLM-as-judge. Quiz 3 is next week — in class, closed-book, 5 multiple-choice. Scope: Weeks 6–8 readings (both MCP/A2A LinkedIn courses · the RAG course & HF unit above · next week's Agents Companion whitepaper + pass^k/τ-bench reading). Sample questions: above on this page ↑ . Group Assignment 3 + capstone Milestone I release next week. 
+
+ Week 8 readings: 
+
+· Google/Kaggle — Agents Companion whitepaper (free) ↗ 
+
+· τ-bench — the pass^k paper (Yao et al., 2024; skim §1–3) ↗ 
+
+Full list on the Week 8 site.

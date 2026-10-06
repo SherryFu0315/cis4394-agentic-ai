@@ -1,0 +1,57 @@
+01 · Foundations
+
+ Anatomy of a prompt .
+
+ A prompt is everything the model sees before it responds — not just your question. Every well-built prompt has up to five parts, and each part is a knob you can turn (Boonstra, Google/Kaggle Prompt Engineering whitepaper, 2024–25).
+
+ Interactive
+
+ Click each part — see it in a real prompt
+
+ This is a real business prompt for routing support tickets. Click the five parts on the left and watch them light up.
+
+ You are a support-ticket triage assistant for Acme Software. Route tickets accurately; when unsure, choose HUMAN_REVIEW. Never invent order numbers. 
+
+ Context: Acme sells a project-management app. Billing handles payments and refunds; Technical handles bugs and access; Sales handles upgrades and demos. 
+
+ Example —
+ticket: "I was charged twice this month"
+output: {"category": "BILLING", "urgent": false} 
+
+ Return ONLY JSON: {"category": "BILLING"|"TECHNICAL"|"SALES"|"HUMAN_REVIEW", "urgent": true|false} 
+
+ Ticket: "The app deleted my project and I present to a client in an hour!!" 
+
+ Click a part on the left.
+
+ Why it matters: when an output is wrong, don’t rewrite the whole prompt — diagnose which part failed. Wrong format? Fix the output spec. Wrong facts? Fix the context. Wrong behavior? Fix the instruction. That’s the skill Exercise A trains.
+
+ Two kinds of prompt
+
+ System prompt vs user prompt
+
+ System prompt The employee handbook
+ Persistent. Set once by the developer; wraps every conversation. Role, scope, rules, refusals, output format. Users never see it — but it governs everything. (Week 2 flashback: you read Codex’s.)
+
+ User prompt Today’s ticket
+ Per-turn. The specific question or task right now. Changes every message; interpreted under the system prompt’s rules.
+
+ Without a system prompt 
+ User: Can I get a refund after 60 days?
+Model: Absolutely! Acme offers a 90-day
+money-back guarantee… ← invented policy
+
+ Not hypothetical: a tribunal made Air Canada honor a refund policy its chatbot invented — the airline argued the bot was “responsible for its own actions,” and lost. Ars Technica, Feb 2024 ↗ 
+
+ With a system prompt 
+ SYSTEM: You are Acme support. Answer ONLY
+from the policy text provided. If the answer
+is not in the policy, say so and escalate.
+Never invent prices or policies.
+
+User: Can I get a refund after 60 days?
+Model: Our policy covers refunds within 30
+days. I've flagged your case for a human
+agent to review options.
+
+ The system prompt is a policy guardrail. It’s also where Week 3 meets Week 2: prompt-level rules are the soft layer of guardrails; runtime enforcement (like Codex’s exec_policy ) is the hard layer. Real systems need both — and the $1-Tahoe case (page 04) shows what happens with neither.

@@ -48,3 +48,13 @@ USING A DIFFERENT MODEL
 
 Small models make mistakes. Observing and measuring those mistakes is part of the lab, not a bug in your code.
 Full instructions: https://sherryfu0315.github.io/cis4394-agentic-ai/week5/local.html
+
+WEEK 7 ADD-ON (RAG on your local model)
+  Download CIS4394_Week7_RAG_Addon.zip and unzip it INTO this folder, so that
+  7_rag_local.py, build_corpus.py and corpus/ sit next to 1_agent_raw.py.
+  One extra model:           ollama pull nomic-embed-text        (274 MB)
+  Then, in this folder:      python 7_rag_local.py index
+                             python 7_rag_local.py ask --no-rag "When is Quiz 3 and what does it cover?"
+                             python 7_rag_local.py search "When is Quiz 3 and what does it cover?"
+                             python 7_rag_local.py ask "When is Quiz 3 and what does it cover?"
+  Full instructions: https://sherryfu0315.github.io/cis4394-agentic-ai/week7/local.html

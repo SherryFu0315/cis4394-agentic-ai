@@ -1,0 +1,177 @@
+02 · The pipeline
+
+ Retrieval-augmented generation .
+
+ The model was trained on text that stopped at a cutoff date and never included your documents. RAG closes that gap without touching the weights: find the passages that answer this question, paste them into the prompt, and require the answer to come from them — with a citation (Lewis et al., 2020).
+
+ Why not just ask the model
+
+ Closed book vs open book
+
+ Closed book — parametric knowledge 
+ Everything the model "knows" on its own is compressed into its weights during training. Three consequences follow, and none of them are fixable by prompting harder:
+
+ It is frozen. Whatever changed after the training cutoff is invisible. It never saw your data. Your contracts, tickets, and policies were not in the training set, and you would not want them to be. It has no sources. Parametric knowledge is a blend, not a filing cabinet, so the model cannot tell you which document a claim came from — and when it is unsure, fluent guessing looks exactly like knowing.
+
+ Open book — retrieval-augmented 
+ Lewis et al. (2020) paired a generator with a retriever over an external corpus, so the knowledge lives in documents you control rather than in frozen parameters ( arXiv:2005.11401 ↗ ). Dense passage retrieval — matching questions to passages by learned embeddings rather than keywords — is the retrieval half of that design (Karpukhin et al., 2020, arXiv:2004.04906 ↗ ).
+
+ Fresh: update a document, and the next answer changes. Private: the corpus stays yours. Attributable: the answer can name the chunk it used, so a human can check it.
+
+ The mechanism underneath
+
+ Embeddings: meaning as geometry
+
+ Retrieval has to find the right passage when the user's words are not the document's words. A customer types "can I send this back?"; the policy says "return window." Zero words in common — and a keyword search returns nothing useful.
+
+ An embedding model converts a piece of text into a list of numbers — a vector, typically several hundred values long. The model is trained so that text with similar meaning lands in similar directions, which turns a language problem into a geometry problem: to find related text, find nearby vectors.
+
+ Nearness is usually measured with cosine similarity — the angle between two vectors, reported on a scale where 1.0 means pointing the same way and 0 means unrelated. "Retrieve the top k " simply means: embed the question, then return the k stored chunks whose vectors sit at the smallest angle to it.
+
+ Two practical consequences you will meet in the exercises. First, the question and the documents must be embedded by the same model — vectors from two different models are not comparable, so swapping the embedding model means re-embedding the entire corpus. Second, similarity is not truth : the nearest chunk is the one that talks about the topic most, which may well be last year's version of the policy. Freshness has to be enforced by metadata, not by geometry.
+
+ "can I send this back?" ← the question 
+ the query vector 
+ "return window: 30 days" 
+ "refunds & exchanges" 
+ "how to start a return" 
+ "employee parking permits" 
+ "holiday shipping cut-off" 
+ Illustration only — real embedding spaces have hundreds of dimensions, not two. 
+
+ Interactive · click each stage
+
+ The RAG pipeline
+
+ Six stages, split across two moments in time. The top lane runs offline , once per document. The bottom lane runs live , on every question. Click any box.
+
+ INDEXING · OFFLINE 
+
+ QUERY · LIVE 
+
+ documents policies, tickets, PDFs 
+ chunk split into passages 
+ embed text → vector 
+ vector index vectors + text + metadata 
+ question what the user asked 
+ embed same model as above 
+ retrieve top-k nearest 
+ augment chunks + rules + question 
+ generate grounded, cited answer 
+ The generator runs only in the last box. 
+ Embedding uses a separate, much smaller model. 
+
+ Click a stage in the diagram.
+
+ Retrieval quality is destiny. The generator can only work with what it is handed. If the right passage is not in the top k , no amount of prompt polish recovers it — the model will either say it does not know (the good outcome) or fill the gap from its parameters (the bad one). Most "the RAG bot is wrong" tickets are retrieval bugs wearing a generation costume.
+
+ Interactive · step through one query
+
+ One question, end to end
+
+ A fictional teaching example : Lakeside Supply Co., a retailer with a small policy corpus. A support rep asks about a return. Press Step and watch the question travel through the pipeline. Similarity scores are illustrative.
+
+ Step ▸ 
+ Auto-play 
+ Reset 
+ Query: the Georgia laptop return · step 0 of 8 
+
+ Press Step to send the question through the pipeline… 
+
+ Pipeline state 
+
+ Read it like the Week 2 evidence standard. state before → observation → available actions → selected action → result → state after. A RAG answer is auditable for exactly the same reason an agent loop is: every claim in the final sentence traces to a chunk ID, and every chunk ID traces to a document version. If your logs do not contain the retrieved chunk IDs, you cannot prove after the fact why the system said what it said.
+
+ The anti-hallucination move
+
+ Grounding and citations
+
+ Retrieval alone does not stop a model from inventing things. Three instructions turn retrieved text into an actual constraint, and they belong in the augmented prompt every single time:
+
+ Answer only from the context. Explicitly forbid outside knowledge. Without this line, the model happily blends what it retrieved with what it half-remembers from training — and you cannot tell which sentence came from where.
+
+ Cite the source of each claim. Require the chunk ID or document section next to the statement it supports. Citations are not decoration; they are the mechanism that makes a wrong answer checkable by a human in ten seconds.
+
+ Say "I don't know" when the context is thin. Give the model an approved way to fail — and back it with a rule in your code: if the best similarity score is below a threshold, do not even call the generator. Escalate to a person instead.
+
+ Then verify: a groundedness check compares each claim in the answer against the retrieved text, and a low-confidence result routes to a human gate — the same gate you placed on irreversible actions in Week 4, now placed on assertions .
+
+ SYSTEM
+Answer ONLY from the CONTEXT below.
+Cite the chunk id for every claim, like [R7-3.2].
+If the CONTEXT does not answer the question, reply
+exactly: "I don't have that in the policy documents."
+Do not use outside knowledge.
+
+CONTEXT
+[R7-3.2] Returns Policy v7, s.3.2 (effective
+2026-07-01): Customers in Georgia may return
+unopened electronics within 30 days of delivery.
+[R7-1.0] Returns Policy v7, s.1.0: This policy
+supersedes Returns Policy v6 in all regions.
+
+QUESTION
+How long do I have to return a laptop in Georgia?
+
+ Week 3 callback — the Air Canada lesson. On the prompt anatomy page you read what happened when a chatbot stated a refund policy that did not exist and a tribunal held the airline to it. A grounded, cited answer is not a nicety — it is the difference between a statement your company can stand behind and one it will be held to anyway.
+
+ From pipeline to agent
+
+ Agentic RAG — the model decides when to look
+
+ Classic RAG retrieves on every question, whether or not retrieval helps. Agentic RAG makes retrieval a tool , and hands the decision to the model inside the loop you built in Week 4.
+
+ Decide "Do I need to look this up?" A greeting, a formatting request, or arithmetic needs no search — and searching anyway costs latency and drags irrelevant text into the context. A question about your refund policy always needs a search, and the model should refuse to answer it from memory.
+
+ Re-query If the first retrieval comes back weak, the agent can rewrite the query and try again — dropping jargon, adding a synonym, or narrowing by metadata. That is the Observe → Reason → Act loop pointed at the index instead of at the outside world.
+
+ Chain Multi-hop questions need more than one retrieval: find the customer's region, then find the policy for that region. One shot at top- k cannot do this; a loop with a stopping condition can. Each hop is a step you can cap and log.
+
+ The cost side. Every extra retrieval is another embedding call and more tokens in the window. The same budget discipline from Week 4 applies: cap the number of retrieval hops, cap k , and log the score of what came back so you can tell a genuinely hard question from a badly chunked corpus.
+
+ Discussion question Your agentic RAG assistant answers "what is our GA refund window?" by searching — good. It also answers "summarize the paragraph I just pasted" by searching, and returns a policy chunk that has nothing to do with the paragraph. What broke, and where do you fix it?
+
+ See the answer 
+ Nothing broke in the index — this is a decision failure, not a retrieval failure. The agent searched when the answer was already in the context window, and then, because retrieval always returns something , it got the nearest chunk in a corpus that contains no relevant chunk at all. Three fixes, in order of preference. (1) The tool description. The model chooses tools from their descriptions (Week 2's tool-inventory lesson): "searches Lakeside policy documents; use only for questions about company policy, not for text the user has already provided" is a better spec than "searches documents." (2) A score floor. If the best match is below your threshold, return "no relevant policy found" instead of the nearest three chunks — an index that never says "nothing here" will hand the model noise on every off-topic question. (3) Routing. For high-volume assistants, a cheap classifier decides retrieve-or-not before the expensive model runs. And note the general lesson: retrieval quality is measured not only by whether it finds the right chunk, but by whether it declines when there is no right chunk.
+
+ The decision managers actually ask about
+
+ RAG or fine-tuning?
+
+ These are not competitors — they change different things. Retrieval changes what the model sees. Fine-tuning changes what the model is. 
+
+ RAG (retrieval) Fine-tuning 
+
+ What it changes The input : relevant passages are added to the prompt at question time. The weights are untouched. The weights : continued training on your examples bakes behavior into the model itself. 
+
+ Best for Knowledge — facts, policies, documents, anything the model must be correct about. Behavior — tone, format, house style, a narrow repeated task where you want the output shape without a long prompt. 
+
+ Freshness Immediate. Replace the document, re-index that document, done. Frozen at training time. New facts require a new training run. 
+
+ Traceability The answer can cite the chunk and version it used. None. A fine-tuned claim cannot be traced to a source document. 
+
+ Cost to update Low and incremental — an indexing job, not a training job. High and lumpy — curated examples, compute, and a full evaluation pass to check nothing else regressed. 
+
+ Access control Enforceable at retrieval time: filter by the user's permissions before anything enters the prompt. Not enforceable. Whatever went into the training data is in the model, for every user. 
+
+ Week 4 callback On the reasoning patterns page you ran the weights visualizer: prompting left all twenty edges of the toy network untouched, while fine-tuning rewrote them. That picture is the whole argument on this page. Retrieval is a very sophisticated way of changing the input — which is why it can be fresh, private, and citable, and why fine-tuning can be none of those things.
+
+ Week 3 callback — the budget still binds Retrieved chunks are tokens, and they compete with everything else in the packing game . Raising k from 3 to 20 does not make answers twenty times better; it dilutes the prompt with near-misses and pushes you toward the recall problems of an overstuffed window. Retrieve narrow and relevant, not wide and hopeful.
+
+ The usual answer is "both." Fine-tune for the voice and the output format if you truly need them; retrieve for every fact. If someone proposes fine-tuning so the model "knows our policies," ask the two questions that settle it: how often do those facts change , and does the answer need to cite a source? 
+
+ Watch
+
+ Two short videos
+
+ What is Retrieval-Augmented Generation? (IBM Technology)
+ The canonical whiteboard explainer, about 6½ minutes: the two failure modes RAG addresses — no source, and out-of-date knowledge — and the retrieve-then-generate loop.
+
+ IBM Think — the written explainer ↗ 
+
+ RAG's Evolution: From Simple Retrieval to Agentic AI (IBM Technology)
+ About 8½ minutes on the step this page ends with: retrieval as a tool an agent chooses to call, re-query, and chain — the bridge from a fixed pipeline to the loop you built in Week 4.
+
+ Concept check
+
+ Three that catch people out

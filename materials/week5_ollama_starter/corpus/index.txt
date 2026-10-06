@@ -1,0 +1,169 @@
+GSU · Fall 2026 · CIS 4394
+
+ Agentic AI : build systems that reason, act, and know when to stop.
+
+ Generative AI is evolving into agentic AI — systems that reason, plan, adapt, and collaborate in complex environments. This course teaches the foundations and the practice: from the agent loop and tool use to evaluation, safety, and deployment, ending in a real capstone agent.
+
+ Instructor Dr. Xinyu Fu
+
+ School Robinson College of Business, GSU
+
+ Format Weekly hands-on studio classes
+
+ Tools All free — no paid API keys
+
+ News & opportunities
+
+ Announcements
+
+ 🌍 Free career program · Centre for Effective Altruism · posted Sept 28, 2026 · apply by Saturday Oct 4 
+ “Make your high-impact career pivot” — a free 4-day online bootcamp
+
+ A 4-day online bootcamp run by the Centre for Effective Altruism for people who want to steer their career toward the world’s biggest problems. AI safety is one of its main tracks , alongside pandemic preparedness and global development. You get structured decision frameworks for comparing directions, 1:1 written and verbal feedback from advisors , peer accountability, and sessions with people who left tech, government and business to work on AI safety and related fields.
+
+ Cost: free — donors cover it. Online. Two options: weekdays Oct 12–15 , or weekends Oct 17–18 & 24–25 . About 20–30 hours total ; two interactive calls a day (8 am and 4 pm GMT — the 4 pm GMT call is noon in Atlanta). Graduates can opt into an accountability buddy and follow-up 1:1 career advising.
+
+ Who it is for — read this honestly: it is aimed at accomplished professionals; most participants have 5+ years’ experience, though the organizers say that is “not required.” You must be 18+, and entry is competitive. If you are still an undergraduate, apply if you have a track record you can point to — internships, shipped projects, your capstone from this course — and do not take a “no” personally; it is a mid-career-leaning program. There is also a version specifically for operations professionals and organizational leaders (same form; you state your preference).
+
+ Apply: a 15-minute form, no interview — forms.cea.community/bootcamp ↗  ·  full details and FAQ: effectivealtruism.org/courses/bootcamp ↗ 
+
+ 👥 Group assignment · posted Sept 23, 2026 · action required: enroll in a group 
+ Group Assignment 2 is out — self-enroll in your team
+
+ GA2 is released on iCollege: build a tool-using agent — a loop, at least two tools with real schemas, a max-iteration guard, one execution trace, and a one-page design note. Submitted as a group, and you self-enroll (Assessments → Groups → the GA2 category → View Available Groups → Join Group), in your own section.
+
+ These are new groups — your GA1 team does not carry over, and you are encouraged to team up with people you have not worked with yet. Code path, no-code path, or your own favourite tool — all graded on the same standard. Due in Week 7; check iCollege for your section’s due date .
+
+ Enrollment steps, the three build paths, and what every path must show: Week 5 Summary → 
+
+ 📌 Assignment · posted Sept 16, 2026 · check iCollege for your due date 
+ Final-project proposal released
+
+ Due this week (Week 6). The proposal assignment is open on iCollege — the official instructions and rubric are there. Submit to your own section — the two sections’ deadlines are a day apart, so check iCollege for your section’s due date .
+
+ Tip: before you choose a model for your project, measure it — Week 5, page 03 shows how to test a local model over several runs.
+
+ 📣 Student event · AIS GSU Student Chapter · Thursday Oct 1 
+ Breaking Into Consulting — Capgemini panel
+
+ The Association for Information Systems (AIS) GSU Student Chapter hosts an interactive panel with consultants from Capgemini — the skills that stand out in today's market, a day-in-the-life view of consulting, and direct networking. Open to all CIS students.
+
+ Details and RSVP on PIN: AIS chapter page ↗  ·  Browse PIN events ↗ 
+
+ Interactive class sites
+
+ The weeks
+
+ Each week ships as an interactive mini-site: clickable architecture explorers, step-through agent-loop simulators, live concept checks, hidden answers on every question, and full lab instructions. Readings and quiz scope are listed at the end of each week.
+
+ Module 1 · Foundations of agentic AI
+
+ Week 1 
+ Introduction to Agentic AI + What Enterprises Actually Use 
+ What an LLM is (just enough) · the agent loop · agent vs workflow vs chatbot · the autonomy dial · the 2026 enterprise agent stack · classify-the-scenario exercises · toolchain setup. 
+ → 
+
+ Week 2 
+ Learning from the Best: Unpacking Coding Agents 
+ Reverse-engineer Codex · the same lens on Claude Code · then build a Job Search Agent three ways (Google Opal, LangSmith Fleet, or Codex + Python) with tests, guardrails, and human approval. 
+ → 
+
+ Week 3 
+ Prompting & Context Engineering 
+ Anatomy of a prompt (annotated & clickable) · few-shot, chain-of-thought, JSON output · a temperature dial · the context-window packing game · context rot · the $1 Chevy Tahoe case · Quiz 1 week. 
+ → 
+
+ Week 4 
+ Reasoning, Planning & the Agent Loop 
+ The Observe→Reason→Act loop, step-through simulator · ReAct, plan-then-execute, reflection & Tree of Thoughts (with the papers) · the cost of thinking · build a minimal LangGraph agent with a max-iteration guard. 
+ → 
+
+ Module 2 · Supercharging agents with tools & protocols
+
+ Week 5 
+ Tool Use & Function Calling 
+ The “Act” arrow becomes a real tool call: the function-calling round trip · schemas as interfaces · errors as observations · the auto-run / constrain / gate decision · build a tool-calling agent on your own laptop with Ollama , and measure it. 
+ → 
+
+ Week 6 
+ MCP & A2A — the interoperability standards 
+ The N×M integration problem · MCP (agent ↔ tools) architecture, clickable · A2A (agent ↔ agent) and Agent Cards · which standard when · the trust boundary a third-party server sits inside. 
+ → 
+
+ Week 7 
+ Memory, RAG & Knowledge 
+ Working, episodic, semantic & procedural memory · the RAG pipeline step by step · embeddings as geometry · grounding and citations · RAG vs fine-tuning, decided. 
+ → 
+
+ Module 3 · Evaluation, safety & governance
+
+ Week 8 
+ Evaluation & Reliability 
+ Why demos lie · outcome vs trajectory · pass@k vs pass^k (with a calculator you can push) · benchmark literacy · LLM-as-judge and its biases · writing a real eval set. 
+ → 
+
+ Week 9 
+ Multi-Agent Systems 
+ Supervisor, network & hierarchical topologies, clickable · what actually gets shared · the honest case against multi-agent · why these systems fail · split-or-not decisions. 
+ → 
+
+ Week 10 
+ Security, Trust & Governance 
+ The lethal trifecta as a toggle you can flip · indirect prompt injection as an architecture problem · least-privilege tools · NIST AI RMF vs the EU AI Act · attack-and-patch lab. 
+ → 
+
+ Module 4 · Deployment & applications
+
+ Week 11 
+ Agentic Commerce 
+ When the action moves money: irreversibility, identity & liability · the emerging payment protocols (AP2, ACP) · computer-use agents · the deployment checklist and the gate that must hold. 
+ → 
+
+ Weeks 12–14 
+ Capstone studios, final presentations & course wrap-up 
+ Build time in class, then demo day. Published here as the semester reaches them. 
+
+ How the course runs
+
+ Four modules, one capstone
+
+ Module 1 Foundations
+ LLMs → agents, the loop, agentic coding, prompting & context engineering, reasoning & planning.
+
+ Module 2 Tools & protocols
+ Tool use and function calling, MCP & A2A, memory & RAG.
+
+ Module 3 Eval, safety, governance
+ Evaluation & reliability, multi-agent systems, security & governance.
+
+ Module 4 Deployment & capstone
+ Deployment & agentic commerce, capstone studios, final presentations.
+
+ Build paths (all free): LangGraph on the Google Gemini free tier (code, default) · LangSmith Fleet (no-code) · GitHub Copilot as the coding assistant · LangSmith for evaluation and observability. The capstone must be a real agent — the LLM owns control flow — with a named stop condition, one human gate, an evaluation harness, and a security review.
+
+ Downloads
+
+ Class materials
+
+ Week 1 — lecture deck
+ Introduction to Agentic AI + What Enterprises Actually Use (PowerPoint, ~66 slides, with speaker notes and references).
+ Download .pptx ↓ 
+
+ Week 2 — class bundle
+ Lesson deck, step-by-step lab guide, starter kit (résumé, preferences, six-job dataset with a prompt-injection test, Python baseline), and pre-class prep.
+ Download .zip ↓ 
+
+ Week 5 — Ollama starter code
+ Four short Python scripts for a tool-calling agent on a local model: the raw agent loop, a pass^k runner, the same agent in LangGraph, and the tool-design experiment. No API key needed.
+ Download .zip ↓ 
+
+ About
+
+ Who teaches this
+
+ Dr. Xinyu Fu
+ Instructor, Computer Information Systems, J. Mack Robinson College of Business, Georgia State University. This course pairs research-grounded foundations (ReAct, Toolformer, LLM-agent surveys, τ-bench) with what enterprises actually deploy — and every claim on these pages is dated and sourced, because agentic AI moves fast. The course is offered within PATH — Pathways for AI Training & Hiring , a national initiative led by MIT RAISE and Georgia State.
+ Faculty profile ↗  ·  Personal site ↗  ·  xfu11 [at] gsu [dot] edu 
+
+ Why the sites are interactive
+ Agent loops, autonomy, and control flow are abstract until you can push on them. Each week's site turns the core abstractions into things students can click, step through, and break — the same standard the course applies to agents themselves: don't trust the demo, test the behavior.

@@ -1,0 +1,107 @@
+01 · Foundations
+
+ Context is not memory .
+
+ An agent that "remembers" is an agent whose harness wrote something down and read it back . Those are two separate design decisions — a write policy and a read policy — and neither one happens by default.
+
+ The distinction that fixes everything else
+
+ Context vs memory
+
+ Both are "what the model sees." Only one of them still exists tomorrow.
+
+ Context (the window) Memory (a store) 
+
+ What it is The tokens assembled for this model call: system prompt, tools, retrieved text, conversation so far. Data your system deliberately saved outside the model — a row in a database, a file, a vector index. 
+
+ Lifespan One call. The next call gets whatever your harness re-assembles. Until you delete it. Survives the run, the session, the deploy. 
+
+ Where it lives In the request. It is gone the moment the response returns. In your infrastructure — and therefore in your backup, your access-control model, and your retention schedule. 
+
+ Who controls it Your prompt-assembly code, every turn (Week 3's context engineering). Your write policy (what gets saved) and read policy (what gets loaded back). 
+
+ What it costs Tokens — every turn, forever. Bigger context = higher bill and, past a point, worse recall inside the window. Storage plus a retrieval step. Cheap to keep, cheap to update — you pay tokens only for what you load. 
+
+ Failure mode Amnesia between runs; or, if you stuff everything in, context rot. Stale, contradictory, or over-broad memories that quietly poison later runs. 
+
+ Week 3 callback: you already played the context packing game — a fixed token budget, and every item earning its place. Memory is what you do with the things that lost that competition but still matter: park them in a store, and pull them back only on the turn that needs them.
+
+ Interactive · click each store
+
+ Four kinds of memory, one architecture
+
+ The standard taxonomy borrows its names from cognitive psychology: working , episodic , semantic , and procedural memory. IBM's explainer uses the same four for agent systems ( IBM Think — What is AI agent memory? ↗ ). Click a box to see what belongs in it and what it costs you.
+
+ read path: retrieve → inject 
+ write path: the loop decides what is worth storing — 
+ nothing saves itself 
+ working memory = the context window · gone at end of run 
+ the agent loop reads before deciding · writes after acting 
+ episodic what happened 
+ semantic what is true 
+ procedural how to do it 
+
+ Amber = volatile. The three boxes at the bottom are long-term stores: they persist between runs, and something has to load them back in.
+
+ Click a box in the diagram.
+
+ Notice the shape. Long-term memory works exactly like RAG (page 02): decide what to store, store it, then retrieve the relevant part and paste it into the context window at the right moment. Memory is retrieval over things the agent learned; RAG is retrieval over things your organization wrote. Same read path, different corpus.
+
+ Concept check · interactive
+
+ The memory router
+
+ You are building a travel-booking agent for a mid-size firm. Four things happen during a run. For each one, decide which store it belongs in — or whether it belongs in a store at all.
+
+ Why the classification is not academic: each store has a different retention rule, a different retrieval trigger, and a different privacy exposure. Semantic facts about a person are the ones the law cares about; episodic run records are what your on-call engineer needs at 2 a.m.; procedural notes are the ones that silently change your agent's behavior forever if nobody reviews them.
+
+ The two policies
+
+ What gets written, and when it gets read
+
+ Write policy What is worth remembering?
+
+ Storing everything is the same mistake as putting everything in the context window — you just move the mess. A workable filter asks four questions of each candidate memory:
+
+ Is it durable? True next week, not just for this turn. "User prefers aisle seats" is durable; "user is currently looking at flight 442" is not.
+
+ Is it reusable? Will a future run actually consult it? A fact nothing will ever retrieve is storage cost with no upside.
+
+ Is it expensive to recompute? Something learned from six tool calls is worth saving; something one cheap lookup returns is not.
+
+ Is it allowed? Do you have a basis to retain it, and can you delete it on request? If not, the answer to "should we store this" is no — regardless of how useful it is.
+
+ Who writes it matters too. Explicit writes ("remember that…") are auditable and rare. Automatic writes — where the agent decides at the end of a run what to save — scale better and are exactly where wrong facts get canonized. Keep a source and timestamp on every memory so a bad one can be traced and revoked.
+
+ Read policy When do you retrieve?
+
+ The naive design loads the whole memory store into every prompt. That works for a demo with nine memories and collapses at nine thousand — you have re-created the context problem with a bigger bill. Real read policies are selective:
+
+ At the start of a session , load a small, bounded profile: the handful of semantic facts about this user, plus the standing procedural rules.
+
+ On relevance , retrieve mid-run by similarity to the current sub-task — the same top- k mechanism as RAG on page 02.
+
+ On failure , pull episodic records of previous attempts at this task. This is the retry that gets smarter instead of louder.
+
+ Bound it. A cap on how many memories can enter the prompt, and a recency or confidence tiebreak. Memory competes for the same token budget as everything else.
+
+ Then close the loop: log which memories were injected on the turn that produced a bad answer. Without that, a poisoned memory is invisible — the trace shows a confident model and no reason for it.
+
+ Week 4 callback — procedural memory is Reflexion, persisted. On the reasoning patterns page you met reflection: the agent critiques its own attempt and stores the critique so the next attempt does better. Inside a single run, that critique lives in the context window. Write it to a store instead and it becomes procedural memory: a lesson that carries into next month's runs. That one change is the difference between an agent that learns within a task and an agent that learns across a job.
+
+ Governance
+
+ A memory store is retained personal data
+
+ The engineering question is "what should the agent remember?" The business question is "what are we now holding, about whom, and for how long?" They have to be answered together, because the second one has consequences the first one cannot see.
+
+ Consent & notice A user talking to an assistant does not obviously expect a durable profile to be built from it. If your agent writes semantic facts about people, someone has to be told — and the agent should be able to say what it knows about you when asked.
+
+ Retention & deletion "Forget me" has to be executable. That means every memory carries an owner ID and a timestamp, and deletion reaches the vector index and the backups too — not just the pretty table in the admin UI.
+
+ Contamination Memory is an input channel, so it is an attack surface . Text the agent read in one session and saved becomes an instruction it reads back later — prompt injection with a delay fuse (Week 2's J004). Treat stored memories as untrusted data, not as system prompt.
+
+ Discussion question Your firm's support agent has been writing automatic memories for four months. Legal asks: "for customer #8812, show us everything the system remembers, where each item came from, and delete it." What must have been designed in on day one for that request to be answerable in an afternoon rather than a quarter?
+
+ See the answer 
+ Four things, none of which can be retrofitted cheaply. (1) A subject key on every memory. Memories written as free text with no owner field cannot be queried by customer — you end up doing similarity search over your own database and hoping. (2) Provenance. Each memory needs the run ID, the timestamp, and the source turn or document that produced it, so "where did this come from" has an answer and a wrong memory can be traced to a wrong input. (3) A single delete path that reaches every copy — the primary store, the vector index (embeddings of personal text are still personal data), any cache, and the run logs. Deleting the row while the embedding survives is not deletion. (4) An export view — the same read path a human can run, so "show us everything" is a query, not an archaeology project. Notice these are the same properties that make a RAG system auditable on page 02: an ID, a source, a version, a timestamp. Governance is mostly the discipline of never storing a fact without knowing where it came from.

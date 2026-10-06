@@ -1,0 +1,58 @@
+03 · The 2026 core skill
+
+ Context engineering .
+
+ Prompting is what you say; context engineering is everything the model can see. As agents got longer-running, deciding what fills the context window — instructions, retrieved documents, examples, tool outputs, history — and in what order became its own discipline (Mei et al., 2025; Anthropic, 2025).
+
+ The constraint
+
+ The context window is a budget
+
+ A token is roughly ¾ of an English word. The context window is the fixed number of tokens the model can attend to per call — and everything competes for it: the system prompt, conversation history, retrieved data, the current question, and room for the answer itself.
+
+ HF Agents Course tie-in (this week’s reading): context is the agent’s working memory . And like any working memory: more is not better.
+
+ Context rot As the window fills with long or noisy input, accuracy and instruction-following degrade : models “lose the middle,” forget rules stated early, and drift — documented across 2024–25 long-context evaluations, including Chroma’s Context Rot report (2025).
+ Practical rule: put the most important instructions first and last, and test at the lengths you’ll actually run.
+
+ Curation over accumulation: include what’s relevant, exclude the rest — top-k retrieval instead of the whole manual (RAG preview, Week 7), summarize old history, drop stale turns. The anti-pattern: dumping everything into every call “just in case.”
+
+ Interactive · Exercise B preview
+
+ The packing game: fit the agent in 4,000 tokens
+
+ You’re shipping a customer-support agent. Everything below “wants” to be in context — but it totals far more than your 4,000-token budget (you must leave ≥500 tokens of room for the answer). For each item choose Keep · Summarize · Drop , then check your packing.
+
+ News hook · 2026
+
+ Even Anthropic cut 80% of Claude Code’s system prompt
+
+ Anthropic engineer Thariq Shihipar reported removing over 80% of Claude Code’s system prompt for Claude 5–generation models — with no measurable loss on coding evals (Cat Wu & Thariq Shihipar, Claude Code team, interviewed at the AI Engineer World’s Fair, July 2026). What got cut: examples (“it was just more creative than the examples we gave it”), “do not do this” rules, and absolute instructions that were only 90% true.
+
+ Read it carefully: this is a capability-driven simplification — “the model got better, so the prompt could get shorter.” It is NOT “prompts don’t matter.” And it’s Claude Code’s prompt (the CLI coding agent), not the Claude.ai app — older models kept the full prompt. Viral restatements over-generalize; cite the primary interview.
+
+ The interview write-up (Simon Willison, Jul 2026) ↗  ·  News coverage (The Decoder) ↗ 
+
+ >80%
+ of the system prompt removed, no measurable eval loss — as reported, 2026.
+
+ Three takeaways for your prompts: 
+1 · Less can beat more.
+2 · Match scaffolding to capability — don’t over-constrain a strong model.
+3 · Curate, don’t stuff — context rot is real.
+
+ The last fork
+
+ Prompting vs fine-tuning
+
+ Prompt / context engineering Fine-tuning 
+
+ What changes What the model sees The model’s weights 
+
+ Cost & speed Free · instant Data + compute + upkeep · weeks 
+
+ Data needed None (a few examples) Hundreds+ curated examples 
+
+ Best for Almost everything — start here Consistent style at massive scale · cutting prompt cost · deep domain behavior 
+
+ The order: prompt → few-shot → better context / RAG → fine-tune, last . Every rung you skip is money and weeks you didn’t need to spend.

@@ -1,0 +1,194 @@
+02 · The horizontal handshake
+
+ A2A — when the other side is an agent .
+
+ MCP assumes the thing you are calling is a system: it does what it is told and returns. A2A assumes the other side has its own model, its own tools, and its own judgment — so you do not call it, you delegate to it. Announced by Google in April 2025 and contributed to the Linux Foundation that June, it is the younger and less settled of this week's two standards, and we will be honest about that.
+
+ The distinction that generates everything else
+
+ Calling a tool vs. delegating to an agent
+
+ Calling a tool 
+ book_room(room="Aderhold 204",
+ start="14:00", end="15:00")
+
+→ {"ok": true, "confirmation": "R-8812"}
+
+ You know the exact function, the exact arguments, and the shape of the answer. It returns in one shot or it errors. There is nothing to negotiate — and nothing that can ask you a question back.
+
+ Delegating to an agent 
+ "Find a tutoring slot for a first-year
+ student in MATH 1113, sometime this week,
+ preferably afternoons."
+
+→ "Which campus? And is online acceptable?"
+→ (…several turns…)
+→ "Booked Thu 3:00 pm, Langdale 102."
+
+ You state an outcome , not a call. The other side may plan, use tools you cannot see, take minutes rather than milliseconds, and ask you something mid-task . That last one is why a request/response API is not enough.
+
+ So A2A's design problems are different from MCP's: how does one agent find another and learn what it can do? How do two agents keep a long-running conversation straight? How does an agent ask a clarifying question without breaking the protocol? And — the one that makes managers sit up — how do you delegate across an organizational boundary without exposing your internals?
+
+ Definition
+
+ What A2A is
+
+ A2A (Agent2Agent) is an open protocol for agents built by different teams, on different frameworks, from different vendors, to discover each other and work together over ordinary web infrastructure. Its three moving parts:
+
+ The Agent Card. A published description of an agent — who it is, where to reach it, what it can do, and how to authenticate. This is how discovery happens: read the card, decide whether this agent is worth talking to.
+
+ The Task. A unit of delegated work with an identity and a lifecycle. Tasks can be long-running, so both sides can track one across many messages instead of pretending everything finishes in one HTTP round trip.
+
+ Messages and artifacts. The back-and-forth inside a task, plus the outputs it produces — a booking confirmation, a document, a table of results.
+
+ Two design commitments worth naming, because they are what makes it enterprise-shaped: it runs on plain web standards (HTTP and JSON, so your existing gateways, auth, and logging apply), and agents are treated as opaque — you expose what you can do, not how you do it. Your prompts, your model choice, and your internal tools stay yours.
+
+ Primary sources: Google's announcement (2025) ↗ · the A2A protocol site ↗ .
+
+ An honest note on maturity 
+ MCP had a year of adoption before A2A was announced, and it shows. A2A moved to a neutral foundation quickly and has real vendor backing, but the open question is adoption, not design — cross-organization agent delegation requires two organizations to actually want it, plus answers to questions the protocol alone cannot settle: who is liable when a delegated task goes wrong, how you audit an agent you do not run, and what a service-level agreement means when the other side is probabilistic.
+
+ Learn it for the concepts — discovery, delegation, task lifecycle. Those survive whichever protocol wins. Be skeptical of anyone claiming the standards war is settled; in this material we would rather teach you the shape of the problem than a winner.
+
+ Interview framing: “MCP is how my agent reaches its tools; A2A is how my agent reaches someone else's agent. One is vertical, one is horizontal, and a serious system will use both.”
+
+ Interactive · click the fields
+
+ Anatomy of an Agent Card
+
+ An Agent Card is a small JSON document an agent publishes so others can find and evaluate it — the A2A analogue of an MCP server advertising its tools. Click any highlighted field to see what it is doing and what a careful reader would ask about it.
+
+ {
+ "name": "Tutoring Center Scheduling Agent" ,
+ "description": "Finds and books tutoring appointments for
+ enrolled students across campus locations." ,
+ "url": "https://tutoring.example.edu/a2a" ,
+ "version": "1.4.0" ,
+ "capabilities": { "streaming": true,
+ "pushNotifications": true } ,
+ "authentication": { "schemes": ["oauth2"] } ,
+ "skills": [
+ { "id": "find_slot",
+ "description": "Find open tutoring slots for a course",
+ "examples": ["open MATH 1113 slots Thursday afternoon"] },
+ { "id": "book_slot",
+ "description": "Reserve a slot for a student" }
+ ] 
+}
+
+ Illustrative and simplified — a teaching example, not a spec excerpt. Field names and required properties change between protocol versions; check a2a-protocol.org ↗ for the current definition before you write one.
+
+ Click a highlighted field in the JSON.
+
+ The card is a contract. Everything a partner needs to decide “can this agent do my job, and may I talk to it?” is here — and nothing about how it works inside. Compare with an MCP server's tool list: same idea (advertise capability, hide implementation), one level up the ladder.
+
+ Interactive · step through a delegation
+
+ The task lifecycle
+
+ A campus advising agent delegates to the tutoring center's agent — a different department, a different codebase, a different owner. Press Step and watch the task move through its states. The amber state is the interesting one.
+
+ submitted 
+ working 
+ input- required 
+ completed 
+ failed 
+
+ The amber state — input-required — is what a plain API call cannot express. The delegate stops and asks, and the task stays alive while it waits.
+
+ Step ▸ 
+ Auto-play 
+ Reset 
+ Delegation · step 0 of 8 
+
+ Press Step to begin the delegation… 
+
+ Task state 
+
+ Notice what crossed the boundary and what did not. The advising agent never learned which model the tutoring agent uses, what its prompt says, or which database it queried. It learned one thing: the outcome. That opacity is the feature — it is what makes delegation between two organizations conceivable at all.
+
+ Compose, don't choose
+
+ MCP and A2A in one picture
+
+ Your advising agent you own this 
+ Tutoring agent another department 
+
+ A2A · HORIZONTAL 
+
+ MCP 
+ VERTICAL 
+ records DB 
+ catalog files 
+ email server 
+
+ their systems 
+ their MCP servers — invisible to you 
+
+ MCP A2A 
+
+ Connects An agent to tools & data An agent to another agent 
+
+ Direction Vertical — downward Horizontal — sideways 
+
+ Other side is A system: deterministic, no goals An agent: plans, may ask you questions 
+
+ Discovery Tool list at connect time Agent Card, published 
+
+ Unit of work A tool call, usually fast A task, possibly long-running 
+
+ Typical use “Read the student record” “Get this student tutored” 
+
+ Origin Anthropic, Nov 2024 Google, Apr 2025 
+
+ One agent, both protocols, no conflict. Your agent reaches down through MCP to its own systems and sideways through A2A to a peer. The peer does the same on its side — and you never see its plumbing.
+
+ The decision
+
+ Do you even need a protocol here?
+
+ The most common mistake this week is reaching for A2A when the honest answer is “these are two nodes in a graph I control.” Three options, one question that separates them: am I crossing a boundary I do not own? 
+
+ In-graph edges Same app, same deploy
+
+ A researcher node and a writer node in one LangGraph. They share state, ship together, and are versioned together. Adding a protocol here buys you serialization overhead and a second failure mode in exchange for nothing. Use edges. Week 4 → 
+
+ Week 9 preview: multi-agent design — supervisors, hand-offs, and when splitting one agent into several actually helps — is a whole week of its own, and most of it happens inside a single application.
+
+ MCP You need a capability
+
+ You want a system's data or actions and you would be happy with a well-described function. The other side has no goals to negotiate with. Wrap it in a server — once — and every agent you build afterwards gets it free.
+
+ A2A You need someone else's judgment
+
+ The work belongs to another team, vendor, or company: they own the data, the rules, and the accountability. You want an outcome without inheriting their internals, and you may need a back-and-forth to get there. That is delegation, and that is A2A's case.
+
+ The manager's version of the same question: a protocol boundary is also a contract boundary. Crossing an organizational line means someone must answer: who authenticates whom, what data is allowed to travel, what is logged on each side, who is liable when the delegated task fails, and how you audit an agent you cannot inspect. If nobody in the room can answer those, the technology choice is premature.
+
+ Discussion
+
+ Discussion question Your procurement agent negotiates delivery dates with a supplier's agent over A2A. The supplier's agent commits to a date it cannot meet. What did your side need to have in place before that call — and what should it have logged?
+
+ See the answer 
+ Before: an authenticated, allow-listed counterparty (you delegate to agents you have onboarded, not to any card you find); an explicit scope for what the agent may agree to — a mandate with limits on price, quantity, and date; and a human gate on anything that becomes binding, which is the Week 5 rule surviving contact with another company. Autonomy is fine for “ask when they could ship”; it is not fine for “accept.” Logged: the Agent Card version you talked to (capability claims change), the task id, every message in both directions with timestamps, the artifact returned, which human approved what, and the mandate limits in force at the time. The uncomfortable part: none of that makes the supplier's agent honest. The protocol standardizes the conversation, not the counterparty — commitments across organizations still need contracts, penalties, and reconciliation, exactly as they did when humans made the call. Interoperability solves the plumbing; it does not solve trust.
+
+ Watch
+
+ Introduction to Agent2Agent
+
+ Introduction to Agent2Agent (A2A) Protocol (Google Cloud Tech)
+
+ The official short introduction: Agent Cards, tasks, and discovery across vendors. Watch it with the diagram above in mind and check whether the speaker's example is really cross-organizational — or whether it would have been fine as edges in one graph. (~8 minutes; runtime approximate.) 
+
+ Read it as a strategist 
+ This is a vendor introducing a standard it created, which is not a criticism — it is context. When you watch, separate three layers: the problem (agents from different builders cannot find or talk to each other), which is real and would exist without any vendor; the design (cards, tasks, opacity), which you can evaluate on its merits; and the pitch (that this particular design should be the industry's), which is a claim about the future, not a fact about the present.
+
+ Whoever's format becomes the default captures the ecosystem around it — that is the platform economics behind every standards announcement you will read this year, and why open governance under a neutral foundation is a substantive move rather than a press-release detail.
+
+ Free deep dives: Microsoft — AI Agents for Beginners ↗ · Hugging Face Agents Course ↗ 
+
+ Concept check
+
+ Which standard — if any?
+
+ Four scenarios. Pick MCP, A2A, or neither. The “neither” option is not a trick — it is the answer more often than students expect.

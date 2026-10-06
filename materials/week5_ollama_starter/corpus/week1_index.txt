@@ -1,0 +1,80 @@
+Week 1 · Foundations
+
+ Introduction to Agentic AI — and what enterprises actually use.
+
+ Everyone uses AI; few profit from it yet. Agents — systems where the model owns the control flow — are the bet the industry is making to close that gap. This week builds your mental model: the loop, the vocabulary, the autonomy dial, and the 2026 landscape.
+
+ In the news · 2026
+
+ Five numbers that frame the semester
+
+ Click each card for the “so what” and the source. All figures are approximate and dated — that’s a feature of this field, not a bug of these slides.
+
+ TAP 88%
+ of firms use AI regularly — but only ~39% report EBIT impact
+ Everyone uses AI; few profit yet. Agents are the industry’s bridge from usage to value — and the paradox this course exists to close.
+ McKinsey, State of AI in 2025 (2025), approx.
+
+ TAP 40%
+ of enterprise apps expected to ship task-specific agents by end of 2026 — up from <5% in 2025
+ You are early. The skill you build this semester is arriving in the software you’ll use at work.
+ Gartner (2025), projection, approx.
+
+ TAP 4+
+ live agentic-commerce efforts: Visa + OpenAI, ChatGPT Instant Checkout, Amazon “Buy for Me,” Mastercard Agent Pay
+ Software can now hold a wallet. What goes right — and what goes wrong — when an agent can transact?
+ Digital Commerce 360 (2026)
+
+ TAP 80–90%
+ of a real cyber-espionage campaign was automated after a state-linked group jailbroke an agentic coding tool (~30 targets)
+ Autonomy cuts both ways. Power without guardrails is a liability — this previews our security week.
+ Anthropic / Cybersecurity Dive (Nov 2025)
+
+ TAP −14%
+ hiring rate for 22–25-year-olds in AI-exposed jobs — yet ~57% of AI use augments rather than automates
+ It’s not replacing you; it rewards the people who can use it well. That’s the career case for this course.
+ Anthropic, Labor-Market Impacts / Economic Index (2026), approx.
+
+ The tension
+
+ The 2026 split: exploding capability, stubborn unreliability
+
+ Advancing fast Task length doubles ~every 88 days
+ The length of tasks agents can complete autonomously has been doubling roughly every three months (METR, approx.). Demos get dramatically better every semester.
+
+ Still unreliable ~20% vs 72%
+ On long computer-use tasks, top agents score around 20% where humans score ~72% (OSWorld, approx.). Benchmarks lag the demos — reliability is the semester’s recurring villain.
+
+ Both of these are true at once. Holding that tension — capability and unreliability — is the whole discipline of agentic AI.
+
+ This week
+
+ Work through the four parts
+
+ 01 
+ Foundations From LLM to agent What a language model actually is, why one call can’t book a flight, the four parts of an agent — and a step-through agent-loop simulator. 
+ → 
+
+ 02 
+ Vocabulary Agent vs workflow vs chatbot The real distinction — who owns control flow — plus the five workflow patterns and an autonomy dial you can actually turn. 
+ → 
+
+ 03 
+ Landscape What enterprises actually use in 2026 The agent stack, build vs buy vs wait, MCP & A2A, why coding agents broke out first — and the gen-AI paradox case. 
+ → 
+
+ 04 
+ Practice Exercises, toolchain, interview check Classify seven scenarios, trace a loop by hand, set up Gemini + Copilot for free, and test yourself against interview-level questions. 
+ → 
+
+ Objectives
+
+ By the end of Week 1 you can…
+
+ Explain what an LLM is — and why a bare LLM can’t act 
+ Draw the agent loop and name a stop condition 
+ Distinguish chatbot, workflow, and agent by who owns control flow 
+
+ Place a business problem on the autonomy spectrum — and justify the lowest level that works 
+ Name the 2026 agent stack: frameworks, platforms, standards, coding agents 
+ Set up the free course toolchain (Gemini key, Copilot, hello-agent)

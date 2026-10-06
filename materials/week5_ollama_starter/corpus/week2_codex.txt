@@ -1,0 +1,201 @@
+01 · Part 1
+
+ Unpack Codex .
+
+ You skimmed a real coding agent before class. Now we take it apart — not to memorize a repository, but to extract a reusable architecture for agentic systems.
+
+ Discussion question If Codex had the exact same model — but no access to files, shell commands, tools, state, or permissions — would it still be Codex?
+
+ What a strong answer covers 
+ No — you would have a chatbot that talks about code. Everything that makes it Codex — reading files, running tests, applying patches, pausing for approval — lives in the harness . The model supplies reasoning; the product is the loop built around it. (Corollary: swap the model and most of the product survives; remove the harness and nothing does.)
+
+ How we got here
+
+ Three shifts in AI engineering
+
+ In two years, the center of gravity of AI engineering has moved twice. Each era is defined by the question it obsesses over.
+
+ Shift 1 · 2023 Prompt Engineering
+ “Does the model understand what you’re asking?”
+ Wording, examples, personas, magic phrases. Necessary — but a better sentence still can’t read a file or run a test.
+
+ Shift 2 · 2024–25 Context Engineering
+ “Does the model have the right information?”
+ Retrieval, RAG, memory, long context. Feeds the model the facts it needs — but knowing is still not doing.
+
+ Shift 3 · now Harness Engineering
+ “Can the model execute reliably in the real world?”
+ Tools, environment, state, sandboxing, approvals, the loop. Where the industry’s effort — and hiring — has moved.
+
+ 👥 Group task · 2 minutes 
+ Before scrolling: are these three replacements for each other — or something else? Agree on one sentence describing the relationship between them.
+
+ Then: scroll to the figure and check your sentence against it.
+
+ The shifts nest — each one contains the last
+
+ These are not replacements. A harness still contains context engineering, which still contains prompting — each shift wraps the previous one in more machinery. Your prompt-engineering skills aren’t obsolete; they are now one layer of a bigger system.
+
+ HARNESS ENGINEERING 
+ “Can it execute reliably in the real world?” 
+ + tools · environment · state · sandbox · approvals · loop 
+
+ CONTEXT ENGINEERING 
+ “Does it have the right information?” 
+ + retrieval · memory · documents 
+
+ PROMPT ENGINEERING 
+ “Does it understand the ask?” 
+ + instructions · examples · personas 
+
+ THE MODEL 
+ frozen weights · pure reasoning 
+
+ Prompt engineering Context engineering Harness engineering 
+
+ You are tuning… the wording of one request what information reaches the model the system around the model 
+
+ The artifact is… a prompt string a pipeline — retrieval, memory, context assembly a product — tools, state, sandbox, approvals, loop 
+
+ It fixes… “it misunderstood me” “it didn’t know, so it made something up” “it can’t do it, reliably” 
+
+ Skill ceiling writing information architecture systems engineering — this course 
+
+ What all three share: none of them touch the model’s weights. All of AI engineering is building around a frozen model — and this course works on the outermost ring. The best way to study harnesses is to read the best one shipping today, so next we open Codex’s actual repository.
+
+ Open the hood
+
+ A field guide to the Codex repository
+
+ github.com/openai/codex ↗ is not a model repository — the model isn’t in it . Everything you’ll see is harness. We’re here to recognize structure, not to read Rust.
+
+ The top level, in one pass
+
+ codex-rs/ The engine room — the agent’s core, written in Rust. Today’s destination. 
+
+ codex-cli/ The npm wrapper you actually install ( @openai/codex ) — a shell around the Rust engine. 
+
+ sdk/ · docs/ For developers embedding Codex; documentation. 
+
+ AGENTS.md · .codex/ ⭐ The repo carries its own agent instructions — OpenAI uses Codex to build Codex. Layer 3, live, eating its own dog food. 
+
+ everything else Build systems, CI, scripts — engineering plumbing; skip. 
+
+ Why we go to codex-rs/core 
+
+ codex-rs/ holds 111 modules — pause on that number: is “a chatbot with some tools” 111 modules big? That is the true size of a production harness.
+
+ We go to core because its own README says so: “This crate implements the business logic for Codex… used by the various Codex UIs.” Every interface is a shell; the agent lives here. And your pre-class reading — gpt_5_2_prompt.md — lives at this address.
+
+ Neighbors whose names alone tell the story: apply-patch , sandboxing , shell-escalation , rollout (traces), tui .
+
+ 👥 Group task · Repo scavenger race · 10 minutes 
+ Your group claims two layers of the nine. Open github.com/openai/codex ↗ and find real file or folder evidence for each — names count as evidence.
+
+ Produce: one sentence per layer — “Layer __ lives in ____ , because ____.” Report back in one breath. Then open the map below to check yourselves.
+
+ Open the map of core/ — what’s inside, layer by layer 
+
+ Inside core/ Layer What it tells you 
+
+ gpt_5_2_prompt.md — plus four sibling prompt files , one per model 3 · Instructions ⭐ Five prompts, one harness: the model is a swappable engine. Last section’s “swap the model” answer, sitting in a file listing. 
+
+ src/tools/ — with registry.rs , orchestrator.rs , parallel.rs 4 · Tools Tools are a subsystem — registry, scheduling, parallel execution — not a sentence in a prompt. 
+
+ src/exec.rs · unified_exec/ · exec_policy/ 5 · Environment Where words become commands on a real filesystem. 
+
+ src/state/ · session/ · context_manager/ · a dozen compact*.rs files 6 · State / Memory “Compact” = context compression: deciding what to remember and what to forget takes a dozen files. 
+
+ src/tasks/ · agent/ · codex_thread.rs 7 · Loop The turn-by-turn skeleton of the loop. 
+
+ src/tools/approvals.rs · sandboxing/ · guardian/ 8 · Guardrails / HITL ⭐ There is literally a file named approvals.rs — asking the human is a code module, not a courtesy line. 
+
+ tests/ 9 · Evaluation The harness verifies itself, too. 
+
+ Last week the nine layers were boxes on a slide. Here they are folders. The abstraction wasn’t invented — it was extracted. (Structure as of Sept 2026; this repository moves fast — expect renames.) 
+
+ The nine layers
+
+ Anatomy of a coding agent
+
+ Click each layer. Together they answer one question: what has to surround a language model before it can actually do things?
+
+ 👥 Group task · Jigsaw · 5 min prep + 60 seconds each 
+ Your group claims two layers below. Read them, discuss the layer’s question, and agree on your answer — then check it against the Suggested answer.
+
+ Produce: teach your layers to the class in 60 seconds each, in your own words — no reading the panel aloud.
+
+ Suggested answer 
+
+ Primary-source check
+
+ The nine layers, in the real prompt
+
+ Before class you read Codex’s actual system prompt ↗ . The file never says “layer” — the nine layers are our analysis framework. But read it with the checklist in hand and the evidence is right there. Compare your scavenger-hunt answers first, then reveal.
+
+ Reveal the line-by-line evidence 
+
+ Layer Where What the prompt actually says 
+
+ 1 · Goal Task execution “keep going until the query or task is completely resolved , before ending your turn” — the goal persists across many actions. 
+
+ 2 · Model / Reasoning Opening line “You are GPT-5.2 running in the Codex CLI” — the very first sentence separates the model from the harness: this whole file is the harness talking to the model. 
+
+ 3 · Instructions AGENTS.md spec The entire file is this layer. It even defines scope and precedence: nested AGENTS.md files win over outer ones; direct system/user instructions win over AGENTS.md. 
+
+ 4 · Tools Tool Guidelines A whole chapter: shell commands, apply_patch (with its full patch format), update_plan — “Emit function calls to run terminal commands and apply patches.” 
+
+ 5 · Environment Capabilities “files in the workspace ”; “the repo(s) in the current environment” — the world it acts on is the repository. 
+
+ 6 · State / Memory Planning update_plan is an explicit state machine: “exactly one item in_progress at a time”; “Do not let the plan go stale while coding.” 
+
+ 7 · Agent Loop Autonomy & Task execution “carry changes through implementation, verification …”; “ persevere even when function calls fail . Only terminate your turn when you are sure that the problem is solved” — a loop with an explicit stop condition. 
+
+ 8 · Guardrails / HITL Capabilities & Validating “function calls be escalated to the user for approval before running”; three approval modes are named — never / untrusted / on-request . 
+
+ 9 · Evaluation Validating your work “If the codebase has tests… use them to verify changes ” — plus a strategy: start with the most specific tests, then broaden. 
+
+ Two things sharp readers notice: the ## Responsiveness heading is empty — system prompts are engineering artifacts, not magic; and the file references a “Sandbox and approvals” section that isn’t in it — the harness assembles the full instructions at runtime, and this file is only one piece. One honest gap: there is no cross-session long-term memory here — not every product ships all nine layers, and spotting which are missing is itself the skill. (Quotes from the Apache-2.0 openai/codex repository as of Sept 2026; the file evolves.)
+
+ See it move
+
+ Watch the loop run
+
+ The abstract diagram becomes concrete when you watch one real episode: Codex fixes a failing test. Step through it — watch which node is active, what appears in the terminal, and how state accumulates.
+
+ Observe 
+ Decide 
+ Act + record 
+ Update state 
+ Need human? Pause 
+
+ The loop closes: update state → observe again . The pause node is where human approval interrupts autonomy.
+
+ Step ▸ 
+ Auto-play 
+ Reset 
+ Episode: fix a failing test · step 0 of 12 
+
+ Press Step to begin the episode… 
+
+ Agent state 
+
+ Key idea: the model supplies reasoning, but the agent harness supplies capabilities, state, control flow, permissions, and access to the environment. Notice how much of the episode above is harness, not model.
+
+ Concept check
+
+ Agent or workflow?
+
+ A multi-step system is not automatically an agent. The difference is how the next action is chosen.
+
+ System A: for every job, it always runs the same four steps: read résumé → score job → write cover letter → show result.
+
+ Workflow 
+ Agent 
+
+ System B: it reads a job, checks current state, then chooses among ASK_USER, DOWN_RANK, REQUEST_APPROVAL, or CONTINUE_INVESTIGATION; after the action, it updates state and decides again.
+
+ Agent 
+ Workflow 
+
+ Agency test: when the observation changes, the executed action sequence should change.

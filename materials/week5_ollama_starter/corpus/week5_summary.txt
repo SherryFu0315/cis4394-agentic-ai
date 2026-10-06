@@ -1,0 +1,164 @@
+After class · Week 5
+
+ Week 5, wrapped — and what’s next.
+
+ Four things on this page: a recap of what you should now be able to do, how to self-enroll in a group for Group Assignment 2 ( new groups — and I want to see new names together), the build paths you can choose from, and the proposal that is due next week .
+
+ Recap
+
+ Week 5 in one sentence per page
+
+ The model proposes a tool call; your harness disposes . Everything this week followed from taking that one sentence literally — because if your code is the only thing that executes, your code is the only place controls need to live.
+
+ Page The one thing to remember 
+
+ 01 · Function calling A “tool call” is two objects in order : the schema you write first (name, typed parameters, description), and the call the model emits second — a small JSON block naming a function and its arguments. The model never executes. Your harness parses, validates, runs, and appends the return value as the next observation. 
+
+ 02 · Schemas, errors & gates A rule in the prompt is a request. A rule in the schema is a wall. Three rails: least privilege (expose the narrowest tool that does the job), constrain the inputs (enum, min/max, required), separate duties (never one tool that both decides and pays). Then sort every tool by blast radius: auto-run · constrain · human-gate. 
+
+ 03 · Build it locally You ran a real agent loop on your own laptop, free, with no API key. A 0.5B model can call a tool correctly and still fail the task — and the fix was never “a bigger model.” It was a coarser tool, a tighter docstring, and a negative rule. Tool design is the lever. 
+
+ 04 · Practice & case Gate the effect , not the input. Reading hostile data is survivable; acting on it is not. And gate selectively — a gate nobody reads is not a control, it is a rubber stamp. 
+
+ If you keep only one line from this week: define two tools with clean schemas, return errors as data, and put a human gate on anything irreversible. That is the headline skill — and it is close to a list of what Group Assignment 2 grades.
+
+ Action required
+
+ Enroll in a group for Group Assignment 2
+
+ GA2 is released on iCollege — build a tool-using agent : a loop, at least two tools with real schemas, a max-iteration guard , one clean execution trace , and a one-page design note . It is submitted as a group, and you must self-enroll in a group yourself.
+
+ 👥 New groups for GA2 — you do not keep your GA1 team 
+ Your GA1 group does not carry over. The GA2 groups on iCollege are empty and separate, so everyone enrolls again from scratch. You may re-form your GA1 team if you want to — but I would rather you didn’t.
+
+ Work with at least one person you have not worked with yet. Two selfish reasons, not just a nice sentiment: (1) GA2 is the assignment where skill mix decides the grade — the design note and the failure-mode analysis are worth as much as the code, and a team of all-coders or all-non-coders usually loses points on the half they are weaker at; (2) this is the last group assignment before you commit to capstone teams , so it is a low-cost way to find out who you actually want to build with for the rest of the semester.
+
+ How to enroll (2 minutes)
+
+ Open your section’s course on iCollege ↗ .
+
+ Go to Assessments → Groups .
+
+ In the dropdown, pick the Group Assignment 2 category — not the GA1 one.
+
+ Click View Available Groups .
+
+ Find a group with space and click Join Group .
+
+ Confirm your name appears in the member list.
+
+ The rules
+
+ 3–5 members. Coordinate with the people you mean to team up with before anyone clicks Join.
+
+ Different teammates are encouraged — same team as GA1 is allowed, a new mix is better.
+
+ Your own section only. Groups do not transfer between sections, and I cannot grade you through the other section.
+
+ Don’t save seats in multiple groups. Join once, join the group you mean.
+
+ One team submission — plus each member’s own peer-evaluation form . Team grades can be adjusted for uneven contribution.
+
+ Due date: the two sections are a day apart — check iCollege for your section’s due date . You have roughly two weeks; GA2 is due in Week 7.
+
+ Can’t find teammates? Post in the iCollege discussion board with what you bring (code / writing / domain idea) and what you want to build, or come find me after class — I will pair you up. Nobody works alone on GA2 , and nobody gets left without a group.
+
+ Your choice
+
+ Two paths — and a third if you have a favourite tool
+
+ GA2 is graded on agent design , not on which framework you typed it into. Both official paths are held to the same standard : no-code is not graded easier, and it does not excuse you from the design thinking. Pick one path per team and name it in the first line of your design note.
+
+ 🅐 Code path 
+ Write the loop
+
+ Use whatever you are fastest in:
+
+ Plain Python + Ollama — exactly what you ran in class this week. Free, local, no API key. Start from page 03 and the starter kit.
+
+ LangGraph — the framework version of the same loop, on the Gemini free tier . We give it a proper treatment in Week 9 .
+
+ Any other SDK you already know.
+
+ Deliver: the code, a README with exact run steps, sample inputs. No API key in the repo. 
+
+ 🅑 No-code path 
+ Build the flow
+
+ If your team would rather not write code, build the same agent in a visual builder — LangSmith Fleet ↗ (free tier) is the supported default, and you met it in Week 2.
+
+ The requirements are identical : two tools, a loop with a stop condition, one trace, the design note. You will not be graded easier for going no-code — and you cannot use it to skip the tool/gate/failure-mode thinking.
+
+ Deliver: the exported flow or a shareable link, plus screenshots of the tool config and the loop/guard settings.
+
+ 🅒 Your own tool 
+ Something else you like
+
+ Google ADK, OpenAI Agents SDK, CrewAI, n8n, Opal, Copilot Studio, a local model through some other runner — all fine . If you already have a tool you enjoy, use it.
+
+ Two conditions, and they are the whole catch: it must be free (if it asks for a card, you are on the wrong plan), and it must let you show the five required things in the box below. Some pretty builders hide the loop and will not give you a real trace — check that before you build, not the night before it is due.
+
+ Not sure whether your tool qualifies? Ask me — one message, before you invest a weekend in it.
+
+ Path-independent 
+ Whatever you build in, the grader must be able to see these five things
+
+ Two or more distinct tools , each with a real schema — a name, a description that says when to use it , typed parameters, and constraints. Two tools that do different work, not one tool wearing two hats.
+
+ An auto-run / constrain / gate decision per tool , with the reason. Anything irreversible — money, email, deletion — is gated.
+
+ A loop with a working max-iteration guard that stops gracefully and says it could not finish. A missing or fake guard is an automatic heavy deduction.
+
+ One clean execution trace : reasoning → tool call with arguments → observation → … → final answer. A final answer with no visible tool calls proves nothing.
+
+ A one-page design note : tools, loop, three specific failure modes with mitigations, and your AI-use disclosure. “The AI could be wrong” is not a failure mode.
+
+ Full instructions and the point-by-point rubric are on iCollege — if anything here differs, iCollege wins.
+
+ 🎯 Why this one is worth doing properly: GA2 is essentially your capstone Milestone I — a single agent, running end to end, with a real tool and a stop condition. The schemas, the loop and the guard all carry forward. Build it well now as a team and Milestone I is largely already written.
+
+ Due next week
+
+ Your final-project proposal
+
+ The proposal is due next week , submitted on iCollege in your own section . The two sections’ deadlines are a day apart, so check iCollege for your section’s due date . The official prompt and rubric live on iCollege — this is just a last pass before you submit.
+
+ Before you submit, check
+
+ One scoped task , named in a sentence. Who the user is, and what “done” looks like for a single run.
+
+ Why an agent and not a single prompt or a fixed script — what genuinely needs a loop.
+
+ At least two tools , written down as contracts, not as vibes.
+
+ The one call that gets a human gate , and why that one.
+
+ How you will know it worked — the beginning of an evaluation story (we sharpen this in Week 8).
+
+ What data you will use and where it comes from. Nothing sensitive, nothing you can’t legally hold.
+
+ Two notes worth reading twice
+
+ The proposal is individual to your capstone, not to GA2. They are different deliverables on different clocks — do not let the proposal deadline hide GA2, and do not let GA2 eat the proposal. Both are live right now.
+
+ Narrow beats ambitious. Every semester the strongest capstones are the ones that scoped down early. A refund helper that really works beats a “universal business assistant” that demos once and falls over.
+
+ A fuller checklist is on the Week 6 practice page → 
+
+ 📌 Everything live at once, in one list: Group Assignment 2 — enroll in a group now, due Week 7. Final-project proposal — due next week. No quiz next week. Agent Radar presenter slots for the coming weeks are still open. All deadlines: your own section’s iCollege .
+
+ Next week
+
+ From your boundary to a standard
+
+ This week you built a tool boundary by hand: schemas you wrote, validation you wrote, gates you placed. Next week that hand-built boundary meets the protocols designed to standardise it — so any tool can plug into any agent, and agents can talk to each other.
+
+ Next week: MCP & A2A — the interoperability standards. Your final-project proposal is due next week (own section, iCollege). No quiz next week. 
+
+ Week 6 readings: 
+
+ · Rand-Hendriksen — Model Context Protocol (MCP): Hands-On with Agentic AI (LinkedIn Learning) ↗ 
+
+ · Ponnambalam — Building AI Agents with MCP & A2A (LinkedIn Learning) ↗ 
+
+ Both free with your GSU login via the GSU portal ↗ — start there, or you will hit a paywall. Full list on the Week 6 site .

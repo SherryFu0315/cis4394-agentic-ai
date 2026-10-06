@@ -1,0 +1,32 @@
+02 · Part 2
+
+ The same lens on Claude Code .
+
+ We just extracted an architecture from Codex. Real test of a good abstraction: does it explain a competing product we didn’t derive it from? Use the shared vocabulary — not a feature-by-feature marketing comparison.
+
+ Side by side
+
+ One architecture, two products
+
+ Architecture 
+ What differs? 
+ Discussion 
+
+ Sort it out
+
+ Codex, Claude Code — or both?
+
+ For each statement, decide whether it describes Codex, Claude Code, or the shared architecture underneath both. This is the heart of Part 2: separating product decisions from agent design .
+
+ Takeaway: most of what makes these systems agents is shared. What differs is implementation: models, tool schemas, permission systems, context strategies, UX. Same architecture — different product decisions.
+
+ Discussion
+
+ Separate the model from the harness
+
+ Discussion question If we swapped the model but kept the entire agent harness, how much of the product would still remain?
+
+ Use this question to separate model capability from agent-system design . In Part 3, you will keep the design and throw away everything coding-specific.
+
+ What a strong answer covers 
+ Most of the product remains: the tools, permission system, state, instruction files, UX, and the loop itself. What changes is reasoning quality. That is why “which agent is best” is as much a harness question as a model question — and why vendors can swap models underneath without renaming the product.

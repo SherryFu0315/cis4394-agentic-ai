@@ -1,0 +1,97 @@
+02 · Reliability
+
+ Techniques that raise reliability .
+
+ Four techniques and one dial. Each fixes a different kind of failure — matching the technique to the failure is the skill.
+
+ Technique 1
+
+ Few-shot: show, don’t describe
+
+ Zero-shot = no examples. One-shot = one worked pair. Few-shot = several. Models pattern-match on examples far more reliably than they follow prose descriptions — the effect that made GPT-3 famous (Brown et al., 2020).
+
+ Best for: locking output format, label strings, and edge-case behavior. Three labeled tickets lock BILLING / TECHNICAL / SALES exactly, so downstream code can switch on them.
+
+ ticket: "I was charged twice" → {"category":"BILLING"}
+ticket: "App crashes on login" → {"category":"TECHNICAL"}
+ticket: "Can we add 50 more seats?" → {"category":"SALES"}
+
+ticket: "Password reset email never arrives" → ?
+
+ Technique 2
+
+ Chain-of-thought: reason before answering
+
+ What it is 
+ Ask the model to work step by step before giving the final answer — big gains on multi-step math, logic, and policy questions (Wei et al., 2022). The lazy version works too: just add “Let’s think step by step” (zero-shot CoT, Kojima et al., 2022) — the cheapest first thing to try on a reasoning miss.
+
+ When it helps vs hurts 
+
+ Helps 3-rule discount eligibility · multi-step calculations · ambiguous policy calls 
+
+ Overkill Extract a phone number · yes/no lookups — you pay tokens + latency for nothing 
+
+ For automation: let it reason, then demand a delimited final answer your code can parse — reasoning for the model, structure for the machine.
+
+ Technique 3
+
+ Structured JSON output: the coupling point
+
+ Free text cannot pipe into a database. {"field": value} can. Forcing a fixed, machine-readable shape is what turns “a model that answers” into “a component in a system” — the flow is free text → JSON → database / next agent .
+
+ Caution: validate. Well-formed JSON can still contain wrong values — schema conformance is not accuracy (the hands-on tests both).
+
+ SCHEMA
+{"vendor": str, "invoice_no": str,
+ "total_usd": number|null,
+ "due_date": "YYYY-MM-DD"|null,
+ "currency": str}
+
+messy input: "Pls remit $1,284.50 to DataCorp
+by Oct 1 — inv #DC-2291, thanks!!"
+
+output: {"vendor":"DataCorp","invoice_no":"DC-2291",
+ "total_usd":1284.50,"due_date":"2026-10-01",
+ "currency":"USD"}
+
+ The dial
+
+ Temperature: drag it and watch
+
+ Temperature controls output randomness. Same prompt — “Name our new project-management app” — different dial positions. Drag it.
+
+ 0 · deterministic 0.5 · balanced 1.0 · creative 
+
+ Run 1 
+
+ Run 2 — same prompt, run again 
+
+ Rule of thumb: extraction, JSON, routing, anything automated → 0–0.3 . Brainstorming, naming, drafts for humans to pick from → 0.7–1.0 . If you’re going to automate it, turn the temperature down.
+
+ Test yourself
+
+ Which technique fixes it?
+
+ Each scenario has one best-fit fix. Pick, then check.
+
+ Synthesis
+
+ The reliability ladder
+
+ Climb in this order — each rung adds reliability at rising cost. Fine-tuning is the top rung for a reason: try everything below it first.
+
+ Clear instruction Say precisely what you want, and what to do when unsure free · seconds 
+
+ System prompt Role, scope, rules, refusals — the policy guardrail free · minutes 
+
+ Few-shot examples Lock format and labels by showing worked pairs free · minutes 
+
+ Chain-of-thought Buy accuracy on multi-step reasoning with tokens tokens + latency 
+
+ Structured output Fixed JSON so machines can consume the answer free · minutes 
+
+ Tuned temperature Down for automation, up for ideation free · seconds 
+
+ Curated context The right facts in the window — next page engineering time 
+
+ Fine-tuning Train the weights — last resort, needs data + upkeep $$ · weeks

@@ -1,0 +1,118 @@
+02 · Patterns
+
+ Four ways to think in a loop.
+
+ Same loop, different reasoning strategies. Each pattern below is a real, cited technique — and each buys reliability with tokens. Your job as a designer is matching the pattern to the task, not maxing out the thinking.
+
+ The four patterns
+
+ ReAct · Plan-then-execute · Reflection · Tree of Thoughts
+
+ ReAct — interleaved
+
+ Thought → Action → Observation
+Thought → Action → Observation
+… → Answer
+
+ Decide the next step only after seeing the last result. Grounds reasoning in real observations — fewer hallucinations, natural error recovery. Cost: a model call per step; can wander.
+
+ Yao et al., 2022 (ICLR 2023) ↗ 
+
+ Plan-then-execute
+
+ Plan: 1. … 2. … 3. …
+Execute 1 → 2 → 3
+→ Answer
+
+ Think once, up front; then run the steps. Cheaper, auditable before anything runs, parallelizable. Cost: brittle — if step 2's result surprises you, the plan is stale.
+
+ Wang et al., Plan-and-Solve, ACL 2023 ↗ 
+
+ Reflection
+
+ Generate → Critique
+→ Revise → Critique
+→ good enough? → Answer
+
+ A second pass that critiques the first, with the critique stored and fed back (Reflexion: verbal self-feedback in episodic memory). Shines when the target is checkable — code, math. Each pass roughly doubles cost.
+
+ Shinn et al., NeurIPS 2023 ↗ 
+
+ Tree of Thoughts
+
+ thought A ─ dead end ✗
+goal ┤
+ thought B ┬ B1 → score
+ └ B2 → best ✓
+
+ Generate several candidate thoughts, score them, expand the promising ones, backtrack from dead ends. Big gains on branching, search-heavy puzzles; very token-hungry.
+
+ Yao et al., ToT, NeurIPS 2023 ↗ 
+
+ Evidence, honestly stated: the ReAct paper shows reasoning + acting together beats either alone on multi-hop QA and fact-verification benchmarks, with more interpretable, recoverable traces (Yao et al., 2022) — and it still fails when retrieval fails. No pattern fixes bad tools.
+
+ Side by side
+
+ When each wins
+
+ Chain-of-thought (W3) Plan-then-execute ReAct (interleaved) Tree of Thoughts 
+
+ Predictability High — one call High — plan is visible up front Medium — path emerges at runtime Low — search branches 
+
+ Cost $ $$ $$–$$$ (a call per step) $$$$ 
+
+ Adapts mid-task No Poorly (needs replanning) Yes — that's the point Yes, via backtracking 
+
+ Auditability One blob of reasoning Plan reviewable before execution Full step-by-step trace Full tree (large) 
+
+ Best for Single-shot reasoning, no tools Stable, well-understood workflows Volatile tasks where results steer next steps Puzzles/search where partial states can be scored 
+
+ The MIS rule of thumb: choose by task volatility and oversight needs . Predictable + high-compliance → plan first (auditors can read the plan). Surprising environments → interleave. Branching search + a way to score partial progress → only then pay for ToT.
+
+ Interactive · pick the pattern
+
+ Which pattern fits the task?
+
+ Interactive · the cost of thinking harder
+
+ Every “think again” is an invoice line
+
+ Click a strategy. Bars show illustrative multipliers vs a single call (real numbers depend on model, prompt size, and tools — measure your own).
+
+ 1 call (CoT) 
+ 8-step ReAct loop 
+ 8 steps + reflection 
+
+ Budget the loop — four dials you own: a step cap (max iterations), a token/$ budget per run, an explicit stop condition (“done when X”), and the human-gate placement . The manager's question is never “is it smart?” — it's “what does a run cost, and when do I trust it unattended?”
+
+ Aside · the one thing that changes the model
+
+ Prompting changes the input . Fine-tuning changes the weights .
+
+ Everything this week — ReAct, plans, reflection — and everything last week — prompts, context — lives to the left of the model: it changes what the model sees . (Week 2 flashback: prompt ⊂ context ⊂ harness — none touch the weights .) Fine-tuning is different in kind: it rewrites the numbers inside . Watch the difference below — the network's edges are its weights; thicker = stronger.
+
+ weights: unchanged 🔒 
+
+ A toy 3–4–2 network. A real LLM has billions of these edges — that's all "parameters" means: the numbers on the arrows. Changed in this demo: 0 of 20 . 
+
+ 🅐 Prompt it 
+ 🅑 Fine-tune it 
+
+ Terminology — clear this up once 
+ Parameters (= weights): the numbers inside the model — the edges above, billions of them. They were learned in training, and fine-tuning updates exactly these . Prompting never does.
+
+ Hyperparameters: NOT inside the model. They're the dials you set on the training process itself — learning rate, number of epochs, batch size. You choose them; the model never “learns” them.
+
+ Analogy: parameters are the employee's skills after the course; hyperparameters are the course schedule. “Fine-tuning updates the parameters” = the training changed the skills. (Saying it “updates hyperparameters” is the common mix-up — the schedule doesn't change the employee.)
+
+ Why fine-tune is still the LAST rung 
+ The demo hides the real bill: hundreds+ of curated examples, GPU time, and re-running your evals to make sure the new weights didn't break something else — every time the task changes. A prompt edit ships in minutes; new weights ship in weeks.
+
+ That's the Week 3 ladder: prompt → few-shot → context/RAG → fine-tune last ( the decision table ). Week 7 revisits the fork one more time: RAG vs fine-tuning for company knowledge — retrieval usually wins for facts , fine-tuning for style and format at massive scale .
+
+ Discussion
+
+ Discussion question Your team automates invoice-coding: 5,000 near-identical invoices a month, and finance must sign off on the procedure. Interleaved ReAct would work. Why is it still the wrong choice?
+
+ See the answer 
+ Because the task has low volatility and high oversight . ReAct pays a model call per step to buy adaptivity you don't need — 5,000× a month — and its emergent, run-by-run paths are exactly what a sign-off process hates. A plan-then-execute design (or an outright Week 1 workflow) gives finance a fixed, reviewable procedure and costs a fraction. Save the interleaving for the 2% of invoices that fail validation — route those to an agent, or a human.

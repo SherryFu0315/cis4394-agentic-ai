@@ -1,0 +1,174 @@
+After class · Week 2
+
+ Week 2, wrapped — and what’s next.
+
+ Four things on this page: the full answer key for the repo scavenger hunt, how to join a group for Group Assignment 1, clear step-by-step tutorials for each build path, and a heads-up on Quiz 1 with sample questions.
+
+ Scavenger hunt · full answer key
+
+ The nine layers, mapped to real Codex files
+
+ Finding evidence in a 111-module repo was genuinely hard — that was part of the point. Here is the full map: one concrete file per layer, with what you’ll find inside. Remember: the repo has no folders named “Goal” or “Loop” — the nine layers are our architectural interpretation , not OpenAI’s official taxonomy. (Paths verified Sept 2026; this repo moves fast.)
+
+ Layer File (click to open) What you find there 
+
+ 01 Goal mcp-server/src/codex_tool_config.rs The goal is surprisingly thin — just “the initial user prompt to start the Codex conversation.” No GoalManager class. Persistence comes from keeping that objective in context across many actions. Prompt = one message; goal = that objective across a sequence of actions. 
+
+ 02 Model / Reasoning core/src/config/edit.rs SetModel { model, effort } — the model and its reasoning effort are configuration . The model decides what to do next; the runtime carries it out. Reasoning is a component, not the whole system. 
+
+ 03 Instructions config/src/config_toml.rs Instruction layers beyond your prompt: “Developer instructions inserted as a ‘developer’ role message.” Goal = what outcome; instructions = how to behave while pursuing it. 
+
+ 04 Tools core/src/tools/handlers/plan_spec.rs name: "update_plan" — a tool defined in code, with a schema (steps, statuses: pending / in_progress / completed) the model can see. Tools turn “input → text” into “reason → choose tool → act → observe.” 
+
+ 05 Environment core/tests/suite/prompt_caching.rs Codex injects environment context — the tests check for <cwd> , <shell> , <current_date> , <timezone> tags. The environment is the world the agent can observe and act on . 
+
+ 06 State / Memory core/config.schema.json History persists to ~/.codex/history.jsonl , and a separate memories subsystem exists. Three kinds: turn state → conversation state → long-lived memory. You don’t need all three to be an agent. 
+
+ 07 Agent Loop ⭐ core/src/session/turn.rs Read this file first. Its comments state the whole algorithm: if the model requests a function call, execute it and send the output back; if it sends only a message, the turn is complete. That’s the agent loop — and its stop condition — in two sentences. 
+
+ 08 Guardrails / HITL core/src/exec_policy.rs Decision::Prompt → NeedsApproval — policy code sits between reasoning and action : allow, forbid, or ask the human. Model intention ≠ execution permission. This is runtime enforcement, not a polite prompt line. 
+
+ 09 Evaluation protocol/…/base_instructions/default.md The base instructions tell the agent to verify its work with the project’s own tests and builds. Evaluation doesn’t need another LLM — pytest passing is evaluation. And a failing test feeds the loop : fail → observe → reason → retry. 
+
+ The whole architecture, in one loop
+
+ while not done:
+ response = model(goal, instructions, environment, history, tools)
+ if response.requests_tool:
+ if policy(response.tool_call) == NEEDS_APPROVAL: # layer 8
+ wait_for_human()
+ result = execute(response.tool_call) # layer 4/5
+ history.append(result) # layer 6
+ else:
+ return response # stop condition
+
+ The real Rust adds streaming, cancellation, compaction, errors, parallel tools — but architecturally, that is Codex . The single takeaway of Week 2: the LLM is only one component of the agent. 
+
+ Want to read the repo yourself? Go in this order: core/src/session/turn.rs (the loop) → core/src/tools/ → protocol/…/base_instructions/default.md → core/src/session/turn_context.rs → core/src/exec_policy.rs → config / history / memories. Loop first — or you’ll drown in infrastructure.
+
+ Action required
+
+ Join a group for Group Assignment 1
+
+ GA1 (the Job Search Agent) is submitted as a group , and you must self-enroll in a group on iCollege — in your own section.
+
+ How to enroll (2 minutes)
+
+ Open your section’s course on iCollege ↗ .
+
+ Go to Assessments → Groups .
+
+ Click View Available Groups .
+
+ Find a group with space and click Join Group .
+
+ Confirm your name appears in the member list.
+
+ The rules
+
+ 1–6 members. Working solo is allowed — you still must join a group (of one).
+
+ Join the group you mean to join. Coordinate with your teammates first — don’t drop into a group of strangers, and don’t “save seats” in multiple groups.
+
+ Your own section only. Groups don’t transfer between sections.
+
+ Deadline: GA1 is due Tue Sept 15 (Wednesday section) / Wed Sept 16 (Thursday section), 11:59 pm EST — enroll well before then.
+
+ Build paths
+
+ Path tutorials — clearer this time
+
+ In-class was a quick look; here is the sit-down version. Each path: numbered steps, an official illustrated guide, and a video. Full lab requirements stay on the Build page .
+
+ 🅐 Google Opal — the visual path
+
+ Use a personal Gmail — your GSU account is blocked from Labs. You must be 18+.
+
+ On a computer, open gemini.google.com ↗ → left sidebar → Gems .
+
+ Under My Gems from Labs , click New Gem — this opens the Opal editor (boxes connected by arrows; each box is a step).
+
+ Paste the full starter prompt from prompts/opal_starter_prompt.md (starter kit).
+
+ Add three inputs by pasting the files as text: resume.md (facts), preferences.md (constraints), data/jobs.json (jobs).
+
+ Build the flow: an evaluate step → routing (recommend / investigate / down-rank / ask) → a user-input step for Approve / Edit / Reject → a draft step that only runs after approval.
+
+ Click Preview to run; test with J001 first, then all four cases. Screenshot every run — those are your evidence.
+
+ Illustrated official guide: developers.google.com/opal ↗ · account requirements: Google Help ↗ 
+
+ Video walkthrough (12 min) Building an agent workflow in Opal via the current Gemini → Gems route (AsapGuide, May 2026).
+
+ 🅑 LangSmith Fleet — the builder path
+
+ Sign in at smith.langchain.com ↗ (free account).
+
+ In the left navigation, click Switch to Fleet .
+
+ Click + New Agent → choose Create manually (skip templates for this lab).
+
+ Paste prompts/fleet_starter_prompt.md into the agent instructions .
+
+ Paste resume.md , preferences.md , and data/jobs.json into the agent’s context .
+
+ In settings, require approval before final external-facing drafts. Do not connect email or any submission tools.
+
+ Run the four cases from the chat panel. After each run, open the trace — that trace view is exactly the evidence deliverable.
+
+ Budget: free tier ≈ 5 Fleet LCUs/month and runs pause when it’s gone — plan your runs, don’t spam retries.
+
+ Illustrated official guide: Fleet docs ↗ · free hands-on course: LangChain Academy ↗ 
+
+ Official: Introducing Fleet (7 min) LangChain, Mar 2026 — what Fleet is and the core flow.
+
+ Official: hands-on getting started (7 min) LangChain — recorded under the old name “Agent Builder”; same product, some labels have changed.
+
+ 🅒 Code path — recommended: Google ADK
+
+ For those coding GA1, we recommend Google’s Agent Development Kit (ADK) — an official, open-source Python framework that runs on the same free Gemini API key you created in Week 1, and ships a built-in dev UI with a trace view (instant evidence for deliverables #8–9).
+
+ pip install google-adk
+adk create job_agent # scaffold
+# put your GOOGLE_API_KEY in job_agent/.env
+adk web # dev UI + traces at localhost:8000
+
+ Follow the ADK quickstart ↗ to a running hello-agent.
+
+ Give your agent tools to read resume.md , preferences.md , jobs.json from the starter kit.
+
+ Implement the decision policy (recommend / investigate / down-rank / ask) and an Approve / Edit / Reject pause before drafting.
+
+ Run the four cases; export traces from adk web .
+
+ Also fine: the plain-Python starter-kit baseline + any coding agent (Codex, Copilot, Claude Code). We’ll meet LangGraph — the course’s main framework — in Week 4; ADK is the fastest on-ramp for GA1.
+
+ Official: Introducing ADK (9 min) Google for Developers.
+
+ Official: getting started (19 min) Google for Developers — from install to a working agent.
+
+ Next week
+
+ Quiz 1 — foundations, Weeks 1–3
+
+ Five multiple-choice questions , closed-book, at the end of next week’s session. Everything comes from the assigned readings below. Read them; the quiz will feel easy.
+
+ W1 · Anthropic — Building Effective AI Agents 
+ Workflows vs agents; the five workflow patterns; “simplest thing that works.” 
+ W1 · Bornet — Agentic Artificial Intelligence (LinkedIn Learning) 
+ Free with your GSU login — but sign in through the GSU portal first (next link), or you’ll hit a paywall. 
+ ↳ GSU LinkedIn Learning portal 
+ Sign in here with your CampusID once, then both LinkedIn Learning readings open free. 
+ W2 · Codex’s system prompt (gpt_5_2_prompt.md) 
+ AGENTS.md rules, planning, task execution, validation. 
+ W2 · OpenAI Cookbook — Planning for Long-Horizon Agents 
+ How Codex plans multi-step work. 
+ W2 · Anthropic — Claude Code auto mode 
+ Autonomy and safeguards in a competing coding agent. 
+ W3 · Sheer — Introduction to Prompt Engineering (LinkedIn Learning) 
+ Via the GSU portal, same as above. 
+ W3 · Hugging Face Agents Course — Unit 1 
+ Free; what an agent is, in the HF framing. 
+
+ Five sample questions
+ Same style and difficulty as the real thing. Try before revealing.

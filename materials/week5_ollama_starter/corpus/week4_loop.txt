@@ -1,0 +1,80 @@
+01 · Foundations
+
+ The agent loop .
+
+ A chatbot answers the last message. An agent pursues a goal across steps — observing, reasoning, acting, and checking whether it's done. That cycle is the unit of agent behavior, and everything else this semester elaborates it.
+
+ Two postures
+
+ Reactive vs goal-oriented
+
+ Reactive — a chatbot 
+ You: How tall is the Statue of Liberty?
+Bot: About 93 meters to the torch.
+You: And Atlanta's tallest building?
+Bot: Bank of America Plaza, about 312 m.
+(…you do the comparison yourself)
+
+ Each turn stands alone. The user owns the goal, the plan, and the follow-through.
+
+ Goal-oriented — an agent 
+ Goal: "Which is taller: Atlanta's tallest
+building, or 2× the Statue of Liberty?"
+
+The agent decomposes, calls tools, keeps
+STATE across steps, and STOPS when the
+goal is satisfied — not when you stop typing.
+
+ Three defining pieces: a goal , persistent state , and a termination condition (Wang et al., 2023 survey framing).
+
+ Interactive · step through a real episode
+
+ One goal, one loop, eight steps
+
+ This is the loop diagram from Week 2 — same shape, new episode. Press Step and watch the agent answer the Atlanta-vs-statue question with two tools: Search and Calculator .
+
+ Observe 
+ Reason 
+ Act (call a tool) 
+ Update state 
+ Done? → Finish 
+
+ The amber node is the stop check : after every state update, the loop asks whether the goal is satisfied — or whether it has run out of budget.
+
+ Step ▸ 
+ Auto-play 
+ Reset 
+ Episode: the height question · step 0 of 10 
+
+ Press Step to begin the episode… 
+
+ Agent state 
+
+ Read the trace like an auditor: every step has the shape state before → observation → selected action → result → state after . That's the evidence standard from Week 2 — and it exists precisely because the loop makes each decision visible.
+
+ Zoom in
+
+ Anatomy of one loop turn
+
+ Assemble the input. The harness packs the goal + current state + latest observations into a prompt (Week 3's context engineering, applied every turn).
+
+ The LLM decides. Given what it sees, it picks exactly one thing: call a specific tool with specific arguments — or declare the goal met and finish.
+
+ The harness executes. Tool runs, result comes back. The model never touches the environment directly; the harness does (and can refuse — Week 2's guardrails).
+
+ State updates. The observation is appended; facts learned are recorded. This is what makes step 5 smarter than step 2.
+
+ The stop check. Goal satisfied? Step cap hit? Budget burned? If yes, exit; if no, go to 1.
+
+ Notice who owns what: the model owns step 2. The harness — code you write — owns 1, 3, 4, and 5. Four fifths of the loop is ordinary software you can test.
+
+ Discussion
+
+ Discussion question Your agent can call send_payment() . Looking at the five parts of a loop turn — where exactly would you put the human gate, and why not anywhere else?
+
+ See the answer 
+ Between step 2 and step 3 — after the model has committed to a specific action with specific arguments, before the harness executes it. Earlier (before reasoning) you'd interrupt harmless steps too; later (after execution) the money is already gone. The gate should also be selective : pause only for irreversible or spend actions, or approval fatigue will train humans to click yes. This is exactly where Codex's exec_policy sits in the Week 2 material.
+
+ Concept check
+
+ Loop or no loop?

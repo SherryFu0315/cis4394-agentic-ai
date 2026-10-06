@@ -1,0 +1,134 @@
+04 · Practice
+
+ Read a loop. Draw a loop. Budget a loop.
+
+ Three activities that turn this week's ideas into skills: annotate a real trace, design a state graph on paper, and argue a case the way a manager would.
+
+ Exercise A
+
+ Annotate the transcript
+
+ 👥 Group task · Pairs · ~10 minutes 
+ Below is the full trace of a travel-cost agent answering: “Can I do 3 nights in Boston — flight from Atlanta plus hotel — for under $900?” Mark up a copy (or a screenshot): (1) circle every point where the loop made a decision ; (2) underline the observation that changed the plan; (3) find one wasted step; (4) verdict: is this plan-then-execute or interleaved — and how can you tell from the trace alone?
+
+ Produce: your annotated trace + a one-sentence verdict with evidence.
+
+ Thought 1: Budget question. Plan: find flight price, find hotel price ×3, add, compare to 900.
+ Action 1: Search("ATL to BOS round trip flight price this weekend")
+ Obs 1: Round trips from $228.
+ Thought 2: Now hotels near downtown Boston.
+ Action 2: Search("Boston downtown hotel price per night")
+ Obs 2: Downtown averages ~$310/night. Cambridge side ~$185/night.
+ Thought 3: 310 × 3 = 930 already busts the budget before airfare.
+ But the observation offered a cheaper substitute — switch to Cambridge.
+ Action 3: Search("cheapest month to visit Boston")
+ Obs 3: January–February are cheapest.
+ Thought 4: That doesn't help — the user asked about THIS weekend. Back to the math.
+ Action 4: Calculator("228 + 3*185")
+ Obs 4: 783
+ Thought 5: 783 < 900, with $117 slack. Goal satisfied → stop.
+ Answer: Yes — about $783: $228 flights + 3 nights in Cambridge at ~$185. Downtown would bust the budget.
+
+ Debrief — answer key 
+ (1) Decisions: Thought 1 (decompose + set the plan), Thought 3 (accept the Cambridge substitute — the big one), Thought 4 (recognize a dead end and return to plan), Thought 5 (stop check: goal satisfied). (2) The plan-changing observation: Obs 2 — the agent came for one number and the environment offered a better option; feeding that back is what a one-shot answer can never do. (3) The wasted step: Action 3. “Cheapest month” doesn't serve a this-weekend goal — a step cap or a sharper Thought 3 would have saved one call. Honest traces show waste; that's a feature. (4) Verdict: interleaved (ReAct-style), with a light plan on top. The tell: Action 4 depends on the content of Obs 2 (185 wasn't knowable when the plan was made). In strict plan-then-execute, Thought 1's plan would have been executed verbatim — and would have concluded “no, $930+ busts it.”
+
+ Exercise B
+
+ Draw the state graph
+
+ 👥 Group task · Pairs · ~15 minutes 
+ On paper or a whiteboard, design a LangGraph-style graph for an agent that (1) makes a plan, (2) executes one step, (3) reflects on the result , and loops or finishes. Your drawing must label: the state fields that persist across nodes (e.g., task , plan , past_steps , results , critique ); every node ; which edges are fixed vs conditional ; and the stopping condition that prevents an infinite loop.
+
+ Produce: a photo of the graph + one sentence: where would ReAct collapse two of your nodes into one?
+
+ Debrief — a reference answer 
+
+ START 
+ planner 
+ executor 
+ reflector ? 
+ END 
+ not done & steps < N → back to executor 
+ done, or steps ≥ N 
+ state: { task, plan, past_steps, results, critique, steps } 
+
+ Fixed edges: START→planner, planner→executor, executor→reflector. Conditional edge: reflector — routes back to executor (critique says “not done”, steps < N) or to END (done, or the max-iteration guard fires at N). The ReAct collapse: ReAct merges planner + executor into one looping “model” node that re-decides the next step every turn — you trade the reviewable up-front plan for adaptivity. Common miss: teams forget steps in the state — a stopping condition that isn't stored anywhere can't be checked.
+
+ Case study · fictional teaching case
+
+ Planning beats greedy generation
+
+ A travel startup ships an itinerary agent: “3 cities in Italy, 7 days, total budget $2,500.” Two builds, two outcomes.
+
+ Build 1 — greedy one-shot 
+ One big prompt, one answer. The model books Rome ($1,100 with a boutique hotel it “liked”), then Florence ($900)… and reaches Venice with $500 left against ~$800 of real costs. The itinerary reads beautifully — and busts the budget by ~$300, discovered by the customer.
+
+ Build 2 — plan, execute, check 
+ First a plan node allocates the budget (roughly $833/city) — reviewable before anything is “booked.” An executor prices each city with tool calls; a checker node compares running total vs plan after every step. Rome comes back at $950 → the checker routes back to replan: downgrade the hotel, shift $100 from Florence. Final: $2,470, under budget, with a trace showing every correction.
+
+ Discussion question 1 Which reasoning pattern is Build 2 — and what, exactly, did the up-front plan buy that Build 1's fluent answer couldn't?
+
+ See the answer 
+ Plan-then-execute plus a reflection/check loop (the checker is a lightweight reflector). The plan bought a global constraint : $2,500 allocated across cities before any city could greedily overspend. Greedy generation optimizes each step locally; nothing in Build 1 ever “sees” the whole budget at once. The check node bought error detection mid-run — the $950 Rome quote was caught in step 2, not in the customer's inbox.
+
+ Discussion question 2 The startup adds real booking (money moves). Where does the human gate go in Build 2's graph — and what should the approval screen show?
+
+ See the answer 
+ On the edge into any node that spends — after the checker approves the plan-conforming price, before the booking tool executes. One gate for the full itinerary (batch approval) if bookings are refundable; per-booking gates if not. The screen should show the decision, not the vibes : item, price, remaining budget before/after, which plan line it satisfies, and what the agent will do next if declined. That's the Approve/Edit/Reject pattern from your GA1 rubric, scaled to money.
+
+ Discussion question 3 Compliance asks: “prove the agent never exceeded budget.” What must Build 2 have logged, per step, for that sentence to be provable?
+
+ See the answer 
+ Per step: state before (remaining budget), the observation (the price quote), the available actions , the selected action + arguments , the result , and state after — plus the checker's verdict at each pass and the final stop reason. That's the Week 2 evidence standard again, now as a compliance artifact: with it, “never exceeded budget” is a query over the trace; without it, it's a promise.
+
+ Job-interview level
+
+ Interview check
+
+ Five questions an agent-engineering interview would actually probe. Try answering out loud before revealing.
+
+ Readings & resources
+
+ This week's readings
+
+ Google/Kaggle — Introduction to Agents (whitepaper) 
+ The model–tools–orchestration framing; free download. 
+ LangChain Academy — Introduction to LangGraph 
+ Free course; modules 0–1 cover everything on page 03. 
+ Skim · Yao et al. 2022 — ReAct 
+ Intro + Figure 1 are enough to see the pattern. 
+ Optional · Wang et al. — LLM Autonomous Agents survey 
+ The map of the field: profile / memory / planning / action. 
+
+ Go deeper (all free) 
+
+ Microsoft — AI Agents for Beginners (MIT) ↗ 
+
+ LangChain Academy notebooks (MIT) ↗ 
+
+ Hugging Face Agents Course (Apache-2.0) ↗ 
+
+ DeepLearning.AI — AI Agents in LangGraph ↗ 
+
+ Reflexion (Shinn et al., 2023) ↗ ·
+ Tree of Thoughts (Yao et al., 2023) ↗ ·
+ Plan-and-Solve (Wang et al., 2023) ↗ 
+
+ 📌 Reminder: Group Assignment 1 is due this week ( details ), and the final-project proposal is on iCollege.
+
+ Next week: Tool Use & Function Calling — the “Act” arrow in this week’s loop becomes a real tool call: schemas, error handling, human gates, and tools in LangGraph. Group Assignment 2 releases.
+
+ Week 5 readings: 
+
+ · Ponnambalam — Build AI Agents and Chatbots with LangGraph (LinkedIn Learning) ↗ — free with your GSU login via the GSU portal ↗ 
+
+ 📝 Quiz 2 next week — in class, closed-book, same format as Quiz 1 (5 multiple-choice). Scope: the Week 4 readings above, the Week 5 reading, and the Week 5 local tool-calling lab. Sample questions: right below ↓ .
+
+ Next week
+
+ Quiz 2 — reasoning, planning & the loop
+
+ Five multiple-choice questions , closed-book, in class. Everything comes from the readings listed above — scope: the Week 4 readings (Kaggle whitepaper · Intro to LangGraph · ReAct skim) + the Week 5 reading (Ponnambalam, LangGraph, LinkedIn Learning) + the Week 5 local tool-calling lab ( Week 5, page 03 ) — plus this week's core ideas. Try the samples before revealing; the real quiz is the same style and difficulty.
+
+ Five sample questions
+ Same style and difficulty as the real thing.

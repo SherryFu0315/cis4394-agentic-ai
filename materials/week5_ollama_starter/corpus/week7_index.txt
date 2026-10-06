@@ -1,0 +1,70 @@
+Week 7 · Module 2 · Building Blocks
+
+ Memory, RAG & knowledge .
+
+ Week 6 gave your agent reach — protocols that let it call tools and talk to other agents. This week is about what it knows : what survives the end of a run, and how a model that has never seen your company's documents can still answer questions about them — with a citation.
+
+ 📌 This week's logistics: Group Assignment 2 is due this week — see your own section's due date and the submission link on iCollege . 📝 Quiz 3 is NEXT week — in class, closed-book, 5 multiple-choice; the full scope and five sample questions are at the bottom of this week's Practice page ↓ . Agent Radar continues — check whose slot is next.
+
+ The big question
+
+ Discussion question Your Week 4 agent finished its run, printed a good answer, and exited. Everything it figured out along the way is gone. Which part of that is a bug , and which part is just how a context window works?
+
+ See the answer 
+ Neither part is a bug in the model — it is a missing component in your system. The context window is working memory: a scratchpad the model sees for one turn, sized by a token budget you pay for (Week 3). It was never storage, and making it bigger does not make it storage — it just makes each turn more expensive and, past a point, less accurate. Anything that should outlive the run has to be deliberately written somewhere (a database, a file, a vector index) and deliberately read back later. That write/read decision is a design choice you own — and it is this entire week: memory for what the agent learned, retrieval for what your organization already wrote down.
+
+ The hook · fictional teaching example
+
+ The goldfish and the grounded agent
+
+ Same customer-support assistant, same question, two architectures. The only difference is where the knowledge lives.
+
+ No memory, no retrieval 
+ Mon 9:14 Rep: Our Georgia refund window is
+ 30 days, not 14. Remember that.
+ Bot: Got it — 30 days in Georgia.
+
+Tue 8:02 Rep: What is the refund window in GA?
+ Bot: Our standard refund window is
+ 14 days. ✗
+
+ Nothing was stored. Tuesday's session started from zero, and the model fell back on whatever its training left in its weights. The correction the rep typed on Monday was never knowledge — it was tokens in a window that closed .
+
+ Long-term memory + retrieval 
+ Tue 8:02 Rep: What is the refund window in GA?
+ [memory] user.region = GA (stored Mon 9:14)
+ [retrieve] returns_policy_v7.md § 3.2 (0.86)
+ returns_policy_v7.md § 1.0 (0.61)
+ Bot: 30 days for Georgia customers.
+ Source: Returns Policy v7, §3.2,
+ effective 2026-07-01. ✓
+
+ Two different mechanisms did two different jobs: memory carried a durable fact about this user across sessions; retrieval pulled the current policy text into the prompt at question time — and returned a source the rep can click.
+
+ The through-line for the week: a model's parameters are frozen at its training cutoff, and they never contained your contracts, your tickets, or your policies. You do not fix that by making the model bigger. You fix it by storing what matters and retrieving it at the moment of the question.
+
+ This week's pages
+
+ Work through in order
+
+ 01 
+ Agent memory Context vs memory · the four types (working, episodic, semantic, procedural) · write policies and read policies · sort four real items into the right store · why a memory store is regulated data. 
+ → 
+
+ 02 
+ RAG — retrieval-augmented generation Meaning as geometry · chunk → embed → index → retrieve → augment → generate, clickable · step one real query through the whole pipeline · grounding and citations · agentic RAG · RAG vs fine-tuning. 
+ → 
+
+ 03 
+ Practice & case Chunk a policy document · autopsy a retrieval failure · the HR-benefits bot that cited a superseded plan · interview check · readings · Quiz 3 scope + five sample questions . 
+ → 
+
+ Why managers care
+
+ Knowledge that lives in one chat is worthless to the org
+
+ Leverage A fact your best rep taught the agent on Monday should be available to every rep on Tuesday. Without a memory or knowledge layer, each session re-learns the same things and each employee's discovery dies with their tab. Retrieval turns documents your company already paid to write into an answer surface.
+
+ Trust & auditability A retrieved answer can name its source: this document, this section, this version. That is the difference between "the bot said so" and "the policy says so, here it is." When the answer is wrong, you can point at the chunk that caused it — and fix the document instead of arguing with the model.
+
+ Cost & governance Retrieval updates by replacing a file, not by retraining; a policy change ships the same day. But the moment you store user facts or index internal documents, you own data : access control at retrieval time, consent, retention, and deletion. Memory is a feature and a liability — page 01 takes that seriously.

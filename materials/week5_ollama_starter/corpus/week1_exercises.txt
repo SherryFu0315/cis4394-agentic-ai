@@ -1,0 +1,106 @@
+04 · Practice
+
+ Now you make the calls.
+
+ Classify real scenarios, trace a loop by hand, stand up the free toolchain, and check yourself against interview-level questions.
+
+ Exercise A
+
+ Classify the scenario
+
+ For each business scenario, pick the lowest level that genuinely solves it: rules (no LLM), a single LLM call, a workflow, or an agent. Answers are “suggested” — in the debrief, your reasoning counts more than the label.
+
+ Exercise B
+
+ Trace the loop by hand
+
+ Task: “Book a room for 6 people next Tuesday afternoon.” On paper (or in your notes), write the observe → reason → act → observe trace. Mark the stop condition and where a human gate belongs. Then compare.
+
+ Reveal an annotated trace 
+
+ OBSERVE goal: room for 6, Tue afternoon. Rooms + calendars unknown.
+REASON need candidate rooms before times → query room system
+ACT rooms.search(capacity>=6) → [Maple, Peachtree, 201]
+OBSERVE three candidates returned
+REASON check Tuesday-afternoon availability for each
+ACT rooms.availability([...], tue_pm) → Maple 2–4, 201 3–5
+REASON two options; Maple earlier + has a screen → propose Maple 2pm
+HUMAN GATE ⏸ "Book Maple, Tue 2–2:30?" → approve
+ACT rooms.book(maple, tue_1400) → confirmed
+STOP ✓ a confirmed booking exists ← the stop condition
+
+ What graders look for: the loop actually loops (an observation changes the next action); the stop condition is named , not implied; the external action (booking) sits behind the human gate. A trace with no stop condition is a red flag.
+
+ Hands-on
+
+ Your toolchain — three pieces, all free
+
+ Step 1 Gemini free API key
+ Google AI Studio → create API key. No billing required; free-tier rate limits are fine for class. Keep it secret — never commit it to a repo. Already have an old Gemini key? Create a fresh one for this course.
+ aistudio.google.com/apikey ↗ 
+
+ Step 2 GitHub Copilot
+ The free plan includes agent mode; verified students get Copilot Pro via the Student Developer Pack. Enable it in VS Code.
+ Student Developer Pack ↗ 
+
+ Step 3 Hello, agent
+ A minimal loop — model, one tool, stop condition:
+
+ while not done:
+ thought = llm(context)
+ action = parse(thought)
+ result = run_tool(action)
+ context += result
+ done = stop_condition(result)
+
+ Expect it to work ~most of the time. That gap between “demo” and “dependable” is not your bug — it is the field’s central open problem, and it is where this course spends Weeks 8–10.
+
+ Before next week
+
+ Assignment & logistics
+
+ Do
+
+ Read Anthropic, Building Effective AI Agents ↗ — free, no login. The workflow-vs-agent distinction and the five patterns come from here. 
+ Watch Bornet, Agentic Artificial Intelligence ↗ (LinkedIn Learning) — free with GSU login, but enter through the GSU portal ↗ first and sign in with your CampusID; going to linkedin.com directly shows a paywall. 
+ Sign up for Agent Radar on iCollege — student news briefings start Week 2 
+ Set up your Gemini key + Copilot + run the hello-agent 
+ Start thinking about your capstone — browse the Spring 2026 student project demos on iCollege for ideas, and start your one-page agent spec 
+
+ Coming up
+ Week 2 — Learning from the Best: Unpacking Coding Agents. We reverse-engineer Codex, apply the lens to Claude Code, and build a Job Search Agent three ways. Agent Radar begins (student news briefings). GA1 releases.
+ Go to the Week 2 site → 
+
+ 🎯 Take it to your final project: your capstone must be a real agent — the LLM owns control flow — with a named stop condition and one human gate. Write the one-line justification now: “This must be an agent, not a workflow, because …”
+
+ Interview check
+
+ Could you answer these in a job interview?
+
+ Each question is fair game in a 2026 tech or consulting interview. Try answering out loud, then reveal what a strong answer covers.
+
+ Take-aways
+
+ Week 1 in five lines
+
+ An LLM predicts tokens; an agent wraps it with tools, a loop, and memory so it can act.
+
+ The distinction that matters: who owns control flow — a developer (workflow) or the model at runtime (agent).
+
+ Autonomy is a dial; choose the lowest level that solves the problem .
+
+ Enterprises adopted AI everywhere but profit thinly — agents are the bet to close that gap, and reliability is the obstacle.
+
+ Every real agent needs a stop condition , a human gate , and an honest evaluation .
+
+ Next week: Learning from the Best — Unpacking Coding Agents. We reverse-engineer Codex , apply the same lens to Claude Code, and start building the Job Search Agent (GA1 releases).
+
+ Week 2 readings: 
+
+ · Codex’s real system prompt — gpt_5_2_prompt.md ↗ 
+
+ · OpenAI Cookbook — Planning for Long-Horizon Agents ↗ 
+
+ · Anthropic — Claude Code auto mode ↗ 
+
+ Read them with Week 1’s question in mind — who owns control flow? — and start on the Week 2 prep page .

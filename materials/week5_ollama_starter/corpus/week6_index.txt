@@ -1,0 +1,97 @@
+Week 6 · Module 2 · Interoperability
+
+ MCP & A2A — the standards layer.
+
+ Week 5 you hand-wired tools into one agent. That works — once. Do it for five agents and twenty systems and you are maintaining a hundred pieces of custom glue. This week: the two open protocols that turn that multiplication into an addition — MCP for the tools and data underneath an agent, A2A for other agents beside it.
+
+ 📌 This week's logistics: the final-project proposal is due this week on iCollege — the two sections’ deadlines are a day apart, so check iCollege for your section’s due date . See the proposal checklist below before you submit. Group Assignment 2 is in progress and is due next week . No quiz this week. The Agent Radar presenter slots continue — sign up for an open week.
+
+ The big question
+
+ Discussion question Your company builds five agents. Each one needs the CRM, the data warehouse, email, and the ticketing system. How many integrations does your team write — and how many do they maintain when the CRM changes its API?
+
+ See the answer 
+ Written the hand-wired way: 5 × 4 = 20 integrations, and when the CRM ships a breaking change you fix it in five places — each written by a different team, at a different time, with different error handling. Written against a shared protocol: each agent speaks the protocol once and each system exposes a server once, so it is 5 + 4 = 9 pieces, and the CRM change is fixed in one place for everybody. That collapse — from a product to a sum — is the entire business case for MCP and A2A, and it is why this week is about plumbing rather than intelligence.
+
+ Interactive · the integration tax
+
+ M × N, or M + N
+
+ Move the sliders to size your organization, then flip between the two worlds. The red spaghetti is what every team builds first. The blue hub is what a standard buys you — the same connections, without the combinatorics.
+
+ Every red line is a bespoke integration somebody wrote, tested, and now owns.
+
+ Agents / apps (M) 5 
+
+ Tools / systems (N) 4 
+
+ Show the shared protocol ▸ 
+ Currently: bespoke integrations 
+
+ Bespoke 20
+ connections to build and maintain — one per agent-system pair.
+
+ With a shared protocol 9
+ connections — M clients plus N servers, each written once.
+
+ That is a 55% smaller maintenance surface — and the gap widens every time you add an agent or a system.
+
+ Read the arithmetic honestly. A standard does not remove the work of connecting to a CRM; somebody still writes that connector. It removes the combinatorics — the reason the same connector gets written five times. The payoff is in reuse, so it compounds: at 2 agents × 4 systems you save a quarter of the surface; at 20 × 30 you are comparing 600 bespoke integrations to 50. (Illustrative arithmetic, not measured data.) 
+
+ The framing
+
+ “USB-C for AI” — and where it breaks down
+
+ The analogy 
+ Before USB-C, every device shipped its own charger and its own cable. The port did not make laptops better; it made everything else plug in. MCP is pitched the same way: one connector shape between an AI application and the tools and data it needs, so a connector built for one agent works for the next one. Anthropic used exactly this framing when it introduced MCP as an open standard in November 2024 ( Anthropic, 2024 ↗ ).
+
+ Where the analogy leaks 
+ A USB-C cable cannot lie to you. An MCP server can: it runs code, it returns text your model will read as instruction-shaped input, and it sits inside your trust boundary the moment you connect it. Plugging in a charger is a hardware decision; plugging in a server is a supply-chain decision. Hold onto that difference — it is the security thread that runs through page 01 and the case on page 03.
+
+ Two standards, two directions
+
+ One goes down. One goes sideways.
+
+ The single most useful thing you can memorize this week: MCP connects an agent to tools and data. A2A connects an agent to other agents. They are complementary, not competing — a single agent can speak both at once.
+
+ MCP · vertical Agent ↔ tools & data
+
+ Your agent reaches down into a filesystem, a database, a ticketing API, a document store. The thing on the other end is not intelligent — it exposes capabilities and data, and your agent decides what to do with them. Open standard, introduced by Anthropic (2024); broadly adopted across the industry during 2025.
+
+ Page 01 · How MCP works → 
+
+ A2A · horizontal Agent ↔ agent
+
+ Your agent reaches sideways to another agent — possibly built by another team, another vendor, another company — and delegates a task rather than calling a function. The other side has its own goals, its own tools, and its own judgment. Announced by Google in April 2025 and contributed to the Linux Foundation in June 2025.
+
+ Page 02 · How A2A works → 
+
+ And a third option people forget: if both “agents” live inside your own application — two nodes in one LangGraph from Week 4 — you need neither protocol. They are just edges in a graph you own. Reach for a protocol when you cross a boundary you do not control: another team's deployment, another vendor, another company.
+
+ This week's pages
+
+ Work through in order
+
+ 01 
+ MCP — the vertical plug Host, client, server (clickable) · the three primitives: tools, resources, prompts · how one call actually flows · stdio vs HTTP · why a server is a supply-chain decision. 
+ → 
+
+ 02 
+ A2A — the horizontal handshake Agent Cards and capability discovery · the task lifecycle, stepped through · MCP vs A2A vs plain graph edges · an honest note on how young this is. 
+ → 
+
+ 03 
+ Practice & case Design the integration for a campus-services agent · triage a real server's tool list · the third-party grades-server case · interview check · readings · proposal checklist. 
+ → 
+
+ Why managers care
+
+ Standards are an IS lever, not a developer preference
+
+ Cost The line item that kills agent projects is rarely model spend — it is integration and the maintenance tail behind it. M+N is a budget argument before it is an architecture argument, and it is the one a CFO can check with arithmetic.
+
+ Leverage If your sixty connectors are written against one vendor's proprietary format, your renewal conversation has no exit. If they are written against an open protocol, switching hosts is a configuration change. Optionality is negotiating power.
+
+ Trust & audit A protocol boundary is also a control point: one place to log every call, allow-list every server, pin every version, and put the human gate. Ad-hoc glue has no such place — which is why nobody can tell you what it did last Tuesday.
+
+ 🎯 Take it to your final project: your proposal is due this week. Add one paragraph naming the boundary in your system — which capability could you expose as an MCP tool, or at minimum, what does your tool interface look like written down as a contract? Then name the one call in it that gets a human gate. Interoperability is a design habit you build early, not a migration you do later.

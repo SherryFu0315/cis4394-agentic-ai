@@ -1,0 +1,177 @@
+01 · Mechanics
+
+ The model asks . Your code acts.
+
+ Function calling has a reputation for being magic. It is not: the model emits a small piece of structured text naming a function and its arguments, and your program decides what to do about it. Once you see the round trip clearly, every framework, every protocol, and every safety control this semester lands in an obvious place.
+
+ Definition
+
+ What a “tool” actually is
+
+ A tool is an ordinary function in your codebase — calculator() , lookup_order() , send_email() — that you have described to the model in a form it can read. Function calling (also called tool calling) is the model's ability to respond, instead of with prose, with a structured request to run one of those functions with specific arguments.
+
+ Three sentences worth memorising:
+
+ The model proposes. Its entire contribution is a JSON object: which function, which arguments. That is text, produced by the same next-token machinery as everything else it writes.
+
+ Your harness disposes. Your code parses that request, checks it against the schema, decides whether it is permitted, and calls the real function. The model has no execution privileges of any kind.
+
+ The result comes back as an observation. The return value is appended to the conversation as a tool message, and the model reads it before deciding again. That is the Week 4 loop, closed.
+
+ The request / execute / respond flow 
+ 1 You → model: question + tool list
+2 model → you: {name, arguments} // a REQUEST 
+3 you → tool: run it (if allowed)
+4 tool → you: return value or error
+5 you → model: the result, as an observation
+6 model → you: another request, or the answer
+
+ Steps 2 & 6 · the model 
+ Steps 1, 3, 4, 5 · your code 
+
+ Four of the six steps are plain software you can unit-test. This is the same ownership split as the loop in Week 4 — and the reason agent safety is mostly an engineering problem, not a prompting problem.
+
+ Interactive · step through one round trip
+
+ An invoice, two tools, one bad argument
+
+ The episode: “Our Berlin supplier invoiced 4,817 units at €293 each, plus 18% VAT. What is that in USD?” The agent has two tools — calculator and fx_rate — and it will get one call wrong on purpose so you can watch what happens next. Press Step .
+
+ Model reads state 
+ Model decides 
+ Validate + execute 
+ Append result 
+ Final answer 
+
+ The short arrow from Model decides straight to Final answer is the exit: a turn where the model emits no tool call is how the loop ends. The amber box is therefore a stop condition, not a step.
+
+ Step ▸ 
+ Auto-play 
+ Reset 
+ Episode: the supplier invoice · step 0 of 17 
+
+ Press Step to begin the episode… 
+
+ Agent state 
+
+ Three things to notice on your way through. (1) The line marked EMITS is only text — nothing has executed at that moment, which is exactly why a gate can still stop it. (2) The failed fx_rate call did not raise an exception into your users' faces; the validation error was handed back to the model as an observation, and the model repaired its own call. (3) Read the whole trace as the Week 2 evidence standard: state before → observation → available actions → selected action → result → state after . Every tool call produces that record for free.
+
+ The fx_rate value of 1.08 above is an illustrative fixed rate returned by a stub tool written for teaching — not a live or historical quote. The euro subtotal (4,817 × 293 × 1.18 = 1,665,429.58) is exact.
+
+ Anatomy
+
+ Two objects, in the order they happen
+
+ ① First — the schema. You → model, before the conversation starts. Your harness sends the model a list of tool schemas. This is the only thing the model knows about your systems — the menu you hand it: what it may order, and which choices are legal.
+
+ {
+ "name" : "fx_rate" ,
+ "description" : "Return the current exchange 
+ rate from one currency to another. 
+ Use for any conversion between 
+ currencies. Do NOT estimate rates 
+ yourself." ,
+ "parameters" : {
+ "base" : { "type" : "string" ,
+ "enum" :[ "EUR" , "GBP" , "JPY" , "USD" ]},
+ "quote" : { "type" : "string" ,
+ "enum" :[ "EUR" , "GBP" , "JPY" , "USD" ]}
+ },
+ "required" : [ "base" , "quote" ]
+}
+
+ Name, description, typed parameters, required list. Notice that the enum is what made the simulator's error message useful: the harness could tell the model precisely what the legal values were.
+
+ ② Then — the call. Model → you, during the conversation. Having read the menu, the model writes an order slip: a name and a bag of arguments. That is the whole payload. Different vendors wrap it differently, but every one of them reduces to this.
+
+ {
+ "name" : "fx_rate" ,
+ "arguments" : {
+ "base" : "EUR" ,
+ "quote" : "USD" 
+ }
+}
+ # A REQUEST, not an execution. 
+ # Nothing has happened to any system yet. 
+
+ Because it is a request, three useful things are possible before anything runs: you can validate it, you can refuse it, and you can show it to a human . Page 02 is entirely about using that window.
+
+ The description is a prompt. The model chooses between tools by reading their descriptions, in the same way it reads any other instruction. A vague description ( “handles currency stuff” ) produces vague behaviour: wrong tool, missing arguments, silent non-use. In Python you usually write that description as a docstring — which means the docstring is the interface , and it deserves the same care as an API contract. Page 02 makes this concrete, and you will break it deliberately in the hands-on exercise .
+
+ The code
+
+ A tool is just a function
+
+ Whatever you build with, defining a tool means defining an ordinary function: the type hints become the parameter types and the docstring becomes the description the model reads. In plain Python you hand the function straight to the model — that is what you will do on page 03 . The version below adds a framework decorator, which changes nothing about the idea.
+
+ from langchain_core.tools import tool
+
+ @tool 
+ def fx_rate(base: str , quote: str ) -> str :
+ """Return the exchange rate from `base` 
+ to `quote`. Both must be 3-letter ISO 
+ codes such as EUR, GBP, JPY, USD. 
+ Use this for ANY currency conversion; 
+ never estimate a rate yourself.""" 
+ allowed = { "EUR" , "GBP" , "JPY" , "USD" }
+ if base not in allowed:
+ return ( f"ToolArgError: base must be one " 
+ f"of {sorted(allowed)}; got {base!r}" )
+ return str (RATES[(base, quote)])
+
+ Read it as three artefacts at once 
+ The signature (base: str, quote: str) -> str generates the JSON parameter types the model receives. Change a type hint and you have changed the model's contract.
+
+ The docstring is the description — the sentence that decides whether the model reaches for this tool at the right moment. Note that it says what the tool is for and one thing the model must not do.
+
+ The body is your enforcement point. It returns an error string rather than raising, so a bad call becomes an observation the model can recover from instead of an exception that kills the run. That idea gets its own section on page 02 .
+
+ 🎯 Take it to your final project Your capstone agent needs at least two real tools with clean schemas. Start them now, in this shape: typed parameters, a description that states when to use the tool, and errors returned as data. Group Assignment 2 grades exactly these properties.
+
+ Discussion
+
+ Discussion question A vendor tells your CIO that their agent “runs Python, queries the warehouse, and emails customers.” Using this page's vocabulary, what is the one question that tells you how much you should worry?
+
+ See the answer 
+ “Show me the tool schemas, and show me who validates the arguments.” The impressive verb list is just the tool inventory — it tells you the agent's capability , and nothing about its limits . What matters is the shape of each schema and where the checks live: does query_warehouse accept arbitrary SQL or a table name from an enum? Does email_customer accept any address, or only addresses already attached to the ticket? Is the validation inside the vendor's harness (auditable, versioned, testable) or inside the prompt (a polite request the model can ignore)? A secondary question worth asking in the same breath: what happens on failure? An agent that crashes on a bad argument is annoying; an agent that silently retries a write tool is a duplicate-payment incident. You are looking for the same ownership split as this page: model proposes, harness disposes, every call logged.
+
+ Concept check
+
+ Who does what?
+
+ Beyond the core
+
+ Optional — read these when you have time
+
+ Nothing below is needed to do pages 02 and 03, or to pass the quiz. It is context, and it is good context.
+
+ Optional · where this comes from
+
+ Two papers worth knowing by name
+
+ The pattern ReAct (Yao et al., 2022)
+
+ Interleaving reasoning traces with actions — Thought → Action → Observation , looped — so that the model's next decision is grounded in a real result rather than in its own guess. Week 4 used it as a reasoning pattern; this week, the “Action” is literally a tool call and the “Observation” is literally a return value. arXiv:2210.03629 ↗ 
+
+ The capability Toolformer (Schick et al., 2023)
+
+ The paper whose title is the claim: Language Models Can Teach Themselves to Use Tools. It showed that a model can learn, in a largely self-supervised way, which API to call, when to call it, and what to pass — deciding for itself where a tool call helps. That is why tool use is a general capability you can design around, not a trick that needs bespoke training per tool. arXiv:2302.04761 ↗ 
+
+ What this pair means for you as a builder: the model brings the judgement about when to call something; you bring the schema that says what is callable and with what . Neither half works alone — a perfect schema with a model that never triggers it is dead code, and a model eager to act with no schema is an accident waiting for a production database.
+
+ Optional · watch
+
+ Tool calling, explained in five minutes
+
+ What is Tool Calling? Connecting LLMs to Your Data (IBM Technology, ~4m56s)
+
+ The enterprise framing of everything on this page: the model as the reasoning layer, tools as the boundary to the systems that actually hold your data. Watch it before page 02.
+
+ While you watch — three checks 
+ 1 · Every time the speaker says the model “calls” something, mentally substitute “asks your code to call.” Does any claim in the video break? (It should not.)
+
+ 2 · Note where the video puts the boundary line between the model and the enterprise systems. That line is the thing you design this week.
+
+ 3 · Count how many of the four gaps from the week home — cutoff, private data, computation, actions — the examples are closing.
+
+ Reference explainer if you want the same material as text: IBM Think — What Is Tool Calling? ↗ · Framework docs: LangChain — Tool calling ↗

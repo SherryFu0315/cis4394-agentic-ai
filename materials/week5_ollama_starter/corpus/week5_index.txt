@@ -1,0 +1,156 @@
+Week 5 · Module 2 · Tools & Protocols
+
+ Tool use & function calling .
+
+ Last week you built the loop. This week you build the Act arrow. A tool is how a language model reaches something outside itself — a calculator, a database, a payment API — and it is simultaneously the moment your agent stops being a chat window and starts being able to do damage. Tools are capability plus risk surface , and this week is about designing that surface on purpose.
+
+ 📌 This week's logistics: 📝 Quiz 2 is this week — in class, closed-book, 5 multiple-choice. Scope: the Week 4 readings, the Week 5 reading (Ponnambalam, Build AI Agents and Chatbots with LangGraph ), and this week’s local tool-calling lab ( page 03 ). Sample questions are on the Week 4 practice page → . Group Assignment 2 releases this week on iCollege — new groups, self-enroll ( how, and the build paths ). 💻 Bring your laptop with Ollama running and your model downloaded — this week’s lab is page 03 . And the Agent Radar continues — check your presenter slot.
+
+ The big question
+
+ Discussion question When an agent “calls a tool,” what does the language model actually produce — and who runs the code?
+
+ See the answer 
+ The model produces a structured request and nothing else — a small block of JSON naming a function and its arguments: {"name": "calculator",
+ "arguments": {"expression": "4817*293*1.18"}}
+It does not execute anything — it cannot. Your harness receives that request, validates the arguments against the schema you wrote, decides whether the call is even allowed, runs the function, and hands the result back as the next observation. Same division of labour as Week 4's loop: the model proposes, the harness disposes . Everything valuable this week follows from taking that sentence literally — because if the harness is the only thing that executes, the harness is the only place you need to put controls.
+
+ Week 4 called this step “Act” and left it as a black box. Here it is, opened: 
+
+ Week 4 · the loop 
+ Observe → Reason → ACT → Update state
+ ↑
+ (a black box)
+
+ Last week “Act” was a label on an arrow. You stepped through episodes where the agent “called Search” and a result appeared, and we deliberately did not ask how.
+
+ Week 5 · inside the arrow 
+ model emits {name, arguments}
+ → harness VALIDATES the arguments
+ → harness DECIDES: run / constrain / ask a human
+ → tool executes
+ → result returns as an OBSERVATION
+
+ Five steps, four of which are ordinary software you write and test. Pages 01 and 02 take them one at a time.
+
+ The hook
+
+ Arithmetic a model gets wrong
+
+ Your Berlin supplier invoiced 4,817 units at €293 each , plus 18% VAT . What is the euro total? Before anyone tells you the answer, find out for yourself what a local model does with this question.
+
+ 👥 Group task · Pairs, at a laptop · ~12 minutes 
+ Everything here is copy-and-paste into one window. Start Ollama, then in a terminal run ollama run qwen2.5:0.5b once — after that you are just typing at a prompt. No files, no folders, no Python.
+
+ Produce: the filled table below, plus one sentence per round: what changed, and why you think it changed.
+
+ Round 1 · Ask in plain words — send it 5 times
+
+ An invoice is 4817 units at 293 EUR each, plus 18% VAT. What is the euro total?
+
+ Paste the identical question five times and write down all five answers. Press ↑ to repeat the last one.
+
+ Round 2 · Hand it the exact formula — send it 5 times
+
+ What is 4817 * 293 * 1.18? Reply with just the number.
+
+ Nothing to interpret now — no wording, no percentage, just one multiplication. Does that fix it?
+
+ Round 3 · You be the tool
+
+ The model cannot run anything, so for this round you are the code that runs it. Send this, and it will reply with a request instead of an answer:
+
+ You have one tool: calculator(expression). You cannot do arithmetic yourself. When you need arithmetic, reply with ONLY this JSON and nothing else: {"tool":"calculator","expression":"..."} . Question: An invoice is 4817 units at 293 EUR each, plus 18% VAT. What is the euro total?
+
+ Write down the expression it asked for — is it the right formula? Then compute it yourself (phone calculator is fine; the correct value of 4817*293*1.18 is 1665429.58 ) and hand the result back:
+
+ TOOL RESULT: 1665429.58 . Now reply with one short sentence giving the final answer, using exactly that number. Do not output JSON.
+
+ Run the whole round three times. You have just done by hand exactly what the Python on page 03 does automatically.
+
+ Run Round 1
+ asked in words Round 2
+ given the formula Round 3
+ the expression it asked YOU to compute 
+
+ 1 
+
+ 2 
+
+ 3 
+
+ 4 
+
+ 5 
+
+ Discussion question Rounds 1 and 2 both failed — for the same reason, or different ones? And in Round 3, when the number finally came out right, who computed it?
+
+ Compare with the instructor's runs 
+
+ Round 1 — asked in words. Five runs, five different answers, spanning five orders of magnitude, none correct (the answer is 1,665,429.58 ):
+
+ run 1 → 1,378,861 run 4 → 1,336,588
+run 2 → 5,182 run 5 → 346
+run 3 → 127,797,491
+
+ Run 4 is the interesting one: it wrote the right formula, 4817 * 293 * (1 + 0.18) , and still produced a wrong number.
+
+ Round 2 — handed the formula. Wrong every time, and now the wrong answers cluster near the right size, which is worse because they look believable: 999,999.8 · 1,286,483.4 · 1,240,908.4 · 115,085.4 · 1,194,414.8 . So this was never a wording problem. Nothing in the model multiplies anything — it predicts the most plausible-looking continuation, and for long multiplication that is a number of roughly the right magnitude.
+
+ Round 3 — you as the tool. In our runs the model produced a clean JSON request every time, and the expressions varied: (4817*293)+(4817*293*0.18) — correct — in one run, 4817*293 + 4817*0.18 — wrong — in others. After the result was handed back, it finished correctly every time.
+
+ So the two failures are different. Rounds 1–2 are a computation failure, and handing the arithmetic to something that actually computes removes it completely — in Round 3 that something was you . What remains is a planning failure: deciding which expression to compute. That one stays with the model, and it is what page 03 measures.
+
+ What the tool fixes, and what it does not. The calculator is always exact and always logged. What it cannot do is decide what to compute : asked for "plus 18% VAT" in words, this same small model often hands the calculator a wrong expression — 4817*293 + 18/100 in one run, 4817*293 + 18*293 in another. Arithmetic moved into the tool; planning stayed with the model , and that is what page 03 measures. Bigger models get this particular product right more often, which is also not the point: a token predictor is non-deterministic and unauditable : you cannot promise a controller that the number will be right next month, and you cannot show the work. A tool call gives you exactness, repeatability, and a trace — three things a finance team will actually ask for.
+
+ This week's pages
+
+ Work through in order
+
+ 01 
+ Function calling — the mechanics What the model emits, what your code does with it · step through a full tool-call round trip, including a failed call · the schema as interface · ReAct and Toolformer. 
+ → 
+
+ 02 
+ Schemas, errors & gates Writing a description the model can act on · errors as observations, not crashes · the auto-run / constrain / gate decision · classify eight real tools yourself · ToolNode in LangGraph. 
+ → 
+
+ 03 
+ Build it locally with Ollama Turn the model you downloaded into a tool-calling agent — no API key · the whole loop in plain Python · measure it over several runs · can tool design rescue a small model? · the same agent in LangGraph. 
+ → 
+
+ 04 
+ Practice & case Map a tool boundary · break your own agent with a bad tool description and fix it · the expense-report case · interview check · readings. 
+ → 
+
+ 📝 
+ After class Week 5 Summary What to remember from each page · enroll in your Group Assignment 2 team on iCollege (new groups — new teammates encouraged) · the code / no-code / bring-your-own-tool paths · the proposal that is due next week. 
+ → 
+
+ Why managers care
+
+ Tools = capability + risk surface
+
+ Capability A model without tools is a very expensive autocomplete. Every tool you add is a verb the agent acquires: read , compute , file , send , pay . The business value of an agent is almost entirely the value of its verbs.
+
+ Risk Every verb is also a way to be wrong at scale. A read tool leaks; a write tool destroys; a spend tool costs money. The schema you write is where “what is this agent permitted to do?” actually gets answered — in code, not in a policy document.
+
+ Auditability Because every tool call is a structured record — name, arguments, result, timestamp — a tool-using agent is far easier to audit than one that “just knows.” When compliance asks what happened, you replay the calls.
+
+ The manager's version of this week: you do not decide whether an agent is “safe” in the abstract. You decide, tool by tool, which calls run automatically, which run only inside limits you encoded, and which stop and wait for a person. Page 02 turns that into a table you can actually fill in.
+
+ Optional · read on your own
+
+ Four gaps a raw model cannot close
+
+ Background, not a prerequisite — you can do pages 01–03 without it. It answers the question one step behind this week: why give a model tools at all? 
+
+ Gap 1 · Knowledge cutoff A model's weights were frozen on a date. It cannot know your Q3 numbers, today's outage, or a policy you published last Tuesday. Closed by: a retrieval or search tool.
+
+ Gap 2 · Private & live data Your CRM, your ticket queue, your inventory table were never in anyone's training data — and should not have been. Closed by: a read tool against your own systems.
+
+ Gap 3 · True computation Predicting the next token is not arithmetic, and it is certainly not running a SQL query or a pricing model. Closed by: a calculator, a code runner, a query tool.
+
+ Gap 4 · Actions in the world Text cannot file a ticket, send an email, or issue a refund. Closed by: write tools — and this is exactly where the risk arrives.
+
+ The framing: Anthropic's engineering guide calls this the augmented LLM — a model extended with tools, retrieval, and memory as its basic building block (Anthropic, 2024, Building Effective Agents ↗ ). This week is the tools corner of that picture; retrieval and memory come later in the semester.

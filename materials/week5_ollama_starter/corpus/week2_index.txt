@@ -1,0 +1,65 @@
+Week 2 · Learning from the best
+
+ Unpacking coding agents — then building your own.
+
+ Reverse-engineer Codex. Discover that the same architecture explains Claude Code. Then transfer the pattern into a completely different domain: a Job Search Agent that thinks before it acts.
+
+ Course GSU CIS 4394 Agentic AI
+
+ Instructor Dr. Xinyu Fu
+
+ Term Fall 2026
+
+ Format Hands-on studio class
+
+ 📡 
+ Agent Radar · this week Agents are getting real power Three stories from the past few days — physical power, economic power, and a containment incident. Think → Act → Coordinate → Spend → Affect the physical world. 
+ → 
+
+ 📝 
+ After class Week 2 Summary Scavenger-hunt answer key (nine layers → real Codex files) · join your GA1 group on iCollege · Opal / Fleet / ADK tutorials with videos · Quiz 1 readings + five sample questions. 
+ → 
+
+ Start here
+
+ The path through today
+
+ Work through the four parts in order. Do Prep before you come to class — the session starts with building, not with account recovery.
+
+ 00 
+ Before class Student prep Accounts, installs, the guided reading, and what to bring. Fifteen minutes now saves the whole build sprint later. 
+ → 
+
+ 01 
+ Part 1 Unpack Codex Click through the nine layers of a coding agent, then watch the agent loop run — step by step — as Codex fixes a failing test. 
+ → 
+
+ 02 
+ Part 2 The same lens on Claude Code Does the architecture we extracted explain a competing product? Sort what is shared from what differs. 
+ → 
+
+ 03 
+ Part 3 Build the Job Search Agent Transfer the architecture to a new domain. Choose Opal, Fleet, or Codex + Python — with full step-by-step instructions. 
+ → 
+
+ 04 
+ Part 4 Break it, grade it, submit it Four required tests, the evidence standard, ten deliverables, and the rubric. 
+ → 
+
+ Discussion question If Codex had the exact same model — but no access to files, shell commands, tools, state, or permissions — would it still be Codex?
+
+ See the answer 
+ No — you would have a chatbot that talks about code. Everything that makes it Codex — reading files, running tests, applying patches, pausing for approval — lives in the harness . The model supplies reasoning; the product is the loop built around it. Part 1 takes this answer apart layer by layer.
+
+ Today’s arc
+
+ Reverse-engineer → compare → transfer → build
+
+ Unpack Codex
+ What architectural ingredients turn a language model into a coding agent?
+
+ Compare Claude Code
+ Does the same architecture explain a competing product — or is it product-specific?
+
+ Transfer & build
+ Keep the reasoning pattern; swap the goal, environment, tools, and safety boundary.

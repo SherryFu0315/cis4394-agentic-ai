@@ -1,0 +1,137 @@
+03 · Hands-on
+
+ LangGraph — the loop you own .
+
+ LangGraph is an open-source library that makes the agent loop explicit : your agent is a graph of nodes connected by edges, passing a typed state. Nothing hidden — which is exactly why enterprises like it.
+
+ Reference page — read it when you need it. We build agents in plain Python first ( Week 5, page 03 ), and LangGraph gets a proper treatment in Week 9 , where orchestrating several agents actually needs it. The code below uses a cloud model; to run the same graph on your own laptop with Ollama, only the model line changes — see Step 6 of the Week 5 lab.
+
+ Three primitives
+
+ State · nodes · edges
+
+ State The shared memory
+ A typed dict passed to every node. Ours holds messages — the growing conversation of thoughts, tool calls, and results. Whatever a node returns is merged in.
+
+ Nodes Units of work
+ A node is just a function: state in → update out . The two classics: a model node (ask the LLM what to do next) and a tools node (execute what it asked for).
+
+ Edges Routing = the loop
+ Normal edges always fire. Conditional edges look at state and choose the next node — and a conditional edge that can route backwards is all a loop is.
+
+ Interactive · the canonical agent graph
+
+ Click each part of the graph
+
+ This is the same Observe→Reason→Act cycle from page 01, drawn the way LangGraph sees it.
+
+ START 
+ model 
+ tools_condition 
+ tools 
+ END 
+
+ Dashed edge = the loop-back: tools → model . The amber diamond-in-spirit is the conditional edge deciding “tool call or finish?”
+
+ Click a node in the graph.
+
+ That's the whole trick. START → model → if the model asked for a tool → tools → back to model → … → END. The canonical ReAct agent is a five-piece graph.
+
+ The code
+
+ A minimal agent in ~30 lines
+
+ 1 · State, a tool, a model. The state is a message list; the tool is a plain Python function with a docstring (that docstring is the tool's description to the model — Week 2's tool-inventory lesson).
+
+ # pip install langgraph langchain-google-genai 
+ from typing import Annotated
+ from typing_extensions import TypedDict
+ from langgraph.graph import StateGraph, START, END
+ from langgraph.graph.message import add_messages
+ from langgraph.prebuilt import ToolNode, tools_condition
+ from langchain_google_genai import ChatGoogleGenerativeAI
+
+ class State(TypedDict):
+ messages: Annotated[list, add_messages]
+
+ def calculator(expression: str ) -> str :
+ """Evaluate an arithmetic expression like '2*93'.""" 
+ return str (eval(expression)) # demo only! 
+
+llm = ChatGoogleGenerativeAI(model= "gemini-2.0-flash" )
+llm_tools = llm.bind_tools([calculator])
+
+ 2 · Nodes, edges, run. One model node, one prebuilt tools node, one conditional edge — and the tools → model edge that closes the loop.
+
+ def call_model(state: State):
+ return { "messages" : [llm_tools.invoke(state[ "messages" ])]}
+
+g = StateGraph(State)
+g.add_node( "model" , call_model)
+g.add_node( "tools" , ToolNode([calculator]))
+g.add_edge(START, "model" )
+g.add_conditional_edges( "model" , tools_condition) # tool call → "tools", else → END 
+g.add_edge( "tools" , "model" ) # ← the loop 
+agent = g.compile()
+
+out = agent.invoke({ "messages" :
+ [( "user" , "What is twice the height of the Statue of Liberty (93 m)?" )]})
+ for m in out[ "messages" ]: m.pretty_print()
+
+ Where's the loop? Nowhere in your code is there a while . The loop is add_conditional_edges + add_edge("tools","model") . Control flow became data — a graph you can draw, diff, and show an auditor.
+
+ Control the loop
+
+ The max-iteration guard
+
+ Page 01's rule: the harness decides whether the loop runs again. Here's that rule as four lines of state + one condition.
+
+ class State(TypedDict):
+ messages: Annotated[list, add_messages]
+ steps: int # NEW: the counter 
+
+ def call_model(state: State):
+ return { "messages" : [llm_tools.invoke(state[ "messages" ])],
+ "steps" : state[ "steps" ] + 1}
+
+ def guarded_condition(state: State):
+ if state[ "steps" ] >= 8: # the cap 
+ return END # stop, whatever the model wants 
+ return tools_condition(state)
+
+g.add_conditional_edges( "model" , guarded_condition)
+
+ Why this matters This is the loop-layer guardrail from the nine layers, in real code: the model can ask for step 9, and the graph simply won't grant it. Runaway loops, infinite retries, and surprise bills all die at this line. (LangGraph also has a built-in recursion_limit — the point is that you set it.)
+
+ 🎯 Take it to your final project Your capstone agent must have a named stop condition. This pattern — a counter in state plus a guarded conditional edge — is the reference implementation. Add a reflection node before END and you've covered two rubric lines in one graph.
+
+ Group task
+
+ 👥 Group task · Pairs · ~25 minutes 
+ Run the minimal agent above on the Gemini free tier (your Week 1 key from aistudio.google.com/apikey ; set it as GOOGLE_API_KEY ). Then: (1) add a second tool, search_stub(query) , that just returns a canned string with a height; (2) ask the Atlanta-vs-statue question from page 01; (3) add the max-iteration guard with a cap of 3 and watch it cut the run short.
+
+ Produce: the printed message trace for one successful run, plus one sentence: which edge in your graph is the loop?
+
+ Zoom out
+
+ Every framework elaborates this loop
+
+ CrewAI, AutoGen, the OpenAI Agents SDK, and the managed platforms you used in Week 2 (Opal, Fleet) all wrap the same model↔tools cycle with the same three primitives under different names. Learn the loop once, and every framework becomes a dialect. LangGraph docs ↗ 
+
+ Auditability — the MIS framing An explicit graph means every decision, tool call, and state change is logged and replayable. When audit or compliance asks “why did the agent do that?”, the answer is a trace, not a shrug. That's the business case for owning the loop instead of renting a black box.
+
+ Watch
+
+ Two short videos
+
+ Introduction to LangGraph (LangChain, official)
+ The free LangChain Academy course in 2½ minutes — nodes, edges, state, memory, human-in-the-loop. The full course is this week's optional deep dive.
+
+ Free full course ↗ 
+
+ Why Agentic AI Fails (IBM Technology, 12 min)
+ Infinite loops, planning errors, and runaway agents — the failure modes that motivate everything on this page: stop conditions, guards, and reflection.
+
+ Concept check
+
+ State, node, or edge?

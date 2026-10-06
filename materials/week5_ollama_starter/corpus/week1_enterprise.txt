@@ -1,0 +1,71 @@
+03 · Landscape
+
+ What enterprises actually use in 2026.
+
+ Past the demos: the stack companies deploy, the build-vs-buy call they wrestle with, the standards that will outlive the tools — and the paradox that explains why this course exists.
+
+ The map
+
+ The 2026 agent stack
+
+ Build frameworks
+ LangGraph & friends — you own the loop, the state, and the edges. Maximum control; more engineering. This course’s default build path. 
+
+ Managed platforms
+ Amazon Bedrock Agents, Google Vertex, Azure AI Foundry, OpenAI’s agent tooling. Faster to ship, less control, real lock-in questions.
+
+ Interop standards
+ MCP (agent ↔ tools) and A2A (agent ↔ agent). Standards turn an M×N integration mess into M+N — likely the most durable layer of the stack.
+
+ Coding agents
+ Copilot, Cursor, Claude Code, Codex — the breakout enterprise use case, and the reason Week 2 reverse-engineers one.
+
+ Without a standard: M agents × N tools = M×N custom integrations
+With MCP: M agents + N tools = M+N (each speaks the protocol once)
+
+ The MIS question
+
+ Build vs buy vs wait
+
+ Build (LangGraph) Buy (managed platform) Wait 
+
+ Control Full — you own loop & state Partial — platform abstractions None 
+
+ Speed to ship Slower Faster — 
+
+ Cost shape Engineering time Platform + usage fees Opportunity cost 
+
+ Lock-in Low Higher None 
+
+ Right when… Agent logic is core to the product Standard use case, existing cloud contract Task doesn’t need an agent yet — a legitimate strategy 
+
+ Reality check: adoption is near-universal, bottom-line impact still thin — and a large share of agentic-AI projects are forecast to be cancelled before delivering (Gartner projected 40%+ by end of 2027, approx.). “Wait, and pick your shots” is often the analytically correct answer.
+
+ Case
+
+ The gen-AI paradox — and the human turn
+
+ The paradox
+
+ Near-universal adoption, heavy investment, little EBIT impact so far (McKinsey, approx.).
+
+ Discussion questions — we’ll cold-call
+
+ Why the gap — capability problem or organization problem?
+
+ What would have to change for agents to move the P&L?
+
+ If you were CIO, what would you measure to know it’s working?
+
+ What strong answers sound like 
+ 1. Both — but organization dominates. Capability gets you demos; moving EBIT requires redesigned workflows, data access, evaluation, and people who trust the system. Adopting the tech without changing the process is the paradox.
+ 2. Agents must own a measurable slice of a process end-to-end (with human gates) rather than sprinkling assistance everywhere — and reliability must be high enough that people stop double-checking every output.
+ 3. Outcomes, not usage: resolution time, error/rework rate, cost per case, human hours redeployed, escalation quality — measured against a baseline, not against enthusiasm.
+
+ The augmentation story: IKEA’s “Billie”
+
+ A support bot has absorbed a large share of routine service inquiries since 2021 — and IKEA retrained ~8,500 call-center staff as remote interior-design advisors, feeding a ~€1.3B design channel (2022, approx.; CX Today / PYMNTS, 2023). The routine slice got automated; the people moved up the value chain.
+
+ The evidence beyond one case: AI assistance lifted support-agent productivity ~+14% overall and ~+34% for novices (Brynjolfsson, Li & Raymond, QJE 2025); across real usage, ~57% of AI use augments rather than automates (Anthropic Economic Index, approx.).
+
+ The bar for your capstone: build agents that make people better at their work — not just cheaper to replace.
