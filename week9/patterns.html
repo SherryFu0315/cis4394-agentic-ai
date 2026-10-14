@@ -80,60 +80,15 @@
 
 <section><div class="wrap">
   <div class="eyebrow">Where we start</div>
-  <h2>You already wrote this agent. Here it is with names.</h2>
-  <p class="lede"><b>In Week 5 you built an agent in plain Python and could read every line.</b> Multi-agent systems are where that stops scaling — so before we add a second agent, here is the single-agent loop you already know, with the names a framework gives it — <code>@tool</code>, <code>bind_tools</code>, <code>ToolNode</code>, <code>tools_condition</code> — and the gate attaches at exactly the place you would expect. Skim it now; come back when you need it.</p>
-  <p class="lede" style="margin-top:6px">Click any line — <b>the matching line on the other side lights up too</b>. Nothing new happens in the right-hand column; the same moves have simply been given names.</p>
-  <div class="xchips" id="xChips"></div>
-  <div class="xgrid">
-    <div><div class="xlab">Plain Python — what you run on page 03</div>
-      <div class="xcode" id="xPlain"><span class="xl" data-k="tools">TOOLS = {"calculator": calculator,
-         "issue_refund": issue_refund}</span>
-
-<span class="xl" data-k="loop">for step in range(1, MAX_STEPS + 1):</span>
-<span class="xl" data-k="ask">    msg = ollama.chat(model=MODEL,
-                      messages=messages,
-                      tools=list(TOOLS.values())).message</span>
-    messages.append(msg)
-
-<span class="xl" data-k="decide">    if not msg.tool_calls:</span>
-<span class="xl" data-k="end">        return msg.content          # done</span>
-
-    for call in msg.tool_calls:
-        name, args = call.function.name, call.function.arguments
-<span class="xl" data-k="gate">        if name in NEEDS_APPROVAL and not approve(name, args):
-            result = "DENIED by a human reviewer."
-        else:</span>
-<span class="xl" data-k="exec">            result = TOOLS[name](**args)</span>
-<span class="xl" data-k="obs">        messages.append({"role": "tool",
-                         "content": result,
-                         "tool_name": name})</span></div></div>
-    <div><div class="xlab">LangGraph — the same moves, named</div>
-      <div class="xcode" id="xGraph"><span class="xl" data-k="tools">TOOLS = [calculator, issue_refund]
-llm_tools = llm.bind_tools(TOOLS)</span>
-
-<span class="xl" data-k="ask">def call_model(state):
-    return {"messages":
-            [llm_tools.invoke(state["messages"])]}</span>
-
-g = StateGraph(State)
-<span class="xl" data-k="ask">g.add_node("model", call_model)</span>
-<span class="xl" data-k="exec">g.add_node("tools", ToolNode(TOOLS))</span>
-<span class="xl" data-k="obs"># ToolNode also appends each result to state["messages"]</span>
-g.add_edge(START, "model")
-<span class="xl" data-k="decide">g.add_conditional_edges("model", tools_condition)</span>
-<span class="xl" data-k="loop">g.add_edge("tools", "model")</span>
-
-<span class="xl" data-k="gate">agent = g.compile(interrupt_before=["tools"])</span>
-<span class="xl" data-k="end"># tools_condition routes to END when no tool was asked for</span></div></div>
-  </div>
-  <div class="xnote" id="xNote">Click a line in either column, or pick a move above.</div>
-
-  <div class="grid3" style="margin-top:22px">
-    <div class="card"><span class="kicker">Read the last line carefully</span><p class="small" style="margin-top:8px"><code>interrupt_before=["tools"]</code> stops the graph <b>after</b> the model has committed to a call and <b>before</b> anything executes — precisely the window from page 01. Your application then shows the pending call to a person and resumes the graph only on approval. A blunt version gates every tool; a real one checks which tool was requested and interrupts only for the gated ones.</p></div>
-    <div class="card" style="margin-top:14px"><span class="kicker">The docstring is the schema</span><p class="small" style="margin-top:8px">There is no separate schema file in this code. <code>bind_tools</code> reads your function signatures and docstrings and generates the JSON the model sees. Which means every rule on this page — enums, ranges, “use this when…”, “do not use this for…” — is written as ordinary Python type hints and prose.</p></div>
-    <div class="card" style="margin-top:14px"><span class="kicker">🎯 Take it to your final project</span><p class="small" style="margin-top:8px">Define two tools with clean schemas, return errors as data, and put a human gate on anything irreversible. That sentence is the headline Week 5 skill and it is what Group Assignment 2 grades.</p></div>
-  </div>
-  <p class="small" style="margin-top:16px">Framework reference: <a class="doc" href="https://python.langchain.com/docs/concepts/tool_calling/" target="_blank" rel="noopener">LangChain — Tool calling ↗</a></p>
+  <h2>Why real products split into agents — and why "two models are smarter" is not on the list</h2>
+  <p class="lede">Look at any production system that calls itself multi-agent and you will find one of four reasons for the split. None of them is intelligence. All of them are about <b>what each agent is allowed to see and touch</b>.</p>
+  <div style="overflow:auto"><table class="plain"><thead><tr><th>Why teams split</th><th>What it buys</th><th>You met it in</th></tr></thead><tbody>
+    <tr><td><b>Context isolation</b></td><td>Each agent sees only its own job. Instructions and results for unrelated tasks stop piling into one window (context rot).</td><td>Week 3</td></tr>
+    <tr><td><b>Permission isolation</b></td><td>The refund agent has no email tool; the research agent has no payment tool. A specialist cannot be talked into using a capability it does not hold.</td><td>Week 5 — least privilege</td></tr>
+    <tr><td><b>Parallel breadth</b></td><td>Several subtasks that do not depend on each other run at once. Faster, wider — and, per Anthropic's own numbers, roughly 15× the tokens.</td><td><a href="tradeoffs.html">Page 02</a></td></tr>
+    <tr><td><b>Team ownership</b></td><td>Different teams build, test and ship different agents on their own schedules, with a contract between them.</td><td>Week 6 — A2A</td></tr>
+  </tbody></table></div>
+  <div class="callout blue" style="margin-top:16px"><b>So the rule this week is not "don't."</b> It is: <b>one agent with good tools is the default; split when you can name which of the four you are buying, and show the pieces can be verified on their own.</b> On <a href="local.html">page 03</a> you build the smallest honest version — two local agents behind one supervisor — and watch both the benefit (isolation by construction) and the cost (a coordination failure in three messages).</div>
 </div></section>
 
 <section><div class="wrap">
@@ -389,17 +344,6 @@ CC.forEach((x,i)=>{
    gate:['The human gate','Plain Python checks the tool name and asks a person before running it. LangGraph compiles with <code>interrupt_before=["tools"]</code>, which stops the graph after the model has committed to a call and before anything executes — the window from page 01. Your app then shows the pending call and resumes only on approval.'],
    end:['Stopping','The run ends when the model answers without requesting a tool. Plain Python returns; LangGraph routes to END. Separately, both need a cap so a confused agent cannot loop forever: <code>range(1, MAX_STEPS+1)</code> here, <code>recursion_limit</code> there.']
   };
-  const panes=[document.getElementById('xPlain'),document.getElementById('xGraph')];
-  if(!panes[0]||!panes[1])return;
-  const chips=document.getElementById('xChips'), note=document.getElementById('xNote');
-  const order=['tools','ask','decide','exec','obs','loop','gate','end'];
-  order.forEach(k=>{const b=document.createElement('button');b.className='xchip';b.dataset.k=k;b.textContent=NOTE[k][0];chips.appendChild(b)});
-  function select(k){
-    document.querySelectorAll('.xl').forEach(e=>e.classList.toggle('on',e.dataset.k===k));
-    document.querySelectorAll('.xchip').forEach(e=>e.classList.toggle('on',e.dataset.k===k));
-    note.innerHTML='<b>'+NOTE[k][0]+'.</b> '+NOTE[k][1];
-  }
-  document.addEventListener('click',e=>{const t=e.target.closest('.xl,.xchip');if(t&&t.dataset.k)select(t.dataset.k)});
 })();
 
 document.addEventListener('click',e=>{const b=e.target.closest('.revealbtn');if(!b)return;const box=b.nextElementSibling;if(!b.dataset.orig)b.dataset.orig=b.textContent;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':b.dataset.orig});

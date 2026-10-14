@@ -58,3 +58,12 @@ WEEK 7 ADD-ON (RAG on your local model)
                              python 7_rag_local.py search "When is Quiz 3 and what does it cover?"
                              python 7_rag_local.py ask "When is Quiz 3 and what does it cover?"
   Full instructions: https://xinyufu.org/cis4394-agentic-ai/week7/local.html
+
+WEEK 9 ADD-ON (your agents as chat apps)
+  Install once, at home (big download):   python -m pip install gradio
+  Download CIS4394_Week9_App_Addon.zip and unzip it INTO this folder (next to 5_demo_order_agent.py and 7_rag_local.py).
+                             python 8_app_rag.py       -> http://localhost:7860   (course Q&A chat)
+                             python 8_app_orders.py    -> http://localhost:7861   (order desk; the approval gate is a chat turn)
+                             python 8_app_router.py    -> http://localhost:7862   (one window, two agents)
+  On your phone:  LAN=1 (same Wi-Fi, open http://<laptop-ip>:port)  or  SHARE=1 (public link; anyone with it can use your agent)
+  Full instructions: https://xinyufu.org/cis4394-agentic-ai/week9/local.html

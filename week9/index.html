@@ -42,7 +42,8 @@
   <a href="../index.html">⌂ Course</a>
   <a href="patterns.html"><span class="k">01</span>Patterns</a>
   <a href="tradeoffs.html"><span class="k">02</span>The Honest Case</a>
-  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+  <a href="local.html"><span class="k">03</span>Build It Locally</a>
+  <a href="exercises.html"><span class="k">04</span>Practice &amp; Case</a>
 </div></div>
 <div class="progress"><span id="progressBar"></span></div>
 
@@ -53,7 +54,7 @@
 </div></header>
 
 <section><div class="wrap">
-  <div class="callout blue"><b>📌 This week's logistics:</b> <b>Capstone Milestone I is due this week</b> — submit on iCollege in your own section (details in the section below). <b>📝 Quiz 4 is next week</b> — in class, closed-book, 5 multiple-choice; the scope and five sample questions are at the bottom of this week's <a href="exercises.html#quiz">Practice page</a>. <b>Group Assignment 3 is in progress</b> — due Week 11. <b>Capstone Milestone II releases next week.</b></div>
+  <div class="callout blue"><b>📌 This week's logistics:</b> 💻 <b>Bring your laptop</b> — and <b>install Gradio at home before class</b> (<code>python3 -m pip install gradio</code>, 300 MB; it will not work on classroom Wi-Fi) — this week’s lab is <a href="local.html">page 03</a>. <b>Capstone Milestone I is due this week</b> — submit on iCollege in your own section (details in the section below). <b>📝 Quiz 4 is next week</b> — in class, closed-book, 5 multiple-choice; the scope and five sample questions are at the bottom of this week's <a href="exercises.html#quiz">Practice page</a>. <b>Group Assignment 3 is in progress</b> — due Week 11. <b>Capstone Milestone II releases next week.</b></div>
 </div></section>
 
 <section><div class="wrap">
@@ -109,8 +110,13 @@
       <span><b>The honest case</b><span class="small">Cognition's "Don't build multi-agents" vs LangChain's "how and when" · the MAST failure taxonomy · what multi-agent costs in tokens · a five-scenario "split or not?" decision drill · why evaluation gets harder.</span></span>
       <span class="go">→</span>
     </a>
-    <a class="navcard" href="exercises.html">
+    <a class="navcard" href="local.html">
       <span class="num">03</span>
+      <span><b>Build it locally — ship it as an app</b><span class="small">💻 Bring your laptop. Your Week 5 and Week 7 agents as chat apps in a browser · the human gate becomes state · two agents behind one supervisor · open it on your phone · what a public link does to your trust boundary.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="exercises.html">
+      <span class="num">04</span>
       <span><b>Practice &amp; case</b><span class="small">Decompose-or-not on a conference-planning agent · assign blame on a three-agent failure trace · the contradictory-memos case · interview check · readings · <b>Quiz 4 scope + 5 sample questions</b>.</span></span>
       <span class="go">→</span>
     </a>
@@ -129,12 +135,21 @@
 
 <section id="milestone"><div class="wrap">
   <div class="eyebrow">Due this week</div>
-  <h2>Capstone Milestone I</h2>
+  <h2>Capstone Milestone I — your first working agent (5 pts, individual)</h2>
+  <p class="lede">The first step after your proposal: <b>make it run.</b> Milestone I is a working demo of <b>at least one agent</b> on the task you proposed — not a plan, not slides. Submit on iCollege in your own section; the full brief is in the Milestone I dropbox.</p>
   <div class="grid2" style="align-items:start">
-    <div class="card"><span class="kicker">What it is</span><p class="small" style="margin-top:8px">Your first working capstone checkpoint: a <b>single agent</b> that runs end to end on your chosen task, plus the <b>start of an evaluation harness</b> — a handful of cases you can re-run to tell whether a change made things better or worse. Submit on iCollege in your own section; the full brief and rubric live in the Milestone I dropbox.</p></div>
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">This week's rule, applied to your capstone</span><p class="small" style="margin-top:8px"><b>Do not add a second agent to Milestone I without a written justification.</b> "It felt cleaner" is not one. The justification you owe is the test from page 02: name the subtasks, show that they can run in parallel, and say how each one is verified on its own. A single agent with well-designed tools is the correct default — and it is the baseline you will need in order to prove that a second agent helped.</p></div>
+    <div class="card"><span class="kicker">Required</span>
+      <ul style="padding-left:18px;font-size:14.5px;margin:10px 0 0;line-height:1.9">
+        <li><b>One agent that runs end to end</b> on a real input from your task, with <b>at least one real tool</b> and a <b>stop condition</b> (max-iteration guard). Code or no-code; free tiers only; no API keys in the submission.</li>
+        <li><b>A demo:</b> a 2–3 minute screen recording, or a live demo in class, showing one full run. (The chat app from <a href="local.html">page 03</a> is a good way to do this.)</li>
+        <li><b>One execution trace</b> of that run — reasoning → tool calls → observations → answer.</li>
+        <li><b>A README</b> with the exact steps to run it.</li>
+        <li><b>Half a page:</b> what works, what does not yet, and what you will do next.</li>
+      </ul></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">This week's rule, applied to your capstone</span><p class="small" style="margin-top:8px"><b>Do not add a second agent to Milestone I without a written justification.</b> "It felt cleaner" is not one. The justification you owe is on <a href="patterns.html">page 01</a>: name which of the four reasons you are buying — context isolation, permission isolation, parallel breadth, or ownership — and show the pieces can be verified on their own. A single agent with well-designed tools is the correct default, and it is the baseline you will need to prove a second agent helped.</p>
+      <p class="small" style="margin-top:10px"><b>Grading (5 pts):</b> runs on a real input 2 · tool + stop condition 1 · trace + README reproducible 1 · honest status note 1.</p></div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>Looking ahead:</b> Milestone II releases next week. If you are already sure your capstone needs a team of agents, spend this week on page 02 first — the decision drill there is exactly the argument you will have to make in writing.</div>
+  <div class="callout" style="margin-top:20px"><b>Looking ahead:</b> Milestone II releases next week. If you are already sure your capstone needs a team of agents, spend this week on <a href="tradeoffs.html">page 02</a> first — the decision drill there is exactly the argument you will have to make in writing.</div>
 </div></section>
 
 <div class="wrap pager">
