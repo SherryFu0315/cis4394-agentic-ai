@@ -81,14 +81,14 @@
 <section><div class="wrap">
   <div class="eyebrow">Where we start</div>
   <h2>Why real products split into agents — and why "two models are smarter" is not on the list</h2>
-  <p class="lede">Look at any production system that calls itself multi-agent and you will find one of four reasons for the split. None of them is intelligence. All of them are about <b>what each agent is allowed to see and touch</b>.</p>
+  <p class="lede">Look at any production system that calls itself multi-agent and you will find one of four reasons for the split. None of them is intelligence. All of them are about what each agent is allowed to see and touch.</p>
   <div style="overflow:auto"><table class="plain"><thead><tr><th>Why teams split</th><th>What it buys</th><th>You met it in</th></tr></thead><tbody>
     <tr><td><b>Context isolation</b></td><td>Each agent sees only its own job. Instructions and results for unrelated tasks stop piling into one window (context rot).</td><td>Week 3</td></tr>
     <tr><td><b>Permission isolation</b></td><td>The refund agent has no email tool; the research agent has no payment tool. A specialist cannot be talked into using a capability it does not hold.</td><td>Week 5: least privilege</td></tr>
     <tr><td><b>Parallel breadth</b></td><td>Several subtasks that do not depend on each other run at once. Faster, wider: and, per Anthropic's own numbers, roughly 15× the tokens.</td><td><a href="tradeoffs.html">Page 02</a></td></tr>
     <tr><td><b>Team ownership</b></td><td>Different teams build, test and ship different agents on their own schedules, with a contract between them.</td><td>Week 6: A2A</td></tr>
   </tbody></table></div>
-  <div class="callout blue" style="margin-top:16px"><b>So the rule this week is not "don't."</b> It is: <b>one agent with good tools is the default; split when you can name which of the four you are buying, and show the pieces can be verified on their own.</b> On <a href="local.html">page 03</a> you build the smallest honest version — two local agents behind one supervisor — and watch both the benefit (isolation by construction) and the cost (a coordination failure in three messages).</div>
+  <div class="callout blue" style="margin-top:16px">So the rule this week is not "don't." It is: one agent with good tools is the default; split when you can name which of the four you are buying, and show the pieces can be verified on their own. On <a href="local.html">page 03</a> you build the smallest honest version — two local agents behind one supervisor — and watch both the benefit (isolation by construction) and the cost (a coordination failure in three messages).</div>
 </div></section>
 
 <section><div class="wrap">
@@ -129,7 +129,7 @@
           <g><rect x="30" y="170" width="116" height="46" rx="10"/><text x="88" y="198" text-anchor="middle">worker A</text></g>
           <g><rect x="172" y="170" width="116" height="46" rx="10"/><text x="230" y="198" text-anchor="middle">worker B</text></g>
           <g><rect x="314" y="170" width="116" height="46" rx="10"/><text x="372" y="198" text-anchor="middle">worker C</text></g>
-          <text class="tiny" x="230" y="248" text-anchor="middle">workers never talk to each other — every result returns to the supervisor</text>
+          <text class="tiny" x="230" y="248" text-anchor="middle">workers never talk to each other; every result returns to the supervisor</text>
           <text class="tiny" x="230" y="268" text-anchor="middle">3 channels, not 6 · each worker gets its own clean context window</text>
         </g>
         <g id="tpNetwork" style="display:none">
@@ -165,7 +165,7 @@
     </div>
     <div class="toponote" id="tpNote"></div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>Notice what is missing from all four pictures:</b> the arrows do not say <em>what</em> crosses them. That payload — the hand-off contract — is where multi-agent systems succeed or fail, and it is the subject of the next section.</div>
+  <div class="callout" style="margin-top:20px">Notice what is missing from all four pictures: the arrows do not say <em>what</em> crosses them. That payload — the hand-off contract — is where multi-agent systems succeed or fail, and it is the subject of the next section.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -174,13 +174,13 @@
   <p class="lede">Anthropic published how they built the multi-agent research system behind Claude's Research feature. It is the orchestrator-worker pattern, and the write-up is unusually honest about what it cost.</p>
   <div class="grid2" style="align-items:start">
     <div class="card"><span class="kicker">The architecture, as described</span>
-      <p class="small" style="margin-top:8px">A <b>lead agent</b> receives the user's query, thinks about how to approach it, and <b>spawns subagents that search in parallel</b>. Each subagent works in its own context window with its own tools, then returns findings to the lead, which decides whether to spawn more, and finally synthesizes an answer. The subagents do not talk to each other — a deliberate restriction, exactly the <em>n−1 channels</em> point from the week's home page.</p>
+      <p class="small" style="margin-top:8px">A <b>lead agent</b> receives the user's query, thinks about how to approach it, and <b>spawns subagents that search in parallel</b>. Each subagent works in its own context window with its own tools, then returns findings to the lead, which decides whether to spawn more, and finally synthesizes an answer. The subagents do not talk to each other, a deliberate restriction, exactly the <em>n−1 channels</em> point from the week's home page.</p>
       <p class="small">Why the pattern fits: open-ended research is <b>breadth-first</b>. "What are the board members of the top five companies in X?" is genuinely four or five independent lookups, each verifiable on its own. That is the canonical shape.</p>
       <p class="small"><a class="doc" href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener">Anthropic Engineering — How we built our multi-agent research system ↗</a> (this week's reading)</p>
     </div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">The cost, as reported</span>
-      <p class="small" style="margin-top:8px">Anthropic reports that the multi-agent system used roughly <b>15× more tokens</b> than a chat interaction, and that it outperformed a single-agent baseline on their internal research evaluation by about <b>90%</b>. Both figures are as reported in their engineering post and are approximate — do not quote them as general laws of multi-agent systems. They describe <em>one</em> system on <em>one</em> internal eval.</p>
-      <p class="small">The right lesson is not "multi-agent is 15× worse" or "multi-agent is 90% better". It is: <b>the value must be large enough to survive the multiplier</b>. Anthropic's own framing is that this only makes sense for tasks valuable enough to justify the spend. Most CRUD-shaped agent work is not.</p>
+      <p class="small" style="margin-top:8px">Anthropic reports that the multi-agent system used roughly <b>15× more tokens</b> than a chat interaction, and that it outperformed a single-agent baseline on their internal research evaluation by about <b>90%</b>. Both figures are as reported in their engineering post and are approximate; do not quote them as general laws of multi-agent systems. They describe <em>one</em> system on <em>one</em> internal eval.</p>
+      <p class="small">The right lesson is not "multi-agent is 15× worse" or "multi-agent is 90% better". It is: the value must be large enough to survive the multiplier. Anthropic's own framing is that this only makes sense for tasks valuable enough to justify the spend. Most CRUD-shaped agent work is not.</p>
     </div>
   </div>
 </div></section>
@@ -191,18 +191,18 @@
   <p class="lede">Two agents can be connected in exactly two ways, and choosing between them is a bigger decision than choosing the topology.</p>
   <div class="grid2" style="align-items:start">
     <div class="card"><span class="kicker">Shared state</span>
-      <p class="small" style="margin-top:8px">Both agents read and write the same object — a plan, a draft, a scratchpad, a LangGraph state dict. Nothing is "sent"; changes are simply visible.</p>
-      <p class="small"><b>Buys:</b> no information is lost in translation; agents cannot hold contradictory pictures of a shared field.<br /><b>Costs:</b> the classic concurrency problems arrive with it — two agents editing the same field, last-write-wins, and an ever-growing shared blob that every agent must now read (which is the context problem you were trying to escape).</p>
+      <p class="small" style="margin-top:8px">Both agents read and write the same object: a plan, a draft, a scratchpad, a LangGraph state dict. Nothing is "sent"; changes are simply visible.</p>
+      <p class="small"><b>Buys:</b> no information is lost in translation; agents cannot hold contradictory pictures of a shared field.<br /><b>Costs:</b> the classic concurrency problems arrive with it: two agents editing the same field, last-write-wins, and an ever-growing shared blob that every agent must now read (which is the context problem you were trying to escape).</p>
     </div>
     <div class="card"><span class="kicker">Messages / hand-offs</span>
       <p class="small" style="margin-top:8px">Agent A finishes and passes a payload to agent B. B's context contains only what A chose to send.</p>
       <p class="small"><b>Buys:</b> clean, small contexts and clear boundaries. Each agent's window holds one job.<br /><b>Costs:</b> whatever A did not put in the payload is <em>gone</em>. B re-derives it, guesses it, or silently works from a different assumption. This is <b>context fragmentation</b>, and it is the single most common cause of confidently contradictory multi-agent output.</p>
     </div>
   </div>
-  <div class="callout blue" style="margin-top:20px"><b>Context isolation is a feature, not an accident.</b> In Week 3 you measured what happens when one window carries too much: retrieval degrades, earlier instructions decay, and the model starts answering the wrong question — <a href="../week3/context.html">context rot</a>. Giving a subagent a clean window for one narrow job is a direct fix for that. The trade is exact and worth memorizing: <b>isolation cures context rot and causes context fragmentation.</b> Every hand-off design is you choosing where on that line to sit.</div>
+  <div class="callout blue" style="margin-top:20px">Context isolation is a feature, not an accident. In Week 3 you measured what happens when one window carries too much: retrieval degrades, earlier instructions decay, and the model starts answering the wrong question — <a href="../week3/context.html">context rot</a>. Giving a subagent a clean window for one narrow job is a direct fix for that. The trade is exact and worth memorizing: isolation cures context rot and causes context fragmentation. Each hand-off design picks a point on that line.</div>
   <div class="grid2" style="align-items:start;margin-top:20px">
     <div>
-      <p class="small"><b>Write the hand-off contract before you write the agent.</b> A payload that reliably survives a hand-off names all four of these — anything left implicit is a bug waiting for production.</p>
+      <p class="small">Write the hand-off contract before you write the agent. A payload that reliably survives a hand-off names all four of these; anything left implicit is a bug waiting for production.</p>
       <div class="codebox"><span class="cm"># the hand-off contract, as a schema</span>
 {
   <span class="cs">"task"</span>:        <span class="cm"># what B must do, restated in full —</span>
@@ -216,7 +216,7 @@
 }</div>
     </div>
     <div class="card"><span class="kicker">The instruction-decay failure</span>
-      <p class="small" style="margin-top:8px">The user says "keep it under 400 words and cite every claim." The supervisor passes the topic to a writer but not the word limit. The writer produces 900 excellent words. A formatter agent trims to 400 by deleting the citations — the only instruction <em>it</em> was given was the length.</p>
+      <p class="small" style="margin-top:8px">The user says "keep it under 400 words and cite every claim." The supervisor passes the topic to a writer but not the word limit. The writer produces 900 excellent words. A formatter agent trims to 400 by deleting the citations. The only instruction <em>it</em> was given was the length.</p>
       <p class="small">No agent malfunctioned. Every agent did its job correctly on the input it received. The system still violated the user's requirement, because the requirement was never in the payload. That is a <b>specification and design</b> failure in the MAST taxonomy (Cemri et al., 2025), and you will meet it again on page 02.</p>
     </div>
   </div>
@@ -227,11 +227,11 @@
   <h2>Orchestration patterns that survive production</h2>
   <div class="grid2" style="align-items:start">
     <div class="card"><h3>From Chaos to Choreography (AI Engineer, 26m28s)</h3>
-      <p class="small">Sandipan Bhaumik surveys the orchestration patterns that hold up in real deployments and the ones that quietly fall over — the same four shapes you just clicked through, argued from production experience.</p>
+      <p class="small">Sandipan Bhaumik surveys the orchestration patterns that hold up in real deployments and the ones that quietly fall over: the same four shapes you just clicked through, argued from production experience.</p>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/2czYyrTzILg" title="From Chaos to Choreography: Multi-Agent Orchestration Patterns That Actually Work" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
     </div>
     <div class="card"><h3>Fully local multi-agent systems with LangGraph (LangChain, 13m14s)</h3>
-      <p class="small">The vendor-official walkthrough, in the framework introduced at the top of this page. Watch specifically for where the graph decides routing — in LangGraph, "which agent goes next" is just another conditional edge.</p>
+      <p class="small">The vendor-official walkthrough, in the framework introduced at the top of this page. Watch specifically for where the graph decides routing: in LangGraph, "which agent goes next" is just another conditional edge.</p>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/4oC1ZKa9-Hs" title="Fully local multi-agent systems with LangGraph" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
     </div>
   </div>
@@ -245,9 +245,9 @@
     <table>
       <tr><th>Framework</th><th>Its vocabulary</th><th>Where control flow lives</th><th>What it is good at</th></tr>
       <tr><td><b>LangGraph</b><br /><a class="doc" href="https://github.com/langchain-ai/langgraph" target="_blank" rel="noopener">repo ↗</a></td><td>State, nodes, edges: agents are nodes, hand-offs are edges</td><td><b>Explicitly yours.</b> The graph is the org chart; routing is a conditional edge you wrote (Week 4).</td><td>Auditable control flow, loops with guards, teams that need to show an auditor the diagram.</td></tr>
-      <tr><td><b>crewAI</b><br />(this week's course)</td><td>Agents with roles and goals, tasks, crews, processes (sequential or hierarchical)</td><td>In the crew configuration — you declare roles and a process, the library runs it.</td><td>Getting a role-based team running quickly; the clearest on-ramp to the mental model.</td></tr>
+      <tr><td><b>crewAI</b><br />(this week's course)</td><td>Agents with roles and goals, tasks, crews, processes (sequential or hierarchical)</td><td>In the crew configuration: you declare roles and a process, the library runs it.</td><td>Getting a role-based team running quickly; the clearest on-ramp to the mental model.</td></tr>
       <tr><td><b>AutoGen</b><br />(Wu et al., 2023 · <a class="doc" href="https://arxiv.org/abs/2308.08155" target="_blank" rel="noopener">arXiv:2308.08155</a>)</td><td>Conversable agents exchanging messages; group chat with a chat manager</td><td>In the <b>conversation</b>: agents talk, and the message protocol drives the work.</td><td>Agent-to-agent messaging as the primitive; human-in-the-loop configurations. <a class="doc" href="https://github.com/microsoft/autogen" target="_blank" rel="noopener">repo ↗</a></td></tr>
-      <tr><td><b>MetaGPT</b><br />(Hong et al., 2023 · <a class="doc" href="https://arxiv.org/abs/2308.00352" target="_blank" rel="noopener">arXiv:2308.00352</a>)</td><td>Roles from a software company (PM, architect, engineer) with standardized operating procedures</td><td>In the encoded <b>SOP</b>: the procedure constrains what each role may produce and hand on.</td><td>Its argument is worth the read on its own — structured, standardized hand-off artifacts as a defense against cascading errors.</td></tr>
+      <tr><td><b>MetaGPT</b><br />(Hong et al., 2023 · <a class="doc" href="https://arxiv.org/abs/2308.00352" target="_blank" rel="noopener">arXiv:2308.00352</a>)</td><td>Roles from a software company (PM, architect, engineer) with standardized operating procedures</td><td>In the encoded <b>SOP</b>: the procedure constrains what each role may produce and hand on.</td><td>Its argument is worth the read on its own: structured, standardized hand-off artifacts as a defense against cascading errors.</td></tr>
     </table>
   </div>
   <div class="callout" style="margin-top:18px"><b>The MetaGPT idea, stated plainly:</b> if free-form hand-offs are where multi-agent systems lose information, then constrain the hand-off to a <em>standard artifact</em> — a spec document, a design doc, a typed record — instead of a paragraph of prose. That is the same instinct as the hand-off contract above, and the same instinct as a schema on a tool call in Week 5.</div>

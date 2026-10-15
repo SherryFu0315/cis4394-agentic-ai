@@ -54,14 +54,14 @@
 </div></header>
 
 <section><div class="wrap">
-  <div class="callout blue"><b>📌 This week's logistics:</b> 💻 <b>Bring your laptop</b>, and <b>install Gradio at home before class</b> (<code>python3 -m pip install gradio</code>, 300 MB; it will not work on classroom Wi-Fi). This week’s lab is <a href="local.html">page 03</a>. <b>Capstone Milestone I is due this week</b> — submit on iCollege in your own section (details in the section below). <b>📝 Quiz 4 is next week</b> — in class, closed-book, 5 multiple-choice; the scope and five sample questions are at the bottom of this week's <a href="exercises.html#quiz">Practice page</a>. <b>Group Assignment 3 is in progress</b> — due Week 11. <b>Capstone Milestone II releases next week.</b></div>
+  <div class="callout blue"><b>📌 This week's logistics:</b> 💻 <b>Bring your laptop</b>, and <b>install Gradio at home before class</b> (<code>python3 -m pip install gradio</code>, 300 MB; it will not work on classroom Wi-Fi). This week’s lab is <a href="local.html">page 03</a>. Capstone Milestone I is due this week. Submit on iCollege in your own section (details in the section below). <b>📝 Quiz 4 is next week: in class, closed-book, 5 multiple-choice; the scope and five sample questions are at the bottom of this week's <a href="exercises.html#quiz">Practice page</a>. <b>Group Assignment 3 is in progress, due Week 11. <b>Capstone Milestone II releases next week.</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">The big question</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your agent is overloaded: too many tools, a context window stuffed with three jobs' worth of instructions, and results that drift. Is the right move to split it into four agents?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">Only if the work actually <b>decomposes</b>. Ask one question, not "how many agents": <b>can this task be cut into subtasks that run in parallel and can each be verified on their own?</b> If yes — breadth-first research, four independent searches, four checkable answers — splitting buys you real parallelism and clean context per worker. If the subtasks form one dependent chain, or if they all read and write the same evolving artifact, splitting buys you nothing and costs you a great deal: every hand-off is a place for context to be dropped, and every agent is another full model call. "My agent is overloaded" is often a <em>context engineering</em> problem (Week 3) or a <em>tool design</em> problem (Week 5) wearing an org-chart costume.</div>
+  <div class="revealbox">Only if the work actually <b>decomposes</b>. Ask one question, not "how many agents": can this task be cut into subtasks that run in parallel and can each be verified on their own? If yes — breadth-first research, four independent searches, four checkable answers — splitting buys you real parallelism and clean context per worker. If the subtasks form one dependent chain, or if they all read and write the same evolving artifact, splitting buys you nothing and costs you a great deal: every hand-off is a place for context to be dropped, and every agent is another full model call. "My agent is overloaded" is often a <em>context engineering</em> problem (Week 3) or a <em>tool design</em> problem (Week 5) wearing an org-chart costume.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -91,7 +91,7 @@
         <div class="lkcount" id="lkCount" style="margin-top:6px">—</div>
         <p class="small" id="lkNote" style="margin-top:10px">Pick a team size.</p>
       </div>
-      <div class="callout blue" style="margin-top:14px"><b>Read this honestly.</b> n(n−1)/2 is the <em>upper bound</em> — the number of pairs. A supervisor design deliberately refuses most of those links: workers talk only to the supervisor, so you are back to n−1 channels. That restriction <em>is</em> the design. Topologies are not decoration; they are how you choose which relationships are allowed to exist.</div>
+      <div class="callout blue" style="margin-top:14px"><b>Read this honestly.</b> n(n−1)/2 is the <em>upper bound, the number of pairs. A supervisor design deliberately refuses most of those links: workers talk only to the supervisor, so you are back to n−1 channels. That restriction <em>is</em> the design. A topology is a choice about which relationships are allowed to exist.</div>
     </div>
   </div>
 </div></section>
@@ -112,12 +112,12 @@
     </a>
     <a class="navcard" href="local.html">
       <span class="num">03</span>
-      <span><b>Build it locally — ship it as an app</b><span class="small">💻 Bring your laptop. Your Week 5 and Week 7 agents as chat apps in a browser · the human gate becomes state · two agents behind one supervisor · open it on your phone · what a public link does to your trust boundary.</span></span>
+      <span>Build it locally — ship it as an app<span class="small">💻 Bring your laptop. Your Week 5 and Week 7 agents as chat apps in a browser · the human gate becomes state · two agents behind one supervisor · open it on your phone · what a public link does to your trust boundary.</span></span>
       <span class="go">→</span>
     </a>
     <a class="navcard" href="exercises.html">
       <span class="num">04</span>
-      <span><b>Practice &amp; case</b><span class="small">Decompose-or-not on a conference-planning agent · assign blame on a three-agent failure trace · the contradictory-memos case · interview check · readings · <b>Quiz 4 scope + 5 sample questions</b>.</span></span>
+      <span><b>Practice &amp; case</b><span class="small">Decompose-or-not on a conference-planning agent · assign blame on a three-agent failure trace · the contradictory-memos case · interview check · readings · Quiz 4 scope + 5 sample questions.</span></span>
       <span class="go">→</span>
     </a>
   </div>
@@ -127,8 +127,8 @@
   <div class="eyebrow">Why managers care</div>
   <h2>An agent team is a hiring decision</h2>
   <div class="grid3">
-    <div class="card"><span class="kicker">Cost</span><p class="small" style="margin-top:8px">Each agent is a recurring per-run expense, not a one-time build cost. Anthropic reports that their multi-agent research system consumed roughly <b>15× the tokens</b> of a chat interaction (Anthropic Engineering, 2025 — figure as reported, approximate). Parallel search buys <em>breadth</em>, not savings. A second agent must earn that line item.</p></div>
-    <div class="card"><span class="kicker">Trust</span><p class="small" style="margin-top:8px">Two agents that disagree do not announce it — they produce two confident, incompatible outputs and let a human discover the contradiction. Your users cannot see the seam. That is a trust failure before it is a technical one.</p></div>
+    <div class="card"><span class="kicker">Cost</span><p class="small" style="margin-top:8px">Each agent is a recurring per-run expense, not a one-time build cost. Anthropic reports that their multi-agent research system consumed roughly <b>15× the tokens</b> of a chat interaction (Anthropic Engineering, 2025; figure as reported, approximate). Parallel search buys <em>breadth</em>, not savings. A second agent must earn that line item.</p></div>
+    <div class="card"><span class="kicker">Trust</span><p class="small" style="margin-top:8px">Two agents that disagree do not announce it. They produce two confident, incompatible outputs and let a human discover the contradiction. Your users cannot see the seam. That is a trust failure before it is a technical one.</p></div>
     <div class="card"><span class="kicker">Auditability</span><p class="small" style="margin-top:8px">"Why did the system do that?" has a clean answer only if every agent's trace carries the Week 2 evidence standard — <em>state before → observation → available actions → selected action → result → state after</em> — plus the hand-off payload. Budget observability <b>before</b> you add the agent.</p></div>
   </div>
 </div></section>
@@ -140,13 +140,13 @@
   <div class="grid2" style="align-items:start">
     <div class="card"><span class="kicker">Required</span>
       <ul style="padding-left:18px;font-size:14.5px;margin:10px 0 0;line-height:1.9">
-        <li><b>One agent that runs end to end</b> on a real input from your task, with <b>at least one real tool</b> and a <b>stop condition</b> (max-iteration guard). Code or no-code; free tiers only; no API keys in the submission.</li>
+        <li>One agent that runs end to end on a real input from your task, with <b>at least one real tool</b> and a <b>stop condition</b> (max-iteration guard). Code or no-code; free tiers only; no API keys in the submission.</li>
         <li><b>A demo:</b> a 2–3 minute screen recording, or a live demo in class, showing one full run. (The chat app from <a href="local.html">page 03</a> is a good way to do this.)</li>
-        <li><b>One execution trace</b> of that run — reasoning → tool calls → observations → answer.</li>
+        <li><b>One execution trace</b> of that run: reasoning → tool calls → observations → answer.</li>
         <li><b>A README</b> with the exact steps to run it.</li>
         <li><b>Half a page:</b> what works, what does not yet, and what you will do next.</li>
       </ul></div>
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">This week's rule, applied to your capstone</span><p class="small" style="margin-top:8px"><b>Do not add a second agent to Milestone I without a written justification.</b> "It felt cleaner" is not one. The justification you owe is on <a href="patterns.html">page 01</a>: name which of the four reasons you are buying — context isolation, permission isolation, parallel breadth, or ownership — and show the pieces can be verified on their own. A single agent with well-designed tools is the correct default, and it is the baseline you will need to prove a second agent helped.</p>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">This week's rule, applied to your capstone</span><p class="small" style="margin-top:8px">Do not add a second agent to Milestone I without a written justification. "It felt cleaner" is not one. The justification you owe is on <a href="patterns.html">page 01</a>: name which of the four reasons you are buying — context isolation, permission isolation, parallel breadth, or ownership — and show the pieces can be verified on their own. A single agent with well-designed tools is the correct default, and it is the baseline you will need to prove a second agent helped.</p>
       <p class="small" style="margin-top:10px"><b>Grading (5 pts):</b> runs on a real input 2 · tool + stop condition 1 · trace + README reproducible 1 · honest status note 1.</p></div>
   </div>
   <div class="callout" style="margin-top:20px"><b>Looking ahead:</b> Milestone II releases next week. If you are already sure your capstone needs a team of agents, spend this week on <a href="tradeoffs.html">page 02</a> first. The decision drill there is exactly the argument you will have to make in writing.</div>
