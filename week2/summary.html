@@ -59,17 +59,17 @@
 <section id="answerkey"><div class="wrap">
   <div class="eyebrow">Scavenger hunt · full answer key</div>
   <h2>The nine layers, mapped to real Codex files</h2>
-  <p class="lede">Finding evidence in a 111-module repo was genuinely hard — that was part of the point. Here is the full map: one concrete file per layer, with what you’ll find inside. Remember: the repo has no folders named “Goal” or “Loop” — the nine layers are <b>our architectural interpretation</b>, not OpenAI’s official taxonomy. (Paths verified Sept 2026; this repo moves fast.)</p>
+  <p class="lede">Finding evidence in a 111-module repo was genuinely hard; that was part of the point. Here is the full map: one concrete file per layer, with what you’ll find inside. Remember: the repo has no folders named “Goal” or “Loop”; the nine layers are <b>our architectural interpretation</b>, not OpenAI’s official taxonomy. (Paths verified Sept 2026; this repo moves fast.)</p>
   <div style="overflow:auto"><table class="plain keytable"><thead><tr><th>Layer</th><th>File (click to open)</th><th>What you find there</th></tr></thead><tbody>
-    <tr><td><b>01 Goal</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/mcp-server/src/codex_tool_config.rs" target="_blank" rel="noopener"><code>mcp-server/src/codex_tool_config.rs</code></a></td><td>The goal is surprisingly thin — just “the initial user prompt to start the Codex conversation.” No GoalManager class. Persistence comes from keeping that objective in context across many actions. <b>Prompt = one message; goal = that objective across a sequence of actions.</b></td></tr>
-    <tr><td><b>02 Model / Reasoning</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/src/config/edit.rs" target="_blank" rel="noopener"><code>core/src/config/edit.rs</code></a></td><td><code>SetModel { model, effort }</code> — the model and its reasoning effort are <em>configuration</em>. The model decides what to do next; the runtime carries it out. Reasoning is a component, not the whole system.</td></tr>
-    <tr><td><b>03 Instructions</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/config/src/config_toml.rs" target="_blank" rel="noopener"><code>config/src/config_toml.rs</code></a></td><td>Instruction layers beyond your prompt: “Developer instructions inserted as a ‘developer’ role message.” <b>Goal = what outcome; instructions = how to behave while pursuing it.</b></td></tr>
-    <tr><td><b>04 Tools</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/src/tools/handlers/plan_spec.rs" target="_blank" rel="noopener"><code>core/src/tools/handlers/plan_spec.rs</code></a></td><td><code>name: "update_plan"</code> — a tool defined in code, with a schema (steps, statuses: pending / in_progress / completed) the model can see. Tools turn “input → text” into “reason → choose tool → act → observe.”</td></tr>
-    <tr><td><b>05 Environment</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/tests/suite/prompt_caching.rs" target="_blank" rel="noopener"><code>core/tests/suite/prompt_caching.rs</code></a></td><td>Codex injects environment context — the tests check for <code>&lt;cwd&gt;</code>, <code>&lt;shell&gt;</code>, <code>&lt;current_date&gt;</code>, <code>&lt;timezone&gt;</code> tags. The environment is <b>the world the agent can observe and act on</b>.</td></tr>
+    <tr><td><b>01 Goal</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/mcp-server/src/codex_tool_config.rs" target="_blank" rel="noopener"><code>mcp-server/src/codex_tool_config.rs</code></a></td><td>The goal is surprisingly thin: just “the initial user prompt to start the Codex conversation.” No GoalManager class. Persistence comes from keeping that objective in context across many actions. Prompt = one message; goal = that objective across a sequence of actions.</td></tr>
+    <tr><td><b>02 Model / Reasoning</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/src/config/edit.rs" target="_blank" rel="noopener"><code>core/src/config/edit.rs</code></a></td><td><code>SetModel { model, effort }</code>: the model and its reasoning effort are <em>configuration</em>. The model decides what to do next; the runtime carries it out. Reasoning is a component, not the whole system.</td></tr>
+    <tr><td><b>03 Instructions</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/config/src/config_toml.rs" target="_blank" rel="noopener"><code>config/src/config_toml.rs</code></a></td><td>Instruction layers beyond your prompt: “Developer instructions inserted as a ‘developer’ role message.” Goal = what outcome; instructions = how to behave while pursuing it.</td></tr>
+    <tr><td><b>04 Tools</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/src/tools/handlers/plan_spec.rs" target="_blank" rel="noopener"><code>core/src/tools/handlers/plan_spec.rs</code></a></td><td><code>name: "update_plan"</code>: a tool defined in code, with a schema (steps, statuses: pending / in_progress / completed) the model can see. Tools turn “input → text” into “reason → choose tool → act → observe.”</td></tr>
+    <tr><td><b>05 Environment</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/tests/suite/prompt_caching.rs" target="_blank" rel="noopener"><code>core/tests/suite/prompt_caching.rs</code></a></td><td>Codex injects environment context: the tests check for <code>&lt;cwd&gt;</code>, <code>&lt;shell&gt;</code>, <code>&lt;current_date&gt;</code>, <code>&lt;timezone&gt;</code> tags. The environment is the world the agent can observe and act on.</td></tr>
     <tr><td><b>06 State / Memory</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/config.schema.json" target="_blank" rel="noopener"><code>core/config.schema.json</code></a></td><td>History persists to <code>~/.codex/history.jsonl</code>, and a separate <code>memories</code> subsystem exists. Three kinds: turn state → conversation state → long-lived memory. You don’t need all three to be an agent.</td></tr>
     <tr><td><b>07 Agent Loop</b> ⭐</td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/src/session/turn.rs" target="_blank" rel="noopener"><code>core/src/session/turn.rs</code></a></td><td><b>Read this file first.</b> Its comments state the whole algorithm: if the model requests a function call, execute it and send the output back; if it sends only a message, the turn is complete. That’s the agent loop — and its stop condition — in two sentences.</td></tr>
-    <tr><td><b>08 Guardrails / HITL</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/src/exec_policy.rs" target="_blank" rel="noopener"><code>core/src/exec_policy.rs</code></a></td><td><code>Decision::Prompt → NeedsApproval</code> — policy code sits <b>between reasoning and action</b>: allow, forbid, or ask the human. Model intention ≠ execution permission. This is runtime enforcement, not a polite prompt line.</td></tr>
-    <tr><td><b>09 Evaluation</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/protocol/src/prompts/base_instructions/default.md" target="_blank" rel="noopener"><code>protocol/…/base_instructions/default.md</code></a></td><td>The base instructions tell the agent to verify its work with the project’s own tests and builds. Evaluation doesn’t need another LLM — <code>pytest</code> passing is evaluation. And a failing test <b>feeds the loop</b>: fail → observe → reason → retry.</td></tr>
+    <tr><td><b>08 Guardrails / HITL</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/src/exec_policy.rs" target="_blank" rel="noopener"><code>core/src/exec_policy.rs</code></a></td><td><code>Decision::Prompt → NeedsApproval</code>: policy code sits <b>between reasoning and action</b>: allow, forbid, or ask the human. Model intention ≠ execution permission. This is runtime enforcement, not a polite prompt line.</td></tr>
+    <tr><td><b>09 Evaluation</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/protocol/src/prompts/base_instructions/default.md" target="_blank" rel="noopener"><code>protocol/…/base_instructions/default.md</code></a></td><td>The base instructions tell the agent to verify its work with the project’s own tests and builds. Evaluation doesn’t need another LLM: <code>pytest</code> passing is evaluation. And a failing test <b>feeds the loop</b>: fail → observe → reason → retry.</td></tr>
   </tbody></table></div>
 
   <div class="card" style="margin-top:20px">
@@ -83,16 +83,16 @@
         history.append(result)                              # layer 6
     else:
         return response                                     # stop condition</div>
-    <p class="small" style="margin-top:10px">The real Rust adds streaming, cancellation, compaction, errors, parallel tools, but architecturally, <b>that is Codex</b>. The single takeaway of Week 2: <b>the LLM is only one component of the agent.</b></p>
+    <p class="small" style="margin-top:10px">The real Rust adds streaming, cancellation, compaction, errors, parallel tools, but architecturally, <b>that is Codex</b>. The single takeaway of Week 2: the LLM is only one component of the agent.</p>
   </div>
 
-  <div class="callout blue" style="margin-top:18px"><b>Want to read the repo yourself? Go in this order:</b> <code>core/src/session/turn.rs</code> (the loop) → <code>core/src/tools/</code> → <code>protocol/…/base_instructions/default.md</code> → <code>core/src/session/turn_context.rs</code> → <code>core/src/exec_policy.rs</code> → config / history / memories. Loop first, or you’ll drown in infrastructure.</div>
+  <div class="callout blue" style="margin-top:18px">Want to read the repo yourself? Go in this order: <code>core/src/session/turn.rs</code> (the loop) → <code>core/src/tools/</code> → <code>protocol/…/base_instructions/default.md</code> → <code>core/src/session/turn_context.rs</code> → <code>core/src/exec_policy.rs</code> → config / history / memories. Loop first, or you’ll drown in infrastructure.</div>
 </div></section>
 
 <section id="ga1"><div class="wrap">
   <div class="eyebrow">Action required</div>
   <h2>Join a group for Group Assignment 1</h2>
-  <p class="lede">GA1 (the Job Search Agent) is submitted <b>as a group</b>, and you must <b>self-enroll</b> in a group on iCollege — in your own section.</p>
+  <p class="lede">GA1 (the Job Search Agent) is submitted <b>as a group</b>, and you must <b>self-enroll</b> in a group on iCollege, in your own section.</p>
   <div class="grid2" style="align-items:start">
     <div class="card">
       <h3>How to enroll (2 minutes)</h3>
@@ -108,9 +108,9 @@
       <h3>The rules</h3>
       <ul style="padding-left:18px;font-size:14.5px;margin:14px 0 0;line-height:1.9">
         <li><b>1–6 members.</b> Working solo is allowed. You still must join a group (of one).</li>
-        <li><b>Join the group you mean to join.</b> Coordinate with your teammates first — don’t drop into a group of strangers, and don’t “save seats” in multiple groups.</li>
+        <li>Join the group you mean to join. Coordinate with your teammates first; don’t drop into a group of strangers, and don’t “save seats” in multiple groups.</li>
         <li><b>Your own section only.</b> Groups don’t transfer between sections.</li>
-        <li><b>Deadline:</b> GA1 is due <b>Tue Sept 15</b> (Wednesday section) / <b>Wed Sept 16</b> (Thursday section), 11:59 pm EST — enroll well before then.</li>
+        <li><b>Deadline:</b> GA1 is due <b>Tue Sept 15</b> (Wednesday section) / <b>Wed Sept 16</b> (Thursday section), 11:59 pm EST; enroll well before then.</li>
       </ul>
     </div>
   </div>
@@ -126,9 +126,9 @@
     <div class="grid2" style="align-items:start;margin-top:12px">
       <div>
         <ol class="steps">
-          <li>Use a <b>personal Gmail</b> — your GSU account is blocked from Labs. You must be 18+.</li>
+          <li>Use a <b>personal Gmail</b>; your GSU account is blocked from Labs. You must be 18+.</li>
           <li>On a computer, open <a class="doc" href="https://gemini.google.com/" target="_blank" rel="noopener">gemini.google.com ↗</a> → left sidebar → <b>Gems</b>.</li>
-          <li>Under <b>My Gems from Labs</b>, click <b>New Gem</b> — this opens the Opal editor (boxes connected by arrows; each box is a step).</li>
+          <li>Under <b>My Gems from Labs</b>, click <b>New Gem</b>; this opens the Opal editor (boxes connected by arrows; each box is a step).</li>
           <li>Paste the full starter prompt from <code>prompts/opal_starter_prompt.md</code> (starter kit).</li>
           <li>Add three inputs by pasting the files as text: <code>resume.md</code> (facts), <code>preferences.md</code> (constraints), <code>data/jobs.json</code> (jobs).</li>
           <li>Build the flow: an <b>evaluate</b> step → <b>routing</b> (recommend / investigate / down-rank / ask) → a <b>user-input step</b> for Approve / Edit / Reject → a <b>draft</b> step that only runs after approval.</li>
@@ -151,8 +151,8 @@
           <li>Paste <code>prompts/fleet_starter_prompt.md</code> into the agent <b>instructions</b>.</li>
           <li>Paste <code>resume.md</code>, <code>preferences.md</code>, and <code>data/jobs.json</code> into the agent’s <b>context</b>.</li>
           <li>In settings, require <b>approval</b> before final external-facing drafts. Do not connect email or any submission tools.</li>
-          <li>Run the four cases from the chat panel. After each run, open the <b>trace</b> — that trace view is exactly the evidence deliverable.</li>
-          <li><b>Budget:</b> free tier ≈ 5 Fleet LCUs/month and runs pause when it’s gone — plan your runs, don’t spam retries.</li>
+          <li>Run the four cases from the chat panel. After each run, open the <b>trace</b>; that trace view is exactly the evidence deliverable.</li>
+          <li><b>Budget:</b> free tier ≈ 5 Fleet LCUs/month and runs pause when it’s gone; plan your runs, don’t spam retries.</li>
         </ol>
         <p class="small" style="margin-top:10px">Illustrated official guide: <a class="doc" href="https://docs.langchain.com/langsmith/fleet" target="_blank" rel="noopener">Fleet docs ↗</a> · free hands-on course: <a class="doc" href="https://academy.langchain.com/courses/quickstart-agent-builder" target="_blank" rel="noopener">LangChain Academy ↗</a></p>
       </div>
@@ -167,7 +167,7 @@
     <h3>🅒 Code path — recommended: Google ADK</h3>
     <div class="grid2" style="align-items:start;margin-top:12px">
       <div>
-        <p class="small">For those coding GA1, we recommend Google’s <b>Agent Development Kit (ADK)</b> — an official, open-source Python framework that runs on the <b>same free Gemini API key</b> you created in Week 1, and ships a built-in dev UI with a <b>trace view</b> (instant evidence for deliverables #8–9).</p>
+        <p class="small">For those coding GA1, we recommend Google’s <b>Agent Development Kit (ADK)</b>: an official, open-source Python framework that runs on the <b>same free Gemini API key</b> you created in Week 1, and ships a built-in dev UI with a <b>trace view</b> (instant evidence for deliverables #8–9).</p>
         <div class="codebox" style="margin-top:12px">pip install google-adk
 adk create job_agent        # scaffold
 # put your GOOGLE_API_KEY in job_agent/.env
@@ -194,14 +194,14 @@ adk web                     # dev UI + traces at localhost:8000</div>
   <p class="lede"><b>Five multiple-choice questions</b>, closed-book, at the end of next week’s session. Everything comes from the assigned readings below. Read them; the quiz will feel easy.</p>
   <div class="grid2" style="align-items:start">
     <div class="readings card">
-      <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener"><b>W1 · Anthropic — Building Effective AI Agents</b><br /><span class="small">Workflows vs agents; the five workflow patterns; “simplest thing that works.”</span></a>
-      <a href="https://www.linkedin.com/learning/agentic-artificial-intelligence-harnessing-ai-agents-to-reinvent-business-work-and-life" target="_blank" rel="noopener"><b>W1 · Bornet — Agentic Artificial Intelligence (LinkedIn Learning)</b><br /><span class="small">Free with your GSU login — but sign in through the GSU portal first (next link), or you’ll hit a paywall.</span></a>
+      <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">W1 · Anthropic — Building Effective AI Agents<br /><span class="small">Workflows vs agents; the five workflow patterns; “simplest thing that works.”</span></a>
+      <a href="https://www.linkedin.com/learning/agentic-artificial-intelligence-harnessing-ai-agents-to-reinvent-business-work-and-life" target="_blank" rel="noopener">W1 · Bornet — Agentic Artificial Intelligence (LinkedIn Learning)<br /><span class="small">Free with your GSU login — but sign in through the GSU portal first (next link), or you’ll hit a paywall.</span></a>
       <a href="https://technology.gsu.edu/technology-services/technology-professional-training/linkedin-learning/" target="_blank" rel="noopener"><b>↳ GSU LinkedIn Learning portal</b><br /><span class="small">Sign in here with your CampusID once, then both LinkedIn Learning readings open free.</span></a>
       <a href="https://github.com/openai/codex/blob/main/codex-rs/core/gpt_5_2_prompt.md" target="_blank" rel="noopener"><b>W2 · Codex’s system prompt (gpt_5_2_prompt.md)</b><br /><span class="small">AGENTS.md rules, planning, task execution, validation.</span></a>
-      <a href="https://github.com/openai/openai-cookbook/blob/main/articles/codex_exec_plans.md" target="_blank" rel="noopener"><b>W2 · OpenAI Cookbook — Planning for Long-Horizon Agents</b><br /><span class="small">How Codex plans multi-step work.</span></a>
-      <a href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noopener"><b>W2 · Anthropic — Claude Code auto mode</b><br /><span class="small">Autonomy and safeguards in a competing coding agent.</span></a>
-      <a href="https://www.linkedin.com/learning/introduction-to-prompt-engineering-for-generative-ai" target="_blank" rel="noopener"><b>W3 · Sheer — Introduction to Prompt Engineering (LinkedIn Learning)</b><br /><span class="small">Via the GSU portal, same as above.</span></a>
-      <a href="https://huggingface.co/learn/agents-course/unit1/introduction" target="_blank" rel="noopener"><b>W3 · Hugging Face Agents Course — Unit 1</b><br /><span class="small">Free; what an agent is, in the HF framing.</span></a>
+      <a href="https://github.com/openai/openai-cookbook/blob/main/articles/codex_exec_plans.md" target="_blank" rel="noopener">W2 · OpenAI Cookbook — Planning for Long-Horizon Agents<br /><span class="small">How Codex plans multi-step work.</span></a>
+      <a href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noopener">W2 · Anthropic — Claude Code auto mode<br /><span class="small">Autonomy and safeguards in a competing coding agent.</span></a>
+      <a href="https://www.linkedin.com/learning/introduction-to-prompt-engineering-for-generative-ai" target="_blank" rel="noopener">W3 · Sheer — Introduction to Prompt Engineering (LinkedIn Learning)<br /><span class="small">Via the GSU portal, same as above.</span></a>
+      <a href="https://huggingface.co/learn/agents-course/unit1/introduction" target="_blank" rel="noopener">W3 · Hugging Face Agents Course — Unit 1<br /><span class="small">Free; what an agent is, in the HF framing.</span></a>
     </div>
     <div>
       <div class="card"><h3>Five sample questions</h3><p class="small">Same style and difficulty as the real thing. Try before revealing.</p>
@@ -213,7 +213,7 @@ adk web                     # dev UI + traces at localhost:8000</div>
 
 <div class="wrap pager">
   <a href="index.html"><span class="lab">← Back</span><b>Week 2 home</b></a>
-  <a href="build.html" class="next"><span class="lab">Keep building →</span><b>03 · Build the Job Search Agent</b></a>
+  <a href="build.html" class="next"><span class="lab">Keep building →</span>03 · Build the Job Search Agent</a>
 </div>
 
 <footer class="footer"><div class="wrap">

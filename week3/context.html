@@ -53,7 +53,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">03 · The 2026 core skill</div>
   <h1>Context <em>engineering</em>.</h1>
-  <p class="lede"><b>Prompting is what you say; context engineering is everything the model can see.</b> As agents got longer-running, deciding what fills the context window — instructions, retrieved documents, examples, tool outputs, history — and in what order became its own discipline (Mei et al., 2025; Anthropic, 2025).</p>
+  <p class="lede">Prompting is what you say; context engineering is everything the model can see. As agents got longer-running, deciding what fills the context window — instructions, retrieved documents, examples, tool outputs, history — and in what order became its own discipline (Mei et al., 2025; Anthropic, 2025).</p>
 </div></header>
 
 <section><div class="wrap">
@@ -62,9 +62,9 @@
   <div class="grid2" style="align-items:start">
     <div class="card"><p class="small">A <b>token</b> is roughly ¾ of an English word. The <b>context window</b> is the fixed number of tokens the model can attend to per call, and <em>everything</em> competes for it: the system prompt, conversation history, retrieved data, the current question, and room for the answer itself.</p>
     <p class="small" style="margin-top:8px">HF Agents Course tie-in (this week’s reading): context is the agent’s <b>working memory</b>. And like any working memory: more is not better.</p></div>
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Context rot</span><p class="small" style="margin-top:8px">As the window fills with long or noisy input, accuracy and instruction-following <b>degrade</b>: models “lose the middle,” forget rules stated early, and drift — documented across 2024–25 long-context evaluations, including Chroma’s <i>Context Rot</i> report (2025).</p><p class="small" style="margin-top:8px"><b>Practical rule:</b> put the most important instructions first <em>and</em> last, and test at the lengths you’ll run.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Context rot</span><p class="small" style="margin-top:8px">As the window fills with long or noisy input, accuracy and instruction-following <b>degrade</b>: models “lose the middle,” forget rules stated early, and drift, documented across 2024–25 long-context evaluations, including Chroma’s <i>Context Rot</i> report (2025).</p><p class="small" style="margin-top:8px"><b>Practical rule:</b> put the most important instructions first <em>and</em> last, and test at the lengths you’ll run.</p></div>
   </div>
-  <div class="callout blue" style="margin-top:20px"><b>Curation over accumulation:</b> include what’s relevant, exclude the rest — top-k retrieval instead of the whole manual (RAG preview, Week 7), summarize old history, drop stale turns. The anti-pattern: dumping everything into every call “just in case.”</div>
+  <div class="callout blue" style="margin-top:20px"><b>Curation over accumulation:</b> include what’s relevant, exclude the rest: top-k retrieval instead of the whole manual (RAG preview, Week 7), summarize old history, drop stale turns. The anti-pattern: dumping everything into every call “just in case.”</div>
 </div></section>
 
 <section><div class="wrap">
@@ -78,11 +78,11 @@
   <div class="eyebrow">News hook · 2026</div>
   <h2>Even Anthropic cut 80% of Claude Code’s system prompt</h2>
   <div class="grid2" style="align-items:start">
-    <div class="card"><p class="small">Anthropic engineer Thariq Shihipar reported removing <b>over 80%</b> of <b>Claude Code’s</b> system prompt for Claude 5–generation models — with <b>no measurable loss on coding evals</b> (Cat Wu &amp; Thariq Shihipar, Claude Code team, interviewed at the AI Engineer World’s Fair, July 2026). What got cut: examples (“it was just more creative than the examples we gave it”), “do not do this” rules, and absolute instructions that were only 90% true.</p>
+    <div class="card"><p class="small">Anthropic engineer Thariq Shihipar reported removing <b>over 80%</b> of <b>Claude Code’s</b> system prompt for Claude 5–generation models, with <b>no measurable loss on coding evals</b> (Cat Wu &amp; Thariq Shihipar, Claude Code team, interviewed at the AI Engineer World’s Fair, July 2026). What got cut: examples (“it was just more creative than the examples we gave it”), “do not do this” rules, and absolute instructions that were only 90% true.</p>
     <p class="small" style="margin-top:8px"><b>Read it carefully:</b> this is a <em>capability-driven simplification</em> — “the model got better, so the prompt could get shorter.” It is NOT “prompts don’t matter.” And it’s Claude Code’s prompt (the CLI coding agent), not the Claude.ai app — older models kept the full prompt. Viral restatements over-generalize; cite the primary interview.</p>
     <p class="small" style="margin-top:8px"><a class="doc" href="https://simonwillison.net/2026/Jul/21/cat-and-thariq/" target="_blank" rel="noopener">The interview write-up (Simon Willison, Jul 2026) ↗</a> &nbsp;·&nbsp; <a class="doc" href="https://the-decoder.com/anthropic-says-it-cut-80-percent-of-claude-codes-system-prompt-because-fable-5-models-want-a-smaller-system-prompt/" target="_blank" rel="noopener">News coverage (The Decoder) ↗</a></p></div>
     <div class="card" style="background:#101319;border-color:#101319"><div style="font-size:clamp(40px,4.5vw,60px);font-weight:700;color:#fff">&gt;80%</div><p class="small" style="color:#b9bdc7">of the system prompt removed, no measurable eval loss, as reported, 2026.</p>
-    <p class="small" style="color:#b9bdc7;margin-top:10px"><b style="color:#fff">Three takeaways for your prompts:</b><br />1 · Less can beat more.<br />2 · Match scaffolding to capability — don’t over-constrain a strong model.<br />3 · Curate, don’t stuff — context rot is real.</p></div>
+    <p class="small" style="color:#b9bdc7;margin-top:10px"><b style="color:#fff">Three takeaways for your prompts:</b><br />1 · Less can beat more.<br />2 · Match scaffolding to capability: don’t over-constrain a strong model.<br />3 · Curate, don’t stuff; context rot is real.</p></div>
   </div>
 </div></section>
 

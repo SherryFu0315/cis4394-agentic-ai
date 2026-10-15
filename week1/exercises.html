@@ -47,7 +47,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Exercise A</div>
   <h2>Classify the scenario</h2>
-  <p class="lede">For each business scenario, pick the <b>lowest</b> level that genuinely solves it: rules (no LLM), a single LLM call, a workflow, or an agent. Answers are “suggested” — in the debrief, your reasoning counts more than the label.</p>
+  <p class="lede">For each business scenario, pick the <b>lowest</b> level that genuinely solves it: rules (no LLM), a single LLM call, a workflow, or an agent. Answers are “suggested”; in the debrief, your reasoning counts more than the label.</p>
   <div id="quizA"></div>
   <div class="scoreline" id="scoreA"></div>
 </div></section>
@@ -55,7 +55,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Exercise B</div>
   <h2>Trace the loop by hand</h2>
-  <p class="lede">Task: <b>“Book a room for 6 people next Tuesday afternoon.”</b> On paper (or in your notes), write the observe → reason → act → observe trace. Mark the <b>stop condition</b> and where a <b>human gate</b> belongs. Then compare.</p>
+  <p class="lede">Task: “Book a room for 6 people next Tuesday afternoon.” On paper (or in your notes), write the observe → reason → act → observe trace. Mark the <b>stop condition</b> and where a <b>human gate</b> belongs. Then compare.</p>
   <div class="card">
     <button class="revealbtn" data-target="exbAnswer">Reveal an annotated trace</button>
     <div class="revealbox" id="exbAnswer">
@@ -78,7 +78,7 @@ STOP ✓   a confirmed booking exists  ← the stop condition</div>
   <div class="eyebrow">Hands-on</div>
   <h2>Your toolchain — three pieces, all free</h2>
   <div class="grid3">
-    <div class="card"><span class="kicker">Step 1</span><h3 style="margin-top:6px">Gemini free API key</h3><p class="small">Google AI Studio → create API key. No billing required; free-tier rate limits are fine for class. <b>Keep it secret</b> — never commit it to a repo. Already have an old Gemini key? Create a fresh one for this course.</p><p class="small" style="margin-top:6px"><b>Update, Week 5:</b> the course now runs its agents on a local model via Ollama, so this key is optional. It stays useful for the GA1 ADK path and as a free cloud fallback.</p><a class="doc" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey ↗</a></div>
+    <div class="card"><span class="kicker">Step 1</span><h3 style="margin-top:6px">Gemini free API key</h3><p class="small">Google AI Studio → create API key. No billing required; free-tier rate limits are fine for class. <b>Keep it secret</b>: never commit it to a repo. Already have an old Gemini key? Create a fresh one for this course.</p><p class="small" style="margin-top:6px"><b>Update, Week 5:</b> the course now runs its agents on a local model via Ollama, so this key is optional. It stays useful for the GA1 ADK path and as a free cloud fallback.</p><a class="doc" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey ↗</a></div>
     <div class="card"><span class="kicker">Step 2</span><h3 style="margin-top:6px">GitHub Copilot</h3><p class="small">The free plan includes agent mode; verified students get Copilot Pro via the Student Developer Pack. Enable it in VS Code.</p><a class="doc" href="https://education.github.com/pack" target="_blank" rel="noopener">Student Developer Pack ↗</a></div>
     <div class="card"><span class="kicker">Step 3</span><h3 style="margin-top:6px">Hello, agent</h3><p class="small">A minimal loop: model, one tool, stop condition:</p>
       <div class="codebox" style="margin-bottom:0">while not done:
@@ -89,7 +89,7 @@ STOP ✓   a confirmed booking exists  ← the stop condition</div>
     done    = stop_condition(result)</div>
     </div>
   </div>
-  <div class="callout"><b>Expect it to work ~most of the time.</b> That gap between “demo” and “dependable” is not your bug. It is the field’s central open problem, and it is where this course spends Weeks 8–10.</div>
+  <div class="callout">Expect it to work ~most of the time. That gap between “demo” and “dependable” is the field’s central open problem, not your bug, and it is where this course spends Weeks 8–10.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -99,13 +99,13 @@ STOP ✓   a confirmed booking exists  ← the stop condition</div>
     <div class="card checklist"><h3>Do</h3>
       <label><input type="checkbox" /> Read Anthropic, <a class="doc" href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener"><i>Building Effective AI Agents</i> ↗</a> — free, no login. The workflow-vs-agent distinction and the five patterns come from here.</label>
       <label><input type="checkbox" /> Watch Bornet, <a class="doc" href="https://www.linkedin.com/learning/agentic-artificial-intelligence-harnessing-ai-agents-to-reinvent-business-work-and-life" target="_blank" rel="noopener"><i>Agentic Artificial Intelligence</i> ↗</a> (LinkedIn Learning) — free with GSU login, but enter through <a class="doc" href="https://technology.gsu.edu/technology-services/technology-professional-training/linkedin-learning/" target="_blank" rel="noopener">the GSU portal ↗</a> first and sign in with your CampusID; going to linkedin.com directly shows a paywall.</label>
-      <label><input type="checkbox" /> Sign up for <b>Agent Radar</b> on iCollege — student news briefings start Week 2</label>
+      <label><input type="checkbox" /> Sign up for <b>Agent Radar</b> on iCollege; student news briefings start Week 2</label>
       <label><input type="checkbox" /> Set up Copilot + run the hello-agent (the Gemini key is optional from Week 5 on)</label>
-      <label><input type="checkbox" /> Start thinking about your capstone — browse the Spring 2026 student project demos on iCollege for ideas, and start your one-page agent spec</label>
+      <label><input type="checkbox" /> Start thinking about your capstone: browse the Spring 2026 student project demos on iCollege for ideas, and start your one-page agent spec</label>
     </div>
-    <div class="card"><h3>Coming up</h3><p class="small"><b>Week 2: Learning from the Best: Unpacking Coding Agents.</b> We reverse-engineer Codex, apply the lens to Claude Code, and build a Job Search Agent three ways. Agent Radar begins (student news briefings). GA1 releases.</p><a class="doc" href="../week2/index.html">Go to the Week 2 site →</a></div>
+    <div class="card"><h3>Coming up</h3><p class="small">Week 2: Learning from the Best: Unpacking Coding Agents. We reverse-engineer Codex, apply the lens to Claude Code, and build a Job Search Agent three ways. Agent Radar begins (student news briefings). GA1 releases.</p><a class="doc" href="../week2/index.html">Go to the Week 2 site →</a></div>
   </div>
-  <div class="callout blue" style="margin-top:20px"><b>🎯 Take it to your final project:</b> your capstone must be a <em>real agent</em> — the LLM owns control flow — with a named stop condition and one human gate. Write the one-line justification now: “This must be an agent, not a workflow, because …”</div>
+  <div class="callout blue" style="margin-top:20px">🎯 Take it to your final project: your capstone must be a <em>real agent</em> — the LLM owns control flow — with a named stop condition and one human gate. Write the one-line justification now: “This must be an agent, not a workflow, because …”</div>
 </div></section>
 
 <section><div class="wrap">
@@ -120,17 +120,17 @@ STOP ✓   a confirmed booking exists  ← the stop condition</div>
   <h2>Week 1 in five lines</h2>
   <ol style="padding-left:22px;font-size:16px;line-height:2">
     <li>An LLM predicts tokens; an <b>agent</b> wraps it with tools, a loop, and memory so it can act.</li>
-    <li>The distinction that matters: <b>who owns control flow</b> — a developer (workflow) or the model at runtime (agent).</li>
+    <li>The distinction that matters: <b>who owns control flow</b>: a developer (workflow) or the model at runtime (agent).</li>
     <li>Autonomy is a dial; choose the <b>lowest level that solves the problem</b>.</li>
-    <li>Enterprises adopted AI everywhere but profit thinly — agents are the bet to close that gap, and reliability is the obstacle.</li>
+    <li>Enterprises adopted AI everywhere but profit thinly; agents are the bet to close that gap, and reliability is the obstacle.</li>
     <li>Every real agent needs a <b>stop condition</b>, a <b>human gate</b>, and an honest <b>evaluation</b>.</li>
   </ol>
-  <div class="callout" style="margin-top:22px"><b>Next week:</b> Learning from the Best — Unpacking Coding Agents. We reverse-engineer <b>Codex</b>, apply the same lens to Claude Code, and start building the Job Search Agent (GA1 releases).<br /><br />
+  <div class="callout" style="margin-top:22px"><b>Next week:</b> Learning from the Best: Unpacking Coding Agents. We reverse-engineer <b>Codex</b>, apply the same lens to Claude Code, and start building the Job Search Agent (GA1 releases).<br /><br />
   <b>Week 2 readings:</b><br />
   · <a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/gpt_5_2_prompt.md" target="_blank" rel="noopener">Codex’s real system prompt — gpt_5_2_prompt.md ↗</a><br />
   · <a class="doc" href="https://github.com/openai/openai-cookbook/blob/main/articles/codex_exec_plans.md" target="_blank" rel="noopener">OpenAI Cookbook — Planning for Long-Horizon Agents ↗</a><br />
   · <a class="doc" href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noopener">Anthropic — Claude Code auto mode ↗</a><br />
-  Read them with Week 1’s question in mind — who owns control flow? — and start on the <a class="doc" href="../week2/prep.html">Week 2 prep page</a>.</div>
+  Read them with Week 1’s question in mind: who owns control flow? Then start on the <a class="doc" href="../week2/prep.html">Week 2 prep page</a>.</div>
 </div></section>
 
 <div class="wrap pager">

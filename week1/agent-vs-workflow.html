@@ -49,7 +49,7 @@
   <h2>Precise, with one example each</h2>
   <div class="grid3">
     <div class="card"><span class="kicker">Chatbot</span><h3 style="margin-top:6px">Responds</h3><p class="small">Generates a reply to a message. Control flow: one turn, then back to the human.</p><p class="small"><b>Example:</b> a support FAQ bot that answers “What’s your return policy?”</p></div>
-    <div class="card"><span class="kicker">Workflow</span><h3 style="margin-top:6px">Follows a path</h3><p class="small">LLM calls arranged along a <b>predefined code path</b> — steps and routing written by a developer.</p><p class="small"><b>Example:</b> classify ticket → look up account → draft reply from template.</p></div>
+    <div class="card"><span class="kicker">Workflow</span><h3 style="margin-top:6px">Follows a path</h3><p class="small">LLM calls arranged along a <b>predefined code path</b>: steps and routing written by a developer.</p><p class="small"><b>Example:</b> classify ticket → look up account → draft reply from template.</p></div>
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Agent</span><h3 style="margin-top:6px">Directs its own process</h3><p class="small">The <b>LLM owns the control flow</b>: it decides the next action from observations and state, acts, and continues until a stop condition.</p><p class="small"><b>Example:</b> “find and book the best venue”, which searches, calls, and comparisons happen is decided at runtime.</p></div>
   </div>
   <div style="overflow:auto;margin-top:26px"><table class="plain"><thead><tr><th></th><th>Chatbot</th><th>Workflow</th><th>Agent</th></tr></thead><tbody>
@@ -59,7 +59,7 @@
     <tr><td><b>Best when</b></td><td>Answering is enough</td><td>Steps are known in advance</td><td>The path can’t be scripted</td></tr>
   </tbody></table></div>
   <p class="small" style="margin-top:12px">Anthropic’s framing (this week’s reading): workflows use predefined code paths; agents direct their own process, and you should look for the “simplest thing that works.” (Anthropic, <i>Building Effective Agents</i>, 2024.)</p>
-  <div class="callout" style="margin-top:18px"><b>Two more words you’ll hear in the wild:</b> <b>“Agentic systems”</b> is Anthropic’s umbrella term covering <em>both</em> workflows and agents (from this week’s reading). <b>“Agentic workflow”</b> is Andrew Ng’s popular term for LLM pipelines with reflection and tool-use — in our vocabulary, usually a <em>workflow</em> with agent-like moments inside its steps. Neither term settles anything by itself: when someone says “we built an agent,” ask our question — <b>who owns the control flow?</b> — before believing the noun.</div>
+  <div class="callout" style="margin-top:18px">Two more words you’ll hear in the wild: <b>“Agentic systems”</b> is Anthropic’s umbrella term covering <em>both</em> workflows and agents (from this week’s reading). <b>“Agentic workflow”</b> is Andrew Ng’s popular term for LLM pipelines with reflection and tool-use; in our vocabulary, usually a <em>workflow</em> with agent-like moments inside its steps. Neither term settles anything by itself: when someone says “we built an agent,” ask our question: <b>who owns the control flow?</b> — before believing the noun.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -75,7 +75,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive</div>
   <h2>Autonomy is a dial, not a switch</h2>
-  <p class="lede">Drag the dial. Value rises with autonomy, and so do risk and the oversight you owe it. The engineering discipline: <b>pick the lowest autonomy that solves the problem.</b></p>
+  <p class="lede">Drag the dial. Value rises with autonomy, and so do risk and the oversight you owe it. The engineering discipline: pick the lowest autonomy that solves the problem.</p>
   <div class="dialwrap">
     <input type="range" id="dial" min="0" max="4" step="1" value="0" aria-label="autonomy level" />
     <div class="diallabels"><span>Rules, no LLM</span><span>Single call</span><span>Workflow</span><span>Agent</span><span>Fully autonomous</span></div>
@@ -90,7 +90,7 @@
       </div>
     </div>
   </div>
-  <div class="callout red" style="margin-top:24px"><b>When NOT to build an agent:</b> the task is deterministic; a single call is enough; or the cost, latency, or risk of runtime decisions outweighs the value. Most business problems do not need an agent — saying so out loud is a professional skill.</div>
+  <div class="callout red" style="margin-top:24px"><b>When NOT to build an agent:</b> the task is deterministic; a single call is enough; or the cost, latency, or risk of runtime decisions outweighs the value. Most business problems do not need an agent; saying so out loud is a professional skill.</div>
 </div></section>
 
 <div class="wrap pager">

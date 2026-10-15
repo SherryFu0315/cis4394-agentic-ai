@@ -76,14 +76,14 @@ ticket: "Password reset email never arrives" → ?</div>
   <h2>Chain-of-thought: reason before answering</h2>
   <div class="grid2" style="align-items:start">
     <div class="card"><span class="kicker">What it is</span>
-      <p class="small" style="margin-top:8px">Ask the model to work step by step <em>before</em> giving the final answer — big gains on multi-step math, logic, and policy questions (Wei et al., 2022). The lazy version works too: just add <b>“Let’s think step by step”</b> (zero-shot CoT, Kojima et al., 2022) — the cheapest first thing to try on a reasoning miss.</p>
+      <p class="small" style="margin-top:8px">Ask the model to work step by step <em>before</em> giving the final answer: big gains on multi-step math, logic, and policy questions (Wei et al., 2022). The lazy version works too: just add <b>“Let’s think step by step”</b> (zero-shot CoT, Kojima et al., 2022); the cheapest first thing to try on a reasoning miss.</p>
     </div>
     <div class="card"><span class="kicker">When it helps vs hurts</span>
       <div style="overflow:auto;margin-top:8px"><table class="plain"><tbody>
         <tr><td style="background:var(--good)"><b>Helps</b></td><td>3-rule discount eligibility · multi-step calculations · ambiguous policy calls</td></tr>
         <tr><td style="background:var(--bad)"><b>Overkill</b></td><td>Extract a phone number · yes/no lookups — you pay tokens + latency for nothing</td></tr>
       </tbody></table></div>
-      <p class="small" style="margin-top:8px"><b>For automation:</b> let it reason, then demand a delimited final answer your code can parse — reasoning for the model, structure for the machine.</p>
+      <p class="small" style="margin-top:8px"><b>For automation:</b> let it reason, then demand a delimited final answer your code can parse: reasoning for the model, structure for the machine.</p>
     </div>
   </div>
 </div></section>
@@ -92,8 +92,8 @@ ticket: "Password reset email never arrives" → ?</div>
   <div class="eyebrow">Technique 3</div>
   <h2>Structured JSON output: the coupling point</h2>
   <div class="grid2" style="align-items:start">
-    <div class="card"><p class="small">Free text cannot pipe into a database. <code>{"field": value}</code> can. Forcing a fixed, machine-readable shape is what turns “a model that answers” into “a component in a system”. The flow is <b>free text → JSON → database / next agent</b>.</p>
-    <p class="small" style="margin-top:8px"><b>Caution:</b> validate. Well-formed JSON can still contain wrong values — schema conformance is not accuracy (the hands-on tests both).</p></div>
+    <div class="card"><p class="small">Free text cannot pipe into a database. <code>{"field": value}</code> can. Forcing a fixed, machine-readable shape is what turns “a model that answers” into “a component in a system”. The flow is free text → JSON → database / next agent.</p>
+    <p class="small" style="margin-top:8px"><b>Caution:</b> validate. Well-formed JSON can still contain wrong values; schema conformance is not accuracy (the hands-on tests both).</p></div>
     <div class="codebox" style="margin:0">SCHEMA
 {"vendor": str, "invoice_no": str,
  "total_usd": number|null,
@@ -136,7 +136,7 @@ output: {"vendor":"DataCorp","invoice_no":"DC-2291",
 <section><div class="wrap">
   <div class="eyebrow">Synthesis</div>
   <h2>The reliability ladder</h2>
-  <p class="lede">Climb in this order — each rung adds reliability at rising cost. Fine-tuning is the top rung for a reason: try everything below it first.</p>
+  <p class="lede">Climb in this order; each rung adds reliability at rising cost. Fine-tuning is the top rung for a reason: try everything below it first.</p>
   <div class="ladder">
     <div class="rung"><span><b>Clear instruction</b><span class="small">Say precisely what you want, and what to do when unsure</span></span><span class="cost">free · seconds</span></div>
     <div class="rung"><span><b>System prompt</b><span class="small">Role, scope, rules, refusals — the policy guardrail</span></span><span class="cost">free · minutes</span></div>

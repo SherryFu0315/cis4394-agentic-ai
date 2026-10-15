@@ -58,7 +58,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">01 · Foundations</div>
   <h1>Anatomy of a <em>prompt</em>.</h1>
-  <p class="lede">A prompt is <b>everything the model sees before it responds</b>, not just your question. Every well-built prompt has up to five parts, and each part is a knob you can turn (Boonstra, Google/Kaggle Prompt Engineering whitepaper, 2024–25).</p>
+  <p class="lede">A prompt is everything the model sees before it responds, not just your question. Every well-built prompt has up to five parts, and each part is a knob you can turn (Boonstra, Google/Kaggle Prompt Engineering whitepaper, 2024–25).</p>
 </div></header>
 
 <section><div class="wrap">
@@ -81,7 +81,7 @@ output: {"category": "BILLING", "urgent": false}</span>
       <div class="partnote" id="partNote">Click a part on the left.</div>
     </div>
   </div>
-  <div class="callout" style="margin-top:22px"><b>Why it matters:</b> when an output is wrong, don’t rewrite the whole prompt — diagnose <em>which part</em> failed. Wrong format? Fix the output spec. Wrong facts? Fix the context. Wrong behavior? Fix the instruction. That’s the skill Exercise A trains.</div>
+  <div class="callout" style="margin-top:22px"><b>Why it matters:</b> when an output is wrong, don’t rewrite the whole prompt; diagnose <em>which part</em> failed. Wrong format? Fix the output spec. Wrong facts? Fix the context. Wrong behavior? Fix the instruction. That’s the skill Exercise A trains.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -96,7 +96,7 @@ output: {"category": "BILLING", "urgent": false}</span>
       <div class="codebox" style="margin-top:10px">User: Can I get a refund after 60 days?
 Model: Absolutely! Acme offers a 90-day
 money-back guarantee…   ← invented policy</div>
-      <p class="small" style="margin-top:10px">Not hypothetical: a tribunal made <b>Air Canada honor a refund policy its chatbot invented</b> — the airline argued the bot was “responsible for its own actions,” and lost. <a class="doc" href="https://arstechnica.com/tech-policy/2024/02/air-canada-must-honor-refund-policy-invented-by-airlines-chatbot/" target="_blank" rel="noopener">Ars Technica, Feb 2024 ↗</a></p>
+      <p class="small" style="margin-top:10px">Not hypothetical: a tribunal made Air Canada honor a refund policy its chatbot invented; the airline argued the bot was “responsible for its own actions,” and lost. <a class="doc" href="https://arstechnica.com/tech-policy/2024/02/air-canada-must-honor-refund-policy-invented-by-airlines-chatbot/" target="_blank" rel="noopener">Ars Technica, Feb 2024 ↗</a></p>
     </div>
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">With a system prompt</span>
       <div class="codebox" style="margin-top:10px">SYSTEM: You are Acme support. Answer ONLY
@@ -110,7 +110,7 @@ days. I've flagged your case for a human
 agent to review options.</div>
     </div>
   </div>
-  <div class="callout blue" style="margin-top:20px"><b>The system prompt is a policy guardrail.</b> It’s also where Week 3 meets Week 2: prompt-level rules are the <em>soft</em> layer of guardrails; runtime enforcement (like Codex’s <code>exec_policy</code>) is the hard layer. Real systems need both, and the <a href="exercises.html">$1-Tahoe case (page 04)</a> shows what happens with neither.</div>
+  <div class="callout blue" style="margin-top:20px">The system prompt is a policy guardrail. It’s also where Week 3 meets Week 2: prompt-level rules are the <em>soft</em> layer of guardrails; runtime enforcement (like Codex’s <code>exec_policy</code>) is the hard layer. Real systems need both, and the <a href="exercises.html">$1-Tahoe case (page 04)</a> shows what happens with neither.</div>
 </div></section>
 
 <div class="wrap pager">
