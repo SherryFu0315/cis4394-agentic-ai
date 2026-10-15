@@ -59,8 +59,8 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">03 · Hands-on</div>
   <h1>LangGraph — the loop you <em>own</em>.</h1>
-  <p class="lede">LangGraph is an open-source library that makes the agent loop <b>explicit</b>: your agent is a graph of nodes connected by edges, passing a typed state. Nothing hidden — which is exactly why enterprises like it.</p>
-  <div class="callout blue" style="margin-top:18px"><b>Reference page — read it when you need it.</b> We build agents in plain Python first (<a href="../week5/local.html">Week 5, page 03</a>), and LangGraph gets a proper treatment in <b>Week 9</b>, where orchestrating several agents needs it. The code below uses a cloud model; to run the same graph on your own laptop with Ollama, only the model line changes — see Step 6 of the Week 5 lab.</div>
+  <p class="lede">LangGraph is an open-source library that makes the agent loop <b>explicit</b>: your agent is a graph of nodes connected by edges, passing a typed state. Nothing hidden, which is exactly why enterprises like it.</p>
+  <div class="callout blue" style="margin-top:18px"><b>Reference page: read it when you need it.</b> We build agents in plain Python first (<a href="../week5/local.html">Week 5, page 03</a>), and LangGraph gets a proper treatment in <b>Week 9</b>, where orchestrating several agents needs it. The code below uses a cloud model; to run the same graph on your own laptop with Ollama, only the model line changes — see Step 6 of the Week 5 lab.</div>
 </div></header>
 
 <section><div class="wrap">
@@ -69,7 +69,7 @@
   <div class="grid3">
     <div class="card"><span class="kicker">State</span><h3 style="margin-top:6px">The shared memory</h3><p class="small">A typed dict passed to every node. Ours holds <code>messages</code> — the growing conversation of thoughts, tool calls, and results. Whatever a node returns is merged in.</p></div>
     <div class="card"><span class="kicker">Nodes</span><h3 style="margin-top:6px">Units of work</h3><p class="small">A node is just a function: <code>state in → update out</code>. The two classics: a <b>model</b> node (ask the LLM what to do next) and a <b>tools</b> node (execute what it asked for).</p></div>
-    <div class="card"><span class="kicker">Edges</span><h3 style="margin-top:6px">Routing = the loop</h3><p class="small">Normal edges always fire. <b>Conditional</b> edges look at state and choose the next node — and a conditional edge that can route <em>backwards</em> is all a loop is.</p></div>
+    <div class="card"><span class="kicker">Edges</span><h3 style="margin-top:6px">Routing = the loop</h3><p class="small">Normal edges always fire. <b>Conditional</b> edges look at state and choose the next node, and a conditional edge that can route <em>backwards</em> is all a loop is.</p></div>
   </div>
 </div></section>
 
@@ -127,7 +127,7 @@ llm = ChatGoogleGenerativeAI(model=<span class="cs">"gemini-2.0-flash"</span>)
 llm_tools = llm.bind_tools([calculator])</div>
     </div>
     <div>
-      <p class="small"><b>2 · Nodes, edges, run.</b> One model node, one prebuilt tools node, one conditional edge — and the <code>tools → model</code> edge that closes the loop.</p>
+      <p class="small"><b>2 · Nodes, edges, run.</b> One model node, one prebuilt tools node, one conditional edge, and the <code>tools → model</code> edge that closes the loop.</p>
       <div class="codebox"><span class="ck">def</span> call_model(state: State):
     <span class="ck">return</span> {<span class="cs">"messages"</span>: [llm_tools.invoke(state[<span class="cs">"messages"</span>])]}
 
@@ -144,7 +144,7 @@ out = agent.invoke({<span class="cs">"messages"</span>:
 <span class="ck">for</span> m <span class="ck">in</span> out[<span class="cs">"messages"</span>]: m.pretty_print()</div>
     </div>
   </div>
-  <div class="callout" style="margin-top:18px"><b>Where's the loop?</b> Nowhere in your code is there a <code>while</code>. The loop <em>is</em> <code>add_conditional_edges + add_edge("tools","model")</code>. Control flow became data — a graph you can draw, diff, and show an auditor.</div>
+  <div class="callout" style="margin-top:18px"><b>Where's the loop?</b> Nowhere in your code is there a <code>while</code>. The loop <em>is</em> <code>add_conditional_edges + add_edge("tools","model")</code>. Control flow became data. A graph you can draw, diff, and show an auditor.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -218,7 +218,7 @@ g.add_conditional_edges(<span class="cs">"model"</span>, guarded_condition)</div
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 4 — Reasoning, Planning &amp; the Agent Loop<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 4: Reasoning, Planning &amp; the Agent Loop<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

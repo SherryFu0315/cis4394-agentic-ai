@@ -74,7 +74,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">02 · Patterns</div>
   <h1>Four ways to <em>think</em> in a loop.</h1>
-  <p class="lede">Same loop, different reasoning strategies. Each pattern below is a real, cited technique — and each buys reliability with tokens. Your job as a designer is matching the pattern to the task, not maxing out the thinking.</p>
+  <p class="lede">Same loop, different reasoning strategies. Each pattern below is a real, cited technique, and each buys reliability with tokens. Your job as a designer is matching the pattern to the task, not maxing out the thinking.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -92,7 +92,7 @@ Thought → Action → Observation
       <div class="mini">Plan: 1. …  2. …  3. …
 Execute 1 → 2 → 3
 → Answer</div>
-      <p class="small">Think once, up front; then run the steps. Cheaper, auditable before anything runs, parallelizable. Cost: brittle — if step 2's result surprises you, the plan is stale.</p>
+      <p class="small">Think once, up front; then run the steps. Cheaper, auditable before anything runs, parallelizable. Cost: brittle, if step 2's result surprises you, the plan is stale.</p>
       <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2305.04091" target="_blank" rel="noopener">Wang et al., Plan-and-Solve, ACL 2023 ↗</a></p>
     </div>
     <div class="rail"><h3>Reflection</h3>
@@ -111,7 +111,7 @@ goal ┤
       <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noopener">Yao et al., ToT, NeurIPS 2023 ↗</a></p>
     </div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>Evidence, honestly stated:</b> the ReAct paper shows reasoning + acting together beats either alone on multi-hop QA and fact-verification benchmarks, with more interpretable, recoverable traces (Yao et al., 2022) — and it still fails when retrieval fails. No pattern fixes bad tools.</div>
+  <div class="callout" style="margin-top:20px"><b>Evidence, honestly stated:</b> the ReAct paper shows reasoning + acting together beats either alone on multi-hop QA and fact-verification benchmarks, with more interpretable, recoverable traces (Yao et al., 2022), and it still fails when retrieval fails. No pattern fixes bad tools.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -119,9 +119,9 @@ goal ┤
   <h2>When each wins</h2>
   <div class="cmpwrap"><table class="cmp">
     <tr><th></th><th>Chain-of-thought (W3)</th><th>Plan-then-execute</th><th>ReAct (interleaved)</th><th>Tree of Thoughts</th></tr>
-    <tr><td>Predictability</td><td>High — one call</td><td>High — plan is visible up front</td><td>Medium — path emerges at runtime</td><td>Low — search branches</td></tr>
+    <tr><td>Predictability</td><td>High: one call</td><td>High: plan is visible up front</td><td>Medium: path emerges at runtime</td><td>Low: search branches</td></tr>
     <tr><td>Cost</td><td>$ </td><td>$$</td><td>$$–$$$ (a call per step)</td><td>$$$$</td></tr>
-    <tr><td>Adapts mid-task</td><td>No</td><td>Poorly (needs replanning)</td><td>Yes — that's the point</td><td>Yes, via backtracking</td></tr>
+    <tr><td>Adapts mid-task</td><td>No</td><td>Poorly (needs replanning)</td><td>Yes: that's the point</td><td>Yes, via backtracking</td></tr>
     <tr><td>Auditability</td><td>One blob of reasoning</td><td>Plan reviewable before execution</td><td>Full step-by-step trace</td><td>Full tree (large)</td></tr>
     <tr><td>Best for</td><td>Single-shot reasoning, no tools</td><td>Stable, well-understood workflows</td><td>Volatile tasks where results steer next steps</td><td>Puzzles/search where partial states can be scored</td></tr>
   </table></div>
@@ -144,13 +144,13 @@ goal ┤
     <button class="ghost" data-cost="2">8 steps + reflection</button>
   </div>
   <div id="costbars"></div>
-  <div class="callout" style="margin-top:18px"><b>Budget the loop — four dials you own:</b> a <b>max-iteration guard</b> (max iterations), a <b>token/$ budget</b> per run, an explicit <b>stop condition</b> (“done when X”), and the <b>human-gate placement</b>. The manager's question is never “is it smart?” — it's “what does a run cost, and when do I trust it unattended?”</div>
+  <div class="callout" style="margin-top:18px"><b>Budget the loop: four dials you own:</b> a <b>max-iteration guard</b> (max iterations), a <b>token/$ budget</b> per run, an explicit <b>stop condition</b> (“done when X”), and the <b>human-gate placement</b>. The manager's question is never “is it smart?” — it's “what does a run cost, and when do I trust it unattended?”</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">Aside · the one thing that changes the model</div>
   <h2>Prompting changes the <em>input</em>. Fine-tuning changes the <em>weights</em>.</h2>
-  <p class="lede">Everything this week — ReAct, plans, reflection — and everything last week — prompts, context — lives to the <b>left</b> of the model: it changes what the model <em>sees</em>. (Week 2 flashback: prompt ⊂ context ⊂ harness — <b>none touch the weights</b>.) Fine-tuning is different in kind: it rewrites the numbers <em>inside</em>. Watch the difference below — the network's edges are its weights; thicker = stronger.</p>
+  <p class="lede">Everything this week — ReAct, plans, reflection — and everything last week — prompts, context — lives to the <b>left</b> of the model: it changes what the model <em>sees</em>. (Week 2 flashback: prompt ⊂ context ⊂ harness — <b>none touch the weights</b>.) Fine-tuning is different in kind: it rewrites the numbers <em>inside</em>. Watch the difference below. The network's edges are its weights; thicker = stronger.</p>
   <div class="ftwrap">
     <div class="netbox">
       <span class="wbadge" id="wBadge">weights: unchanged 🔒</span>
@@ -193,7 +193,7 @@ goal ┤
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 4 — Reasoning, Planning &amp; the Agent Loop<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 4: Reasoning, Planning &amp; the Agent Loop<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

@@ -84,7 +84,7 @@ table.plain td,table.plain th{font-size:13.5px}
 <section><div class="wrap">
   <div class="eyebrow">Step 0</div>
   <h2>Check that your model can call tools</h2>
-  <p class="lede">Most of you have <code>qwen2.5:0.5b</code>; some of you picked a different model to fit your laptop and your final project. Either is fine — but first confirm the model supports tool calling.</p>
+  <p class="lede">Most of you have <code>qwen2.5:0.5b</code>; some of you picked a different model to fit your laptop and your final project. Either is fine, but first confirm the model supports tool calling.</p>
   <div class="term2"><span class="p">$</span> ollama list
 <span class="p">$</span> ollama show qwen2.5:0.5b        <span class="p"># use your exact model name from `ollama list`</span>
 
@@ -125,11 +125,11 @@ pip install -r requirements.txt</div>
 
 <section><div class="wrap">
   <div class="callout blue" style="margin-top:0"><b>First, a 60-second terminal skill you will use all semester.</b>
-<p style="margin:8px 0 6px">A terminal is always <b>standing inside one folder</b>. Commands act on that folder. When you open it, it starts in your <b>home folder</b> — and your Desktop is inside your home folder. So if you save the file to your Desktop, getting there is one word:</p>
+<p style="margin:8px 0 6px">A terminal is always <b>standing inside one folder</b>. Commands act on that folder. When you open it, it starts in your <b>home folder</b>, and your Desktop is inside your home folder. So if you save the file to your Desktop, getting there is one word:</p>
 <div class="oscmd">
-  <div><div class="lab">Mac — Terminal</div><div class="codebox" style="margin:0">cd Desktop        <span class="cm"># move into the folder</span>
+  <div><div class="lab">Mac: Terminal</div><div class="codebox" style="margin:0">cd Desktop        <span class="cm"># move into the folder</span>
 ls                <span class="cm"># what's in here?</span></div></div>
-  <div><div class="lab">Windows — PowerShell</div><div class="codebox" style="margin:0">cd Desktop        <span class="cm"># move into the folder</span>
+  <div><div class="lab">Windows: PowerShell</div><div class="codebox" style="margin:0">cd Desktop        <span class="cm"># move into the folder</span>
 dir               <span class="cm"># what's in here?</span></div></div>
 </div>
 <p style="margin:10px 0 0"><b>How to tell it worked:</b> look at the prompt itself — it shows the folder you are standing in.</p>
@@ -190,7 +190,7 @@ xinyufu@MacBook <span class="cs">Desktop</span> %  ls           <span class="cm"
                          <span class="cs">"tool_name"</span>: name})</span></div>
     </div>
     <div>
-      <div class="ynote" id="yNote"><h4>Start anywhere</h4><p style="margin:0">Click a line on the left, or pick a step above. Nine pieces make up the entire agent — nothing else is hiding.</p></div>
+      <div class="ynote" id="yNote"><h4>Start anywhere</h4><p style="margin:0">Click a line on the left, or pick a step above. Nine pieces make up the entire agent. Nothing else is hiding.</p></div>
       <div class="callout blue" style="margin-top:14px"><b>Four sentences that survive this page.</b>
       <ol style="margin:8px 0 0 18px">
         <li><b>The model requests; your code executes.</b></li>
@@ -226,13 +226,13 @@ The result of 4817 * 293 is 1411381.</div>
   <div style="overflow-x:auto"><table class="plain">
     <thead><tr><th>Model</th><th>Download</th><th>Invoice question</th><th>What went wrong</th></tr></thead>
     <tbody>
-      <tr><td><code>qwen2.5:0.5b</code></td><td>398 MB</td><td class="res poor">0 / 16</td><td>Calls tools, but plans the math wrong — "plus 18% tax" became <code>+ 18/100</code> or <code>+ 1800</code> — and usually skips the exchange rate.</td></tr>
+      <tr><td><code>qwen2.5:0.5b</code></td><td>398 MB</td><td class="res poor">0 / 16</td><td>Calls tools, but plans the math wrong — "plus 18% tax" became <code>+ 18/100</code> or <code>+ 1800</code>, and usually skips the exchange rate.</td></tr>
       <tr><td><code>llama3.2</code> (3B)</td><td>2.0 GB</td><td class="res poor">0 / 5</td><td>Skips the calculator and does the arithmetic in its head (wrongly); sometimes writes the tool call as plain text instead of making it.</td></tr>
-      <tr><td><code>deepseek-r1:14b</code></td><td>9.0 GB</td><td class="res poor">0 / 3</td><td>Lists <code>tools</code> in its capabilities — and never called one. It reasoned the whole problem out in text.</td></tr>
+      <tr><td><code>deepseek-r1:14b</code></td><td>9.0 GB</td><td class="res poor">0 / 3</td><td>Lists <code>tools</code> in its capabilities, and never called one. It reasoned the whole problem out in text.</td></tr>
       <tr><td>a 27B Qwen-family model</td><td>16 GB</td><td class="res good">3 / 3</td><td>The same clean path every time: calculator → exchange rate → calculator. Too large for most laptops.</td></tr>
     </tbody>
   </table></div>
-  <div class="callout" style="margin-top:16px"><b>Read this table carefully.</b> Every model here "supports tools." Only one completed the task. The mechanics of tool calling working is not the same as the agent being reliable — and the only way to know which one you have is to measure it on your task.</div>
+  <div class="callout" style="margin-top:16px"><b>Read this table carefully.</b> Every model here "supports tools." Only one completed the task. The mechanics of tool calling working is not the same as the agent being reliable, and the only way to know which one you have is to measure it on your task.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -243,12 +243,12 @@ The result of 4817 * 293 is 1411381.</div>
   <div style="overflow-x:auto"><table class="plain" style="margin-top:12px">
     <thead><tr><th>Setup</th><th>Tools the model gets</th><th>qwen2.5:0.5b, measured</th></tr></thead>
     <tbody>
-      <tr><td><b>A.</b> Single step — "What is 4817 × 293?"</td><td><code>calculator</code>, <code>get_exchange_rate</code></td><td class="res good">16 / 16</td></tr>
+      <tr><td><b>A.</b> Single step: "What is 4817 × 293?"</td><td><code>calculator</code>, <code>get_exchange_rate</code></td><td class="res good">16 / 16</td></tr>
       <tr><td><b>B.</b> Multi-step invoice question</td><td>same two fine-grained tools</td><td class="res poor">0 / 16</td></tr>
       <tr><td><b>C.</b> Same invoice question</td><td>one coarse tool: <code>invoice_total(units, unit_price, tax_rate_percent, from_currency, to_currency)</code></td><td><span class="res good">tool right 12 / 15</span><br /><span class="res poor">final answer right 6 / 23</span></td></tr>
     </tbody>
   </table></div>
-  <p class="small" style="margin-top:10px">Pooled over several runs. Your numbers will vary from run to run — that variation is itself a result worth reporting.</p>
+  <p class="small" style="margin-top:10px">Pooled over several runs. Your numbers will vary from run to run. That variation is itself a result worth reporting.</p>
   <p class="small" style="margin-top:10px">Look at setup C closely. The model filled in all five arguments correctly almost every time, and the tool returned <code>1798663.95</code>. Then, writing its final answer, the model reported <b>179,866.39</b> or <b>17,986,639.50</b> — it moved the decimal point while copying the number.</p>
 
   <div class="bigq" style="margin-top:22px"><span class="qlabel">Discussion question 1</span>In setup C the tool returned the right number and the model still reported a wrong one. Where should the final number come from?</div>
@@ -261,13 +261,13 @@ The result of 4817 * 293 is 1411381.</div>
 
   <div class="bigq" style="margin-top:22px"><span class="qlabel">Discussion question 3</span><code>ollama show</code> lists "tools" for your model. Is that enough to build your final project on it?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">No. The capability line means the chat template supports the tool-call format. <code>deepseek-r1:14b</code> lists it and never called a tool on our task. The evidence you need is a pass rate on <em>your</em> project's own questions, measured over several runs — which is exactly what scripts 2 and 4 give you, once you swap in your tools and your questions.</div>
+  <div class="revealbox">No. The capability line means the chat template supports the tool-call format. <code>deepseek-r1:14b</code> lists it and never called a tool on our task. The evidence you need is a pass rate on <em>your</em> project's own questions, measured over several runs, which is exactly what scripts 2 and 4 give you, once you swap in your tools and your questions.</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">Group task</div>
   <div class="grouptask"><span class="gk">👥 Group task · Groups of 3–4 · ~25 minutes</span>
-    <p><b>Pool your models.</b> Each person runs <code>python 4_tool_design_ladder.py &lt;your-model&gt; 3</code> on their own laptop — the group will likely have <code>qwen2.5:0.5b</code> plus a few different models. Combine the results into one table: model, download size, and the A / B / C numbers. Then answer together: <b>(1)</b> Which model would you build your final project on, and what evidence from the table supports it? <b>(2)</b> For the weakest model in your group, name one tool-design change that would raise its score, in the spirit of setup C.</p>
+    <p><b>Pool your models.</b> Each person runs <code>python 4_tool_design_ladder.py &lt;your-model&gt; 3</code> on their own laptop. The group will likely have <code>qwen2.5:0.5b</code> plus a few different models. Combine the results into one table: model, download size, and the A / B / C numbers. Then answer together: <b>(1)</b> Which model would you build your final project on, and what evidence from the table supports it? <b>(2)</b> For the weakest model in your group, name one tool-design change that would raise its score, in the spirit of setup C.</p>
     <p class="prod"><b>Produce:</b> the pooled table, plus three sentences: your model choice with its evidence, and one design change for the weakest model.</p>
   </div>
   <div class="card">
@@ -279,12 +279,12 @@ The result of 4817 * 293 is 1411381.</div>
 <section><div class="wrap">
   <div class="eyebrow">Step 5 · 5_demo_order_agent.py</div>
   <h2>Two tools, two risk levels, one human gate</h2>
-  <p class="lede">The invoice agent had one job. A real agent carries several tools, and the model must pick — which is where <a href="design.html">page 02</a>’s triage becomes concrete. This one is a customer-service assistant for an online store:</p>
+  <p class="lede">The invoice agent had one job. A real agent carries several tools, and the model must pick, which is where <a href="design.html">page 02</a>’s triage becomes concrete. This one is a customer-service assistant for an online store:</p>
   <div class="grid2">
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Auto-run</span><h3 style="margin-top:6px"><code>lookup_order(order_id)</code></h3><p class="small">Read-only. It cannot change anything, so waiting for a human would only slow the customer down. The harness just runs it.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Human gate</span><h3 style="margin-top:6px"><code>issue_refund(order_id, amount_usd, reason)</code></h3><p class="small">It moves money and cannot be undone. The harness stops, prints exactly what is about to happen, and waits for a person to type <code>y</code>.</p></div>
   </div>
-  <p class="small" style="margin-top:16px"><b>Run all three cases</b> and watch which tool the model picks — and where it is made to wait:</p>
+  <p class="small" style="margin-top:16px"><b>Run all three cases</b> and watch which tool the model picks, and where it is made to wait:</p>
   <div class="term2"><span class="p">$</span> python 5_demo_order_agent.py "Where is my order ORD-004411?"
 
 <span class="ask">[step 1] model requests -&gt; lookup_order({'order_id': 'ORD-004411'})</span>
@@ -310,7 +310,7 @@ Your order ORD-004411 is shipped, 2 items, total $84.20.</div>
 
 [step 2] FINAL ANSWER:
 I can’t process that refund — a person will follow up with you.</div>
-  <div class="callout blue"><b>Look at what the denial is:</b> the refusal goes back into the conversation as an <em>observation</em>, exactly like a tool result. The model is not overruled in secret — it is told what happened and must carry on from there. That is the whole shape of a human gate: the model proposes, a person disposes, and the agent keeps its trace either way.</div>
+  <div class="callout blue"><b>Look at what the denial is:</b> the refusal goes back into the conversation as an <em>observation</em>, exactly like a tool result. The model is not overruled in secret. It is told what happened and must carry on from there. That is the whole shape of a human gate: the model proposes, a person disposes, and the agent keeps its trace either way.</div>
 
   <h3 style="margin-top:30px">Getting a small model to choose well: four attempts</h3>
   <p class="small" style="max-width:860px">This agent did not work on the first try. The numbers below are real runs of the three cases on <code>qwen2.5:0.5b</code>, changing only the instructions — no change to the model, no change to the tool code.</p>
@@ -338,7 +338,7 @@ I can’t process that refund — a person will follow up with you.</div>
 <section><div class="wrap">
   <div class="eyebrow">Step 6 · 3_agent_langgraph.py</div>
   <h2>The same agent in LangGraph</h2>
-  <p class="lede">Everything above works without a framework, and that is deliberate — you can read the whole loop. This step is your <b>first look at LangGraph</b>, which gives those same pieces names: a model node, a tools node, a conditional edge, and one edge back that makes it a loop. Compare it to the plain version and decide for yourself what the framework bought. Reference: <a href="../week4/langgraph.html">the Week 4 LangGraph page</a> (written for Gemini — running locally, the <b>only line that changes</b> is the model).</p>
+  <p class="lede">Everything above works without a framework, and that is deliberate. You can read the whole loop. This step is your <b>first look at LangGraph</b>, which gives those same pieces names: a model node, a tools node, a conditional edge, and one edge back that makes it a loop. Compare it to the plain version and decide for yourself what the framework bought. Reference: <a href="../week4/langgraph.html">the Week 4 LangGraph page</a> (written for Gemini — running locally, the <b>only line that changes</b> is the model).</p>
   <div class="grid2" style="align-items:start">
     <div class="codebox"><span class="ck">from</span> langchain_ollama <span class="ck">import</span> ChatOllama
 
@@ -406,7 +406,7 @@ g.add_edge(<span class="cs">"tools"</span>, <span class="cs">"model"</span>)    
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 5 — Tool Use &amp; Function Calling<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 5: Tool Use &amp; Function Calling<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Measured results are from one laptop in September 2026; rerun them on yours.</div>
 </div></footer>

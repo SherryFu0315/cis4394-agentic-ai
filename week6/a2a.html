@@ -58,7 +58,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">02 · The horizontal handshake</div>
   <h1>A2A — when the other side is an <em>agent</em>.</h1>
-  <p class="lede">MCP assumes the thing you are calling is a system: it does what it is told and returns. A2A assumes the other side has its own model, its own tools, and its own judgment — so you do not call it, you <b>delegate</b> to it. Announced by Google in April 2025 and contributed to the Linux Foundation that June, it is the younger and less settled of this week's two standards, and we will be honest about that.</p>
+  <p class="lede">MCP assumes the thing you are calling is a system: it does what it is told and returns. A2A assumes the other side has its own model, its own tools, and its own judgment, so you do not call it, you <b>delegate</b> to it. Announced by Google in April 2025 and contributed to the Linux Foundation that June, it is the younger and less settled of this week's two standards, and we will be honest about that.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -70,7 +70,7 @@
           start="14:00", end="15:00")
 
 → {"ok": true, "confirmation": "R-8812"}</div>
-      <p class="small" style="margin-top:10px">You know the exact function, the exact arguments, and the shape of the answer. It returns in one shot or it errors. There is nothing to negotiate — and nothing that can ask you a question back.</p></div>
+      <p class="small" style="margin-top:10px">You know the exact function, the exact arguments, and the shape of the answer. It returns in one shot or it errors. There is nothing to negotiate, and nothing that can ask you a question back.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Delegating to an agent</span>
       <div class="codebox" style="margin-top:10px">"Find a tutoring slot for a first-year
  student in MATH 1113, sometime this week,
@@ -134,7 +134,7 @@
     </div>
     <div>
       <div class="fldnote" id="fldNote">Click a highlighted field in the JSON.</div>
-      <div class="callout" style="margin-top:14px"><b>The card is a contract.</b> Everything a partner needs to decide &ldquo;can this agent do my job, and may I talk to it?&rdquo; is here — and nothing about how it works inside. Compare with an MCP server's tool list: same idea (advertise capability, hide implementation), one level up the ladder.</div>
+      <div class="callout" style="margin-top:14px"><b>The card is a contract.</b> Everything a partner needs to decide &ldquo;can this agent do my job, and may I talk to it?&rdquo; is here, and nothing about how it works inside. Compare with an MCP server's tool list: same idea (advertise capability, hide implementation), one level up the ladder.</div>
     </div>
   </div>
 </div></section>
@@ -171,7 +171,7 @@
       <div class="statepanel" id="simState"><span class="kicker">Task state</span></div>
     </div>
   </div>
-  <div class="callout blue"><b>Notice what crossed the boundary and what did not.</b> The advising agent never learned which model the tutoring agent uses, what its prompt says, or which database it queried. It learned one thing: the outcome. That opacity is the feature — it is what makes delegation between two organizations conceivable at all.</div>
+  <div class="callout blue"><b>Notice what crossed the boundary and what did not.</b> The advising agent never learned which model the tutoring agent uses, what its prompt says, or which database it queried. It learned one thing: the outcome. That opacity is the feature. It is what makes delegation between two organizations conceivable at all.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -203,7 +203,7 @@
         <table class="plain">
           <tr><th></th><th>MCP</th><th>A2A</th></tr>
           <tr><td><b>Connects</b></td><td>An agent to tools &amp; data</td><td>An agent to another agent</td></tr>
-          <tr><td><b>Direction</b></td><td>Vertical — downward</td><td>Horizontal — sideways</td></tr>
+          <tr><td><b>Direction</b></td><td>Vertical: downward</td><td>Horizontal: sideways</td></tr>
           <tr><td><b>Other side is</b></td><td>A system: deterministic, no goals</td><td>An agent: plans, may ask you questions</td></tr>
           <tr><td><b>Discovery</b></td><td>Tool list at connect time</td><td>Agent Card, published</td></tr>
           <tr><td><b>Unit of work</b></td><td>A tool call, usually fast</td><td>A task, possibly long-running</td></tr>
@@ -211,7 +211,7 @@
           <tr><td><b>Origin</b></td><td>Anthropic, Nov 2024</td><td>Google, Apr 2025</td></tr>
         </table>
       </div>
-      <div class="callout" style="margin-top:16px"><b>One agent, both protocols, no conflict.</b> Your agent reaches down through MCP to its own systems and sideways through A2A to a peer. The peer does the same on its side — and you never see its plumbing.</div>
+      <div class="callout" style="margin-top:16px"><b>One agent, both protocols, no conflict.</b> Your agent reaches down through MCP to its own systems and sideways through A2A to a peer. The peer does the same on its side, and you never see its plumbing.</div>
     </div>
   </div>
 </div></section>
@@ -234,7 +234,7 @@
 
 <section><div class="wrap">
   <div class="eyebrow">Discussion</div>
-  <div class="bigq"><span class="qlabel">Discussion question</span>Your procurement agent negotiates delivery dates with a supplier's agent over A2A. The supplier's agent commits to a date it cannot meet. What did your side need to have in place before that call — and what should it have logged?</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Your procurement agent negotiates delivery dates with a supplier's agent over A2A. The supplier's agent commits to a date it cannot meet. What did your side need to have in place before that call, and what should it have logged?</div>
   <button class="revealbtn">See the answer</button>
   <div class="revealbox"><b>Before:</b> an authenticated, allow-listed counterparty (you delegate to agents you have onboarded, not to any card you find); an explicit scope for what the agent may agree to — a mandate with limits on price, quantity, and date; and a <b>human gate</b> on anything that becomes binding, which is the Week 5 rule surviving contact with another company. Autonomy is fine for &ldquo;ask when they could ship&rdquo;; it is not fine for &ldquo;accept.&rdquo; <b>Logged:</b> the Agent Card version you talked to (capability claims change), the task id, every message in both directions with timestamps, the artifact returned, which human approved what, and the mandate limits in force at the time. <b>The uncomfortable part:</b> none of that makes the supplier's agent honest. The protocol standardizes the conversation, not the counterparty — commitments across organizations still need contracts, penalties, and reconciliation, exactly as they did when humans made the call. Interoperability solves the plumbing; it does not solve trust.</div>
 </div></section>
@@ -244,12 +244,12 @@
   <h2>Introduction to Agent2Agent</h2>
   <div class="grid2" style="align-items:start">
     <div class="card"><h3>Introduction to Agent2Agent (A2A) Protocol (Google Cloud Tech)</h3>
-      <p class="small">The official short introduction: Agent Cards, tasks, and discovery across vendors. Watch it with the diagram above in mind and check whether the speaker's example is really cross-organizational — or whether it would have been fine as edges in one graph. <span style="color:var(--muted)">(~8 minutes; runtime approximate.)</span></p>
+      <p class="small">The official short introduction: Agent Cards, tasks, and discovery across vendors. Watch it with the diagram above in mind and check whether the speaker's example is really cross-organizational, or whether it would have been fine as edges in one graph. <span style="color:var(--muted)">(~8 minutes; runtime approximate.)</span></p>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/Fbr_Solax1w" title="Google Cloud Tech: Introduction to Agent2Agent (A2A) Protocol" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
     </div>
     <div class="card"><span class="kicker">Read it as a strategist</span>
-      <p class="small" style="margin-top:8px">This is a vendor introducing a standard it created, which is not a criticism — it is context. When you watch, separate three layers: <b>the problem</b> (agents from different builders cannot find or talk to each other), which is real and would exist without any vendor; <b>the design</b> (cards, tasks, opacity), which you can evaluate on its merits; and <b>the pitch</b> (that this particular design should be the industry's), which is a claim about the future, not a fact about the present.</p>
-      <p class="small" style="margin-top:10px">Whoever's format becomes the default captures the ecosystem around it — that is the platform economics behind every standards announcement you will read this year, and why open governance under a neutral foundation is a substantive move rather than a press-release detail.</p>
+      <p class="small" style="margin-top:8px">This is a vendor introducing a standard it created, which is not a criticism. It is context. When you watch, separate three layers: <b>the problem</b> (agents from different builders cannot find or talk to each other), which is real and would exist without any vendor; <b>the design</b> (cards, tasks, opacity), which you can evaluate on its merits; and <b>the pitch</b> (that this particular design should be the industry's), which is a claim about the future, not a fact about the present.</p>
+      <p class="small" style="margin-top:10px">Whoever's format becomes the default captures the ecosystem around it. That is the platform economics behind every standards announcement you will read this year, and why open governance under a neutral foundation is a substantive move rather than a press-release detail.</p>
       <p class="small" style="margin-top:10px">Free deep dives: <a class="doc" href="https://github.com/microsoft/ai-agents-for-beginners" target="_blank" rel="noopener">Microsoft — AI Agents for Beginners ↗</a> · <a class="doc" href="https://huggingface.co/learn/agents-course" target="_blank" rel="noopener">Hugging Face Agents Course ↗</a></p>
     </div>
   </div>
@@ -258,7 +258,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Concept check</div>
   <h2>Which standard — if any?</h2>
-  <p class="lede">Four scenarios. Pick MCP, A2A, or neither. The &ldquo;neither&rdquo; option is not a trick — it is the answer more often than students expect.</p>
+  <p class="lede">Four scenarios. Pick MCP, A2A, or neither. The &ldquo;neither&rdquo; option is not a trick. It is the answer more often than students expect.</p>
   <div id="ccheck"></div>
 </div></section>
 
@@ -270,7 +270,7 @@
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 6 — MCP &amp; A2A: The Interoperability Standards<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 6: MCP &amp; A2A: The Interoperability Standards<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

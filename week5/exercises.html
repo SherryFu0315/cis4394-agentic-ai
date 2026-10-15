@@ -74,16 +74,16 @@
       <p style="margin-top:0">A reference answer, not <em>the</em> answer. Yours will differ; what should not differ is that every row names a blast radius and every “Constrain” names a real constraint.</p>
       <div class="compare" style="margin-top:12px">
         <table class="plain">
-          <tr><th style="width:30%">Tool</th><th style="width:14%">Decision</th><th>Why — and the constraint</th></tr>
+          <tr><th style="width:30%">Tool</th><th style="width:14%">Decision</th><th>Why, and the constraint</th></tr>
           <tr><td><code>search_inbox(query: str)</code></td><td><span class="chip auto">Auto-run</span></td><td>Read-only over the user's own mailbox; a wrong call wastes a step. Scope it to <em>this</em> user's mailbox in the harness so the argument cannot widen it.</td></tr>
           <tr><td><code>read_thread(thread_id: str)</code></td><td><span class="chip auto">Auto-run</span></td><td>Read-only. Constrain the ID pattern so the model cannot fish for arbitrary IDs, but no human is needed to read the user's own mail.</td></tr>
-          <tr><td><code>create_draft(to, subject, body)</code></td><td><span class="chip constrain">Constrain</span></td><td>Reversible — nothing leaves the building. Constraint: recipients must already appear in the referenced thread or the user's contacts. Separating draft from send is the whole trick.</td></tr>
+          <tr><td><code>create_draft(to, subject, body)</code></td><td><span class="chip constrain">Constrain</span></td><td>Reversible: nothing leaves the building. Constraint: recipients must already appear in the referenced thread or the user's contacts. Separating draft from send is the whole trick.</td></tr>
           <tr><td><code>schedule_meeting(attendees, start, duration)</code></td><td><span class="chip constrain">Constrain</span></td><td>A write, but undoable, and it does contact other people. Constraints: duration ≤ 60 min, working hours only, attendees limited to the thread participants.</td></tr>
-          <tr><td><code>send_email(to, subject, body)</code></td><td><span class="chip gate">Gate</span></td><td>External and irreversible — no unsend, and a wrong send is a reputational event. Also the choke point for prompt injection arriving in mail the agent read.</td></tr>
+          <tr><td><code>send_email(to, subject, body)</code></td><td><span class="chip gate">Gate</span></td><td>External and irreversible: no unsend, and a wrong send is a reputational event. Also the choke point for prompt injection arriving in mail the agent read.</td></tr>
           <tr><td><code>delete_thread(thread_id: str)</code></td><td><span class="chip gate">Gate</span></td><td>Destructive. Better answer: redesign it. Ship <code>archive_thread</code> instead — reversible, so it drops to Constrain and needs no human at all.</td></tr>
         </table>
       </div>
-      <p style="margin-top:14px"><b>Riskiest tool:</b> <code>send_email</code> — not because it is the most complex, but because it is the only one whose blast radius reaches outside the organisation and cannot be undone. Ship it gated, with the approval screen showing the full body and the recipient list, and log the approver alongside the call. <b>The move worth stealing from row 6:</b> when a tool is dangerous, ask whether a reversible version would do the same job. Redesigning a tool to be undoable is almost always cheaper than supervising it forever.</p>
+      <p style="margin-top:14px"><b>Riskiest tool:</b> <code>send_email</code>, not because it is the most complex, but because it is the only one whose blast radius reaches outside the organisation and cannot be undone. Ship it gated, with the approval screen showing the full body and the recipient list, and log the approver alongside the call. <b>The move worth stealing from row 6:</b> when a tool is dangerous, ask whether a reversible version would do the same job. Redesigning a tool to be undoable is almost always cheaper than supervising it forever.</p>
     </div>
   </div>
 </div></section>
@@ -94,7 +94,7 @@
   <p class="lede">The claim from <a href="mechanics.html">page 01</a> — <em>the docstring is the interface</em> — is easy to nod at and much more convincing when you watch a real model misuse a tool you sabotaged on purpose. Note which lever you are pulling here: on <a href="local.html">page 03</a> you saw measured results from changing the <b>system prompt</b>; this exercise changes the <b>tool description</b>. Same failure modes, two different places to fix them. It runs locally on your own Ollama model, starting from the <a href="local.html">page 03 starter code</a> — no API key.</p>
   <div class="grouptask"><span class="gk">👥 Group task · Pairs, at a laptop · ~25 minutes</span>
     <p><b>(1) Start from the starter agent</b> on <a href="local.html">page 03</a>: <code>1_agent_raw.py</code> (delete the <code>@tool</code> line and add the function to the <code>TOOLS</code> dictionary) or <code>3_agent_langgraph.py</code> (keep <code>@tool</code> and add it to the <code>tools</code> list). <b>(2) Add the bad version</b> of a new tool, below. <b>(3) Ask the agent three questions</b>: one that clearly needs the tool, one that clearly does not, and one ambiguous. Record which questions triggered a call and with what arguments. <b>(4) Rewrite the description and signature</b> into the good version, restart, and ask the identical three questions. <b>(5) Diff the two traces.</b></p>
-    <p class="prod"><b>Produce:</b> the before/after message traces for all three questions, plus two sentences — which specific words in your rewrite changed the behaviour, and which failure mode from page 02 (over-triggering, wrong-tool selection, missing arguments) you reproduced.</p>
+    <p class="prod"><b>Produce:</b> the before/after message traces for all three questions, plus two sentences, which specific words in your rewrite changed the behaviour, and which failure mode from page 02 (over-triggering, wrong-tool selection, missing arguments) you reproduced.</p>
   </div>
   <div class="grid2" style="align-items:start;margin-top:20px">
     <div>
@@ -133,27 +133,27 @@
   <div class="card" style="margin-top:16px">
     <button class="revealbtn">What you should see — and why</button>
     <div class="revealbox">
-      <p style="margin-top:0"><b>With <code>get_info</code>, expect some combination of these.</b> The exact behaviour varies by model and by run — that variability is itself the lesson, and you should say so in your write-up rather than reporting one run as if it were a law.</p>
+      <p style="margin-top:0"><b>With <code>get_info</code>, expect some combination of these.</b> The exact behaviour varies by model and by run. That variability is itself the lesson, and you should say so in your write-up rather than reporting one run as if it were a law.</p>
       <p><b>· Over-triggering.</b> “Gets information” matches almost any question, so the model calls it for things it could answer itself — including your deliberately unrelated question — and gets <code>"no data"</code> back.</p>
       <p><b>· Missing or invented arguments.</b> With an untyped <code>query</code>, the model passes whatever seems relevant: the customer's name, a whole sentence, an order ID it invented because nothing told it the format. All of them return <code>"no data"</code>.</p>
       <p><b>· A dead end after failure.</b> <code>"no data"</code> carries no repair instruction, so the model either gives up or — the expensive one — decides the order does not exist and tells the user so with total confidence.</p>
       <p><b>· Or, sometimes, nothing at all.</b> On the question that genuinely needs the tool, a vague description may lose to the model's own confidence and it answers from memory. This is the failure that hurts most in production, because it looks like success.</p>
       <p style="margin-top:14px"><b>An illustrative pair of traces</b> for the ambiguous question, <em>“Has my stuff gone out yet? It was ORD-004411 I think.”</em> These are written to show you the shape of the diff — <b>your actual run will differ</b>, and reporting yours honestly is the assignment.</p>
-      <div class="tracebox" style="margin-top:10px"><span class="fin">BEFORE — get_info("Gets information.")</span>
+      <div class="tracebox" style="margin-top:10px"><span class="fin">BEFORE: get_info("Gets information.")</span>
 <span class="th">model:</span> the user is asking about their stuff
 <span class="ac">call:</span>  get_info(query="has my stuff gone out yet")
 <span class="ob">obs:</span>   "no data"
 <span class="th">model:</span> nothing found, so there is no such order
 <span class="fin">answer:</span> I could not find any order for you.        ← wrong, and confident
 
-<span class="fin">AFTER — lookup_order (trigger + exclusion + format)</span>
+<span class="fin">AFTER: lookup_order (trigger + exclusion + format)</span>
 <span class="th">model:</span> the user mentioned an order; the description
         says never answer order questions from memory
 <span class="ac">call:</span>  lookup_order(order_id="ORD-004411")
 <span class="ob">obs:</span>   "shipped, 2 items, $84.20"
-<span class="fin">answer:</span> Yes — ORD-004411 shipped: 2 items, $84.20.</div>
+<span class="fin">answer:</span> Yes: ORD-004411 shipped: 2 items, $84.20.</div>
       <p style="margin-top:14px"><b>With <code>lookup_order</code>:</b> the clear question triggers a well-formed call; the unrelated question does not trigger it, because the description says what the tool is <em>not</em> for; the ambiguous one usually triggers it, because “whenever the user mentions an order” is an explicit rule rather than a hint. And when an ID is malformed, the error message names the format, so the model repairs the call inside the loop instead of failing the user.</p>
-      <p><b>The two-sentence version for your write-up:</b> the words that changed behaviour are the <em>trigger clause</em> (“use this whenever…”), the <em>exclusion clause</em> (“do NOT use it for…”), and the <em>format statement</em> in the parameter description. None of them are cleverness — they are the ordinary content of an API contract, applied to a reader who happens to be a language model.</p>
+      <p><b>The two-sentence version for your write-up:</b> the words that changed behaviour are the <em>trigger clause</em> (“use this whenever…”), the <em>exclusion clause</em> (“do NOT use it for…”), and the <em>format statement</em> in the parameter description. None of them are cleverness. They are the ordinary content of an API contract, applied to a reader who happens to be a language model.</p>
     </div>
   </div>
 </div></section>
@@ -194,15 +194,15 @@
   </div>
 
   <div style="margin-top:20px">
-    <div class="bigq"><span class="qlabel">Discussion question 2</span>Where exactly does the human gate go — and why is putting it on <code>read_receipt</code> both tempting and wrong?</div>
+    <div class="bigq"><span class="qlabel">Discussion question 2</span>Where exactly does the human gate go, and why is putting it on <code>read_receipt</code> both tempting and wrong?</div>
     <button class="revealbtn">See the answer</button>
-    <div class="revealbox"><b>The gate goes on <code>reimburse</code>, between the model's proposal and the harness's execution</b> — after the arguments are known and before any money moves. Everything upstream (reading, categorising, checking policy) can run freely: reading a receipt is reversible, and if the OCR is wrong you have lost nothing but a step. <b>Why gating <code>read_receipt</code> is tempting:</b> incident 1 and incident 2 both <em>originate</em> there, so it feels like the place to intervene. <b>Why it is wrong:</b> it gates the wrong volume and the wrong risk. Every single report reads a receipt, so you would be asking a person to approve hundreds of harmless calls a day — the approval fatigue trap from <a href="design.html">page 02</a> — and you would still not have stopped the payment, because the damage happens two steps later regardless of what the receipt said. <b>The principle:</b> gate the <em>effect</em>, not the <em>input</em>. Reading hostile or wrong data is survivable; acting on it is not. That is also the answer to incident 2 — the injected instruction in the PDF only mattered because there was an ungated spend tool downstream. <b>And gate selectively:</b> auto-run under $75 within a category cap, gate above it, gate anything with an “other” category or a missing policy match. The routine flow stays fast, and the reviews that remain are ones a person will read.</div>
+    <div class="revealbox"><b>The gate goes on <code>reimburse</code>, between the model's proposal and the harness's execution</b> — after the arguments are known and before any money moves. Everything upstream (reading, categorising, checking policy) can run freely: reading a receipt is reversible, and if the OCR is wrong you have lost nothing but a step. <b>Why gating <code>read_receipt</code> is tempting:</b> incident 1 and incident 2 both <em>originate</em> there, so it feels like the place to intervene. <b>Why it is wrong:</b> it gates the wrong volume and the wrong risk. Every single report reads a receipt, so you would be asking a person to approve hundreds of harmless calls a day — the approval fatigue trap from <a href="design.html">page 02</a>, and you would still not have stopped the payment, because the damage happens two steps later regardless of what the receipt said. <b>The principle:</b> gate the <em>effect</em>, not the <em>input</em>. Reading hostile or wrong data is survivable; acting on it is not. That is also the answer to incident 2 — the injected instruction in the PDF only mattered because there was an ungated spend tool downstream. <b>And gate selectively:</b> auto-run under $75 within a category cap, gate above it, gate anything with an “other” category or a missing policy match. The routine flow stays fast, and the reviews that remain are ones a person will read.</div>
   </div>
 
   <div style="margin-top:20px">
     <div class="bigq"><span class="qlabel">Discussion question 3</span>Finance asks: “prove that no employee was reimbursed twice for the same receipt.” What must the agent have logged, per step, for that sentence to be provable rather than merely believed?</div>
     <button class="revealbtn">See the answer</button>
-    <div class="revealbox">Per step, the <a href="../week2/evaluate.html">Week 2 evidence standard</a>, applied to tool calls: <b>state before</b> (which report, which employee, running total for the period), the <b>observation</b> (the OCR text and the policy lookup result, stored verbatim — that is how you would have found the injected line in incident 2), the <b>available actions</b>, the <b>selected action with its exact arguments</b> (<code>reimburse</code>, employee, amount, category, and the <b>idempotency key</b>), the <b>result</b> returned by the payments API, and <b>state after</b>. Plus, for gated calls, the approver's identity and timestamp. <b>The load-bearing field is the idempotency key</b> — with a stable key derived from the receipt (say, a hash of the file plus the employee and date), “was this receipt paid twice?” becomes a one-line query over the log, and the duplicate in incident 3 would have been refused by the payments service rather than discovered six weeks later. Without it, you are diffing amounts and dates and guessing. <b>The framing for a manager:</b> auditability is not a report you generate afterwards; it is a property you either designed into the tool boundary or did not. If the key was never recorded, no amount of log analysis makes that sentence provable — the best you can offer is “we have no evidence it happened,” which is not what finance asked for.</div>
+    <div class="revealbox">Per step, the <a href="../week2/evaluate.html">Week 2 evidence standard</a>, applied to tool calls: <b>state before</b> (which report, which employee, running total for the period), the <b>observation</b> (the OCR text and the policy lookup result, stored verbatim. That is how you would have found the injected line in incident 2), the <b>available actions</b>, the <b>selected action with its exact arguments</b> (<code>reimburse</code>, employee, amount, category, and the <b>idempotency key</b>), the <b>result</b> returned by the payments API, and <b>state after</b>. Plus, for gated calls, the approver's identity and timestamp. <b>The load-bearing field is the idempotency key</b> — with a stable key derived from the receipt (say, a hash of the file plus the employee and date), “was this receipt paid twice?” becomes a one-line query over the log, and the duplicate in incident 3 would have been refused by the payments service rather than discovered six weeks later. Without it, you are diffing amounts and dates and guessing. <b>The framing for a manager:</b> auditability is not a report you generate afterwards; it is a property you either designed into the tool boundary or did not. If the key was never recorded, no amount of log analysis makes that sentence provable. The best you can offer is “we have no evidence it happened,” which is not what finance asked for.</div>
   </div>
 </div></section>
 
@@ -241,7 +241,7 @@
   <div class="eyebrow">Next week</div>
   <h2>From your boundary to a standard</h2>
   <p class="lede">You just built a tool boundary by hand: schemas you wrote, validation you wrote, gates you placed. Next week that hand-built boundary meets the protocols designed to standardise it.</p>
-  <div class="callout" style="margin-top:22px"><b>Next week:</b> MCP &amp; A2A — the interoperability standards: one protocol to plug any tool into any agent, and one for agents to talk to each other. <b>Your final-project proposal is due next week</b> (own section, iCollege).<br /><br />
+  <div class="callout" style="margin-top:22px"><b>Next week:</b> MCP &amp; A2A: the interoperability standards: one protocol to plug any tool into any agent, and one for agents to talk to each other. <b>Your final-project proposal is due next week</b> (own section, iCollege).<br /><br />
   <b>Week 6 readings:</b><br />
   · <a class="doc" href="https://www.linkedin.com/learning/model-context-protocol-mcp-hands-on-with-agentic-ai" target="_blank" rel="noopener">Rand-Hendriksen — Model Context Protocol (MCP): Hands-On with Agentic AI (LinkedIn Learning) ↗</a><br />
   · <a class="doc" href="https://www.linkedin.com/learning/hands-on-ai-building-ai-agents-with-model-context-protocol-mcp-and-agent2agent-a2a" target="_blank" rel="noopener">Ponnambalam — Building AI Agents with MCP &amp; A2A (LinkedIn Learning) ↗</a><br />
@@ -256,7 +256,7 @@
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 5 — Tool Use &amp; Function Calling<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 5: Tool Use &amp; Function Calling<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

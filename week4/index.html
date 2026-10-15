@@ -45,12 +45,12 @@
 </div></header>
 
 <section><div class="wrap">
-  <div class="callout blue"><b>📌 This week's logistics:</b> <b>Group Assignment 1 is due</b> on iCollege — the two sections’ deadlines are a day apart, so <b>check iCollege for your section’s due date</b> (<a href="../week2/summary.html#ga1">enrollment &amp; submission details</a>). The <b>final-project proposal</b> is released on iCollege this week. And the <a href="../week2/radar.html">Agent Radar</a> presenter slot for next week is open — sign up.</div>
+  <div class="callout blue"><b>📌 This week's logistics:</b> <b>Group Assignment 1 is due</b> on iCollege. The two sections’ deadlines are a day apart, so <b>check iCollege for your section’s due date</b> (<a href="../week2/summary.html#ga1">enrollment &amp; submission details</a>). The <b>final-project proposal</b> is released on iCollege this week. And the <a href="../week2/radar.html">Agent Radar</a> presenter slot for next week is open — sign up.</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">The big question</div>
-  <div class="bigq"><span class="qlabel">Discussion question</span>In Week 2 you watched Codex loop: observe → decide → act, over and over. Who decides that the loop should run <em>one more time</em> — and who decides that it should stop?</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>In Week 2 you watched Codex loop: observe → decide → act, over and over. Who decides that the loop should run <em>one more time</em>, and who decides that it should stop?</div>
   <button class="revealbtn">See the answer</button>
   <div class="revealbox">The <b>model</b> proposes ("I'm not done — the tests still fail"), but the <b>harness</b> disposes: the loop code you write decides whether to grant another iteration, checking the stop condition, the max-iteration guard, and the budget. An agent that "knows when to stop" is really a loop that checks. This week you build that loop yourself — first on paper, then in LangGraph.</div>
 </div></section>
@@ -66,7 +66,7 @@ Statue of Liberty?
 
 Model: (from memory, no checking)
 "Twice the Statue of Liberty is taller."   ✗</div>
-      <p class="small" style="margin-top:10px">No tools, no verification, no recovery. If the memory is wrong, the answer is wrong — and nobody notices.</p>
+      <p class="small" style="margin-top:10px">No tools, no verification, no recovery. If the memory is wrong, the answer is wrong, and nobody notices.</p>
     </div>
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">The loop</span>
       <div class="codebox" style="margin-top:10px">Thought: I need both heights. Search first.
@@ -76,7 +76,7 @@ Thought: Now the statue, then compare.
 Action: Search → 93 m · Calculator → 186 m
 Thought: 312 &gt; 186. Done.
 Answer: the Atlanta building — by 126 m.  ✓</div>
-      <p class="small" style="margin-top:10px">Each observation is fed back before the next decision. Wrong turns become visible — and recoverable.</p>
+      <p class="small" style="margin-top:10px">Each observation is fed back before the next decision. Wrong turns become visible, and recoverable.</p>
     </div>
   </div>
   <div class="callout" style="margin-top:20px"><b>The trade:</b> every extra loop step is another model call — more latency, more tokens, more money. This week is about buying reliability with steps, and knowing when you're overpaying.</div>
@@ -127,7 +127,7 @@ Answer: the Atlanta building — by 126 m.  ✓</div>
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 4 — Reasoning, Planning &amp; the Agent Loop<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 4: Reasoning, Planning &amp; the Agent Loop<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

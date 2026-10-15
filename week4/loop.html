@@ -88,7 +88,7 @@ goal is satisfied — not when you stop typing.</div>
         <g class="loopnode" id="ln3"><rect x="30" y="265" width="160" height="46" rx="10"/><text x="110" y="293" text-anchor="middle">Update state</text></g>
         <g class="loopnode pausenode" id="ln4"><rect x="16" y="122" width="176" height="46" rx="10"/><text x="104" y="150" text-anchor="middle">Done? → Finish</text></g>
       </svg>
-      <p class="small" style="margin:10px 6px 4px">The amber node is the <b>stop check</b>: after every state update, the loop asks whether the goal is satisfied — or whether it has run out of budget.</p>
+      <p class="small" style="margin:10px 6px 4px">The amber node is the <b>stop check</b>: after every state update, the loop asks whether the goal is satisfied, or whether it has run out of budget.</p>
     </div>
     <div class="simright">
       <div class="simctl">
@@ -101,7 +101,7 @@ goal is satisfied — not when you stop typing.</div>
       <div class="statepanel" id="simState"><span class="kicker">Agent state</span></div>
     </div>
   </div>
-  <div class="callout"><b>Read the trace like an auditor:</b> every step has the shape <em>state before → observation → selected action → result → state after</em>. That's the evidence standard from Week 2 — and it exists precisely because the loop makes each decision visible.</div>
+  <div class="callout"><b>Read the trace like an auditor:</b> every step has the shape <em>state before → observation → selected action → result → state after</em>. That's the evidence standard from Week 2, and it exists precisely because the loop makes each decision visible.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -109,7 +109,7 @@ goal is satisfied — not when you stop typing.</div>
   <h2>Anatomy of one loop turn</h2>
   <ol class="steps">
     <li><b>Assemble the input.</b> The harness packs the goal + current state + latest observations into a prompt (Week 3's context engineering, applied every turn).</li>
-    <li><b>The LLM decides.</b> Given what it sees, it picks exactly one thing: call a specific tool with specific arguments — or declare the goal met and finish.</li>
+    <li><b>The LLM decides.</b> Given what it sees, it picks exactly one thing: call a specific tool with specific arguments, or declare the goal met and finish.</li>
     <li><b>The harness executes.</b> Tool runs, result comes back. The model never touches the environment directly; the harness does (and can refuse — Week 2's guardrails).</li>
     <li><b>State updates.</b> The observation is appended; facts learned are recorded. This is what makes step 5 smarter than step 2.</li>
     <li><b>The stop check.</b> Goal satisfied? Max-iteration guard hit? Budget burned? If yes, exit; if no, go to 1.</li>
@@ -119,7 +119,7 @@ goal is satisfied — not when you stop typing.</div>
 
 <section><div class="wrap">
   <div class="eyebrow">Discussion</div>
-  <div class="bigq"><span class="qlabel">Discussion question</span>Your agent can call <code>send_payment()</code>. Looking at the five parts of a loop turn — where exactly would you put the human gate, and why not anywhere else?</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Your agent can call <code>send_payment()</code>. Looking at the five parts of a loop turn, where exactly would you put the human gate, and why not anywhere else?</div>
   <button class="revealbtn">See the answer</button>
   <div class="revealbox">Between <b>step 2 and step 3</b> — after the model has committed to a specific action with specific arguments, before the harness executes it. Earlier (before reasoning) you'd interrupt harmless steps too; later (after execution) the money is already gone. The gate should also be <em>selective</em>: pause only for irreversible or spend actions, or approval fatigue will train humans to click yes. This is exactly where Codex's <code>exec_policy</code> sits in the Week 2 material.</div>
 </div></section>
@@ -138,7 +138,7 @@ goal is satisfied — not when you stop typing.</div>
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 4 — Reasoning, Planning &amp; the Agent Loop<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 4: Reasoning, Planning &amp; the Agent Loop<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

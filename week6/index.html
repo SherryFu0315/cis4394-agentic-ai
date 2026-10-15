@@ -63,12 +63,12 @@
 </div></header>
 
 <section><div class="wrap">
-  <div class="callout blue"><b>📌 This week's logistics:</b> the <b>final-project proposal is due this week</b> on iCollege — the two sections’ deadlines are a day apart, so <b>check iCollege for your section’s due date</b>. See the <a href="exercises.html#proposal">proposal checklist</a> below before you submit. <b>Group Assignment 2</b> is in progress and is <b>due in Week 8</b>. <b>No quiz this week.</b> The <a href="../week2/radar.html">Agent Radar</a> presenter slots continue — sign up for an open week.</div>
+  <div class="callout blue"><b>📌 This week's logistics:</b> the <b>final-project proposal is due this week</b> on iCollege. The two sections’ deadlines are a day apart, so <b>check iCollege for your section’s due date</b>. See the <a href="exercises.html#proposal">proposal checklist</a> below before you submit. <b>Group Assignment 2</b> is in progress and is <b>due in Week 8</b>. <b>No quiz this week.</b> The <a href="../week2/radar.html">Agent Radar</a> presenter slots continue — sign up for an open week.</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">The big question</div>
-  <div class="bigq"><span class="qlabel">Discussion question</span>Your company builds five agents. Each one needs the CRM, the data warehouse, email, and the ticketing system. How many integrations does your team write — and how many do they <em>maintain</em> when the CRM changes its API?</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Your company builds five agents. Each one needs the CRM, the data warehouse, email, and the ticketing system. How many integrations does your team write, and how many do they <em>maintain</em> when the CRM changes its API?</div>
   <button class="revealbtn">See the answer</button>
   <div class="revealbox">Written the hand-wired way: <b>5 × 4 = 20</b> integrations, and when the CRM ships a breaking change you fix it in <b>five</b> places — each written by a different team, at a different time, with different error handling. Written against a shared protocol: each agent speaks the protocol once and each system exposes a server once, so it is <b>5 + 4 = 9</b> pieces, and the CRM change is fixed in <b>one</b> place for everybody. That collapse — from a product to a sum — is the entire business case for MCP and A2A, and it is why this week is about plumbing rather than intelligence.</div>
 </div></section>
@@ -95,7 +95,7 @@
         <div class="card"><span class="kicker">Bespoke</span><div class="bigcount red" id="cntBespoke">20</div><p class="small" style="margin-top:8px">connections to build and maintain — one per agent-system pair.</p></div>
         <div class="card"><span class="kicker">With a shared protocol</span><div class="bigcount" id="cntProto">9</div><p class="small" style="margin-top:8px">connections — M clients plus N servers, each written once.</p></div>
       </div>
-      <div class="callout" id="nmVerdict" style="margin-top:14px"><b>That is a 55% smaller maintenance surface</b> — and the gap widens every time you add an agent or a system.</div>
+      <div class="callout" id="nmVerdict" style="margin-top:14px"><b>That is a 55% smaller maintenance surface</b>, and the gap widens every time you add an agent or a system.</div>
     </div>
   </div>
   <div class="callout blue" style="margin-top:20px"><b>Read the arithmetic honestly.</b> A standard does not remove the <em>work</em> of connecting to a CRM; somebody still writes that connector. It removes the <b>combinatorics</b> — the reason the same connector gets written five times. The payoff is in reuse, so it compounds: at 2 agents × 4 systems you save a quarter of the surface; at 20 × 30 you are comparing 600 bespoke integrations to 50. <span class="small">(Illustrative arithmetic, not measured data.)</span></div>
@@ -108,14 +108,14 @@
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">The analogy</span>
       <p class="small" style="margin-top:8px">Before USB-C, every device shipped its own charger and its own cable. The port did not make laptops better; it made <em>everything else</em> plug in. MCP is pitched the same way: one connector shape between an AI application and the tools and data it needs, so a connector built for one agent works for the next one. Anthropic used exactly this framing when it introduced MCP as an open standard in <b>November 2024</b> (<a class="doc" href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener">Anthropic, 2024 ↗</a>).</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Where the analogy leaks</span>
-      <p class="small" style="margin-top:8px">A USB-C cable cannot lie to you. An MCP server can: it runs code, it returns text your model will read as instruction-shaped input, and it sits <em>inside</em> your trust boundary the moment you connect it. Plugging in a charger is a hardware decision; plugging in a server is a <b>supply-chain</b> decision. Hold onto that difference — it is the security thread that runs through page 01 and the case on page 03.</p></div>
+      <p class="small" style="margin-top:8px">A USB-C cable cannot lie to you. An MCP server can: it runs code, it returns text your model will read as instruction-shaped input, and it sits <em>inside</em> your trust boundary the moment you connect it. Plugging in a charger is a hardware decision; plugging in a server is a <b>supply-chain</b> decision. Hold onto that difference. It is the security thread that runs through page 01 and the case on page 03.</p></div>
   </div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">Two standards, two directions</div>
   <h2>One goes down. One goes sideways.</h2>
-  <p class="lede">The single most useful thing you can memorize this week: <b>MCP connects an agent to tools and data. A2A connects an agent to other agents.</b> They are complementary, not competing — a single agent can speak both at once.</p>
+  <p class="lede">The single most useful thing you can memorize this week: <b>MCP connects an agent to tools and data. A2A connects an agent to other agents.</b> They are complementary, not competing. A single agent can speak both at once.</p>
   <div class="grid2">
     <div class="card"><span class="kicker">MCP · vertical</span><h3 style="margin-top:6px">Agent ↔ tools &amp; data</h3>
       <p class="small">Your agent reaches <em>down</em> into a filesystem, a database, a ticketing API, a document store. The thing on the other end is not intelligent — it exposes capabilities and data, and your agent decides what to do with them. Open standard, introduced by Anthropic (2024); broadly adopted across the industry during 2025.</p>
@@ -153,11 +153,11 @@
   <div class="eyebrow">Why managers care</div>
   <h2>Standards are an IS lever, not a developer preference</h2>
   <div class="grid3">
-    <div class="card"><span class="kicker">Cost</span><p class="small" style="margin-top:8px">The line item that kills agent projects is rarely model spend — it is integration and the maintenance tail behind it. M+N is a budget argument before it is an architecture argument, and it is the one a CFO can check with arithmetic.</p></div>
+    <div class="card"><span class="kicker">Cost</span><p class="small" style="margin-top:8px">The line item that kills agent projects is rarely model spend. It is integration and the maintenance tail behind it. M+N is a budget argument before it is an architecture argument, and it is the one a CFO can check with arithmetic.</p></div>
     <div class="card"><span class="kicker">Leverage</span><p class="small" style="margin-top:8px">If your sixty connectors are written against one vendor's proprietary format, your renewal conversation has no exit. If they are written against an open protocol, switching hosts is a configuration change. Optionality <em>is</em> negotiating power.</p></div>
-    <div class="card"><span class="kicker">Trust &amp; audit</span><p class="small" style="margin-top:8px">A protocol boundary is also a control point: one place to log every call, allow-list every server, pin every version, and put the human gate. Ad-hoc glue has no such place — which is why nobody can tell you what it did last Tuesday.</p></div>
+    <div class="card"><span class="kicker">Trust &amp; audit</span><p class="small" style="margin-top:8px">A protocol boundary is also a control point: one place to log every call, allow-list every server, pin every version, and put the human gate. Ad-hoc glue has no such place, which is why nobody can tell you what it did last Tuesday.</p></div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>🎯 Take it to your final project:</b> your proposal is due this week. Add one paragraph naming the boundary in your system — which capability could you expose as an MCP tool, or at minimum, what does your tool interface look like written down as a contract? Then name the one call in it that gets a human gate. Interoperability is a design habit you build early, not a migration you do later.</div>
+  <div class="callout" style="margin-top:20px"><b>🎯 Take it to your final project:</b> your proposal is due this week. Add one paragraph naming the boundary in your system, which capability could you expose as an MCP tool, or at minimum, what does your tool interface look like written down as a contract? Then name the one call in it that gets a human gate. Interoperability is a design habit you build early, not a migration you do later.</div>
 </div></section>
 
 <div class="wrap pager">
@@ -168,7 +168,7 @@
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 6 — MCP &amp; A2A: The Interoperability Standards<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 6: MCP &amp; A2A: The Interoperability Standards<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

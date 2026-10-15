@@ -86,7 +86,7 @@
         <span class="tag">Steps 2 &amp; 6 · the model</span>
         <span class="tag">Steps 1, 3, 4, 5 · your code</span>
       </div>
-      <p class="small" style="margin-top:12px">Four of the six steps are plain software you can unit-test. This is the same ownership split as the loop in <a href="../week4/loop.html">Week 4</a> — and the reason agent safety is mostly an engineering problem, not a prompting problem.</p>
+      <p class="small" style="margin-top:12px">Four of the six steps are plain software you can unit-test. This is the same ownership split as the loop in <a href="../week4/loop.html">Week 4</a>, and the reason agent safety is mostly an engineering problem, not a prompting problem.</p>
     </div>
   </div>
 </div></section>
@@ -94,7 +94,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive · step through one round trip</div>
   <h2>An invoice, two tools, one bad argument</h2>
-  <p class="lede">The episode: <em>“Our Berlin supplier invoiced 4,817 units at €293 each, plus 18% VAT. What is that in USD?”</em> The agent has two tools — <code>calculator</code> and <code>fx_rate</code> — and it will get one call wrong on purpose so you can watch what happens next. Press <b>Step</b>.</p>
+  <p class="lede">The episode: <em>“Our Berlin supplier invoiced 4,817 units at €293 each, plus 18% VAT. What is that in USD?”</em> The agent has two tools — <code>calculator</code> and <code>fx_rate</code>, and it will get one call wrong on purpose so you can watch what happens next. Press <b>Step</b>.</p>
   <div class="sim2">
     <div class="loopbox">
       <svg viewBox="0 0 480 330" aria-label="function calling loop diagram">
@@ -123,8 +123,8 @@
       <div class="statepanel" id="simState"><span class="kicker">Agent state</span></div>
     </div>
   </div>
-  <div class="callout"><b>Three things to notice on your way through.</b> <b>(1)</b> The line marked <em>EMITS</em> is only text — nothing has executed at that moment, which is exactly why a gate can still stop it. <b>(2)</b> The failed <code>fx_rate</code> call did not raise an exception into your users' faces; the validation error was handed <em>back to the model</em> as an observation, and the model repaired its own call. <b>(3)</b> Read the whole trace as the Week 2 evidence standard: <em>state before → observation → available actions → selected action → result → state after</em>. Every tool call produces that record for free.</div>
-  <p class="small" style="margin-top:14px">The <code>fx_rate</code> value of 1.08 above is an <b>illustrative fixed rate returned by a stub tool</b> written for teaching — not a live or historical quote. The euro subtotal (4,817 × 293 × 1.18 = 1,665,429.58) is exact.</p>
+  <div class="callout"><b>Three things to notice on your way through.</b> <b>(1)</b> The line marked <em>EMITS</em> is only text. Nothing has executed at that moment, which is exactly why a gate can still stop it. <b>(2)</b> The failed <code>fx_rate</code> call did not raise an exception into your users' faces; the validation error was handed <em>back to the model</em> as an observation, and the model repaired its own call. <b>(3)</b> Read the whole trace as the Week 2 evidence standard: <em>state before → observation → available actions → selected action → result → state after</em>. Every tool call produces that record for free.</div>
+  <p class="small" style="margin-top:14px">The <code>fx_rate</code> value of 1.08 above is an <b>illustrative fixed rate returned by a stub tool</b> written for teaching, not a live or historical quote. The euro subtotal (4,817 × 293 × 1.18 = 1,665,429.58) is exact.</p>
 </div></section>
 
 <section><div class="wrap">
@@ -164,7 +164,7 @@
       <p class="small">Because it is a request, three useful things are possible before anything runs: you can <b>validate</b> it, you can <b>refuse</b> it, and you can <b>show it to a human</b>. Page 02 is entirely about using that window.</p>
     </div>
   </div>
-  <div class="callout blue" style="margin-top:20px"><b>The description is a prompt.</b> The model chooses between tools by reading their descriptions, in the same way it reads any other instruction. A vague description (<em>“handles currency stuff”</em>) produces vague behaviour: wrong tool, missing arguments, silent non-use. In Python you usually write that description as a docstring — which means <b>the docstring is the interface</b>, and it deserves the same care as an API contract. Page 02 makes this concrete, and you will break it deliberately in the <a href="exercises.html">hands-on exercise</a>.</div>
+  <div class="callout blue" style="margin-top:20px"><b>The description is a prompt.</b> The model chooses between tools by reading their descriptions, in the same way it reads any other instruction. A vague description (<em>“handles currency stuff”</em>) produces vague behaviour: wrong tool, missing arguments, silent non-use. In Python you usually write that description as a docstring, which means <b>the docstring is the interface</b>, and it deserves the same care as an API contract. Page 02 makes this concrete, and you will break it deliberately in the <a href="exercises.html">hands-on exercise</a>.</div>
 </div></section>
 
 
@@ -172,7 +172,7 @@
 <section><div class="wrap">
   <div class="eyebrow">The code</div>
   <h2>A tool is just a function</h2>
-  <p class="lede">Whatever you build with, defining a tool means defining an ordinary function: the <b>type hints</b> become the parameter types and the <b>docstring</b> becomes the description the model reads. In plain Python you hand the function straight to the model — that is what you will do on <a href="local.html">page 03</a>. The version below adds a framework decorator, which changes nothing about the idea.</p>
+  <p class="lede">Whatever you build with, defining a tool means defining an ordinary function: the <b>type hints</b> become the parameter types and the <b>docstring</b> becomes the description the model reads. In plain Python you hand the function straight to the model. That is what you will do on <a href="local.html">page 03</a>. The version below adds a framework decorator, which changes nothing about the idea.</p>
   <div class="grid2" style="align-items:start">
     <div class="codebox"><span class="ck">from</span> langchain_core.tools <span class="ck">import</span> tool
 
@@ -227,7 +227,7 @@
   <h2>Two papers worth knowing by name</h2>
   <div class="grid2">
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">The pattern</span><h3 style="margin-top:6px">ReAct (Yao et al., 2022)</h3>
-      <p class="small">Interleaving reasoning traces with actions — <em>Thought → Action → Observation</em>, looped — so that the model's next decision is grounded in a real result rather than in its own guess. Week 4 used it as a reasoning pattern; this week, the “Action” is literally a tool call and the “Observation” is literally a return value. <a class="doc" href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">arXiv:2210.03629 ↗</a></p></div>
+      <p class="small">Interleaving reasoning traces with actions — <em>Thought → Action → Observation</em>, looped, so that the model's next decision is grounded in a real result rather than in its own guess. Week 4 used it as a reasoning pattern; this week, the “Action” is literally a tool call and the “Observation” is literally a return value. <a class="doc" href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">arXiv:2210.03629 ↗</a></p></div>
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">The capability</span><h3 style="margin-top:6px">Toolformer (Schick et al., 2023)</h3>
       <p class="small">The paper whose title is the claim: <em>Language Models Can Teach Themselves to Use Tools.</em> It showed that a model can learn, in a largely self-supervised way, <b>which</b> API to call, <b>when</b> to call it, and <b>what</b> to pass — deciding for itself where a tool call helps. That is why tool use is a general capability you can design around, not a trick that needs bespoke training per tool. <a class="doc" href="https://arxiv.org/abs/2302.04761" target="_blank" rel="noopener">arXiv:2302.04761 ↗</a></p></div>
   </div>
@@ -259,7 +259,7 @@
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 5 — Tool Use &amp; Function Calling<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 5: Tool Use &amp; Function Calling<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

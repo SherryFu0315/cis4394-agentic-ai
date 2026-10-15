@@ -93,7 +93,7 @@
       <p class="small" id="verdict" style="margin-top:14px"></p>
     </div>
     <div>
-      <div class="term" id="runlog"><span class="t-dim">No runs yet. Press “Run the task” — run #1 is the one you would have demoed.</span></div>
+      <div class="term" id="runlog"><span class="t-dim">No runs yet. Press “Run the task”; run #1 is the one you would have demoed.</span></div>
     </div>
   </div>
   <div class="callout" style="margin-top:20px"><b>Read what just happened:</b> nothing was misconfigured and nothing crashed. Runs 3 and 5 failed for reasons that live inside normal agent behavior: an empty tool result treated as an answer, and a loop that burned its <a href="../week4/langgraph.html">step cap</a> on pagination. Both failures returned <em>confident-looking output</em>. That is the failure mode evaluation exists to catch: agents rarely fail loudly.</div>
@@ -260,7 +260,7 @@ function doRun(){
 document.getElementById('btnRun').addEventListener('click',doRun);
 document.getElementById('btnRunAll').addEventListener('click',()=>{while(rIdx<RUNS.length)doRun()});
 document.getElementById('btnRunReset').addEventListener('click',()=>{
-  rIdx=0;logEl.innerHTML='<span class="t-dim">No runs yet. Press “Run the task” — run #1 is the one you would have demoed.</span>';
+  rIdx=0;logEl.innerHTML='<span class="t-dim">No runs yet. Press “Run the task”; run #1 is the one you would have demoed.</span>';
   renderChips();renderScores();
   const b=document.getElementById('btnRun');b.disabled=false;b.style.opacity='1';
 });
