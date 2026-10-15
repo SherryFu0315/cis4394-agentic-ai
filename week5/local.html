@@ -74,7 +74,7 @@ table.plain td,table.plain th{font-size:13.5px}
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">03 · Hands-on lab</div>
   <h1>Build a tool-calling agent on <em>your own</em> laptop.</h1>
-  <p class="lede">Last week you installed Ollama and downloaded a model. This page turns that model into an agent that calls real Python tools — no API key, no cost, nothing leaves your machine. Then you measure how reliable it actually is, and use tool design to make it better.</p>
+  <p class="lede">Last week you installed Ollama and downloaded a model. This page turns that model into an agent that calls real Python tools — no API key, no cost, nothing leaves your machine. Then you measure how reliable it is, and use tool design to make it better.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -257,7 +257,7 @@ The result of 4817 * 293 is 1411381.</div>
 
   <div class="bigq" style="margin-top:22px"><span class="qlabel">Discussion question 2</span>Setup C moved the plan — multiply, add tax, convert — out of the model and into your Python function. Is this still an agent, or has it become a workflow?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">For <em>this</em> question, it is much closer to a workflow: you, the developer, decided the steps, and the model only recognizes the request and fills in five arguments. That is not a defeat — Week 1's rule is to choose the <b>lowest level of autonomy that solves the problem</b>, and a small local model plus a well-designed tool is cheap and far more reliable than setup B. The agentic part comes back when the requests vary and the model has to decide <em>which</em> of several tools to use, in what order, and when to stop. The design question for your project is how much planning to leave to your model, given what you measured it can do.</div>
+  <div class="revealbox">For <em>this</em> question, it is much closer to a workflow: you, the developer, decided the steps, and the model only recognizes the request and fills in five arguments. That is not a defeat — Week 1's rule is to choose the <b>lowest level of autonomy that solves the problem</b>, and a small local model plus a well-designed tool is cheap and far more reliable than setup B. The agentic part comes back when the requests vary and the model must decide <em>which</em> of several tools to use, in what order, and when to stop. The design question for your project is how much planning to leave to your model, given what you measured it can do.</div>
 
   <div class="bigq" style="margin-top:22px"><span class="qlabel">Discussion question 3</span><code>ollama show</code> lists "tools" for your model. Is that enough to build your final project on it?</div>
   <button class="revealbtn">See the answer</button>
@@ -279,7 +279,7 @@ The result of 4817 * 293 is 1411381.</div>
 <section><div class="wrap">
   <div class="eyebrow">Step 5 · 5_demo_order_agent.py</div>
   <h2>Two tools, two risk levels, one human gate</h2>
-  <p class="lede">The invoice agent had one job. A real agent carries several tools, and the model has to pick — which is where <a href="design.html">page 02</a>’s triage becomes concrete. This one is a customer-service assistant for an online store:</p>
+  <p class="lede">The invoice agent had one job. A real agent carries several tools, and the model must pick — which is where <a href="design.html">page 02</a>’s triage becomes concrete. This one is a customer-service assistant for an online store:</p>
   <div class="grid2">
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Auto-run</span><h3 style="margin-top:6px"><code>lookup_order(order_id)</code></h3><p class="small">Read-only. It cannot change anything, so waiting for a human would only slow the customer down. The harness just runs it.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Human gate</span><h3 style="margin-top:6px"><code>issue_refund(order_id, amount_usd, reason)</code></h3><p class="small">It moves money and cannot be undone. The harness stops, prints exactly what is about to happen, and waits for a person to type <code>y</code>.</p></div>
@@ -310,7 +310,7 @@ Your order ORD-004411 is shipped, 2 items, total $84.20.</div>
 
 [step 2] FINAL ANSWER:
 I can’t process that refund — a person will follow up with you.</div>
-  <div class="callout blue"><b>Look at what the denial actually is:</b> the refusal goes back into the conversation as an <em>observation</em>, exactly like a tool result. The model is not overruled in secret — it is told what happened and has to carry on from there. That is the whole shape of a human gate: the model proposes, a person disposes, and the agent keeps its trace either way.</div>
+  <div class="callout blue"><b>Look at what the denial is:</b> the refusal goes back into the conversation as an <em>observation</em>, exactly like a tool result. The model is not overruled in secret — it is told what happened and must carry on from there. That is the whole shape of a human gate: the model proposes, a person disposes, and the agent keeps its trace either way.</div>
 
   <h3 style="margin-top:30px">Getting a small model to choose well: four attempts</h3>
   <p class="small" style="max-width:860px">This agent did not work on the first try. The numbers below are real runs of the three cases on <code>qwen2.5:0.5b</code>, changing only the instructions — no change to the model, no change to the tool code.</p>

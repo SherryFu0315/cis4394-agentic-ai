@@ -100,7 +100,7 @@
         <g class="memnode" id="mem2"><rect x="162" y="238" width="136" height="62"/><text x="230" y="264" text-anchor="middle">semantic</text><text class="sub" x="230" y="282" text-anchor="middle">what is true</text></g>
         <g class="memnode" id="mem3"><rect x="314" y="238" width="136" height="62"/><text x="382" y="264" text-anchor="middle">procedural</text><text class="sub" x="382" y="282" text-anchor="middle">how to do it</text></g>
       </svg>
-      <p class="small" style="margin:10px 6px 4px">Amber = volatile. The three boxes at the bottom are <b>long-term</b> stores: they persist between runs, and something has to load them back in.</p>
+      <p class="small" style="margin:10px 6px 4px">Amber = volatile. The three boxes at the bottom are <b>long-term</b> stores: they persist between runs, and something must load them back in.</p>
     </div>
     <div>
       <div class="memnote" id="memNote">Click a box in the diagram.</div>
@@ -125,7 +125,7 @@
       <p class="small">Storing everything is the same mistake as putting everything in the context window — you just move the mess. A workable filter asks four questions of each candidate memory:</p>
       <ol class="steps" style="margin-top:14px">
         <li><b>Is it durable?</b> True next week, not just for this turn. "User prefers aisle seats" is durable; "user is currently looking at flight 442" is not.</li>
-        <li><b>Is it reusable?</b> Will a future run actually consult it? A fact nothing will ever retrieve is storage cost with no upside.</li>
+        <li><b>Is it reusable?</b> Will a future run consult it? A fact nothing will ever retrieve is storage cost with no upside.</li>
         <li><b>Is it expensive to recompute?</b> Something learned from six tool calls is worth saving; something one cheap lookup returns is not.</li>
         <li><b>Is it allowed?</b> Do you have a basis to retain it, and can you delete it on request? If not, the answer to "should we store this" is no — regardless of how useful it is.</li>
       </ol>
@@ -136,7 +136,7 @@
       <ol class="steps" style="margin-top:14px">
         <li><b>At the start of a session</b>, load a small, bounded profile: the handful of semantic facts about this user, plus the standing procedural rules.</li>
         <li><b>On relevance</b>, retrieve mid-run by similarity to the current sub-task — the same top-<em>k</em> mechanism as RAG on page 02.</li>
-        <li><b>On failure</b>, pull episodic records of previous attempts at this task. This is the retry that gets smarter instead of louder.</li>
+        <li><b>On failure</b>, pull episodic records of prior attempts at this task. This is the retry that gets smarter instead of louder.</li>
         <li><b>Bound it.</b> A cap on how many memories can enter the prompt, and a recency or confidence tiebreak. Memory competes for the same token budget as everything else.</li>
       </ol>
       <p class="small" style="margin-top:12px">Then close the loop: log which memories were injected on the turn that produced a bad answer. Without that, a poisoned memory is invisible — the trace shows a confident model and no reason for it.</p>
@@ -148,10 +148,10 @@
 <section><div class="wrap">
   <div class="eyebrow">Governance</div>
   <h2>A memory store is retained personal data</h2>
-  <p class="lede">The engineering question is "what should the agent remember?" The business question is "what are we now holding, about whom, and for how long?" They have to be answered together, because the second one has consequences the first one cannot see.</p>
+  <p class="lede">The engineering question is "what should the agent remember?" The business question is "what are we now holding, about whom, and for how long?" They must be answered together, because the second one has consequences the first one cannot see.</p>
   <div class="grid3">
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Consent &amp; notice</span><p class="small" style="margin-top:8px">A user talking to an assistant does not obviously expect a durable profile to be built from it. If your agent writes semantic facts about people, someone has to be told — and the agent should be able to say what it knows about you when asked.</p></div>
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Retention &amp; deletion</span><p class="small" style="margin-top:8px">"Forget me" has to be executable. That means every memory carries an owner ID and a timestamp, and deletion reaches the vector index and the backups too — not just the pretty table in the admin UI.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Consent &amp; notice</span><p class="small" style="margin-top:8px">A user talking to an assistant does not obviously expect a durable profile to be built from it. If your agent writes semantic facts about people, someone must be told — and the agent should be able to say what it knows about you when asked.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Retention &amp; deletion</span><p class="small" style="margin-top:8px">"Forget me" must be executable. That means every memory carries an owner ID and a timestamp, and deletion reaches the vector index and the backups too — not just the pretty table in the admin UI.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Contamination</span><p class="small" style="margin-top:8px">Memory is an input channel, so it is an <b>attack surface</b>. Text the agent read in one session and saved becomes an instruction it reads back later — prompt injection with a delay fuse (Week 2's J004). Treat stored memories as untrusted data, not as system prompt.</p></div>
   </div>
   <div style="margin-top:22px">

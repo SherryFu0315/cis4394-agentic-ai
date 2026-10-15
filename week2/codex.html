@@ -63,7 +63,7 @@
   </div>
   <div class="card" style="margin-top:26px;padding:28px">
     <h3 style="margin-bottom:4px">The shifts nest — each one contains the last</h3>
-    <p class="small" style="margin-bottom:16px">These are not replacements. A harness still contains context engineering, which still contains prompting — each shift wraps the previous one in more machinery. Your prompt-engineering skills aren’t obsolete; they are now one layer of a bigger system.</p>
+    <p class="small" style="margin-bottom:16px">These are not replacements. A harness still contains context engineering, which still contains prompting — each shift wraps the prior one in more machinery. Your prompt-engineering skills aren’t obsolete; they are now one layer of a bigger system.</p>
     <svg viewBox="0 0 900 470" style="width:100%;max-width:860px;height:auto;display:block;margin:0 auto;font-family:var(--sans)" role="img" aria-label="Nested diagram: harness engineering contains context engineering, which contains prompt engineering, which wraps the model">
       <rect x="8" y="8" width="884" height="454" rx="16" fill="#eef2fb" stroke="#0039a6" stroke-width="2"/>
       <text x="34" y="44" font-size="17" font-weight="700" fill="#0039a6">HARNESS ENGINEERING</text>
@@ -100,7 +100,7 @@
       <h3>The top level, in one pass</h3>
       <div style="overflow:auto"><table class="plain"><tbody>
         <tr><td><code>codex-rs/</code></td><td>The engine room — the agent’s core, written in Rust. <b>Today’s destination.</b></td></tr>
-        <tr><td><code>codex-cli/</code></td><td>The npm wrapper you actually install (<code>@openai/codex</code>) — a shell around the Rust engine.</td></tr>
+        <tr><td><code>codex-cli/</code></td><td>The npm wrapper you install (<code>@openai/codex</code>) — a shell around the Rust engine.</td></tr>
         <tr><td><code>sdk/</code> · <code>docs/</code></td><td>For developers embedding Codex; documentation.</td></tr>
         <tr><td><code>AGENTS.md</code> · <code>.codex/</code></td><td>⭐ The repo carries its <em>own</em> agent instructions — OpenAI uses Codex to build Codex. Layer 3, live, eating its own dog food.</td></tr>
         <tr><td>everything else</td><td>Build systems, CI, scripts — engineering plumbing; skip.</td></tr>
@@ -137,7 +137,7 @@
 <section><div class="wrap">
   <div class="eyebrow">The nine layers</div>
   <h2>Anatomy of a coding agent</h2>
-  <p class="lede">Click each layer. Together they answer one question: what has to surround a language model before it can actually <em>do</em> things?</p>
+  <p class="lede">Click each layer. Together they answer one question: what must surround a language model before it can <em>do</em> things?</p>
   <div class="grouptask"><span class="gk">👥 Group task · Jigsaw · 5 min prep + 60 seconds each</span>
     <p>Your group claims <b>two layers</b> below. Read them, discuss the layer’s question, and agree on your answer — <em>then</em> check it against the Suggested answer.</p>
     <p class="prod"><b>Produce:</b> teach your layers to the class in 60 seconds each, in your own words — no reading the panel aloud.</p>
@@ -155,7 +155,7 @@
   <div class="card">
     <button class="revealbtn">Reveal the line-by-line evidence</button>
     <div class="revealbox">
-      <div style="overflow:auto"><table class="plain"><thead><tr><th>Layer</th><th>Where</th><th>What the prompt actually says</th></tr></thead><tbody>
+      <div style="overflow:auto"><table class="plain"><thead><tr><th>Layer</th><th>Where</th><th>What the prompt says</th></tr></thead><tbody>
         <tr><td><b>1 &middot; Goal</b></td><td>Task execution</td><td>&ldquo;keep going <b>until the query or task is completely resolved</b>, before ending your turn&rdquo; &mdash; the goal persists across many actions.</td></tr>
         <tr><td><b>2 &middot; Model / Reasoning</b></td><td>Opening line</td><td>&ldquo;You are <b>GPT-5.2</b> running in the Codex CLI&rdquo; &mdash; the very first sentence separates the model from the harness: this whole file is the harness talking <em>to</em> the model.</td></tr>
         <tr><td><b>3 &middot; Instructions</b></td><td>AGENTS.md spec</td><td>The entire file <b>is</b> this layer. It even defines scope and precedence: nested AGENTS.md files win over outer ones; direct system/user instructions win over AGENTS.md.</td></tr>

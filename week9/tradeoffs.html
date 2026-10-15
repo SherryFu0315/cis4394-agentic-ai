@@ -67,7 +67,7 @@
       <p class="small"><a class="doc" href="https://www.langchain.com/blog/how-and-when-to-build-multi-agent-systems" target="_blank" rel="noopener">LangChain — How and when to build multi-agent systems ↗</a></p>
     </div>
   </div>
-  <div class="callout blue" style="margin-top:20px"><b>Notice they do not actually disagree.</b> Anthropic built a multi-agent system for open-ended <em>search</em>; Cognition warns against multi-agent systems for coherent <em>construction</em>; LangChain names the dividing line. All three point at the same thing: <b>context fragmentation</b>. Where fragments can be checked independently, splitting works. Where the answer only makes sense as a whole, splitting breaks it. When an interviewer asks you "are you pro or anti multi-agent?", this paragraph is the answer.</div>
+  <div class="callout blue" style="margin-top:20px"><b>Notice they do not disagree.</b> Anthropic built a multi-agent system for open-ended <em>search</em>; Cognition warns against multi-agent systems for coherent <em>construction</em>; LangChain names the dividing line. All three point at the same thing: <b>context fragmentation</b>. Where fragments can be checked independently, splitting works. Where the answer only makes sense as a whole, splitting breaks it. When an interviewer asks you "are you pro or anti multi-agent?", this paragraph is the answer.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -103,7 +103,7 @@
       <p class="small" style="margin-top:8px">Three questions to put to any team proposing a multi-agent architecture, in order:</p>
       <ol class="steps" style="margin-top:10px">
         <li><b>What does the single-agent baseline score?</b> If there is no baseline, there is no claim. You cannot know a team helped without the number it beat.</li>
-        <li><b>What is the per-run cost of each design, at expected volume?</b> Not the demo cost — the monthly cost at the volume you actually plan to run.</li>
+        <li><b>What is the per-run cost of each design, at expected volume?</b> Not the demo cost — the monthly cost at the volume you plan to run.</li>
         <li><b>What breaks that we would not have been able to debug before?</b> If the answer is "we would read the trace", ask which trace — per-agent, per-hand-off, or the aggregate that hides both.</li>
       </ol>
       <p class="small" style="margin-top:10px">Latency deserves a footnote: parallel workers can genuinely finish a breadth-first task faster in wall-clock time, even while burning more tokens. Speed and cost move in opposite directions here, so be explicit about which one you are buying.</p>
@@ -131,7 +131,7 @@
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">What to log — per agent, per hand-off</span>
       <p class="small" style="margin-top:8px">Each agent gets the Week 2 evidence standard in full: <em>state before → observation → available actions → selected action → result → state after</em>. On top of that, multi-agent adds three things a single-agent trace never needed:</p>
       <ol class="steps" style="margin-top:10px">
-        <li><b>The hand-off payload itself</b> — verbatim, both what was sent and what the receiver actually had in context. Most fragmentation bugs are invisible unless you can diff those two.</li>
+        <li><b>The hand-off payload itself</b> — verbatim, both what was sent and what the receiver had in context. Most fragmentation bugs are invisible unless you can diff those two.</li>
         <li><b>Per-agent cost and step count</b>, so "which agent is expensive" and "which agent is looping" are queries, not guesses.</li>
         <li><b>The verification verdict at each boundary</b> — who checked this result, against what, and what did they conclude. An unchecked boundary is where MAST category 3 lives.</li>
       </ol>

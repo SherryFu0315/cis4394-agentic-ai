@@ -69,7 +69,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">02 · From notebook to production</div>
   <h1>Shipping an <em>agent</em>.</h1>
-  <p class="lede">Two halves, one lesson. First: computer-use agents — the most general thing an agent can do, and the least reliable, according to the benchmarks built to measure it. Then: what actually changes when a working notebook becomes something that runs unattended, costs money per run, and has to be turned off at 2 a.m. by someone who did not write it.</p>
+  <p class="lede">Two halves, one lesson. First: computer-use agents — the most general thing an agent can do, and the least reliable, according to the benchmarks built to measure it. Then: what changes when a working notebook becomes something that runs unattended, costs money per run, and must be turned off at 2 a.m. by someone who did not write it.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -108,7 +108,7 @@ can operate.</div>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/ODaHJzOyVCQ" title="Claude: Computer use for automating operations" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
       <p class="small" style="margin-top:10px">Source: Anthropic (official channel).</p>
     </div>
-    <div class="card"><h3>Operator — OpenAI's first computer-using agent</h3><p class="small">A longer third-party walkthrough (Developers Digest, roughly 16 minutes) of OpenAI's Operator browsing and acting on live sites. Watch it for the failure texture: hesitation, re-reads, and the places a human has to step in.</p>
+    <div class="card"><h3>Operator — OpenAI's first computer-using agent</h3><p class="small">A longer third-party walkthrough (Developers Digest, roughly 16 minutes) of OpenAI's Operator browsing and acting on live sites. Watch it for the failure texture: hesitation, re-reads, and the places a human must step in.</p>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/JJQUL85Ej40" title="Operator: OpenAI's First AI Agent" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
       <p class="small" style="margin-top:10px">Third-party review, not an official OpenAI channel — useful as a demonstration, not as documentation.</p>
     </div>
@@ -118,11 +118,11 @@ can operate.</div>
 <section><div class="wrap">
   <div class="eyebrow">The humbling part</div>
   <h2>What the benchmarks say</h2>
-  <p class="lede">Two research benchmarks put agents in real computer environments and score whether the task actually got done. Both are worth knowing by name, because both are the standard reply to “we'll just let it run.”</p>
+  <p class="lede">Two research benchmarks put agents in real computer environments and score whether the task got done. Both are worth knowing by name, because both are the standard reply to “we'll just let it run.”</p>
   <div class="bench">
     <div class="card"><span class="kicker">Desktop tasks</span>
       <h3 style="margin-top:6px">OSWorld (Xie et al., 2024)</h3>
-      <p class="small">369 real tasks in real operating-system environments, executed and verified rather than graded on plausible-looking output. As reported in the paper at publication: humans completed above roughly 72% of the tasks, while the best model setup the authors evaluated finished around 12%.</p>
+      <p class="small">369 real tasks in real operating-system environments, executed and verified rather than graded on plausible-looking output. As reported in the paper at publication: humans completed above roughly 72% of the tasks, whereas the best model setup the authors evaluated finished around 12%.</p>
       <div class="benchbar">
         <div class="brow"><span>Humans</span><span class="bb"><i style="width:72%"></i></span><span class="v">~72%+</span></div>
         <div class="brow agent"><span>Best agent</span><span class="bb"><i style="width:12%"></i></span><span class="v">~12%</span></div>
@@ -219,7 +219,7 @@ place_order(sku, qty, idempotency_key=key)
 # retry with the SAME key -> the vendor returns the
 # original order instead of creating a second one</div>
     <div>
-      <div class="card"><span class="kicker">What an idempotency key is</span><p class="small" style="margin-top:8px">A caller-generated identifier for <em>this intended action</em>, sent with the request. If the same key arrives twice, the server returns the original result rather than performing the action again. It has to be generated <b>before</b> the first attempt and reused on every retry — a key generated inside the retry loop is a new key each time, which is the same bug wearing a hat.</p></div>
+      <div class="card"><span class="kicker">What an idempotency key is</span><p class="small" style="margin-top:8px">A caller-generated identifier for <em>this intended action</em>, sent with the request. If the same key arrives twice, the server returns the original result rather than performing the action again. It must be generated <b>before</b> the first attempt and reused on every retry — a key generated inside the retry loop is a new key each time, which is the same bug wearing a hat.</p></div>
       <div class="card" style="margin-top:14px"><span class="kicker">Where agents make this worse</span><p class="small" style="margin-top:8px">A retrying agent is not a retrying HTTP client. It may re-plan, decide the order “did not go through,” and place a subtly different one — different quantity, different vendor — which no idempotency key will catch, because it is a genuinely new request. So the loop needs the other half too: <b>read back the state of the world</b> before acting again. Check for an existing order before creating one.</p></div>
     </div>
   </div>
@@ -230,7 +230,7 @@ place_order(sku, qty, idempotency_key=key)
   <h2>Watch it, roll it back, turn it off</h2>
   <div class="grid3">
     <div class="card"><span class="kicker">Monitoring &amp; alerting</span><p class="small" style="margin-top:8px">Log every run as a trace, and alert on the signals that mean something is wrong <em>before</em> a customer notices: cap-hits (an agent that keeps hitting the step limit is failing, not economizing), spend approaching the monthly limit, retry rate, approval-rejection rate, and success rate against your eval suite. Rising rejections at the gate is the most useful early warning you will get — humans are telling you the agent's judgment has drifted.</p></div>
-    <div class="card"><span class="kicker">Rollback</span><p class="small" style="margin-top:8px">A prompt change is a deploy. So is a model version change, and that one can happen without you touching anything. Keep prompts, tool definitions and model versions pinned and versioned, re-run the eval suite before promoting, and be able to return to the previous version in minutes. "Roll back the prompt" should be as ordinary as rolling back code.</p></div>
+    <div class="card"><span class="kicker">Rollback</span><p class="small" style="margin-top:8px">A prompt change is a deploy. So is a model version change, and that one can happen without you touching anything. Keep prompts, tool definitions and model versions pinned and versioned, re-run the eval suite before promoting, and be able to return to the prior version in minutes. "Roll back the prompt" should be as ordinary as rolling back code.</p></div>
     <div class="card"><span class="kicker">The kill switch and the human</span><p class="small" style="margin-top:8px">One flag that stops new runs immediately, reachable by someone who is not you, documented where they will look at 2 a.m. Then name the on-call person, and tell them what to do first: stop new runs, freeze the spend, pull the trace, notify whoever is affected. An unowned agent in production is an incident waiting for a volunteer.</p></div>
   </div>
   <div class="card" style="margin-top:22px"><span class="kicker">Deployment checklist</span>
@@ -241,8 +241,8 @@ place_order(sku, qty, idempotency_key=key)
       <label><input type="checkbox" /> <span>Every irreversible action identified by name, and each one either gated by a human or bounded by a cap I would accept losing.</span></label>
       <label><input type="checkbox" /> <span>Idempotency keys on every action that spends, sends, or creates — generated before the first attempt.</span></label>
       <label><input type="checkbox" /> <span>Full traces stored, for at least as long as a dispute could plausibly arrive.</span></label>
-      <label><input type="checkbox" /> <span>Alerts on cap-hits, spend thresholds, retry spikes, and gate rejections — going somewhere a person actually reads.</span></label>
-      <label><input type="checkbox" /> <span>Pinned model version and versioned prompts, with a tested way back to the previous version.</span></label>
+      <label><input type="checkbox" /> <span>Alerts on cap-hits, spend thresholds, retry spikes, and gate rejections — going somewhere a person reads.</span></label>
+      <label><input type="checkbox" /> <span>Pinned model version and versioned prompts, with a tested way back to the prior version.</span></label>
       <label><input type="checkbox" /> <span>A kill switch that a non-author can find and use, documented in the runbook.</span></label>
       <label><input type="checkbox" /> <span>A named accountable owner and an on-call path — a person, not a team inbox.</span></label>
       <label><input type="checkbox" /> <span>A cost-per-completed-task number measured from real runs, and the manual baseline it is being compared against.</span></label>
@@ -256,7 +256,7 @@ place_order(sku, qty, idempotency_key=key)
   <p class="lede">If you can answer these four in a meeting without hedging, you are ready to deploy. If you cannot, the missing answer is your next task.</p>
   <div class="grid2" style="align-items:start">
     <div class="card"><p style="margin:0;font-weight:600">1 · What does a run cost?</p><button class="revealbtn">What a good answer sounds like</button><div class="revealbox">A measured number per <b>completed task</b>, not per API call, with the arithmetic visible: tokens per step, steps per run, attempts per completion, plus the human review minutes. Then the comparison that makes it mean something — the fully-loaded cost of doing this work the way it is done today, at current volume. A good answer also names the largest lever and what it would save. A weak answer quotes a price per million tokens, which is not a cost and not per task.</div></div>
-    <div class="card"><p style="margin:0;font-weight:600">2 · What happens when it fails?</p><button class="revealbtn">What a good answer sounds like</button><div class="revealbox">Failure is a designed path, not a surprise. Name the modes — a tool errors, the model loops, the cap fires, a purchase half-completes — and say what the system does for each: retry with the same idempotency key, fall back to a simpler path, or stop and hand the task to a human with the trace attached. Say who finds out and how fast. The honest version includes the failure rate you actually measured and the tax it implies in rework.</div></div>
+    <div class="card"><p style="margin:0;font-weight:600">2 · What happens when it fails?</p><button class="revealbtn">What a good answer sounds like</button><div class="revealbox">Failure is a designed path, not a surprise. Name the modes — a tool errors, the model loops, the cap fires, a purchase half-completes — and say what the system does for each: retry with the same idempotency key, fall back to a simpler path, or stop and hand the task to a human with the trace attached. Say who finds out and how fast. The honest version includes the failure rate you measured and the tax it implies in rework.</div></div>
     <div class="card"><p style="margin:0;font-weight:600">3 · Who is accountable?</p><button class="revealbtn">What a good answer sounds like</button><div class="revealbox">A person's name. Not "the AI team," not "the vendor." That person owns the eval numbers, the spend limits, the approval policy and the on-call rotation. Underneath the name sits the machinery that makes accountability possible: an audit trail linking each action to the authorization that permitted it, so "who decided this" has an answer that does not depend on memory. Accountability that cannot be evidenced is just blame waiting to be assigned.</div></div>
     <div class="card"><p style="margin:0;font-weight:600">4 · How do we turn it off?</p><button class="revealbtn">What a good answer sounds like</button><div class="revealbox">One switch, documented, reachable by someone who did not build it, tested at least once. Say what it does precisely: stops new runs, and — separately — whether in-flight runs are drained or killed, because those need different answers when money is moving. Then the sequence after the switch: freeze spend, pull traces, assess what already executed, notify the affected parties, and roll back to the last known-good version. Practice this before you need it; the first time should not be during the incident.</div></div>
   </div>

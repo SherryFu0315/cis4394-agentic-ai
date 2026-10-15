@@ -58,7 +58,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">01 · Why demos lie</div>
   <h1>Evaluating an agent is <em>harder</em> than evaluating a model.</h1>
-  <p class="lede">A model produces one output you can grade. An agent produces a <b>path</b>: a dozen decisions, each one able to poison everything downstream, none of them guaranteed to repeat. Before you can pick a metric, you have to understand what makes the measurement hard.</p>
+  <p class="lede">A model produces one output you can grade. An agent produces a <b>path</b>: a dozen decisions, each one able to poison everything downstream, none of them guaranteed to repeat. Before you can pick a metric, you must understand what makes the measurement hard.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -72,9 +72,9 @@
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">3 · No single right answer</span>
       <p class="small" style="margin-top:8px">“Summarize this ticket,” “draft a reply,” “research three vendors” have no unique correct string to diff against. Exact-match tests, the cheapest and most trustworthy kind, simply don't apply to most of what agents produce — so you need graders that are themselves fallible.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">4 · Stateful and interactive</span>
-      <p class="small" style="margin-top:8px">The agent changes the world as it goes: it writes files, sends messages, books things. You can't rerun step 7 in isolation, and a “correct” final answer reached by an unacceptable route (six needless paid API calls, a policy violation, a lucky guess) is not actually a pass.</p></div>
+      <p class="small" style="margin-top:8px">The agent changes the world as it goes: it writes files, sends messages, books things. You can't rerun step 7 in isolation, and a “correct” final answer reached by an unacceptable route (six needless paid API calls, a policy violation, a lucky guess) is not a pass.</p></div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>Put plainly:</b> unit tests ask “is this output right?” Agent evaluation has to ask “is this output right, <em>how often</em>, and did it get there <em>acceptably</em>?” Three questions, three kinds of measurement — and only the first one looks like software testing.</div>
+  <div class="callout" style="margin-top:20px"><b>Put plainly:</b> unit tests ask “is this output right?” Agent evaluation must ask “is this output right, <em>how often</em>, and did it get there <em>acceptably</em>?” Three questions, three kinds of measurement — and only the first one looks like software testing.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -181,9 +181,9 @@ failure rate        ~ 14%   (about 1 in 7)</div>
 
 <section><div class="wrap">
   <div class="eyebrow">Discussion</div>
-  <div class="bigq"><span class="qlabel">Discussion question</span>Your agent returned the correct final answer on all 20 test cases — but on 6 of them it called the paid enrichment API twice, and on 2 it read a customer record it had no business touching. Your outcome eval says 20/20. What should the report actually say, and what would you have needed to log to say it?</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Your agent returned the correct final answer on all 20 test cases — but on 6 of them it called the paid enrichment API twice, and on 2 it read a customer record it had no business touching. Your outcome eval says 20/20. What should the report say, and what would you have needed to log to say it?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">The report should say <b>outcome 20/20, trajectory 12/20</b> — and treat the trajectory number as the one that governs deployment. Two distinct defects hide behind a perfect outcome score: a <b>cost defect</b> (duplicate paid calls, which scale linearly with volume and will show up as a bill, not as a bug report) and a <b>policy defect</b> (an access violation, which is a compliance incident regardless of whether the answer was right). Neither is visible from the final answer alone.<br /><br />To assert either one you need the per-step record: <b>selected action + arguments</b> (to detect the duplicate call and the record it read), <b>available actions</b> (to show the agent had a compliant alternative), and <b>state before/after</b> (to prove what it actually touched). That's the six-field evidence standard above — and the reason it is worth the storage. The deeper lesson: an eval set that only grades outputs will happily certify an agent that is expensive and non-compliant.</div>
+  <div class="revealbox">The report should say <b>outcome 20/20, trajectory 12/20</b> — and treat the trajectory number as the one that governs deployment. Two distinct defects hide behind a perfect outcome score: a <b>cost defect</b> (duplicate paid calls, which scale linearly with volume and will show up as a bill, not as a bug report) and a <b>policy defect</b> (an access violation, which is a compliance incident regardless of whether the answer was right). Neither is visible from the final answer alone.<br /><br />To assert either one you need the per-step record: <b>selected action + arguments</b> (to detect the duplicate call and the record it read), <b>available actions</b> (to show the agent had a compliant alternative), and <b>state before/after</b> (to prove what it touched). That's the six-field evidence standard above — and the reason it is worth the storage. The deeper lesson: an eval set that only grades outputs will happily certify an agent that is expensive and non-compliant.</div>
 </div></section>
 
 <section><div class="wrap">
