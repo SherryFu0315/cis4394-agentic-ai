@@ -81,7 +81,7 @@ ticket: "Password reset email never arrives" → ?</div>
     <div class="card"><span class="kicker">When it helps vs hurts</span>
       <div style="overflow:auto;margin-top:8px"><table class="plain"><tbody>
         <tr><td style="background:var(--good)"><b>Helps</b></td><td>3-rule discount eligibility · multi-step calculations · ambiguous policy calls</td></tr>
-        <tr><td style="background:var(--bad)"><b>Overkill</b></td><td>Extract a phone number · yes/no lookups — you pay tokens + latency for nothing</td></tr>
+        <tr><td style="background:var(--bad)"><b>Overkill</b></td><td>Extract a phone number · yes/no lookups: you pay tokens + latency for nothing</td></tr>
       </tbody></table></div>
       <p class="small" style="margin-top:8px"><b>For automation:</b> let it reason, then demand a delimited final answer your code can parse: reasoning for the model, structure for the machine.</p>
     </div>
@@ -112,7 +112,7 @@ output: {"vendor":"DataCorp","invoice_no":"DC-2291",
 <section><div class="wrap">
   <div class="eyebrow">The dial</div>
   <h2>Temperature: drag it and watch</h2>
-  <p class="lede">Temperature controls output randomness. Same prompt — <i>“Name our new project-management app”</i> — different dial positions. Drag it.</p>
+  <p class="lede">Temperature controls output randomness. Same prompt (<i>“Name our new project-management app”</i>), different dial positions. Drag it.</p>
   <div class="dialwrap">
     <input type="range" id="tdial" min="0" max="2" step="1" value="0" aria-label="temperature" />
     <div class="diallabels"><span>0 · deterministic</span><span>0.5 · balanced</span><span>1.0 · creative</span></div>
@@ -139,12 +139,12 @@ output: {"vendor":"DataCorp","invoice_no":"DC-2291",
   <p class="lede">Climb in this order; each rung adds reliability at rising cost. Fine-tuning is the top rung for a reason: try everything below it first.</p>
   <div class="ladder">
     <div class="rung"><span><b>Clear instruction</b><span class="small">Say precisely what you want, and what to do when unsure</span></span><span class="cost">free · seconds</span></div>
-    <div class="rung"><span><b>System prompt</b><span class="small">Role, scope, rules, refusals — the policy guardrail</span></span><span class="cost">free · minutes</span></div>
+    <div class="rung"><span><b>System prompt</b><span class="small">Role, scope, rules, refusals: the policy guardrail</span></span><span class="cost">free · minutes</span></div>
     <div class="rung"><span><b>Few-shot examples</b><span class="small">Lock format and labels by showing worked pairs</span></span><span class="cost">free · minutes</span></div>
     <div class="rung"><span><b>Chain-of-thought</b><span class="small">Buy accuracy on multi-step reasoning with tokens</span></span><span class="cost">tokens + latency</span></div>
     <div class="rung"><span><b>Structured output</b><span class="small">Fixed JSON so machines can consume the answer</span></span><span class="cost">free · minutes</span></div>
     <div class="rung"><span><b>Tuned temperature</b><span class="small">Down for automation, up for ideation</span></span><span class="cost">free · seconds</span></div>
-    <div class="rung"><span><b>Curated context</b><span class="small">The right facts in the window — next page</span></span><span class="cost">engineering time</span></div>
+    <div class="rung"><span><b>Curated context</b><span class="small">The right facts in the window (next page)</span></span><span class="cost">engineering time</span></div>
     <div class="rung"><span><b>Fine-tuning</b><span class="small">Train the weights: last resort, needs data + upkeep</span></span><span class="cost">$$ · weeks</span></div>
   </div>
 </div></section>
