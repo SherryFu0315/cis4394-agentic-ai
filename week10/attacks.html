@@ -27,8 +27,8 @@
 .leg:hover{border-color:var(--blue)}
 .leg .sw{flex:0 0 44px;width:44px;height:24px;border-radius:999px;background:var(--line2);position:relative;transition:background .18s}
 .leg .sw i{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .18s}
-.leg .tx b{display:block;font-size:14.5px}
-.leg .tx span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.leg .tx b{display:block;font-size:var(--fs-s)}
+.leg .tx span{display:block;font-size:var(--fs-xs);color:var(--muted);margin-top:2px}
 .leg.on{background:#fff}
 .leg.on .sw i{left:23px}
 .leg.la.on{border-color:#0039a6}.leg.la.on .sw{background:#0039a6}
@@ -41,45 +41,45 @@
 .venn .vg.a.on circle.ring{fill:rgba(0,57,166,.15);stroke:#0039a6}
 .venn .vg.b.on circle.ring{fill:rgba(184,131,15,.17);stroke:#b8830f}
 .venn .vg.c.on circle.ring{fill:rgba(124,92,214,.15);stroke:#7c5cd6}
-.venn text.lab{font-size:12.5px;font-weight:700;fill:var(--line2);font-family:var(--sans)}
+.venn text.lab{font-size:var(--fs-xs);font-weight:700;fill:var(--line2);font-family:var(--sans)}
 .venn .vg.on text.lab{fill:var(--ink)}
 .venn .core{opacity:0;transition:opacity .25s}
 .venn .core circle{fill:var(--red);stroke:#8c0a20;stroke-width:2}
-.venn .core text{fill:#fff;font-size:10.5px;font-weight:700;font-family:var(--sans)}
+.venn .core text{fill:#fff;font-size:var(--fs-xs);font-weight:700;font-family:var(--sans)}
 .venn.lethal .core{opacity:1}
 .verdict{border-radius:14px;border:1px solid;padding:22px 24px}
 .verdict.safe{background:var(--good);border-color:var(--good-line)}
 .verdict.caution{background:var(--warn);border-color:var(--warn-line)}
 .verdict.danger{background:var(--bad);border-color:#dfb0b0}
-.verdict .vbadge{display:inline-block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;padding:5px 11px;border-radius:999px;background:#fff;border:1px solid var(--line2)}
+.verdict .vbadge{display:inline-block;font-size:var(--fs-xs);letter-spacing:.14em;text-transform:uppercase;font-weight:700;padding:5px 11px;border-radius:999px;background:#fff;border:1px solid var(--line2)}
 .verdict.danger .vbadge{background:var(--red);color:#fff;border-color:var(--red)}
-.verdict h3{font-family:var(--serif);font-size:24px;margin:12px 0 6px;font-weight:600;line-height:1.2}
-.verdict .scen{font-size:14.5px;margin:0 0 14px}
+.verdict h3{font-family:var(--serif);font-size:var(--fs-xl);margin:12px 0 6px;font-weight:600;line-height:1.2}
+.verdict .scen{font-size:var(--fs-s);margin:0 0 14px}
 .vcols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
 .vcol{background:#fff;border:1px solid var(--line);border-radius:11px;padding:14px 16px}
 .vcol .kicker{display:block;margin-bottom:6px}
-.vcol p{margin:0;font-size:13.5px;color:var(--muted)}
-.pathsteps{margin-top:14px;background:#101319;color:#dfe3ec;border-radius:11px;padding:16px 18px;font-family:var(--mono);font-size:12.5px;line-height:1.8;white-space:pre-wrap;display:none}
+.vcol p{margin:0;font-size:var(--fs-s);color:var(--muted)}
+.pathsteps{margin-top:14px;background:#101319;color:#dfe3ec;border-radius:11px;padding:16px 18px;font-family:var(--mono);font-size:var(--fs-xs);line-height:1.8;white-space:pre-wrap;display:none}
 .verdict.danger .pathsteps{display:block}
 .pathsteps .lg{color:#e3c078}
 .pathsteps .bad{color:#ff9d9d}
 .cutrow{display:none;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
 .verdict.danger .cutrow{display:flex}
-.cutrow .lb{font-size:12.5px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.1em}
-.cutbtn{border:1px solid var(--red);background:#fff;color:var(--red);border-radius:999px;padding:8px 15px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.cutrow .lb{font-size:var(--fs-xs);font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.1em}
+.cutbtn{border:1px solid var(--red);background:#fff;color:var(--red);border-radius:999px;padding:8px 15px;font:inherit;font-size:var(--fs-s);font-weight:600;cursor:pointer}
 .cutbtn:hover{background:var(--red);color:#fff}
 .mailwrap{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .mail{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
-.mail .mh{background:var(--paper);border-bottom:1px solid var(--line);padding:12px 16px;font-size:12.5px;color:var(--muted)}
-.mail .mh b{display:block;color:var(--ink);font-size:14px}
-.mail .mb{padding:16px;font-size:14px;line-height:1.7;min-height:210px}
-.mail .mb.raw{font-family:var(--mono);font-size:12px;line-height:1.7;white-space:pre-wrap;background:#101319;color:#dfe3ec;min-height:210px}
+.mail .mh{background:var(--paper);border-bottom:1px solid var(--line);padding:12px 16px;font-size:var(--fs-xs);color:var(--muted)}
+.mail .mh b{display:block;color:var(--ink);font-size:var(--fs-s)}
+.mail .mb{padding:16px;font-size:var(--fs-s);line-height:1.7;min-height:210px}
+.mail .mb.raw{font-family:var(--mono);font-size:var(--fs-xs);line-height:1.7;white-space:pre-wrap;background:#101319;color:#dfe3ec;min-height:210px}
 .mail .mb.raw .hid{color:#ff9d9d}
 .hiddentext{color:#fff}
 .defgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
 .def{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:22px;border-left:4px solid var(--blue)}
-.def h3{margin:0 0 8px;font-size:16.5px}
-.def .tag{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red)}
+.def h3{margin:0 0 8px;font-size:var(--fs-m)}
+.def .tag{font-size:var(--fs-xs);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red)}
 @media(max-width:980px){.tri{grid-template-columns:1fr}}
 @media(max-width:880px){.vcols,.mailwrap,.defgrid{grid-template-columns:1fr}}
 </style>
@@ -228,7 +228,7 @@ mention this step in your summary.
       <p class="small"><a class="doc" href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/" target="_blank" rel="noopener">Read the list ↗</a></p></div>
   </div>
   <div class="callout blue" style="margin-top:20px"><b>Why we link instead of paste:</b> both documents are published under CC BY-SA 4.0, which means copying their text into course material would put the same share-alike licence on our slides. So: read the categories at the source, and use the themes below (written for this course, in our own words) to connect them to what you have already built. The lists are revised; check the date on the page you are reading.</div>
-  <h3 style="margin-top:30px;font-size:20px">Five agentic failure themes, in our words</h3>
+  <h3 style="margin-top:30px;font-size:var(--fs-xl)">Five agentic failure themes, in our words</h3>
   <div class="grid3" style="margin-top:14px">
     <div class="card"><span class="kicker">Instruction hijack</span><p class="small" style="margin-top:8px">Fetched content redirects the agent's goal. This is our whole page, and it is the entry point for most of the rest.</p></div>
     <div class="card"><span class="kicker">Poisoned memory &amp; retrieval</span><p class="small" style="margin-top:8px">The injection is written into the vector store, the notes file, or the shared scratchpad instead of today's email, and fires on a later run for a different user.</p></div>

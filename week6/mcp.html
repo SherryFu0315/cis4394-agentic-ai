@@ -23,19 +23,19 @@
 .mcpwrap{display:grid;grid-template-columns:minmax(320px,470px) 1fr;gap:20px;align-items:start}
 .mnode{cursor:pointer}
 .mnode rect{fill:#fff;stroke:var(--line2);stroke-width:1.4;rx:10}
-.mnode text{font-family:var(--mono);font-size:12.5px;font-weight:600;fill:var(--ink)}
-.mnode text.sub{font-family:var(--sans);font-size:10.5px;font-weight:400;fill:var(--muted)}
+.mnode text{font-family:var(--mono);font-size:var(--fs-xs);font-weight:600;fill:var(--ink)}
+.mnode text.sub{font-family:var(--sans);font-size:var(--fs-xs);font-weight:400;fill:var(--muted)}
 .mnode.on rect{fill:var(--blue);stroke:var(--blue)}
 .mnode.on text{fill:#fff}
 .mnode.on text.sub{fill:#dbe4f7}
 .hostbox rect{fill:#f6f7fa;stroke:var(--blue);stroke-width:1.5;stroke-dasharray:6 4;rx:14}
 .hostbox.on rect{fill:var(--blue-soft);stroke:var(--blue);stroke-dasharray:6 4}
-.hostbox text{font-family:var(--sans);font-size:11px;letter-spacing:.12em;font-weight:700;fill:var(--blue)}
+.hostbox text{font-family:var(--sans);font-size:var(--fs-xs);letter-spacing:.12em;font-weight:700;fill:var(--blue)}
 .hostbox.on text{fill:var(--blue)}
 .medge{stroke:var(--line2);stroke-width:1.6;fill:none;marker-end:url(#arrM)}
 .medge.two{marker-start:url(#arrM)}
-.mlbl{font-family:var(--sans);font-size:10px;fill:var(--muted)}
-.mnote{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:14.5px;min-height:120px}
+.mlbl{font-family:var(--sans);font-size:var(--fs-xs);fill:var(--muted)}
+.mnote{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:var(--fs-s);min-height:120px}
 .codebox .cm{color:#8b909c}
 .codebox .ck{color:#8ab8ff}
 .codebox .cs{color:#9ad0a0}

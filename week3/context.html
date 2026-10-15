@@ -22,14 +22,14 @@
 <style>
 .packer{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px}
 .pkitem{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:11px 15px;margin-bottom:8px;background:#fff}
-.pkitem b{font-size:14px}.pkitem .small{display:block}
-.pkitem .tok{font-family:var(--mono);font-size:12.5px;color:var(--muted);white-space:nowrap}
-.pkitem select{font:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.pkitem b{font-size:var(--fs-s)}.pkitem .small{display:block}
+.pkitem .tok{font-family:var(--mono);font-size:var(--fs-xs);color:var(--muted);white-space:nowrap}
+.pkitem select{font:inherit;font-size:var(--fs-s);padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
 .budgetbar{height:26px;border-radius:999px;background:var(--paper);border:1px solid var(--line);overflow:hidden;position:relative;margin-top:16px}
 .budgetbar i{display:block;height:100%;background:var(--blue);transition:width .3s}
 .budgetbar.over i{background:var(--red)}
-.budgetbar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:var(--ink)}
-.pkverdict{margin-top:12px;font-size:14px;min-height:24px}
+.budgetbar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:var(--fs-xs);font-weight:700;color:var(--ink)}
+.pkverdict{margin-top:12px;font-size:var(--fs-s);min-height:24px}
 </style>
 </head>
 <body>

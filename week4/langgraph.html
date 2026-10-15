@@ -23,7 +23,7 @@
 .lgwrap{display:grid;grid-template-columns:minmax(320px,460px) 1fr;gap:20px;align-items:start}
 .lgnode{cursor:pointer}
 .lgnode rect{fill:#fff;stroke:var(--line2);stroke-width:1.4;rx:10}
-.lgnode text{font-family:var(--mono);font-size:13px;font-weight:600;fill:var(--ink)}
+.lgnode text{font-family:var(--mono);font-size:var(--fs-s);font-weight:600;fill:var(--ink)}
 .lgnode.term rect{fill:#f1f3f7;stroke:var(--line2);rx:22}
 .lgnode.on rect{fill:var(--blue);stroke:var(--blue)}
 .lgnode.on text{fill:#fff}
@@ -31,7 +31,7 @@
 .lgnode.cond.on rect{fill:var(--red);stroke:var(--red)}
 .lgedge{stroke:var(--line2);stroke-width:1.6;fill:none;marker-end:url(#arr2)}
 .lgedge.dash{stroke-dasharray:5 4}
-.lgnote{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:14.5px;min-height:96px}
+.lgnote{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:var(--fs-s);min-height:96px}
 .codebox .cm{color:#8b909c}
 .codebox .ck{color:#8ab8ff}
 .codebox .cs{color:#9ad0a0}

@@ -20,16 +20,16 @@
 <link rel="icon" href="../assets/gsu-flame.png" />
 <link rel="stylesheet" href="../assets/site.css" />
 <style>
-.formula{font-family:var(--mono);font-size:15px;background:#101319;color:#e8eaf0;border-radius:10px;padding:14px 18px;margin:12px 0;line-height:1.8;white-space:pre-wrap}
+.formula{font-family:var(--mono);font-size:var(--fs-m);background:#101319;color:#e8eaf0;border-radius:10px;padding:14px 18px;margin:12px 0;line-height:1.8;white-space:pre-wrap}
 .formula .hi{color:#8ab8ff}
 .formula .lo{color:#ff9d9d}
 .calcwrap{display:grid;grid-template-columns:minmax(300px,360px) 1fr;gap:20px;align-items:start}
-.dialwrap label.ctl{display:block;font-size:13px;font-weight:700;color:var(--ink);margin-top:14px}
+.dialwrap label.ctl{display:block;font-size:var(--fs-s);font-weight:700;color:var(--ink);margin-top:14px}
 .dialwrap label.ctl span{color:var(--blue)}
 .readout{display:grid;gap:10px;margin-top:18px}
 .ro{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.ro .lab{font-size:12.5px;color:var(--muted);font-weight:600}
-.ro .val{font-family:var(--serif);font-size:27px;font-weight:600}
+.ro .lab{font-size:var(--fs-xs);color:var(--muted);font-weight:600}
+.ro .val{font-family:var(--serif);font-size:var(--fs-xl);font-weight:600}
 .ro.up .val{color:var(--blue)}
 .ro.down .val{color:var(--red)}
 .ro.base .val{color:var(--ink)}
@@ -37,24 +37,24 @@
 .chartbox svg{width:100%;height:auto;display:block}
 .chartbox .gl{stroke:var(--line);stroke-width:1}
 .chartbox .axis{stroke:var(--line2);stroke-width:1.2}
-.chartbox .tick{font-family:var(--mono);font-size:11px;fill:var(--muted)}
-.chartbox .axlab{font-family:var(--sans);font-size:12px;fill:var(--muted);font-weight:600}
+.chartbox .tick{font-family:var(--mono);font-size:var(--fs-xs);fill:var(--muted)}
+.chartbox .axlab{font-family:var(--sans);font-size:var(--fs-xs);fill:var(--muted);font-weight:600}
 .chartbox .cUp{fill:none;stroke:#0039a6;stroke-width:2.6}
 .chartbox .cDown{fill:none;stroke:#c8102e;stroke-width:2.6}
 .chartbox .kline{stroke:var(--line2);stroke-width:1.2;stroke-dasharray:4 4}
 .chartbox .dot{stroke:#fff;stroke-width:2}
-.chartbox .leg{font-family:var(--sans);font-size:12px;font-weight:700}
-.ptable{width:100%;border-collapse:collapse;font-size:14px;margin-top:14px}
+.chartbox .leg{font-family:var(--sans);font-size:var(--fs-xs);font-weight:700}
+.ptable{width:100%;border-collapse:collapse;font-size:var(--fs-s);margin-top:14px}
 .ptable th,.ptable td{border:1px solid var(--line);padding:10px 13px;text-align:left}
-.ptable th{background:var(--blue-soft);font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.ptable th{background:var(--blue-soft);font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
 .ptable td:first-child{font-weight:700;white-space:nowrap}
-.ptable td.mono{font-family:var(--mono);font-size:13px}
+.ptable td.mono{font-family:var(--mono);font-size:var(--fs-s)}
 .ptable td.drop{color:var(--red);font-weight:700}
 .ptablewrap{overflow-x:auto}
 .biasgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
 .biascard{background:var(--red-soft);border:1px solid #e6bcc4;border-radius:12px;padding:18px 20px}
-.biascard h4{margin:0 0 6px;font-size:15.5px;color:#8f2233}
-.biascard p{margin:0;font-size:13.5px;color:#4b3038}
+.biascard h4{margin:0 0 6px;font-size:var(--fs-m);color:#8f2233}
+.biascard p{margin:0;font-size:var(--fs-s);color:#4b3038}
 @media(max-width:880px){.calcwrap,.biasgrid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -206,7 +206,7 @@
     </div>
   </div>
 
-  <h3 style="margin-top:34px;font-size:20px">The four biases you must be able to name</h3>
+  <h3 style="margin-top:34px;font-size:var(--fs-xl)">The four biases you must be able to name</h3>
   <div class="biasgrid">
     <div class="biascard"><h4>Position bias</h4><p>When comparing two answers, judges can favor the one in a particular position rather than the better one. Documented in <b>Zheng et al., 2023</b>. Your ranking can flip when you swap A and B.</p></div>
     <div class="biascard"><h4>Verbosity / length bias</h4><p>Longer, more elaborate answers tend to score higher, whether or not they are more correct. This is the bias students game accidentally: pad the response and the rubric rewards it.</p></div>
@@ -215,7 +215,7 @@
   </div>
   <div class="callout red" style="margin-top:20px">Why this is worse than having no eval: a biased judge produces a number, a chart, and a sense of rigor. Teams then make deployment decisions on it and stop looking. An unmeasured system at least keeps people suspicious.</div>
 
-  <h3 style="margin-top:30px;font-size:20px">Mitigations: validate the evaluator like you validate the agent</h3>
+  <h3 style="margin-top:30px;font-size:var(--fs-xl)">Mitigations: validate the evaluator like you validate the agent</h3>
   <ol class="steps">
     <li><b>Swap positions and average.</b> Run every pairwise comparison in both orders. If the verdict flips, the judge is reading position, not quality; record that as a disagreement rather than a score.</li>
     <li>Write an explicit rubric with anchors, and give a reference answer. “Rate helpfulness 1–5” invites vibes. “2 = answers the question but omits the policy citation” is checkable, and it is what makes two runs of the judge agree with each other.</li>

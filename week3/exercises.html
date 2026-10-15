@@ -24,8 +24,8 @@
 .videocard{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .videocard .frame{position:relative;padding-top:56.25%;background:#101319}
 .videocard iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.videocard .cap{padding:14px 18px;font-size:13px}
-.videocard .cap b{display:block;font-size:14px;margin-bottom:2px}
+.videocard .cap{padding:14px 18px;font-size:var(--fs-s)}
+.videocard .cap b{display:block;font-size:var(--fs-s);margin-bottom:2px}
 @media(max-width:880px){.videogrid2{grid-template-columns:1fr}}
 </style>
 </head>
@@ -104,7 +104,7 @@ output: {"sentiment":"mixed","one_line_summary":"Great blender, slow shipping","
     </div>
     <div class="card" style="border-top:3px solid var(--blue)"><h3>The reliability check</h3>
       <p class="small" style="margin-top:8px">Run the <b>same document five times</b>:</p>
-      <ul style="padding-left:18px;font-size:14.5px;line-height:1.9;margin:8px 0 0">
+      <ul style="padding-left:18px;font-size:var(--fs-s);line-height:1.9;margin:8px 0 0">
         <li><b>Consistency:</b> are all five outputs identical JSON?</li>
         <li><b>Accuracy:</b> spot-check the values against the source. A prompt can be perfectly consistent and perfectly wrong.</li>
       </ul>
@@ -175,7 +175,7 @@ output: {"sentiment":"mixed","one_line_summary":"Great blender, slow shipping","
 <section><div class="wrap">
   <div class="eyebrow">Take-aways</div>
   <h2>Week 3 in five lines</h2>
-  <ol style="padding-left:22px;font-size:16px;line-height:2">
+  <ol style="padding-left:22px;font-size:var(--fs-m);line-height:2">
     <li><b>Structure is the coupling point</b>: fixed JSON is what lets a model plug into a system.</li>
     <li><b>Context beats cleverness</b>: the right facts in the window outperform a fancier phrasing.</li>
     <li><b>The window is a budget</b>: curate it; stuffing causes context rot.</li>

@@ -24,8 +24,8 @@
 .linkwrap svg{width:100%;height:auto}
 .lkline{stroke:#cfccc2;stroke-width:1.4}
 .lknode circle{fill:#fff;stroke:var(--blue);stroke-width:1.8}
-.lknode text{font-family:var(--mono);font-size:11px;font-weight:700;fill:var(--ink)}
-.lkcount{font-family:var(--serif);font-size:30px;font-weight:600;line-height:1.1}
+.lknode text{font-family:var(--mono);font-size:var(--fs-xs);font-weight:700;fill:var(--ink)}
+.lkcount{font-family:var(--serif);font-size:var(--fs-xxl);font-weight:600;line-height:1.1}
 @media(max-width:880px){.linkwrap{grid-template-columns:1fr}}
 </style>
 </head>
@@ -139,7 +139,7 @@
   <p class="lede">The first step after your proposal: <b>make it run.</b> Milestone I is a working demo of <b>at least one agent</b> on the task you proposed, not a plan, not slides. Submit on iCollege in your own section; the full brief is in the Milestone I dropbox.</p>
   <div class="grid2" style="align-items:start">
     <div class="card"><span class="kicker">Required</span>
-      <ul style="padding-left:18px;font-size:14.5px;margin:10px 0 0;line-height:1.9">
+      <ul style="padding-left:18px;font-size:var(--fs-s);margin:10px 0 0;line-height:1.9">
         <li>One agent that runs end to end on a real input from your task, with <b>at least one real tool</b> and a <b>stop condition</b> (max-iteration guard). Code or no-code; free tiers only; no API keys in the submission.</li>
         <li><b>A demo:</b> a 2–3 minute screen recording, or a live demo in class, showing one full run. (The chat app from <a href="local.html">page 03</a> is a good way to do this.)</li>
         <li><b>One execution trace</b> of that run: reasoning → tool calls → observations → answer.</li>

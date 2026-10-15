@@ -20,7 +20,7 @@
 <link rel="icon" href="../assets/gsu-flame.png" />
 <link rel="stylesheet" href="../assets/site.css" />
 <style>
-.toolbox{background:#101319;color:#dfe3ec;border-radius:14px;padding:20px 24px;font-family:var(--mono);font-size:12.5px;line-height:1.9;white-space:pre-wrap}
+.toolbox{background:#101319;color:#dfe3ec;border-radius:14px;padding:20px 24px;font-family:var(--mono);font-size:var(--fs-xs);line-height:1.9;white-space:pre-wrap}
 .toolbox .tn{color:#9ad0a0}
 .toolbox .td{color:#8b909c}
 .toolbox .tw{color:#ff9d9d}
@@ -28,11 +28,11 @@
 .tier{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:16px 18px;border-top:3px solid var(--blue)}
 .tier:nth-child(2){border-top-color:#8a6d1d}
 .tier:nth-child(3){border-top-color:var(--red)}
-.tier b{font-size:14.5px}
+.tier b{font-size:var(--fs-s)}
 .checklist2{list-style:none;padding:0;margin:14px 0 0}
-.checklist2 li{padding:10px 0 10px 30px;border-bottom:1px solid var(--line);font-size:14.5px;position:relative}
+.checklist2 li{padding:10px 0 10px 30px;border-bottom:1px solid var(--line);font-size:var(--fs-s);position:relative}
 .checklist2 li:last-child{border-bottom:0}
-.checklist2 li::before{content:"☐";position:absolute;left:4px;top:9px;color:var(--blue);font-size:15px}
+.checklist2 li::before{content:"☐";position:absolute;left:4px;top:9px;color:var(--blue);font-size:var(--fs-m)}
 @media(max-width:880px){.tierkey{grid-template-columns:1fr}}
 </style>
 </head>
@@ -121,7 +121,7 @@
   </div>
   <div style="margin-top:24px">
     <div class="eyebrow">Quick practice</div>
-    <h3 style="font-size:20px;margin:12px 0 4px">Triage these three</h3>
+    <h3 style="font-size:var(--fs-xl);margin:12px 0 4px">Triage these three</h3>
     <p class="small" style="margin-bottom:14px">Three tools from a hypothetical campus MCP server. Auto, constrain, or gate?</p>
     <div id="ccheck"></div>
   </div>
