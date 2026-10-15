@@ -88,14 +88,14 @@
     <tr><td><b>Parallel breadth</b></td><td>Several subtasks that do not depend on each other run at once. Faster, wider: and, per Anthropic's own numbers, roughly 15× the tokens.</td><td><a href="tradeoffs.html">Page 02</a></td></tr>
     <tr><td><b>Team ownership</b></td><td>Different teams build, test and ship different agents on their own schedules, with a contract between them.</td><td>Week 6: A2A</td></tr>
   </tbody></table></div>
-  <div class="callout blue" style="margin-top:16px">So the rule this week is not "don't." It is: one agent with good tools is the default; split when you can name which of the four you are buying, and show the pieces can be verified on their own. On <a href="local.html">page 03</a> you build the smallest honest version — two local agents behind one supervisor — and watch both the benefit (isolation by construction) and the cost (a coordination failure in three messages).</div>
+  <div class="callout blue" style="margin-top:16px">So the rule this week is not "don't." It is: one agent with good tools is the default; split when you can name which of the four you are buying, and show the pieces can be verified on their own. On <a href="local.html">page 03</a> you build the smallest honest version (two local agents behind one supervisor) and watch both the benefit (isolation by construction) and the cost (a coordination failure in three messages).</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">Start here</div>
   <h2>The default is one agent with good tools</h2>
   <div class="grid2" style="align-items:start">
-    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Pattern 0 — single agent, many tools</span>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Pattern 0: single agent, many tools</span>
       <p class="small" style="margin-top:8px">One loop, one context, one trace. Every capability you want arrives as a <b>tool</b> (Week 5), not as a colleague. Nothing is handed off, so nothing can be dropped in a hand-off. When people say "we built an agent", this is almost always what they built, and it is what your Capstone Milestone I should be.</p>
       <p class="small">It stops working for a specific, nameable reason: the context window fills with instructions and results for jobs that have nothing to do with each other, or the tool list gets long enough that the model picks wrong. Those are the symptoms worth measuring <em>before</em> you reach for a second agent.</p>
     </div>
@@ -165,7 +165,7 @@
     </div>
     <div class="toponote" id="tpNote"></div>
   </div>
-  <div class="callout" style="margin-top:20px">Notice what is missing from all four pictures: the arrows do not say <em>what</em> crosses them. That payload — the hand-off contract — is where multi-agent systems succeed or fail, and it is the subject of the next section.</div>
+  <div class="callout" style="margin-top:20px">Notice what is missing from all four pictures: the arrows do not say <em>what</em> crosses them. That payload (the hand-off contract) is where multi-agent systems succeed or fail, and it is the subject of the next section.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -199,7 +199,7 @@
       <p class="small"><b>Buys:</b> clean, small contexts and clear boundaries. Each agent's window holds one job.<br /><b>Costs:</b> whatever A did not put in the payload is <em>gone</em>. B re-derives it, guesses it, or silently works from a different assumption. This is <b>context fragmentation</b>, and it is the single most common cause of confidently contradictory multi-agent output.</p>
     </div>
   </div>
-  <div class="callout blue" style="margin-top:20px">Context isolation is a feature, not an accident. In Week 3 you measured what happens when one window carries too much: retrieval degrades, earlier instructions decay, and the model starts answering the wrong question — <a href="../week3/context.html">context rot</a>. Giving a subagent a clean window for one narrow job is a direct fix for that. The trade is exact and worth memorizing: isolation cures context rot and causes context fragmentation. Each hand-off design picks a point on that line.</div>
+  <div class="callout blue" style="margin-top:20px">Context isolation is a feature, not an accident. In Week 3 you measured what happens when one window carries too much: retrieval degrades, earlier instructions decay, and the model starts answering the wrong question: <a href="../week3/context.html">context rot</a>. Giving a subagent a clean window for one narrow job is a direct fix for that. The trade is exact and worth memorizing: isolation cures context rot and causes context fragmentation. Each hand-off design picks a point on that line.</div>
   <div class="grid2" style="align-items:start;margin-top:20px">
     <div>
       <p class="small">Write the hand-off contract before you write the agent. A payload that reliably survives a hand-off names all four of these; anything left implicit is a bug waiting for production.</p>
@@ -250,7 +250,7 @@
       <tr><td><b>MetaGPT</b><br />(Hong et al., 2023 · <a class="doc" href="https://arxiv.org/abs/2308.00352" target="_blank" rel="noopener">arXiv:2308.00352</a>)</td><td>Roles from a software company (PM, architect, engineer) with standardized operating procedures</td><td>In the encoded <b>SOP</b>: the procedure constrains what each role may produce and hand on.</td><td>Its argument is worth the read on its own: structured, standardized hand-off artifacts as a defense against cascading errors.</td></tr>
     </table>
   </div>
-  <div class="callout" style="margin-top:18px"><b>The MetaGPT idea, stated plainly:</b> if free-form hand-offs are where multi-agent systems lose information, then constrain the hand-off to a <em>standard artifact</em> — a spec document, a design doc, a typed record — instead of a paragraph of prose. That is the same instinct as the hand-off contract above, and the same instinct as a schema on a tool call in Week 5.</div>
+  <div class="callout" style="margin-top:18px"><b>The MetaGPT idea, stated plainly:</b> if free-form hand-offs are where multi-agent systems lose information, then constrain the hand-off to a <em>standard artifact</em> (a spec document, a design doc, a typed record) instead of a paragraph of prose. That is the same instinct as the hand-off contract above, and the same instinct as a schema on a tool call in Week 5.</div>
 </div></section>
 
 <section><div class="wrap">

@@ -56,12 +56,12 @@
   <div class="eyebrow">Two essays, one boundary</div>
   <h2>The argument, from both sides</h2>
   <div class="grid2" style="align-items:start">
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Cognition — "Don't build multi-agents"</span>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Cognition: "Don't build multi-agents"</span>
       <p class="small" style="margin-top:8px">The engineering team behind Devin argues against the default multi-agent design, and their reasoning is structural rather than stylistic. Two principles anchor it: <b>share context</b>, and treat every action as carrying an implicit decision.</p>
       <p class="small">When you split work across subagents, each one sees a fragment. Each fragment leads to a locally reasonable choice. Those choices are made with no visibility into one another, so the pieces come back <b>conflicting</b>, and nobody in the system is in a position to notice. Worse, the conflicts are <em>plausible</em>: two agents produce two coherent halves of an incoherent whole. Their prescription is to keep one continuous thread of context and, when a task is too long for one window, to compress deliberately rather than to fragment accidentally.</p>
       <p class="small"><a class="doc" href="https://cognition.com/blog/dont-build-multi-agents" target="_blank" rel="noopener">Cognition — Don't build multi-agents ↗</a></p>
     </div>
-    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">LangChain — "How and when to build multi-agent systems"</span>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">LangChain: "How and when to build multi-agent systems"</span>
       <p class="small" style="margin-top:8px">LangChain answers from the other direction, and lands on a compatible boundary. Multi-agent earns its cost when the work genuinely divides: subtasks that can run <b>in parallel</b> and whose outputs are <b>independently verifiable</b>. Read-heavy research is the clean case: several searches, several checkable findings, one synthesis.</p>
       <p class="small">Write-heavy work is the dirty case. When agents must produce a single coherent artifact, or make decisions that depend on each other's decisions, parallelism is fictional and verification is impossible in isolation. You can only judge the pieces by looking at the whole, which is precisely what no individual agent can see.</p>
       <p class="small"><a class="doc" href="https://www.langchain.com/blog/how-and-when-to-build-multi-agent-systems" target="_blank" rel="noopener">LangChain — How and when to build multi-agent systems ↗</a></p>
@@ -128,7 +128,7 @@
       <p class="small" style="margin-top:8px">The aggregate score drops three points. Which of your five agents caused it? With only an end-to-end trace, you cannot say, and the natural response, changing prompts until the number recovers, is not engineering. It is also expensive: each experiment now costs a full multi-agent run.</p>
       <p class="small">Worse, failures compound quietly. Agent 2 hands agent 3 a subtly wrong fact; agent 3 reasons impeccably from it; agent 5 writes it up beautifully. The output is confidently wrong and every individual step looks defensible. This is why "the answer looked good" is not evidence in a multi-agent system.</p>
     </div>
-    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">What to log — per agent, per hand-off</span>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">What to log: per agent, per hand-off</span>
       <p class="small" style="margin-top:8px">Each agent gets the Week 2 evidence standard in full: <em>state before → observation → available actions → selected action → result → state after</em>. On top of that, multi-agent adds three things a single-agent trace never needed:</p>
       <ol class="steps" style="margin-top:10px">
         <li><b>The hand-off payload itself</b>: verbatim, both what was sent and what the receiver had in context. Most fragmentation bugs are invisible unless you can diff those two.</li>
