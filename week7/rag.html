@@ -81,12 +81,12 @@
   <div class="eyebrow">Why not just ask the model</div>
   <h2>Closed book vs open book</h2>
   <div class="grid2">
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Closed book — parametric knowledge</span>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Closed book: parametric knowledge</span>
       <p class="small" style="margin-top:8px">Everything the model "knows" on its own is compressed into its weights during training. Three consequences follow, and none of them are fixable by prompting harder:</p>
       <p class="small"><b>It is frozen.</b> Whatever changed after the training cutoff is invisible. <b>It never saw your data.</b> Your contracts, tickets, and policies were not in the training set, and you would not want them to be. <b>It has no sources.</b> Parametric knowledge is a blend, not a filing cabinet, so the model cannot tell you which document a claim came from, and when it is unsure, fluent guessing looks exactly like knowing.</p>
     </div>
-    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Open book — retrieval-augmented</span>
-      <p class="small" style="margin-top:8px">Lewis et al. (2020) paired a generator with a retriever over an external corpus, so the knowledge lives in documents you control rather than in frozen parameters (<a class="doc" href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">arXiv:2005.11401 ↗</a>). Dense passage retrieval — matching questions to passages by learned embeddings rather than keywords — is the retrieval half of that design (Karpukhin et al., 2020, <a class="doc" href="https://arxiv.org/abs/2004.04906" target="_blank" rel="noopener">arXiv:2004.04906 ↗</a>).</p>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Open book: retrieval-augmented</span>
+      <p class="small" style="margin-top:8px">Lewis et al. (2020) paired a generator with a retriever over an external corpus, so the knowledge lives in documents you control rather than in frozen parameters (<a class="doc" href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">arXiv:2005.11401 ↗</a>). Dense passage retrieval (matching questions to passages by learned embeddings rather than keywords) is the retrieval half of that design (Karpukhin et al., 2020, <a class="doc" href="https://arxiv.org/abs/2004.04906" target="_blank" rel="noopener">arXiv:2004.04906 ↗</a>).</p>
       <p class="small"><b>Fresh:</b> update a document, and the next answer changes. <b>Private:</b> the corpus stays yours. <b>Attributable:</b> the answer can name the chunk it used, so a human can check it.</p>
     </div>
   </div>
@@ -246,7 +246,7 @@ How long do I have to return a laptop in Georgia?</div>
   </div>
   <div class="grid2" style="margin-top:20px;align-items:start">
     <div class="card"><span class="kicker">Week 4 callback</span><p class="small" style="margin-top:8px">On the <a href="../week4/patterns.html">reasoning patterns page</a> you ran the weights visualizer: prompting left all twenty edges of the toy network untouched, whereas fine-tuning rewrote them. That picture is the whole argument on this page. Retrieval is a very sophisticated way of changing the <em>input</em>, which is why it can be fresh, private, and citable, and why fine-tuning can be none of those things.</p></div>
-    <div class="card"><span class="kicker">Week 3 callback — the budget still binds</span><p class="small" style="margin-top:8px">Retrieved chunks are tokens, and they compete with everything else in the <a href="../week3/context.html">packing game</a>. Raising <em>k</em> from 3 to 20 does not make answers twenty times better; it dilutes the prompt with near-misses and pushes you toward the recall problems of an overstuffed window. Retrieve narrow and relevant, not wide and hopeful.</p></div>
+    <div class="card"><span class="kicker">Week 3 callback: the budget still binds</span><p class="small" style="margin-top:8px">Retrieved chunks are tokens, and they compete with everything else in the <a href="../week3/context.html">packing game</a>. Raising <em>k</em> from 3 to 20 does not make answers twenty times better; it dilutes the prompt with near-misses and pushes you toward the recall problems of an overstuffed window. Retrieve narrow and relevant, not wide and hopeful.</p></div>
   </div>
   <div class="callout blue" style="margin-top:20px"><b>The usual answer is "both."</b> Fine-tune for the voice and the output format if you truly need them; retrieve for every fact. If someone proposes fine-tuning so the model "knows our policies," ask the two questions that settle it: <em>how often do those facts change</em>, and <em>does the answer need to cite a source?</em></div>
 </div></section>
@@ -255,7 +255,7 @@ How long do I have to return a laptop in Georgia?</div>
   <div class="eyebrow">Watch</div>
   <h2>Two short videos</h2>
   <div class="grid2">
-    <div class="card"><h3>What is Retrieval-Augmented Generation? (IBM Technology)</h3><p class="small">The canonical whiteboard explainer, about 6½ minutes: the two failure modes RAG addresses — no source, and out-of-date knowledge — and the retrieve-then-generate loop.</p>
+    <div class="card"><h3>What is Retrieval-Augmented Generation? (IBM Technology)</h3><p class="small">The canonical whiteboard explainer, about 6½ minutes: the two failure modes RAG addresses (no source, and out-of-date knowledge) and the retrieve-then-generate loop.</p>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/T-D1OfcDW1M" title="IBM Technology: What is Retrieval-Augmented Generation (RAG)?" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
       <p class="small" style="margin-top:10px"><a class="doc" href="https://www.ibm.com/think/topics/retrieval-augmented-generation" target="_blank" rel="noopener">IBM Think — the written explainer ↗</a></p>
     </div>
