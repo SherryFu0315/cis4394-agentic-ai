@@ -1,3 +1,4 @@
+:root{--fs-xs:12px;--fs-s:14px;--fs-m:16px;--fs-l:18px;--fs-xl:24px;--fs-xxl:40px}
 /* GSU CIS 4394 · Week 2 site — shared styles */
 :root{
   --paper:#faf9f6; --panel:#ffffff; --ink:#16181d; --muted:#5d6069; --line:#e3e1da; --line2:#cfccc2;
