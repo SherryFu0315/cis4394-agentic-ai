@@ -56,7 +56,7 @@
   <h2>Week 5 in one sentence per page</h2>
   <p class="lede">The model <b>proposes</b> a tool call; your harness <b>disposes</b>. Everything this week followed from taking that one sentence literally, because if your code is the only thing that executes, your code is the only place controls need to live.</p>
   <div style="overflow:auto"><table class="plain recaptable"><thead><tr><th>Page</th><th>The one thing to remember</th></tr></thead><tbody>
-    <tr><td><b><a class="doc" href="mechanics.html">01 · Function calling</a></b></td><td>A “tool call” is <b>two objects in order</b>: the <b>schema</b> you write first (name, typed parameters, description), and the <b>call</b> the model emits second — a small JSON block naming a function and its arguments. The model never executes. Your harness parses, validates, runs, and appends the return value as the next observation.</td></tr>
+    <tr><td><b><a class="doc" href="mechanics.html">01 · Function calling</a></b></td><td>A “tool call” is <b>two objects in order</b>: the <b>schema</b> you write first (name, typed parameters, description), and the <b>call</b> the model emits second: a small JSON block naming a function and its arguments. The model never executes. Your harness parses, validates, runs, and appends the return value as the next observation.</td></tr>
     <tr><td><b><a class="doc" href="design.html">02 · Schemas, errors &amp; gates</a></b></td><td>A rule in the prompt is a request. A rule in the schema is a wall. Three rails: least privilege (expose the narrowest tool that does the job), constrain the inputs (enum, min/max, required), separate duties (never one tool that both decides and pays). Then sort every tool by blast radius: auto-run · constrain · human-gate.</td></tr>
     <tr><td><b><a class="doc" href="local.html">03 · Build it locally</a></b></td><td>You ran a real agent loop on your own laptop, free, with no API key. A 0.5B model can call a tool correctly and still fail the task, and the fix was <b>never “a bigger model.”</b> It was a coarser tool, a tighter docstring, and a negative rule. <b>Tool design is the lever.</b></td></tr>
     <tr><td><b><a class="doc" href="exercises.html">04 · Practice &amp; case</a></b></td><td>Gate the <b>effect</b>, not the input. Reading hostile data is survivable; acting on it is not. And gate selectively: a gate nobody reads is a rubber stamp, not a control.</td></tr>
@@ -120,7 +120,7 @@
     </div>
     <div class="card pathcard blue"><span class="kicker">🅑 No-code path</span>
       <h3 style="margin-top:6px">Build the flow</h3>
-      <p class="small">If your team would rather not write code, build the same agent in a visual builder — <b><a class="doc" href="https://smith.langchain.com/" target="_blank" rel="noopener">LangSmith Fleet ↗</a></b> (free tier) is the supported default, and you met it in Week 2.</p>
+      <p class="small">If your team would rather not write code, build the same agent in a visual builder: <b><a class="doc" href="https://smith.langchain.com/" target="_blank" rel="noopener">LangSmith Fleet ↗</a></b> (free tier) is the supported default, and you met it in Week 2.</p>
       <p class="small" style="margin-top:10px">The requirements are <b>identical</b>: two tools, a loop with a stop condition, one trace, the design note. You will not be graded easier for going no-code, and you cannot use it to skip the tool/gate/failure-mode thinking.</p>
       <p class="small" style="margin-top:10px">Deliver: the exported flow or a shareable link, plus screenshots of the tool config and the loop/guard settings.</p>
     </div>
@@ -137,7 +137,7 @@
     <h3 style="margin-top:6px">Whatever you build in, the grader must be able to see these five things</h3>
     <ul class="mustlist">
       <li><b>Two or more distinct tools</b>, each with a real schema: a name, a description that says <em>when to use it</em>, typed parameters, and constraints. Two tools that do different work, not one tool wearing two hats.</li>
-      <li>An auto-run / constrain / gate decision per tool, with the reason. Anything irreversible — money, email, deletion — is gated.</li>
+      <li>An auto-run / constrain / gate decision per tool, with the reason. Anything irreversible (money, email, deletion) is gated.</li>
       <li>A loop with a working max-iteration guard that stops <em>gracefully</em> and says it could not finish. A missing or fake guard is an automatic heavy deduction.</li>
       <li><b>One clean execution trace</b>: reasoning → tool call with arguments → observation → … → final answer. A final answer with no visible tool calls proves nothing.</li>
       <li><b>A one-page design note</b>: tools, loop, <b>three specific failure modes</b> with mitigations, and your AI-use disclosure. “The AI could be wrong” is not a failure mode.</li>
@@ -182,7 +182,7 @@
   <b>Week 6 readings:</b><br />
   · <a class="doc" href="https://www.linkedin.com/learning/model-context-protocol-mcp-hands-on-with-agentic-ai" target="_blank" rel="noopener">Rand-Hendriksen — Model Context Protocol (MCP): Hands-On with Agentic AI (LinkedIn Learning) ↗</a><br />
   · <a class="doc" href="https://www.linkedin.com/learning/hands-on-ai-building-ai-agents-with-model-context-protocol-mcp-and-agent2agent-a2a" target="_blank" rel="noopener">Ponnambalam — Building AI Agents with MCP &amp; A2A (LinkedIn Learning) ↗</a><br />
-  Both free with your GSU login via the <a class="doc" href="https://technology.gsu.edu/technology-services/technology-professional-training/linkedin-learning/" target="_blank" rel="noopener">GSU portal ↗</a> — start there, or you will hit a paywall. Full list on the <a class="doc" href="../week6/index.html">Week 6 site</a>.</div>
+  Both free with your GSU login via the <a class="doc" href="https://technology.gsu.edu/technology-services/technology-professional-training/linkedin-learning/" target="_blank" rel="noopener">GSU portal ↗</a>; start there, or you will hit a paywall. Full list on the <a class="doc" href="../week6/index.html">Week 6 site</a>.</div>
 </div></section>
 
 <div class="wrap pager">

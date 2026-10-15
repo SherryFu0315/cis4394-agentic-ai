@@ -67,7 +67,7 @@
   <h2>What a “tool” actually is</h2>
   <div class="grid2" style="align-items:start">
     <div>
-      <p>A <b>tool</b> is an ordinary function in your codebase — <code>calculator()</code>, <code>lookup_order()</code>, <code>send_email()</code> — that you have described to the model in a form it can read. <b>Function calling</b> (also called tool calling) is the model's ability to respond, instead of with prose, with a structured request to run one of those functions with specific arguments.</p>
+      <p>A <b>tool</b> is an ordinary function in your codebase (<code>calculator()</code>, <code>lookup_order()</code>, <code>send_email()</code>) that you have described to the model in a form it can read. <b>Function calling</b> (also called tool calling) is the model's ability to respond, instead of with prose, with a structured request to run one of those functions with specific arguments.</p>
       <p>Three sentences worth memorising:</p>
       <ol class="steps" style="margin-top:14px">
         <li><b>The model proposes.</b> Its entire contribution is a JSON object: which function, which arguments. That is text, produced by the same next-token machinery as everything else it writes.</li>
@@ -94,7 +94,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive · step through one round trip</div>
   <h2>An invoice, two tools, one bad argument</h2>
-  <p class="lede">The episode: <em>“Our Berlin supplier invoiced 4,817 units at €293 each, plus 18% VAT. What is that in USD?”</em> The agent has two tools — <code>calculator</code> and <code>fx_rate</code>, and it will get one call wrong on purpose so you can watch what happens next. Press <b>Step</b>.</p>
+  <p class="lede">The episode: <em>“Our Berlin supplier invoiced 4,817 units at €293 each, plus 18% VAT. What is that in USD?”</em> The agent has two tools, <code>calculator</code> and <code>fx_rate</code>, and it will get one call wrong on purpose so you can watch what happens next. Press <b>Step</b>.</p>
   <div class="sim2">
     <div class="loopbox">
       <svg viewBox="0 0 480 330" aria-label="function calling loop diagram">
@@ -132,7 +132,7 @@
   <h2>Two objects, in the order they happen</h2>
   <div class="grid2" style="align-items:start">
     <div>
-      <p class="small"><b>① First — the schema.</b> <span style="color:var(--muted)">You → model, before the conversation starts.</span> Your harness sends the model a list of tool schemas. This is the only thing the model knows about your systems: the menu you hand it: what it may order, and which choices are legal.</p>
+      <p class="small"><b>① First: the schema.</b> <span style="color:var(--muted)">You → model, before the conversation starts.</span> Your harness sends the model a list of tool schemas. This is the only thing the model knows about your systems: the menu you hand it: what it may order, and which choices are legal.</p>
       <div class="codebox">{
   <span class="cn">"name"</span>: <span class="cs">"fx_rate"</span>,
   <span class="cn">"description"</span>: <span class="cs">"Return the current exchange</span>
@@ -151,7 +151,7 @@
       <p class="small">Name, description, typed parameters, required list. Notice that the <code>enum</code> is what made the simulator's error message useful: the harness could tell the model precisely what the legal values were.</p>
     </div>
     <div>
-      <p class="small"><b>② Then — the call.</b> <span style="color:var(--muted)">Model → you, during the conversation.</span> Having read the menu, the model writes an order slip: a name and a bag of arguments. That is the whole payload. Different vendors wrap it differently, but every one of them reduces to this.</p>
+      <p class="small"><b>② Then: the call.</b> <span style="color:var(--muted)">Model → you, during the conversation.</span> Having read the menu, the model writes an order slip: a name and a bag of arguments. That is the whole payload. Different vendors wrap it differently, but every one of them reduces to this.</p>
       <div class="codebox">{
   <span class="cn">"name"</span>: <span class="cs">"fx_rate"</span>,
   <span class="cn">"arguments"</span>: {
@@ -245,7 +245,7 @@
     <div class="card"><span class="kicker">While you watch — three checks</span>
       <p class="small" style="margin-top:8px">1 · Every time the speaker says the model “calls” something, mentally substitute “asks your code to call.” Does any claim in the video break? (It should not.)</p>
       <p class="small">2 · Note where the video puts the boundary line between the model and the enterprise systems. That line is the thing you design this week.</p>
-      <p class="small">3 · Count how many of the four gaps from the <a href="index.html">week home</a> — cutoff, private data, computation, actions — the examples are closing.</p>
+      <p class="small">3 · Count how many of the four gaps from the <a href="index.html">week home</a> (cutoff, private data, computation, actions) the examples are closing.</p>
       <p class="small" style="margin-top:12px">Reference explainer if you want the same material as text: <a class="doc" href="https://www.ibm.com/think/topics/tool-calling" target="_blank" rel="noopener">IBM Think — What Is Tool Calling? ↗</a> · Framework docs: <a class="doc" href="https://python.langchain.com/docs/concepts/tool_calling/" target="_blank" rel="noopener">LangChain — Tool calling ↗</a></p>
     </div>
   </div>

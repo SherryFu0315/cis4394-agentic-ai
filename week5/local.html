@@ -78,7 +78,7 @@ table.plain td,table.plain th{font-size:13.5px}
 </div></header>
 
 <section><div class="wrap">
-  <div class="callout blue" style="margin-top:0"><b>📦 Download the starter code:</b> <a class="doc" href="../materials/CIS4394_Week5_Ollama_Starter.zip">CIS4394_Week5_Ollama_Starter.zip ↓</a> — five short Python scripts, a <code>requirements.txt</code>, and a README. Or view the files one by one in <a class="doc" href="../materials/week5_ollama_starter/README.txt">the materials folder</a>.<br /><b>📄 In-class lab sheet (pairs):</b> <a class="doc" href="../materials/CIS4394_Week5_Student_Lab.pdf">CIS4394_Week5_Student_Lab.pdf ↓</a> — Mac and Windows commands side by side, with the observation tables to fill in.</div>
+  <div class="callout blue" style="margin-top:0"><b>📦 Download the starter code:</b> <a class="doc" href="../materials/CIS4394_Week5_Ollama_Starter.zip">CIS4394_Week5_Ollama_Starter.zip ↓</a>: five short Python scripts, a <code>requirements.txt</code>, and a README. Or view the files one by one in <a class="doc" href="../materials/week5_ollama_starter/README.txt">the materials folder</a>.<br /><b>📄 In-class lab sheet (pairs):</b> <a class="doc" href="../materials/CIS4394_Week5_Student_Lab.pdf">CIS4394_Week5_Student_Lab.pdf ↓</a>: Mac and Windows commands side by side, with the observation tables to fill in.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -92,7 +92,7 @@ table.plain td,table.plain th{font-size:13.5px}
     completion
     <span class="ok">tools</span>                         <span class="p">&lt;- this line must be here</span></div>
   <div class="grid2" style="margin-top:14px">
-    <div class="card"><span class="kicker">No "tools" line?</span><p class="small" style="margin-top:8px">That model cannot take part in this lab. Pull one that lists <code>tools</code> — for example <code>ollama pull qwen2.5:0.5b</code> (398 MB). If you downloaded a model from Hugging Face, prefer a name containing <b>Instruct</b>: a base model has not been trained to follow the tool-call format.</p></div>
+    <div class="card"><span class="kicker">No "tools" line?</span><p class="small" style="margin-top:8px">That model cannot take part in this lab. Pull one that lists <code>tools</code>: for example <code>ollama pull qwen2.5:0.5b</code> (398 MB). If you downloaded a model from Hugging Face, prefer a name containing <b>Instruct</b>: a base model has not been trained to follow the tool-call format.</p></div>
     <div class="card"><span class="kicker">"tools" is listed — are you done?</span><p class="small" style="margin-top:8px">No. The line means the model's chat template <em>knows the format</em>. It does not mean the model will <em>use</em> tools well. In our tests below, one model listed <code>tools</code> and never called a single tool. You find out by measuring: Step 3.</p></div>
   </div>
 </div></section>
@@ -137,8 +137,8 @@ dir               <span class="cm"># what's in here?</span></div></div>
 xinyufu@MacBook <span class="cs">Desktop</span> %  ls           <span class="cm"># after: the prompt changed. You are there.</span></div>
 <p style="margin:0"><b>Two errors everyone hits once:</b></p>
 <ul style="margin:6px 0 0 18px">
-<li><code>cd: no such file or directory: Desktop</code> — you are <b>already in</b> Desktop and tried to go in again. Look at the prompt; if it says <code>Desktop</code>, you are done. Type <code>cd ~</code> to go home if you want to start over.</li>
-<li><code>ls</code> prints <b>nothing</b> — the folder is empty, so the file is not downloaded yet. Do that first, then run <code>ls</code> again and look for <code>1_agent_raw.py</code>.</li>
+<li><code>cd: no such file or directory: Desktop</code>: you are <b>already in</b> Desktop and tried to go in again. Look at the prompt; if it says <code>Desktop</code>, you are done. Type <code>cd ~</code> to go home if you want to start over.</li>
+<li><code>ls</code> prints <b>nothing</b>: the folder is empty, so the file is not downloaded yet. Do that first, then run <code>ls</code> again and look for <code>1_agent_raw.py</code>.</li>
 </ul>
 <p style="margin:8px 0 0"><b>You should see <code>1_agent_raw.py</code> listed.</b> If you do, every command below will work. Three more things worth knowing:</p>
 <ul style="margin:6px 0 0 18px">
@@ -146,8 +146,8 @@ xinyufu@MacBook <span class="cs">Desktop</span> %  ls           <span class="cm"
 <li><b>Shortcut:</b> type <code>cd</code> and a space, then drag the folder from Finder / File Explorer into the terminal window; the full path types itself.</li>
 <li><b>Windows note:</b> if <code>cd Desktop</code> says it cannot find the path, your Desktop is synced to OneDrive. Open the folder in File Explorer, click the address bar, type <code>powershell</code>, press Enter; that opens a terminal already inside it.</li>
 </ul>
-<p style="margin:10px 0 0">One more thing before the commands below. Where the code blocks say <code>python</code>, type <code>python3</code> on <b>Mac</b> or <code>py -3</code> on <b>Windows</b>. And if you built a virtual environment in Step 1, either activate it or call it directly — <code>./venv/bin/python 1_agent_raw.py …</code> on Mac.</p>
-<p class="small" style="margin:10px 0 0"><b>Stuck anyway?</b> The starter zip also contains <code>run_mac.command</code> and <code>run_windows.bat</code> — double-click one and it does all of this for you. Use it to keep moving, then come back and learn the two commands above; you will need them for your final project.</p></div>
+<p style="margin:10px 0 0">One more thing before the commands below. Where the code blocks say <code>python</code>, type <code>python3</code> on <b>Mac</b> or <code>py -3</code> on <b>Windows</b>. And if you built a virtual environment in Step 1, either activate it or call it directly: <code>./venv/bin/python 1_agent_raw.py …</code> on Mac.</p>
+<p class="small" style="margin:10px 0 0"><b>Stuck anyway?</b> The starter zip also contains <code>run_mac.command</code> and <code>run_windows.bat</code>: double-click one and it does all of this for you. Use it to keep moving, then come back and learn the two commands above; you will need them for your final project.</p></div>
   
   <div class="eyebrow">Step 2 · 1_agent_raw.py</div>
   <h2>The whole agent loop, in plain Python</h2>
@@ -196,7 +196,7 @@ xinyufu@MacBook <span class="cs">Desktop</span> %  ls           <span class="cm"
         <li><b>The model requests; your code executes.</b></li>
         <li>Tool results go back into the conversation as observations.</li>
         <li>The loop continues until the model stops asking for tools.</li>
-        <li>Your code — not the model — controls the boundaries: the max-iteration guard, error handling, which tools exist, who approves.</li>
+        <li>Your code, not the model, controls the boundaries: the max-iteration guard, error handling, which tools exist, who approves.</li>
       </ol></div>
       <p class="small" style="margin-top:14px"><b>Run it:</b></p>
       <div class="term2"><span class="p">$</span> python 1_agent_raw.py "What is 4817 * 293?"
@@ -206,7 +206,7 @@ xinyufu@MacBook <span class="cs">Desktop</span> %  ls           <span class="cm"
 
 [step 2] FINAL ANSWER:
 The result of 4817 * 293 is 1411381.</div>
-      <p class="small">Real output from <code>qwen2.5:0.5b</code>. Now run it with no question — the default is a harder, multi-step invoice question — and compare.</p>
+      <p class="small">Real output from <code>qwen2.5:0.5b</code>. Now run it with no question (the default is a harder, multi-step invoice question) and compare.</p>
     </div>
   </div>
 </div></section>
@@ -226,7 +226,7 @@ The result of 4817 * 293 is 1411381.</div>
   <div style="overflow-x:auto"><table class="plain">
     <thead><tr><th>Model</th><th>Download</th><th>Invoice question</th><th>What went wrong</th></tr></thead>
     <tbody>
-      <tr><td><code>qwen2.5:0.5b</code></td><td>398 MB</td><td class="res poor">0 / 16</td><td>Calls tools, but plans the math wrong — "plus 18% tax" became <code>+ 18/100</code> or <code>+ 1800</code>, and usually skips the exchange rate.</td></tr>
+      <tr><td><code>qwen2.5:0.5b</code></td><td>398 MB</td><td class="res poor">0 / 16</td><td>Calls tools, but plans the math wrong: "plus 18% tax" became <code>+ 18/100</code> or <code>+ 1800</code>, and usually skips the exchange rate.</td></tr>
       <tr><td><code>llama3.2</code> (3B)</td><td>2.0 GB</td><td class="res poor">0 / 5</td><td>Skips the calculator and does the arithmetic in its head (wrongly); sometimes writes the tool call as plain text instead of making it.</td></tr>
       <tr><td><code>deepseek-r1:14b</code></td><td>9.0 GB</td><td class="res poor">0 / 3</td><td>Lists <code>tools</code> in its capabilities, and never called one. It reasoned the whole problem out in text.</td></tr>
       <tr><td>a 27B Qwen-family model</td><td>16 GB</td><td class="res good">3 / 3</td><td>The same clean path every time: calculator → exchange rate → calculator. Too large for most laptops.</td></tr>
@@ -253,9 +253,9 @@ The result of 4817 * 293 is 1411381.</div>
 
   <div class="bigq" style="margin-top:22px"><span class="qlabel">Discussion question 1</span>In setup C the tool returned the right number and the model still reported a wrong one. Where should the final number come from?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">From the <b>tool</b>, not from the model's retelling of it. Critical values — money, dates, IDs, quantities — should be shown to the user straight from the tool's output (or returned as a structured field your code reads), with the model only writing the sentence around them. A second defense is a check in the harness: compare every number in the final answer against the tool results in the trace and flag any that do not match. Small models are good at choosing and filling in a tool; do not also make them responsible for copying digits.</div>
+  <div class="revealbox">From the <b>tool</b>, not from the model's retelling of it. Critical values (money, dates, IDs, quantities) should be shown to the user straight from the tool's output (or returned as a structured field your code reads), with the model only writing the sentence around them. A second defense is a check in the harness: compare every number in the final answer against the tool results in the trace and flag any that do not match. Small models are good at choosing and filling in a tool; do not also make them responsible for copying digits.</div>
 
-  <div class="bigq" style="margin-top:22px"><span class="qlabel">Discussion question 2</span>Setup C moved the plan — multiply, add tax, convert — out of the model and into your Python function. Is this still an agent, or has it become a workflow?</div>
+  <div class="bigq" style="margin-top:22px"><span class="qlabel">Discussion question 2</span>Setup C moved the plan (multiply, add tax, convert) out of the model and into your Python function. Is this still an agent, or has it become a workflow?</div>
   <button class="revealbtn">See the answer</button>
   <div class="revealbox">For <em>this</em> question, it is much closer to a workflow: you, the developer, decided the steps, and the model only recognizes the request and fills in five arguments. That is not a defeat: Week 1's rule is to choose the lowest level of autonomy that solves the problem, and a small local model plus a well-designed tool is cheap and far more reliable than setup B. The agentic part comes back when the requests vary and the model must decide <em>which</em> of several tools to use, in what order, and when to stop. The design question for your project is how much planning to leave to your model, given what you measured it can do.</div>
 
@@ -327,7 +327,7 @@ I can’t process that refund — a person will follow up with you.</div>
 
   <div class="bigq" style="margin-top:24px"><span class="qlabel">Discussion question</span>The same final instructions were run on <code>llama3.2</code>, a model five times larger. It scored <b>12 / 24</b>, against <b>22 / 24</b> for the 0.5B model; it called a tool for almost every message, including the general questions. Why might a bigger model do worse here, and what does that mean for choosing one?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">Nothing about “bigger” guarantees better tool discipline. Models differ in how eagerly they reach for a tool — a tendency that comes from how each was trained and tuned, not from parameter count — and a prompt tuned to push one model over the line can push another well past it. The practical lesson is the same one Week 8 makes formal: a model is a choice you test, not a choice you rank by size. Run your own three or four representative messages, including at least one that should call <em>no</em> tool, and count. The message that should trigger nothing is the one most teams forget to test, and it is where over-triggering shows up.</div>
+  <div class="revealbox">Nothing about “bigger” guarantees better tool discipline. Models differ in how eagerly they reach for a tool (a tendency that comes from how each was trained and tuned, not from parameter count), and a prompt tuned to push one model over the line can push another well past it. The practical lesson is the same one Week 8 makes formal: a model is a choice you test, not a choice you rank by size. Run your own three or four representative messages, including at least one that should call <em>no</em> tool, and count. The message that should trigger nothing is the one most teams forget to test, and it is where over-triggering shows up.</div>
 
   <div class="grouptask" style="margin-top:24px"><span class="gk">👥 Group task · Pairs · ~15 minutes</span>
     <p><b>Break it, then fix it.</b> Open <code>5_demo_order_agent.py</code> and delete the last line of the system prompt, the one that says not to call a tool when there is no order number. Ask all three questions again, three times each, and record which tool got called. Then put the line back and confirm the behaviour returns. Finally, add a <b>third tool</b> of your own (for example <code>cancel_order</code>, which should also be gated) and test whether the model still picks correctly among three.</p>
@@ -338,7 +338,7 @@ I can’t process that refund — a person will follow up with you.</div>
 <section><div class="wrap">
   <div class="eyebrow">Step 6 · 3_agent_langgraph.py</div>
   <h2>The same agent in LangGraph</h2>
-  <p class="lede">Everything above works without a framework, and that is deliberate. You can read the whole loop. This step is your <b>first look at LangGraph</b>, which gives those same pieces names: a model node, a tools node, a conditional edge, and one edge back that makes it a loop. Compare it to the plain version and decide for yourself what the framework bought. Reference: <a href="../week4/langgraph.html">the Week 4 LangGraph page</a> (written for Gemini — running locally, the <b>only line that changes</b> is the model).</p>
+  <p class="lede">Everything above works without a framework, and that is deliberate. You can read the whole loop. This step is your <b>first look at LangGraph</b>, which gives those same pieces names: a model node, a tools node, a conditional edge, and one edge back that makes it a loop. Compare it to the plain version and decide for yourself what the framework bought. Reference: <a href="../week4/langgraph.html">the Week 4 LangGraph page</a> (written for Gemini; running locally, the <b>only line that changes</b> is the model).</p>
   <div class="grid2" style="align-items:start">
     <div class="codebox"><span class="ck">from</span> langchain_ollama <span class="ck">import</span> ChatOllama
 
@@ -366,7 +366,7 @@ g.add_edge(<span class="cs">"tools"</span>, <span class="cs">"model"</span>)    
 <section><div class="wrap">
   <div class="eyebrow">🎯 Take it to your final project</div>
   <h2>Choosing your model, on evidence</h2>
-  <div class="callout blue" style="margin-top:0">Pick the model you can <b>run comfortably</b> on the laptops your team will demo on — as a rule of thumb, the download size should fit in your computer's memory with plenty to spare — and then <b>measure it on your own task</b>: swap your tools and questions into script 2 and report the pass rate. If a small model fails at multi-step planning, you have two honest options: design coarser tools so it has less to plan (setup C), or use a larger model on a machine that can run it. Either choice is fine if your numbers support it.</div>
+  <div class="callout blue" style="margin-top:0">Pick the model you can <b>run comfortably</b> on the laptops your team will demo on (as a rule of thumb, the download size should fit in your computer's memory with plenty to spare), and then <b>measure it on your own task</b>: swap your tools and questions into script 2 and report the pass rate. If a small model fails at multi-step planning, you have two honest options: design coarser tools so it has less to plan (setup C), or use a larger model on a machine that can run it. Either choice is fine if your numbers support it.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -382,7 +382,7 @@ g.add_edge(<span class="cs">"tools"</span>, <span class="cs">"model"</span>)    
   </div>
   <div class="card" style="margin-top:10px">
     <button class="revealbtn">"model not found"</button>
-    <div class="revealbox">The name must match <code>ollama list</code> exactly, including the tag after the colon — <code>qwen2.5:0.5b</code>, not <code>qwen2.5</code>.</div>
+    <div class="revealbox">The name must match <code>ollama list</code> exactly, including the tag after the colon: <code>qwen2.5:0.5b</code>, not <code>qwen2.5</code>.</div>
   </div>
   <div class="card" style="margin-top:10px">
     <button class="revealbtn"><code>No module named 'ollama'</code></button>
