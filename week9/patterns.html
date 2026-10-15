@@ -75,7 +75,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">01 · Patterns</div>
   <h1>Four topologies, one <em>decision</em>.</h1>
-  <p class="lede">A multi-agent system is not a new kind of intelligence. It is the same agent loop from Week 4, instantiated several times, with rules about who may talk to whom and what travels across each line. Those rules are the whole design — so learn the four shapes, and learn what each one breaks on.</p>
+  <p class="lede">A multi-agent system is not a new kind of intelligence. It is the same agent loop from Week 4, instantiated several times, with rules about who may talk to whom and what travels across each line. Those rules are the whole design, so learn the four shapes, and learn what each one breaks on.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -84,9 +84,9 @@
   <p class="lede">Look at any production system that calls itself multi-agent and you will find one of four reasons for the split. None of them is intelligence. All of them are about <b>what each agent is allowed to see and touch</b>.</p>
   <div style="overflow:auto"><table class="plain"><thead><tr><th>Why teams split</th><th>What it buys</th><th>You met it in</th></tr></thead><tbody>
     <tr><td><b>Context isolation</b></td><td>Each agent sees only its own job. Instructions and results for unrelated tasks stop piling into one window (context rot).</td><td>Week 3</td></tr>
-    <tr><td><b>Permission isolation</b></td><td>The refund agent has no email tool; the research agent has no payment tool. A specialist cannot be talked into using a capability it does not hold.</td><td>Week 5 — least privilege</td></tr>
-    <tr><td><b>Parallel breadth</b></td><td>Several subtasks that do not depend on each other run at once. Faster, wider — and, per Anthropic's own numbers, roughly 15× the tokens.</td><td><a href="tradeoffs.html">Page 02</a></td></tr>
-    <tr><td><b>Team ownership</b></td><td>Different teams build, test and ship different agents on their own schedules, with a contract between them.</td><td>Week 6 — A2A</td></tr>
+    <tr><td><b>Permission isolation</b></td><td>The refund agent has no email tool; the research agent has no payment tool. A specialist cannot be talked into using a capability it does not hold.</td><td>Week 5: least privilege</td></tr>
+    <tr><td><b>Parallel breadth</b></td><td>Several subtasks that do not depend on each other run at once. Faster, wider: and, per Anthropic's own numbers, roughly 15× the tokens.</td><td><a href="tradeoffs.html">Page 02</a></td></tr>
+    <tr><td><b>Team ownership</b></td><td>Different teams build, test and ship different agents on their own schedules, with a contract between them.</td><td>Week 6: A2A</td></tr>
   </tbody></table></div>
   <div class="callout blue" style="margin-top:16px"><b>So the rule this week is not "don't."</b> It is: <b>one agent with good tools is the default; split when you can name which of the four you are buying, and show the pieces can be verified on their own.</b> On <a href="local.html">page 03</a> you build the smallest honest version — two local agents behind one supervisor — and watch both the benefit (isolation by construction) and the cost (a coordination failure in three messages).</div>
 </div></section>
@@ -96,7 +96,7 @@
   <h2>The default is one agent with good tools</h2>
   <div class="grid2" style="align-items:start">
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Pattern 0 — single agent, many tools</span>
-      <p class="small" style="margin-top:8px">One loop, one context, one trace. Every capability you want arrives as a <b>tool</b> (Week 5), not as a colleague. Nothing is handed off, so nothing can be dropped in a hand-off. When people say "we built an agent", this is almost always what they built — and it is what your Capstone Milestone I should be.</p>
+      <p class="small" style="margin-top:8px">One loop, one context, one trace. Every capability you want arrives as a <b>tool</b> (Week 5), not as a colleague. Nothing is handed off, so nothing can be dropped in a hand-off. When people say "we built an agent", this is almost always what they built, and it is what your Capstone Milestone I should be.</p>
       <p class="small">It stops working for a specific, nameable reason: the context window fills with instructions and results for jobs that have nothing to do with each other, or the tool list gets long enough that the model picks wrong. Those are the symptoms worth measuring <em>before</em> you reach for a second agent.</p>
     </div>
     <div class="card"><span class="kicker">The rule for the rest of this page</span>
@@ -109,7 +109,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive · the four shapes</div>
   <h2>Click a topology</h2>
-  <p class="lede">Same four agents in every picture. What changes is who is allowed to talk to whom — and that single choice determines the failure modes you inherit.</p>
+  <p class="lede">Same four agents in every picture. What changes is who is allowed to talk to whom, and that single choice determines the failure modes you inherit.</p>
   <div class="topowrap">
     <div class="loopbox">
       <svg class="tp" viewBox="0 0 460 300" aria-label="multi-agent topology diagram">
@@ -196,7 +196,7 @@
     </div>
     <div class="card"><span class="kicker">Messages / hand-offs</span>
       <p class="small" style="margin-top:8px">Agent A finishes and passes a payload to agent B. B's context contains only what A chose to send.</p>
-      <p class="small"><b>Buys:</b> clean, small contexts and clear boundaries — each agent's window holds one job.<br /><b>Costs:</b> whatever A did not put in the payload is <em>gone</em>. B re-derives it, guesses it, or silently works from a different assumption. This is <b>context fragmentation</b>, and it is the single most common cause of confidently contradictory multi-agent output.</p>
+      <p class="small"><b>Buys:</b> clean, small contexts and clear boundaries. Each agent's window holds one job.<br /><b>Costs:</b> whatever A did not put in the payload is <em>gone</em>. B re-derives it, guesses it, or silently works from a different assumption. This is <b>context fragmentation</b>, and it is the single most common cause of confidently contradictory multi-agent output.</p>
     </div>
   </div>
   <div class="callout blue" style="margin-top:20px"><b>Context isolation is a feature, not an accident.</b> In Week 3 you measured what happens when one window carries too much: retrieval degrades, earlier instructions decay, and the model starts answering the wrong question — <a href="../week3/context.html">context rot</a>. Giving a subagent a clean window for one narrow job is a direct fix for that. The trade is exact and worth memorizing: <b>isolation cures context rot and causes context fragmentation.</b> Every hand-off design is you choosing where on that line to sit.</div>
@@ -217,7 +217,7 @@
     </div>
     <div class="card"><span class="kicker">The instruction-decay failure</span>
       <p class="small" style="margin-top:8px">The user says "keep it under 400 words and cite every claim." The supervisor passes the topic to a writer but not the word limit. The writer produces 900 excellent words. A formatter agent trims to 400 by deleting the citations — the only instruction <em>it</em> was given was the length.</p>
-      <p class="small">No agent malfunctioned. Every agent did its job correctly on the input it received. The system still violated the user's requirement, because the requirement was never in the payload. That is a <b>specification and design</b> failure in the MAST taxonomy (Cemri et al., 2025) — and you will meet it again on page 02.</p>
+      <p class="small">No agent malfunctioned. Every agent did its job correctly on the input it received. The system still violated the user's requirement, because the requirement was never in the payload. That is a <b>specification and design</b> failure in the MAST taxonomy (Cemri et al., 2025), and you will meet it again on page 02.</p>
     </div>
   </div>
 </div></section>
@@ -240,11 +240,11 @@
 <section><div class="wrap">
   <div class="eyebrow">Zoom out</div>
   <h2>Frameworks are dialects</h2>
-  <p class="lede">Four popular libraries, one set of ideas. If you understand state, hand-offs, and who owns control flow, you can read any of them in an afternoon — and you should choose on operational grounds (observability, control, your team's language), not on which vocabulary sounds most impressive.</p>
+  <p class="lede">Four popular libraries, one set of ideas. If you understand state, hand-offs, and who owns control flow, you can read any of them in an afternoon, and you should choose on operational grounds (observability, control, your team's language), not on which vocabulary sounds most impressive.</p>
   <div class="compare" style="margin-top:16px">
     <table>
       <tr><th>Framework</th><th>Its vocabulary</th><th>Where control flow lives</th><th>What it is good at</th></tr>
-      <tr><td><b>LangGraph</b><br /><a class="doc" href="https://github.com/langchain-ai/langgraph" target="_blank" rel="noopener">repo ↗</a></td><td>State, nodes, edges — agents are nodes, hand-offs are edges</td><td><b>Explicitly yours.</b> The graph is the org chart; routing is a conditional edge you wrote (Week 4).</td><td>Auditable control flow, loops with guards, teams that need to show an auditor the diagram.</td></tr>
+      <tr><td><b>LangGraph</b><br /><a class="doc" href="https://github.com/langchain-ai/langgraph" target="_blank" rel="noopener">repo ↗</a></td><td>State, nodes, edges: agents are nodes, hand-offs are edges</td><td><b>Explicitly yours.</b> The graph is the org chart; routing is a conditional edge you wrote (Week 4).</td><td>Auditable control flow, loops with guards, teams that need to show an auditor the diagram.</td></tr>
       <tr><td><b>crewAI</b><br />(this week's course)</td><td>Agents with roles and goals, tasks, crews, processes (sequential or hierarchical)</td><td>In the crew configuration — you declare roles and a process, the library runs it.</td><td>Getting a role-based team running quickly; the clearest on-ramp to the mental model.</td></tr>
       <tr><td><b>AutoGen</b><br />(Wu et al., 2023 · <a class="doc" href="https://arxiv.org/abs/2308.08155" target="_blank" rel="noopener">arXiv:2308.08155</a>)</td><td>Conversable agents exchanging messages; group chat with a chat manager</td><td>In the <b>conversation</b>: agents talk, and the message protocol drives the work.</td><td>Agent-to-agent messaging as the primitive; human-in-the-loop configurations. <a class="doc" href="https://github.com/microsoft/autogen" target="_blank" rel="noopener">repo ↗</a></td></tr>
       <tr><td><b>MetaGPT</b><br />(Hong et al., 2023 · <a class="doc" href="https://arxiv.org/abs/2308.00352" target="_blank" rel="noopener">arXiv:2308.00352</a>)</td><td>Roles from a software company (PM, architect, engineer) with standardized operating procedures</td><td>In the encoded <b>SOP</b>: the procedure constrains what each role may produce and hand on.</td><td>Its argument is worth the read on its own — structured, standardized hand-off artifacts as a defense against cascading errors.</td></tr>
@@ -267,7 +267,7 @@
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 9 — Multi-Agent Systems<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 9: Multi-Agent Systems<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>
