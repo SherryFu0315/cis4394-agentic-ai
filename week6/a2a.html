@@ -81,7 +81,7 @@
 → "Booked Thu 3:00 pm, Langdale 102."</div>
       <p class="small" style="margin-top:10px">You state an <b>outcome</b>, not a call. The other side may plan, use tools you cannot see, take minutes rather than milliseconds, and <em>ask you something mid-task</em>. That last one is why a request/response API is not enough.</p></div>
   </div>
-  <div class="callout" style="margin-top:20px">So A2A's design problems are different from MCP's: how does one agent <em>find</em> another and learn what it can do? How do two agents keep a long-running conversation straight? How does an agent ask a clarifying question without breaking the protocol? And — the one that makes managers sit up — how do you delegate across an organizational boundary without exposing your internals?</div>
+  <div class="callout" style="margin-top:20px">So A2A's design problems are different from MCP's: how does one agent <em>find</em> another and learn what it can do? How do two agents keep a long-running conversation straight? How does an agent ask a clarifying question without breaking the protocol? And, the one that makes managers sit up, how do you delegate across an organizational boundary without exposing your internals?</div>
 </div></section>
 
 <section><div class="wrap">
@@ -95,7 +95,7 @@
         <li><b>The Task.</b> A unit of delegated work with an identity and a lifecycle. Tasks can be long-running, so both sides can track one across many messages instead of pretending everything finishes in one HTTP round trip.</li>
         <li><b>Messages and artifacts.</b> The back-and-forth inside a task, plus the outputs it produces: a booking confirmation, a document, a table of results.</li>
       </ol>
-      <p class="small" style="margin-top:14px">Two design commitments worth naming, because they are what makes it enterprise-shaped: it runs on <b>plain web standards</b> (HTTP and JSON, so your existing gateways, auth, and logging apply), and agents are treated as <b>opaque</b> — you expose what you can do, not how you do it. Your prompts, your model choice, and your internal tools stay yours.</p>
+      <p class="small" style="margin-top:14px">Two design commitments worth naming, because they are what makes it enterprise-shaped: it runs on <b>plain web standards</b> (HTTP and JSON, so your existing gateways, auth, and logging apply), and agents are treated as <b>opaque</b>: you expose what you can do, not how you do it. Your prompts, your model choice, and your internal tools stay yours.</p>
       <p class="small" style="margin-top:12px">Primary sources: <a class="doc" href="https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/" target="_blank" rel="noopener">Google's announcement (2025) ↗</a> · <a class="doc" href="https://a2a-protocol.org" target="_blank" rel="noopener">the A2A protocol site ↗</a>.</p>
     </div>
     <div>
@@ -158,7 +158,7 @@
         <g class="loopnode" id="ln3"><rect x="150" y="204" width="160" height="44"/><text x="230" y="231" text-anchor="middle">completed</text></g>
         <g class="loopnode" id="ln4"><rect x="336" y="204" width="112" height="44"/><text x="392" y="231" text-anchor="middle">failed</text></g>
       </svg>
-      <p class="small" style="margin:10px 6px 4px">The amber state — <b>input-required</b> — is what a plain API call cannot express. The delegate stops and asks, and the task stays alive while it waits.</p>
+      <p class="small" style="margin:10px 6px 4px">The amber state, <b>input-required</b>, is what a plain API call cannot express. The delegate stops and asks, and the task stays alive while it waits.</p>
     </div>
     <div class="simright">
       <div class="simctl">
@@ -223,9 +223,9 @@
   <div class="grid3">
     <div class="card"><span class="kicker">In-graph edges</span><h3 style="margin-top:6px">Same app, same deploy</h3>
       <p class="small">A researcher node and a writer node in one LangGraph. They share state, ship together, and are versioned together. Adding a protocol here buys you serialization overhead and a second failure mode in exchange for nothing. Use edges. <a class="doc" href="../week4/langgraph.html">Week 4 →</a></p>
-      <p class="small" style="margin-top:8px"><b>Week 9 preview:</b> multi-agent design — supervisors, hand-offs, and when splitting one agent into several helps — is a whole week of its own, and most of it happens inside a single application.</p></div>
+      <p class="small" style="margin-top:8px"><b>Week 9 preview:</b> multi-agent design (supervisors, hand-offs, and when splitting one agent into several helps) is a whole week of its own, and most of it happens inside a single application.</p></div>
     <div class="card"><span class="kicker">MCP</span><h3 style="margin-top:6px">You need a capability</h3>
-      <p class="small">You want a system's data or actions and you would be happy with a well-described function. The other side has no goals to negotiate with. Wrap it in a server — once — and every agent you build afterwards gets it free.</p></div>
+      <p class="small">You want a system's data or actions and you would be happy with a well-described function. The other side has no goals to negotiate with. Wrap it in a server once, and every agent you build afterwards gets it free.</p></div>
     <div class="card"><span class="kicker">A2A</span><h3 style="margin-top:6px">You need someone else's judgment</h3>
       <p class="small">The work belongs to another team, vendor, or company: they own the data, the rules, and the accountability. You want an outcome without inheriting their internals, and you may need a back-and-forth to get there. That is delegation, and that is A2A's case.</p></div>
   </div>
@@ -236,7 +236,7 @@
   <div class="eyebrow">Discussion</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your procurement agent negotiates delivery dates with a supplier's agent over A2A. The supplier's agent commits to a date it cannot meet. What did your side need to have in place before that call, and what should it have logged?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox"><b>Before:</b> an authenticated, allow-listed counterparty (you delegate to agents you have onboarded, not to any card you find); an explicit scope for what the agent may agree to — a mandate with limits on price, quantity, and date; and a <b>human gate</b> on anything that becomes binding, which is the Week 5 rule surviving contact with another company. Autonomy is fine for &ldquo;ask when they could ship&rdquo;; it is not fine for &ldquo;accept.&rdquo; <b>Logged:</b> the Agent Card version you talked to (capability claims change), the task id, every message in both directions with timestamps, the artifact returned, which human approved what, and the mandate limits in force at the time. <b>The uncomfortable part:</b> none of that makes the supplier's agent honest. The protocol standardizes the conversation, not the counterparty; commitments across organizations still need contracts, penalties, and reconciliation, exactly as they did when humans made the call. Interoperability solves the plumbing; it does not solve trust.</div>
+  <div class="revealbox"><b>Before:</b> an authenticated, allow-listed counterparty (you delegate to agents you have onboarded, not to any card you find); an explicit scope for what the agent may agree to: a mandate with limits on price, quantity, and date; and a <b>human gate</b> on anything that becomes binding, which is the Week 5 rule surviving contact with another company. Autonomy is fine for &ldquo;ask when they could ship&rdquo;; it is not fine for &ldquo;accept.&rdquo; <b>Logged:</b> the Agent Card version you talked to (capability claims change), the task id, every message in both directions with timestamps, the artifact returned, which human approved what, and the mandate limits in force at the time. <b>The uncomfortable part:</b> none of that makes the supplier's agent honest. The protocol standardizes the conversation, not the counterparty; commitments across organizations still need contracts, penalties, and reconciliation, exactly as they did when humans made the call. Interoperability solves the plumbing; it does not solve trust.</div>
 </div></section>
 
 <section><div class="wrap">

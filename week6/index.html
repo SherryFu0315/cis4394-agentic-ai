@@ -4,18 +4,18 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CIS 4394 Week 6 — MCP &amp; A2A: The Interoperability Standards</title>
-<meta name="description" content="Week 5 you hand-wired tools into one agent. That works — once. Do it for five agents and twenty systems and you are maintaining a hundred pieces of custom…" />
+<meta name="description" content="Week 5 you hand-wired tools into one agent. That works, once. Do it for five agents and twenty systems and you are maintaining a hundred pieces of custom…" />
 <meta name="author" content="Dr. Xinyu Fu" />
 <link rel="canonical" href="https://xinyufu.org/cis4394-agentic-ai/week6/" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="CIS 4394 Agentic AI · Georgia State University" />
 <meta property="og:title" content="CIS 4394 Week 6 — MCP &amp; A2A: The Interoperability Standards" />
-<meta property="og:description" content="Week 5 you hand-wired tools into one agent. That works — once. Do it for five agents and twenty systems and you are maintaining a hundred pieces of custom…" />
+<meta property="og:description" content="Week 5 you hand-wired tools into one agent. That works, once. Do it for five agents and twenty systems and you are maintaining a hundred pieces of custom…" />
 <meta property="og:url" content="https://xinyufu.org/cis4394-agentic-ai/week6/" />
 <meta property="og:image" content="https://xinyufu.org/cis4394-agentic-ai/assets/social-card.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="CIS 4394 Week 6 — MCP &amp; A2A: The Interoperability Standards" />
-<meta name="twitter:description" content="Week 5 you hand-wired tools into one agent. That works — once. Do it for five agents and twenty systems and you are maintaining a hundred pieces of custom…" />
+<meta name="twitter:description" content="Week 5 you hand-wired tools into one agent. That works, once. Do it for five agents and twenty systems and you are maintaining a hundred pieces of custom…" />
 <meta name="twitter:image" content="https://xinyufu.org/cis4394-agentic-ai/assets/social-card.png" />
 <link rel="icon" href="../assets/gsu-flame.png" />
 <link rel="stylesheet" href="../assets/site.css" />
@@ -59,7 +59,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">Week 6 · Module 2 · Interoperability</div>
   <h1>MCP &amp; A2A — the <em>standards</em> layer.</h1>
-  <p class="lede"><a href="../week5/mechanics.html">Week 5</a> you hand-wired tools into one agent. That works — once. Do it for five agents and twenty systems and you are maintaining a hundred pieces of custom glue. This week: the two open protocols that turn that multiplication into an addition: <b>MCP</b> for the tools and data underneath an agent, <b>A2A</b> for other agents beside it.</p>
+  <p class="lede"><a href="../week5/mechanics.html">Week 5</a> you hand-wired tools into one agent. That works, once. Do it for five agents and twenty systems and you are maintaining a hundred pieces of custom glue. This week: the two open protocols that turn that multiplication into an addition: <b>MCP</b> for the tools and data underneath an agent, <b>A2A</b> for other agents beside it.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -70,7 +70,7 @@
   <div class="eyebrow">The big question</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your company builds five agents. Each one needs the CRM, the data warehouse, email, and the ticketing system. How many integrations does your team write, and how many do they <em>maintain</em> when the CRM changes its API?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">Written the hand-wired way: <b>5 × 4 = 20</b> integrations, and when the CRM ships a breaking change you fix it in <b>five</b> places, each written by a different team, at a different time, with different error handling. Written against a shared protocol: each agent speaks the protocol once and each system exposes a server once, so it is <b>5 + 4 = 9</b> pieces, and the CRM change is fixed in <b>one</b> place for everybody. That collapse — from a product to a sum — is the entire business case for MCP and A2A, and it is why this week is about plumbing rather than intelligence.</div>
+  <div class="revealbox">Written the hand-wired way: <b>5 × 4 = 20</b> integrations, and when the CRM ships a breaking change you fix it in <b>five</b> places, each written by a different team, at a different time, with different error handling. Written against a shared protocol: each agent speaks the protocol once and each system exposes a server once, so it is <b>5 + 4 = 9</b> pieces, and the CRM change is fixed in <b>one</b> place for everybody. That collapse, from a product to a sum, is the entire business case for MCP and A2A, and it is why this week is about plumbing rather than intelligence.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -121,10 +121,10 @@
       <p class="small">Your agent reaches <em>down</em> into a filesystem, a database, a ticketing API, a document store. The thing on the other end is not intelligent; it exposes capabilities and data, and your agent decides what to do with them. Open standard, introduced by Anthropic (2024); broadly adopted across the industry during 2025.</p>
       <p class="small" style="margin-top:10px"><a class="doc" href="mcp.html">Page 01 · How MCP works →</a></p></div>
     <div class="card"><span class="kicker">A2A · horizontal</span><h3 style="margin-top:6px">Agent ↔ agent</h3>
-      <p class="small">Your agent reaches <em>sideways</em> to another agent — possibly built by another team, another vendor, another company — and <b>delegates</b> a task rather than calling a function. The other side has its own goals, its own tools, and its own judgment. Announced by Google in April 2025 and contributed to the Linux Foundation in June 2025.</p>
+      <p class="small">Your agent reaches <em>sideways</em> to another agent (possibly built by another team, another vendor, another company) and <b>delegates</b> a task rather than calling a function. The other side has its own goals, its own tools, and its own judgment. Announced by Google in April 2025 and contributed to the Linux Foundation in June 2025.</p>
       <p class="small" style="margin-top:10px"><a class="doc" href="a2a.html">Page 02 · How A2A works →</a></p></div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>And a third option people forget:</b> if both &ldquo;agents&rdquo; live inside <em>your own</em> application — two nodes in one LangGraph from <a href="../week4/langgraph.html">Week 4</a> — you need neither protocol. They are just edges in a graph you own. Reach for a protocol when you cross a boundary you do not control: another team's deployment, another vendor, another company.</div>
+  <div class="callout" style="margin-top:20px"><b>And a third option people forget:</b> if both &ldquo;agents&rdquo; live inside <em>your own</em> application (two nodes in one LangGraph from <a href="../week4/langgraph.html">Week 4</a>), you need neither protocol. They are just edges in a graph you own. Reach for a protocol when you cross a boundary you do not control: another team's deployment, another vendor, another company.</div>
 </div></section>
 
 <section><div class="wrap">
