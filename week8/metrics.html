@@ -102,7 +102,7 @@
       <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noopener">Yao et al., 2024 — τ-bench (arXiv:2406.12045) ↗</a></p>
     </div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>Both formulas above assume independent trials each succeeding with probability p</b> — the clean textbook case. Real runs are not perfectly independent (a badly worded test case fails every time; a flaky API fails in bursts), so treat these as the model that makes the <em>shape</em> obvious, and measure your own agent to get the real numbers. In practice you estimate <b>pass@1</b> (= p) by running many trials and counting how many passed, then compute the rest.</div>
+  <div class="callout" style="margin-top:20px">Both formulas above assume independent trials each succeeding with probability p, the clean textbook case. Real runs are not perfectly independent (a badly worded test case fails every time; a flaky API fails in bursts), so treat these as the model that makes the <em>shape</em> obvious, and measure your own agent to get the real numbers. In practice you estimate <b>pass@1</b> (= p) by running many trials and counting how many passed, then compute the rest.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -179,7 +179,7 @@
     <div class="checklist" style="margin-top:10px">
       <label><input type="checkbox" /> <span><b>What is measured?</b> Final answers only, or the trajectory too? Whose tests decide a pass?</span></label>
       <label><input type="checkbox" /> <span><b>pass@1, pass@k, or pass^k?</b> And with what k? A number without its metric is not a number.</span></label>
-      <label><input type="checkbox" /> <span><b>Is it saturated?</b> When top scores crowd near the ceiling, the benchmark has stopped discriminating — differences are noise and harness luck.</span></label>
+      <label><input type="checkbox" /> <span><b>Is it saturated?</b> When top scores crowd near the ceiling, the benchmark has stopped discriminating: differences are noise and harness luck.</span></label>
       <label><input type="checkbox" /> <span><b>Could it be contaminated?</b> How long have the tasks and solutions been public?</span></label>
       <label><input type="checkbox" /> <span><b>Does it match my task?</b> Web navigation scores tell you little about refund policy compliance. Your own eval set is always the tiebreaker.</span></label>
     </div>
@@ -199,7 +199,7 @@
         <tr><td><b>LLM-as-judge</b></td><td>Open-ended quality: clarity, tone, helpfulness, faithfulness to a source</td><td>Cheap per item, but biased and needs validating</td></tr>
         <tr><td><b>Human review</b></td><td>High-stakes and ambiguous edges: legal risk, safety, anything you will be asked to defend</td><td>Expensive, slow, and the ground truth everything else is calibrated against</td></tr>
       </table></div>
-      <p class="small" style="margin-top:12px"><b>Worked example: one document-QA agent, four checks:</b> the cited document ID → <b>rule</b> (it either matches or it does not). The extracted dollar amount → <b>rule</b>. Whether the answer reads clearly and stays faithful to the source → <b>LLM-judge</b>. Anything flagged as a legal-risk edge case → <b>human</b>. Do not reach for a judge where a rule is exact and free.</p></div>
+      <p class="small" style="margin-top:12px">Worked example: one document-QA agent, four checks: the cited document ID → <b>rule</b> (it either matches or it does not). The extracted dollar amount → <b>rule</b>. Whether the answer reads clearly and stays faithful to the source → <b>LLM-judge</b>. Anything flagged as a legal-risk edge case → <b>human</b>. Do not reach for a judge where a rule is exact and free.</p></div>
     <div class="card"><h3>LLM as a Judge (IBM Technology, 6m08s)</h3>
       <p class="small">The concept, the rubric, and the pitfalls in six minutes. Watch it, then read the four biases below and see how many the video names.</p>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/trfUBIDeI1Y" title="LLM as a Judge: Scaling AI Evaluation Strategies" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
@@ -213,12 +213,12 @@
     <div class="biascard"><h4>Self-preference</h4><p>A judge can prefer text in its own style or from its own model family. If the judge and the agent are the same model, you are partly grading a family resemblance.</p></div>
     <div class="biascard"><h4>Sycophancy</h4><p>Agreeable, flattering, confident-sounding output scores well. Confidently wrong answers are exactly the ones a judge is worst at catching, and exactly the ones that hurt in production.</p></div>
   </div>
-  <div class="callout red" style="margin-top:20px"><b>Why this is worse than having no eval:</b> a biased judge produces a number, a chart, and a sense of rigor. Teams then make deployment decisions on it and stop looking. An unmeasured system at least keeps people suspicious.</div>
+  <div class="callout red" style="margin-top:20px">Why this is worse than having no eval: a biased judge produces a number, a chart, and a sense of rigor. Teams then make deployment decisions on it and stop looking. An unmeasured system at least keeps people suspicious.</div>
 
   <h3 style="margin-top:30px;font-size:20px">Mitigations — validate the evaluator like you validate the agent</h3>
   <ol class="steps">
-    <li><b>Swap positions and average.</b> Run every pairwise comparison in both orders. If the verdict flips, the judge is reading position, not quality — record that as a disagreement rather than a score.</li>
-    <li><b>Write an explicit rubric with anchors, and give a reference answer.</b> “Rate helpfulness 1–5” invites vibes. “2 = answers the question but omits the policy citation” is checkable, and it is what makes two runs of the judge agree with each other.</li>
+    <li><b>Swap positions and average.</b> Run every pairwise comparison in both orders. If the verdict flips, the judge is reading position, not quality; record that as a disagreement rather than a score.</li>
+    <li>Write an explicit rubric with anchors, and give a reference answer. “Rate helpfulness 1–5” invites vibes. “2 = answers the question but omits the policy citation” is checkable, and it is what makes two runs of the judge agree with each other.</li>
     <li><b>Prefer pairwise comparison over absolute scores</b> when you can. “Which of these two is better?” is a far more stable judgment than “score this 1–10,” for models and humans alike.</li>
     <li><b>Calibrate against humans: non-negotiable.</b> Hand-label a sample (say 50 items), run the judge on the same sample, and report the agreement rate. If the judge agrees with your humans 60% of the time, its scores are decoration. Recheck the agreement whenever the rubric, the judge model, or the task changes.</li>
     <li><b>Use rules wherever a rule exists.</b> Every check you can express deterministically is one fewer place for bias to enter, and it is cheaper besides.</li>
@@ -230,12 +230,12 @@
   <div class="eyebrow">Discussion</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>A vendor's deck says: “Our coding agent achieves 78% on SWE-bench — near-human performance.” You have four minutes with them. What do you ask, and what would change your mind either way?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox"><b>Four questions, in order of how much they move the number:</b><br />
+  <div class="revealbox">Four questions, in order of how much they move the number:<br />
   <b>1. Which subset, and which harness?</b> Full set, Verified, or Lite, and what scaffolding did the agent get: how many steps, which tools, how many attempts, did retries count? Two numbers are only comparable if these match.<br />
-  <b>2. pass@1 or pass@k?</b> If the agent generated many patches and a test suite picked the winner, that is a pass@k number and it is legitimate <em>only because SWE-bench has a free verifier</em> — my repository at 2 a.m. does not. Ask for the pass^k, or at least the variance across repeated runs.<br />
+  <b>2. pass@1 or pass@k?</b> If the agent generated many patches and a test suite picked the winner, that is a pass@k number and it is legitimate <em>only because SWE-bench has a free verifier</em>; my repository at 2 a.m. does not. Ask for the pass^k, or at least the variance across repeated runs.<br />
   <b>3. Contamination?</b> These issues and their accepted fixes have been public for years. Ask what they have measured on issues created <em>after</em> the model's training cutoff, or on a private repo.<br />
-  <b>4. What does it do on my tickets?</b> The only question that decides anything. Propose a pilot on 30 of our own issues, scored by our own tests, run three times each, reporting pass@1 and pass^3.<br /><br />
-  <b>What would change my mind:</b> a strong result on our own private cases at pass^3, with traces I can inspect. <b>What would not:</b> a bigger benchmark number. And note the rhetorical move to reject explicitly — “near-human performance” compares a benchmark score against a human baseline measured on that same benchmark, which says nothing about human performance on our work.</div>
+  4. What does it do on my tickets? The only question that decides anything. Propose a pilot on 30 of our own issues, scored by our own tests, run three times each, reporting pass@1 and pass^3.<br /><br />
+  <b>What would change my mind:</b> a strong result on our own private cases at pass^3, with traces I can inspect. <b>What would not:</b> a bigger benchmark number. And note the rhetorical move to reject explicitly: “near-human performance” compares a benchmark score against a human baseline measured on that same benchmark, which says nothing about human performance on our work.</div>
 </div></section>
 
 <section><div class="wrap">

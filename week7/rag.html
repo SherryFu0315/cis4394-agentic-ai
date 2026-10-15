@@ -74,7 +74,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">02 · The pipeline</div>
   <h1>Retrieval-augmented <em>generation</em>.</h1>
-  <p class="lede">The model was trained on text that stopped at a cutoff date and never included your documents. RAG closes that gap without touching the weights: find the passages that answer this question, paste them into the prompt, and require the answer to come from them — with a citation (Lewis et al., 2020).</p>
+  <p class="lede">The model was trained on text that stopped at a cutoff date and never included your documents. RAG closes that gap without touching the weights: find the passages that answer this question, paste them into the prompt, and require the answer to come from them, with a citation (Lewis et al., 2020).</p>
 </div></header>
 
 <section><div class="wrap">
@@ -98,9 +98,9 @@
   <p class="lede">Retrieval must find the right passage when the user's words are not the document's words. A customer types "can I send this back?"; the policy says "return window." Zero words in common, and a keyword search returns nothing useful.</p>
   <div class="grid2" style="align-items:start">
     <div>
-      <p>An <b>embedding model</b> converts a piece of text into a list of numbers — a vector, typically several hundred values long. The model is trained so that text with similar meaning lands in similar directions, which turns a language problem into a geometry problem: to find related text, find nearby vectors.</p>
-      <p>Nearness is usually measured with <b>cosine similarity</b> — the angle between two vectors, reported on a scale where 1.0 means pointing the same way and 0 means unrelated. "Retrieve the top <em>k</em>" simply means: embed the question, then return the <em>k</em> stored chunks whose vectors sit at the smallest angle to it.</p>
-      <p class="small">Two practical consequences you will meet in the exercises. First, <b>the question and the documents must be embedded by the same model</b> — vectors from two different models are not comparable, so swapping the embedding model means re-embedding the entire corpus. Second, <b>similarity is not truth</b>: the nearest chunk is the one that talks about the topic most, which may well be last year's version of the policy. Freshness must be enforced by metadata, not by geometry.</p>
+      <p>An <b>embedding model</b> converts a piece of text into a list of numbers: a vector, typically several hundred values long. The model is trained so that text with similar meaning lands in similar directions, which turns a language problem into a geometry problem: to find related text, find nearby vectors.</p>
+      <p>Nearness is usually measured with <b>cosine similarity</b>: the angle between two vectors, reported on a scale where 1.0 means pointing the same way and 0 means unrelated. "Retrieve the top <em>k</em>" simply means: embed the question, then return the <em>k</em> stored chunks whose vectors sit at the smallest angle to it.</p>
+      <p class="small">Two practical consequences you will meet in the exercises. First, the question and the documents must be embedded by the same model; vectors from two different models are not comparable, so swapping the embedding model means re-embedding the entire corpus. Second, <b>similarity is not truth</b>: the nearest chunk is the one that talks about the topic most, which may well be last year's version of the policy. Freshness must be enforced by metadata, not by geometry.</p>
     </div>
     <div class="vecmap">
       <svg viewBox="0 0 420 300" aria-label="illustration: a query vector and nearby document chunks in embedding space">
@@ -174,7 +174,7 @@
       <div class="statepanel" id="simState"><span class="kicker">Pipeline state</span></div>
     </div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>Read it like the Week 2 evidence standard.</b> <em>state before → observation → available actions → selected action → result → state after.</em> A RAG answer is auditable for exactly the same reason an agent loop is: every claim in the final sentence traces to a chunk ID, and every chunk ID traces to a document version. If your logs do not contain the retrieved chunk IDs, you cannot prove after the fact <em>why</em> the system said what it said.</div>
+  <div class="callout" style="margin-top:20px">Read it like the Week 2 evidence standard. <em>state before → observation → available actions → selected action → result → state after.</em> A RAG answer is auditable for exactly the same reason an agent loop is: every claim in the final sentence traces to a chunk ID, and every chunk ID traces to a document version. If your logs do not contain the retrieved chunk IDs, you cannot prove after the fact <em>why</em> the system said what it said.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -185,10 +185,10 @@
       <p>Retrieval alone does not stop a model from inventing things. Three instructions turn retrieved text into an actual constraint, and they belong in the augmented prompt every single time:</p>
       <ol class="steps" style="margin-top:14px">
         <li><b>Answer only from the context.</b> Explicitly forbid outside knowledge. Without this line, the model happily blends what it retrieved with what it half-remembers from training, and you cannot tell which sentence came from where.</li>
-        <li><b>Cite the source of each claim.</b> Require the chunk ID or document section next to the statement it supports. Citations are not decoration; they are the mechanism that makes a wrong answer <em>checkable</em> by a human in ten seconds.</li>
-        <li><b>Say "I don't know" when the context is thin.</b> Give the model an approved way to fail, and back it with a rule in your code: if the best similarity score is below a threshold, do not even call the generator. Escalate to a person instead.</li>
+        <li><b>Cite the source of each claim.</b> Require the chunk ID or document section next to the statement it supports. A citation is what lets a human check a wrong answer in ten seconds.</li>
+        <li>Say "I don't know" when the context is thin. Give the model an approved way to fail, and back it with a rule in your code: if the best similarity score is below a threshold, do not even call the generator. Escalate to a person instead.</li>
       </ol>
-      <p class="small" style="margin-top:12px">Then verify: a groundedness check compares each claim in the answer against the retrieved text, and a low-confidence result routes to a human gate — the same gate you placed on irreversible actions in Week 4, now placed on <em>assertions</em>.</p>
+      <p class="small" style="margin-top:12px">Then verify: a groundedness check compares each claim in the answer against the retrieved text, and a low-confidence result routes to a human gate, the same gate you placed on irreversible actions in Week 4, now placed on <em>assertions</em>.</p>
     </div>
     <div>
       <div class="codebox" style="margin-top:0">SYSTEM
@@ -207,7 +207,7 @@ supersedes Returns Policy v6 in all regions.
 
 QUESTION
 How long do I have to return a laptop in Georgia?</div>
-      <div class="callout red" style="margin-top:14px"><b>Week 3 callback: the Air Canada lesson.</b> On the <a href="../week3/anatomy.html">prompt anatomy page</a> you read what happened when a chatbot stated a refund policy that did not exist and a tribunal held the airline to it. A grounded, cited answer is not a nicety. It is the difference between a statement your company can stand behind and one it will be held to anyway.</div>
+      <div class="callout red" style="margin-top:14px">Week 3 callback: the Air Canada lesson. On the <a href="../week3/anatomy.html">prompt anatomy page</a> you read what happened when a chatbot stated a refund policy that did not exist and a tribunal held the airline to it. A grounded, cited answer is the difference between a statement your company can stand behind and one it will be held to anyway.</div>
     </div>
   </div>
 </div></section>
@@ -218,21 +218,21 @@ How long do I have to return a laptop in Georgia?</div>
   <p class="lede">Classic RAG retrieves on every question, whether or not retrieval helps. Agentic RAG makes retrieval a <b>tool</b>, and hands the decision to the model inside the loop you built in Week 4.</p>
   <div class="grid3">
     <div class="card"><span class="kicker">Decide</span><p class="small" style="margin-top:8px">"Do I need to look this up?" A greeting, a formatting request, or arithmetic needs no search, and searching anyway costs latency and drags irrelevant text into the context. A question about your refund policy always needs a search, and the model should refuse to answer it from memory.</p></div>
-    <div class="card"><span class="kicker">Re-query</span><p class="small" style="margin-top:8px">If the first retrieval comes back weak, the agent can rewrite the query and try again — dropping jargon, adding a synonym, or narrowing by metadata. That is the Observe → Reason → Act loop pointed at the index instead of at the outside world.</p></div>
+    <div class="card"><span class="kicker">Re-query</span><p class="small" style="margin-top:8px">If the first retrieval comes back weak, the agent can rewrite the query and try again: dropping jargon, adding a synonym, or narrowing by metadata. That is the Observe → Reason → Act loop pointed at the index instead of at the outside world.</p></div>
     <div class="card"><span class="kicker">Chain</span><p class="small" style="margin-top:8px">Multi-hop questions need more than one retrieval: find the customer's region, then find the policy for that region. One shot at top-<em>k</em> cannot do this; a loop with a stop condition can. Each hop is a step you can cap and log.</p></div>
   </div>
   <div class="callout" style="margin-top:20px"><b>The cost side.</b> Every extra retrieval is another embedding call and more tokens in the window. The same budget discipline from <a href="../week4/langgraph.html">Week 4</a> applies: cap the number of retrieval hops, cap <em>k</em>, and log the score of what came back so you can tell a genuinely hard question from a badly chunked corpus.</div>
   <div style="margin-top:20px">
-    <div class="bigq"><span class="qlabel">Discussion question</span>Your agentic RAG assistant answers "what is our GA refund window?" by searching — good. It also answers "summarize the paragraph I just pasted" by searching, and returns a policy chunk that has nothing to do with the paragraph. What broke, and where do you fix it?</div>
+    <div class="bigq"><span class="qlabel">Discussion question</span>Your agentic RAG assistant answers "what is our GA refund window?" by searching. Good. It also answers "summarize the paragraph I just pasted" by searching, and returns a policy chunk that has nothing to do with the paragraph. What broke, and where do you fix it?</div>
     <button class="revealbtn">See the answer</button>
-    <div class="revealbox">Nothing broke in the <em>index</em> — this is a <b>decision</b> failure, not a retrieval failure. The agent searched when the answer was already in the context window, and then, because retrieval always returns <em>something</em>, it got the nearest chunk in a corpus that contains no relevant chunk at all. Three fixes, in order of preference. <b>(1) The tool description.</b> The model chooses tools from their descriptions (Week 2's tool-inventory lesson): "searches Lakeside policy documents; use only for questions about company policy, not for text the user has already provided" is a better spec than "searches documents." <b>(2) A score floor.</b> If the best match is below your threshold, return "no relevant policy found" instead of the nearest three chunks — an index that never says "nothing here" will hand the model noise on every off-topic question. <b>(3) Routing.</b> For high-volume assistants, a cheap classifier decides retrieve-or-not before the expensive model runs. And note the general lesson: retrieval quality is measured not only by whether it finds the right chunk, but by whether it declines when there is no right chunk.</div>
+    <div class="revealbox">Nothing broke in the <em>index</em>: this is a <b>decision</b> failure, not a retrieval failure. The agent searched when the answer was already in the context window, and then, because retrieval always returns <em>something</em>, it got the nearest chunk in a corpus that contains no relevant chunk at all. Three fixes, in order of preference. <b>(1) The tool description.</b> The model chooses tools from their descriptions (Week 2's tool-inventory lesson): "searches Lakeside policy documents; use only for questions about company policy, not for text the user has already provided" is a better spec than "searches documents." <b>(2) A score floor.</b> If the best match is below your threshold, return "no relevant policy found" instead of the nearest three chunks; an index that never says "nothing here" will hand the model noise on every off-topic question. <b>(3) Routing.</b> For high-volume assistants, a cheap classifier decides retrieve-or-not before the expensive model runs. And note the general lesson: retrieval quality is measured not only by whether it finds the right chunk, but by whether it declines when there is no right chunk.</div>
   </div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">The decision managers ask about</div>
   <h2>RAG or fine-tuning?</h2>
-  <p class="lede">These are not competitors — they change different things. <b>Retrieval changes what the model sees. Fine-tuning changes what the model is.</b></p>
+  <p class="lede">These are not competitors; they change different things. Retrieval changes what the model sees. Fine-tuning changes what the model is.</p>
   <div class="compare">
   <table class="plain">
     <tr><th></th><th>RAG (retrieval)</th><th>Fine-tuning</th></tr>
@@ -259,7 +259,7 @@ How long do I have to return a laptop in Georgia?</div>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/T-D1OfcDW1M" title="IBM Technology: What is Retrieval-Augmented Generation (RAG)?" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
       <p class="small" style="margin-top:10px"><a class="doc" href="https://www.ibm.com/think/topics/retrieval-augmented-generation" target="_blank" rel="noopener">IBM Think — the written explainer ↗</a></p>
     </div>
-    <div class="card"><h3>RAG's Evolution: From Simple Retrieval to Agentic AI (IBM Technology)</h3><p class="small">About 8½ minutes on the step this page ends with: retrieval as a tool an agent chooses to call, re-query, and chain — the bridge from a fixed pipeline to the loop you built in Week 4.</p>
+    <div class="card"><h3>RAG's Evolution: From Simple Retrieval to Agentic AI (IBM Technology)</h3><p class="small">About 8½ minutes on the step this page ends with: retrieval as a tool an agent chooses to call, re-query, and chain: the bridge from a fixed pipeline to the loop you built in Week 4.</p>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/JB2P5Gk23VI" title="IBM Technology: RAG's Evolution — From Simple Retrieval to Agentic AI" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
     </div>
   </div>
@@ -292,7 +292,7 @@ const RG=[
  {id:'rg2',t:'<b>embed — text becomes a vector.</b> Each chunk is passed through an embedding model that returns a list of numbers representing its meaning. This is a separate, much smaller model than the generator, and it is run once per chunk. Remember the constraint: whatever model you use here, the question must be embedded by the same one.'},
  {id:'rg3',t:'<b>vector index — the store.</b> Vectors plus the original text plus the metadata, in a database built for nearest-neighbour search. Because the metadata is stored alongside, you can filter <em>before</em> ranking — region = GA, status = current, access = internal — which is how freshness and permissions get enforced. Everything above this box is offline work; nothing here waits on a user.'},
  {id:'rg4',t:'<b>question — the live input.</b> The user\'s words, which will rarely match the document\'s words. In an agentic system this is also where query rewriting happens: expanding an abbreviation, stripping conversational filler, or splitting a two-part question into two retrievals.'},
- {id:'rg5',t:'<b>embed the question — same model, same space.</b> The question becomes a vector in the same geometry as the chunks, which is the whole trick: now "can I send this back?" and "return window" can be close together even with no shared words. Use a different embedding model here than you used for the corpus and retrieval degrades to noise — the vectors are simply not comparable.'},
+ {id:'rg5',t:'embed the question — same model, same space. The question becomes a vector in the same geometry as the chunks, which is the whole trick: now "can I send this back?" and "return window" can be close together even with no shared words. Use a different embedding model here than you used for the corpus and retrieval degrades to noise — the vectors are simply not comparable.'},
  {id:'rg6',t:'<b>retrieve — top-k nearest.</b> Filter by metadata, then rank by cosine similarity and return the best k chunks (often 3–5). This is the single highest-leverage stage in the system: k, chunk size, the embedding model, metadata filters, and optional re-ranking all live here. It is also where you should enforce a floor — if the best score is weak, return nothing rather than the nearest irrelevant thing.'},
  {id:'rg7',t:'<b>augment — build the prompt.</b> Assemble the retrieved chunks, their IDs, the user\'s question, and the grounding rules ("answer only from this context; cite the chunk id; say you don\'t know if it is not here") into one prompt. This is Week 3\'s context engineering, now with a retrieval step feeding it. Notice that nothing has been learned by the model — the knowledge is simply <em>in the request</em>.'},
  {id:'rg8',t:'<b>generate — the grounded answer.</b> The model writes an answer constrained to the supplied context and tags each claim with the chunk it came from. Log the chunk IDs with the answer: that log is what makes the system auditable, what lets you replay a complaint, and what lets you say "the bot answered from Returns Policy v7, section 3.2" instead of "we are not sure why it said that."'}

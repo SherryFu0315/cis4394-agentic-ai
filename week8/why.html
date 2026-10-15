@@ -66,9 +66,9 @@
   <h2>What breaks the ordinary testing playbook</h2>
   <div class="grid2">
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">1 · Non-determinism</span>
-      <p class="small" style="margin-top:8px">Ordinary software is a function: the same input gives the same output, so one passing test <em>is</em> proof. An agent samples from a distribution — same input, different path, sometimes a different answer. A single passing run proves the system <b>can</b> succeed, never that it <b>will</b>.</p></div>
+      <p class="small" style="margin-top:8px">Ordinary software is a function: the same input gives the same output, so one passing test <em>is</em> proof. An agent samples from a distribution: same input, different path, sometimes a different answer. A single passing run proves the system <b>can</b> succeed, never that it <b>will</b>.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">2 · Multi-step compounding</span>
-      <p class="small" style="margin-top:8px">One wrong step doesn't cost you one step. It poisons every step after it: the agent reasons confidently on top of a bad observation, and the trace still <em>looks</em> coherent. Reliability multiplies down the chain — see the calculator below.</p></div>
+      <p class="small" style="margin-top:8px">One wrong step doesn't cost you one step. It poisons every step after it: the agent reasons confidently on top of a bad observation, and the trace still <em>looks</em> coherent. Reliability multiplies down the chain; see the calculator below.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">3 · No single right answer</span>
       <p class="small" style="margin-top:8px">“Summarize this ticket,” “draft a reply,” “research three vendors” have no unique correct string to diff against. Exact-match tests, the cheapest and most trustworthy kind, simply don't apply to most of what agents produce, so you need graders that are themselves fallible.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">4 · Stateful and interactive</span>
@@ -80,7 +80,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive · same task, five runs</div>
   <h2>Run the identical task five times</h2>
-  <p class="lede">Below is a fixed, scripted episode of the <a href="../week2/build.html">Week 2 Job Search Agent</a> on <b>one identical input</b> — the same posting, the same prompt, the same tools. Press <b>Run the task</b> five times. Everyone in the class sees the same five outcomes, because the lesson shouldn't depend on your luck.</p>
+  <p class="lede">Below is a fixed, scripted episode of the <a href="../week2/build.html">Week 2 Job Search Agent</a> on <b>one identical input</b>: the same posting, the same prompt, the same tools. Press <b>Run the task</b> five times. Everyone in the class sees the same five outcomes, because the lesson shouldn't depend on your luck.</p>
   <div class="stepwrap">
     <div>
       <div class="simctl" style="margin-bottom:12px">
@@ -96,7 +96,7 @@
       <div class="term" id="runlog"><span class="t-dim">No runs yet. Press “Run the task” — run #1 is the one you would have demoed.</span></div>
     </div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>Read what just happened:</b> nothing was misconfigured and nothing crashed. Runs 3 and 5 failed for reasons that live inside normal agent behavior — an empty tool result treated as an answer, and a loop that burned its <a href="../week4/langgraph.html">step cap</a> on pagination. Both failures returned <em>confident-looking output</em>. That is the failure mode evaluation exists to catch: agents rarely fail loudly.</div>
+  <div class="callout" style="margin-top:20px"><b>Read what just happened:</b> nothing was misconfigured and nothing crashed. Runs 3 and 5 failed for reasons that live inside normal agent behavior: an empty tool result treated as an answer, and a loop that burned its <a href="../week4/langgraph.html">step cap</a> on pagination. Both failures returned <em>confident-looking output</em>. That is the failure mode evaluation exists to catch: agents rarely fail loudly.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -127,7 +127,7 @@
 
 whole-task success  ~ 86%
 failure rate        ~ 14%   (about 1 in 7)</div>
-      <p class="small">Every step looks fine in isolation. Nobody on the team would flag a 0.95. The product still fails roughly one refund in seven. <em>(Illustrative per-step numbers — an original teaching example, not measured data.)</em></p></div>
+      <p class="small">Every step looks fine in isolation. Nobody on the team would flag a 0.95. The product still fails roughly one refund in seven. <em>(Illustrative per-step numbers; an original teaching example, not measured data.)</em></p></div>
     <div class="card"><span class="kicker">The MIS takeaway</span>
       <p class="small" style="margin-top:8px">Reliability is engineered <b>per step</b> and experienced <b>per task</b>. Two design consequences follow, and both are decisions you own rather than model choices:</p>
       <p class="small" style="margin-top:8px"><b>Shorten the chain.</b> Fewer steps means fewer multiplications. A deterministic tool or a plain workflow branch that replaces three agent steps buys more reliability than a bigger model usually does.</p>
@@ -154,9 +154,9 @@ failure rate        ~ 14%   (about 1 in 7)</div>
     </div>
     <div class="card"><span class="kicker">While you watch — three things to catch</span>
       <p class="small" style="margin-top:8px"><b>1.</b> What a span contains that an ordinary log line does not, and why nesting matters when one bad observation sits eight steps upstream of the wrong answer.</p>
-      <p class="small" style="margin-top:8px"><b>2.</b> Where the <b>dataset</b> of test cases lives relative to the running agent — the harness anatomy you'll build on page 03: <code>dataset → agent under test → evaluator → report</code>.</p>
+      <p class="small" style="margin-top:8px"><b>2.</b> Where the <b>dataset</b> of test cases lives relative to the running agent: the harness anatomy you'll build on page 03: <code>dataset → agent under test → evaluator → report</code>.</p>
       <p class="small" style="margin-top:8px"><b>3.</b> How an eval turns into a <b>regression test</b>: the same dataset, rerun on every prompt or code change, so “I improved it” becomes a claim with evidence instead of a memory of one good run.</p>
-      <div class="callout" style="margin-top:14px;margin-bottom:0"><b>Tooling note:</b> the mechanics are the same whichever platform you use. What transfers is the shape — cases, evaluator, repeat runs, a report you can hand someone.</div>
+      <div class="callout" style="margin-top:14px;margin-bottom:0"><b>Tooling note:</b> the mechanics are the same whichever platform you use. What transfers is the shape: cases, evaluator, repeat runs, a report you can hand someone.</div>
     </div>
   </div>
 </div></section>
@@ -240,7 +240,7 @@ function renderScores(){
   if(rIdx<5){
     verdictEl.innerHTML='Keep going — you have '+(5-rIdx)+' run'+(5-rIdx>1?'s':'')+' left.';
   }else{
-    verdictEl.innerHTML='<b>Five runs, one identical input: 3 passed, 2 failed.</b> If you had stopped after run 1 you would have reported 100%. The honest single-run number is <b>60%</b>. And the number a customer who runs it five times actually experiences — all five clean — is <b>0 out of 1 attempts here</b>. Page <a href="metrics.html">02</a> names these two readings: <b>pass@k</b> (at least one) and <b>pass^k</b> (all of them).';
+    verdictEl.innerHTML='Five runs, one identical input: 3 passed, 2 failed. If you had stopped after run 1 you would have reported 100%. The honest single-run number is <b>60%</b>. And the number a customer who runs it five times actually experiences — all five clean — is <b>0 out of 1 attempts here</b>. Page <a href="metrics.html">02</a> names these two readings: <b>pass@k</b> (at least one) and <b>pass^k</b> (all of them).';
   }
 }
 function doRun(){
