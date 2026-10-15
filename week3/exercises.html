@@ -58,7 +58,7 @@
   <h2>Prompt Autopsy</h2>
   <div class="grouptask"><span class="gk">👥 Group task · In pairs · 10 minutes</span>
     <p>The failing prompt: <b>“Summarize this customer review”</b> — run over 200 mixed reviews, the outputs are un-dashboardable prose. Rewrite it so every review yields fixed JSON <code>{"sentiment", "one_line_summary", "product_mentioned"}</code>. Your rewrite should add: a <b>system role</b>, the <b>pinned schema</b>, <b>one example</b>, a <b>temperature choice</b>, and a rule for unclear sentiment.</p>
-    <p class="prod"><b>Produce:</b> run before &amp; after on 5 reviews (Gemini free tier or Copilot chat) and count how many outputs are dashboard-ready. Report both numbers.</p>
+    <p class="prod"><b>Produce:</b> run before &amp; after on 5 reviews (local Ollama model, Gemini free tier, or Copilot chat) and count how many outputs are dashboard-ready. Report both numbers.</p>
   </div>
   <div class="card">
     <button class="revealbtn">Debrief — what good rewrites change</button>
@@ -90,7 +90,7 @@ output: {"sentiment":"mixed","one_line_summary":"Great blender, slow shipping","
 <section><div class="wrap">
   <div class="eyebrow">Hands-on</div>
   <h2>Ten messy docs → one clean table</h2>
-  <p class="lede">The task: extract structured data from 10 messy vendor documents into records a spreadsheet can ingest. Tools: Gemini API free tier or Copilot chat.</p>
+  <p class="lede">The task: extract structured data from 10 messy vendor documents into records a spreadsheet can ingest. Tools: your local Ollama model, the Gemini API free tier, or Copilot chat.</p>
   <div class="grid2" style="align-items:start">
     <div class="card"><h3>The steps</h3>
       <ol class="steps" style="margin-top:14px">
