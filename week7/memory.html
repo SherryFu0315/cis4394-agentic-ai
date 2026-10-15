@@ -70,9 +70,9 @@
     <tr><th></th><th>Context (the window)</th><th>Memory (a store)</th></tr>
     <tr><td><b>What it is</b></td><td>The tokens assembled for <em>this</em> model call: system prompt, tools, retrieved text, conversation so far.</td><td>Data your system deliberately saved outside the model — a row in a database, a file, a vector index.</td></tr>
     <tr><td><b>Lifespan</b></td><td>One call. The next call gets whatever your harness re-assembles.</td><td>Until you delete it. Survives the run, the session, the deploy.</td></tr>
-    <tr><td><b>Where it lives</b></td><td>In the request. It is gone the moment the response returns.</td><td>In your infrastructure — and therefore in your backup, your access-control model, and your retention schedule.</td></tr>
+    <tr><td><b>Where it lives</b></td><td>In the request. It is gone the moment the response returns.</td><td>In your infrastructure, and therefore in your backup, your access-control model, and your retention schedule.</td></tr>
     <tr><td><b>Who controls it</b></td><td>Your prompt-assembly code, every turn (Week 3's context engineering).</td><td>Your write policy (what gets saved) and read policy (what gets loaded back).</td></tr>
-    <tr><td><b>What it costs</b></td><td>Tokens — every turn, forever. Bigger context = higher bill and, past a point, worse recall inside the window.</td><td>Storage plus a retrieval step. Cheap to keep, cheap to update — you pay tokens only for what you load.</td></tr>
+    <tr><td><b>What it costs</b></td><td>Tokens: every turn, forever. Bigger context = higher bill and, past a point, worse recall inside the window.</td><td>Storage plus a retrieval step. Cheap to keep, cheap to update — you pay tokens only for what you load.</td></tr>
     <tr><td><b>Failure mode</b></td><td>Amnesia between runs; or, if you stuff everything in, context rot.</td><td>Stale, contradictory, or over-broad memories that quietly poison later runs.</td></tr>
   </table>
   </div>
@@ -112,7 +112,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Concept check · interactive</div>
   <h2>The memory router</h2>
-  <p class="lede">You are building a travel-booking agent for a mid-size firm. Four things happen during a run. For each one, decide which store it belongs in — or whether it belongs in a store at all.</p>
+  <p class="lede">You are building a travel-booking agent for a mid-size firm. Four things happen during a run. For each one, decide which store it belongs in, or whether it belongs in a store at all.</p>
   <div id="router"></div>
   <div class="callout blue" style="margin-top:18px"><b>Why the classification is not academic:</b> each store has a different retention rule, a different retrieval trigger, and a different privacy exposure. Semantic facts about a person are the ones the law cares about; episodic run records are what your on-call engineer needs at 2 a.m.; procedural notes are the ones that silently change your agent's behavior forever if nobody reviews them.</div>
 </div></section>
@@ -132,7 +132,7 @@
       <p class="small" style="margin-top:12px">Who writes it matters too. <b>Explicit</b> writes ("remember that…") are auditable and rare. <b>Automatic</b> writes — where the agent decides at the end of a run what to save — scale better and are exactly where wrong facts get canonized. Keep a source and timestamp on every memory so a bad one can be traced and revoked.</p>
     </div>
     <div class="card"><span class="kicker">Read policy</span><h3 style="margin-top:6px">When do you retrieve?</h3>
-      <p class="small">The naive design loads the whole memory store into every prompt. That works for a demo with nine memories and collapses at nine thousand — you have re-created the context problem with a bigger bill. Real read policies are selective:</p>
+      <p class="small">The naive design loads the whole memory store into every prompt. That works for a demo with nine memories and collapses at nine thousand. You have re-created the context problem with a bigger bill. Real read policies are selective:</p>
       <ol class="steps" style="margin-top:14px">
         <li><b>At the start of a session</b>, load a small, bounded profile: the handful of semantic facts about this user, plus the standing procedural rules.</li>
         <li><b>On relevance</b>, retrieve mid-run by similarity to the current sub-task — the same top-<em>k</em> mechanism as RAG on page 02.</li>
@@ -142,7 +142,7 @@
       <p class="small" style="margin-top:12px">Then close the loop: log which memories were injected on the turn that produced a bad answer. Without that, a poisoned memory is invisible — the trace shows a confident model and no reason for it.</p>
     </div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>Week 4 callback — procedural memory is Reflexion, persisted.</b> On the <a href="../week4/patterns.html">reasoning patterns page</a> you met reflection: the agent critiques its own attempt and stores the critique so the next attempt does better. Inside a single run, that critique lives in the context window. Write it to a store instead and it becomes procedural memory: a lesson that carries into next month's runs. That one change is the difference between an agent that learns within a task and an agent that learns across a job.</div>
+  <div class="callout" style="margin-top:20px"><b>Week 4 callback: procedural memory is Reflexion, persisted.</b> On the <a href="../week4/patterns.html">reasoning patterns page</a> you met reflection: the agent critiques its own attempt and stores the critique so the next attempt does better. Inside a single run, that critique lives in the context window. Write it to a store instead and it becomes procedural memory: a lesson that carries into next month's runs. That one change is the difference between an agent that learns within a task and an agent that learns across a job.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -150,8 +150,8 @@
   <h2>A memory store is retained personal data</h2>
   <p class="lede">The engineering question is "what should the agent remember?" The business question is "what are we now holding, about whom, and for how long?" They must be answered together, because the second one has consequences the first one cannot see.</p>
   <div class="grid3">
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Consent &amp; notice</span><p class="small" style="margin-top:8px">A user talking to an assistant does not obviously expect a durable profile to be built from it. If your agent writes semantic facts about people, someone must be told — and the agent should be able to say what it knows about you when asked.</p></div>
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Retention &amp; deletion</span><p class="small" style="margin-top:8px">"Forget me" must be executable. That means every memory carries an owner ID and a timestamp, and deletion reaches the vector index and the backups too — not just the pretty table in the admin UI.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Consent &amp; notice</span><p class="small" style="margin-top:8px">A user talking to an assistant does not obviously expect a durable profile to be built from it. If your agent writes semantic facts about people, someone must be told, and the agent should be able to say what it knows about you when asked.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Retention &amp; deletion</span><p class="small" style="margin-top:8px">"Forget me" must be executable. That means every memory carries an owner ID and a timestamp, and deletion reaches the vector index and the backups too, not just the pretty table in the admin UI.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Contamination</span><p class="small" style="margin-top:8px">Memory is an input channel, so it is an <b>attack surface</b>. Text the agent read in one session and saved becomes an instruction it reads back later — prompt injection with a delay fuse (Week 2's J004). Treat stored memories as untrusted data, not as system prompt.</p></div>
   </div>
   <div style="margin-top:22px">
@@ -169,7 +169,7 @@
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 7 — Memory, RAG &amp; Knowledge<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 7: Memory, RAG &amp; Knowledge<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

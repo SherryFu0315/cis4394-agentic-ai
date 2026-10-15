@@ -82,7 +82,7 @@
 <span class="fin">Answer:</span>    Yes — about $783: $228 flights + 3 nights in Cambridge at ~$185. Downtown would bust the budget.</div>
   <div class="card" style="margin-top:16px">
     <button class="revealbtn">Debrief — answer key</button>
-    <div class="revealbox"><b>(1) Decisions:</b> Thought 1 (decompose + set the plan), Thought 3 (accept the Cambridge substitute — the big one), Thought 4 (recognize a dead end and return to plan), Thought 5 (stop check: goal satisfied). <b>(2) The plan-changing observation:</b> Obs 2 — the agent came for one number and the environment offered a better option; feeding that back is what a one-shot answer can never do. <b>(3) The wasted step:</b> Action 3. “Cheapest month” doesn't serve a this-weekend goal — a step cap or a sharper Thought 3 would have saved one call. Honest traces show waste; that's a feature. <b>(4) Verdict: interleaved (ReAct-style), with a light plan on top.</b> The tell: Action 4 depends on the <em>content</em> of Obs 2 (185 wasn't knowable when the plan was made). In strict plan-then-execute, Thought 1's plan would have been executed verbatim — and would have concluded “no, $930+ busts it.”</div>
+    <div class="revealbox"><b>(1) Decisions:</b> Thought 1 (decompose + set the plan), Thought 3 (accept the Cambridge substitute — the big one), Thought 4 (recognize a dead end and return to plan), Thought 5 (stop check: goal satisfied). <b>(2) The plan-changing observation:</b> Obs 2 — the agent came for one number and the environment offered a better option; feeding that back is what a one-shot answer can never do. <b>(3) The wasted step:</b> Action 3. “Cheapest month” doesn't serve a this-weekend goal — a max-iteration guard or a sharper Thought 3 would have saved one call. Honest traces show waste; that's a feature. <b>(4) Verdict: interleaved (ReAct-style), with a light plan on top.</b> The tell: Action 4 depends on the <em>content</em> of Obs 2 (185 wasn't knowable when the plan was made). In strict plan-then-execute, Thought 1's plan would have been executed verbatim — and would have concluded “no, $930+ busts it.”</div>
   </div>
 </div></section>
 
@@ -90,7 +90,7 @@
   <div class="eyebrow">Exercise B</div>
   <h2>Draw the state graph</h2>
   <div class="grouptask"><span class="gk">👥 Group task · Pairs · ~15 minutes</span>
-    <p>On paper or a whiteboard, design a LangGraph-style graph for an agent that <b>(1) makes a plan, (2) executes one step, (3) reflects on the result</b>, and loops or finishes. Your drawing must label: the <b>state fields</b> that persist across nodes (e.g., <code>task</code>, <code>plan</code>, <code>past_steps</code>, <code>results</code>, <code>critique</code>); every <b>node</b>; which edges are <b>fixed</b> vs <b>conditional</b>; and the <b>stopping condition</b> that prevents an infinite loop.</p>
+    <p>On paper or a whiteboard, design a LangGraph-style graph for an agent that <b>(1) makes a plan, (2) executes one step, (3) reflects on the result</b>, and loops or finishes. Your drawing must label: the <b>state fields</b> that persist across nodes (e.g., <code>task</code>, <code>plan</code>, <code>past_steps</code>, <code>results</code>, <code>critique</code>); every <b>node</b>; which edges are <b>fixed</b> vs <b>conditional</b>; and the <b>stop condition</b> that prevents an infinite loop.</p>
     <p class="prod"><b>Produce:</b> a photo of the graph + one sentence: where would ReAct collapse two of your nodes into one?</p>
   </div>
   <div class="card">
@@ -114,7 +114,7 @@
         <text class="lbl" x="140" y="212">state: { task, plan, past_steps, results, critique, steps }</text>
       </svg>
       </div>
-      <p style="margin-top:12px"><b>Fixed edges:</b> START→planner, planner→executor, executor→reflector. <b>Conditional edge:</b> reflector — routes back to executor (critique says “not done”, steps &lt; N) or to END (done, or the <b>max-iteration guard</b> fires at N). <b>The ReAct collapse:</b> ReAct merges <em>planner + executor</em> into one looping “model” node that re-decides the next step every turn — you trade the reviewable up-front plan for adaptivity. <b>Common miss:</b> teams forget <code>steps</code> in the state — a stopping condition that isn't <em>stored</em> anywhere can't be checked.</p>
+      <p style="margin-top:12px"><b>Fixed edges:</b> START→planner, planner→executor, executor→reflector. <b>Conditional edge:</b> reflector — routes back to executor (critique says “not done”, steps &lt; N) or to END (done, or the <b>max-iteration guard</b> fires at N). <b>The ReAct collapse:</b> ReAct merges <em>planner + executor</em> into one looping “model” node that re-decides the next step every turn — you trade the reviewable up-front plan for adaptivity. <b>Common miss:</b> teams forget <code>steps</code> in the state — a stop condition that isn't <em>stored</em> anywhere can't be checked.</p>
     </div>
   </div>
 </div></section>

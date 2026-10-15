@@ -70,11 +70,11 @@
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">2 · Multi-step compounding</span>
       <p class="small" style="margin-top:8px">One wrong step doesn't cost you one step. It poisons every step after it: the agent reasons confidently on top of a bad observation, and the trace still <em>looks</em> coherent. Reliability multiplies down the chain — see the calculator below.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">3 · No single right answer</span>
-      <p class="small" style="margin-top:8px">“Summarize this ticket,” “draft a reply,” “research three vendors” have no unique correct string to diff against. Exact-match tests, the cheapest and most trustworthy kind, simply don't apply to most of what agents produce — so you need graders that are themselves fallible.</p></div>
+      <p class="small" style="margin-top:8px">“Summarize this ticket,” “draft a reply,” “research three vendors” have no unique correct string to diff against. Exact-match tests, the cheapest and most trustworthy kind, simply don't apply to most of what agents produce, so you need graders that are themselves fallible.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">4 · Stateful and interactive</span>
       <p class="small" style="margin-top:8px">The agent changes the world as it goes: it writes files, sends messages, books things. You can't rerun step 7 in isolation, and a “correct” final answer reached by an unacceptable route (six needless paid API calls, a policy violation, a lucky guess) is not a pass.</p></div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>Put plainly:</b> unit tests ask “is this output right?” Agent evaluation must ask “is this output right, <em>how often</em>, and did it get there <em>acceptably</em>?” Three questions, three kinds of measurement — and only the first one looks like software testing.</div>
+  <div class="callout" style="margin-top:20px"><b>Put plainly:</b> unit tests ask “is this output right?” Agent evaluation must ask “is this output right, <em>how often</em>, and did it get there <em>acceptably</em>?” Three questions, three kinds of measurement, and only the first one looks like software testing.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -149,7 +149,7 @@ failure rate        ~ 14%   (about 1 in 7)</div>
   <h2>Observability and evals, in fifteen minutes</h2>
   <div class="grid2" style="align-items:start">
     <div class="card"><h3>Observability and Evals for AI Agents (LangChain, 14m44s)</h3>
-      <p class="small">Why agent debugging needs traces and spans rather than classic metrics and log lines — and how an eval set gets wired to them. Watch this before page 02.</p>
+      <p class="small">Why agent debugging needs traces and spans rather than classic metrics and log lines, and how an eval set gets wired to them. Watch this before page 02.</p>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/FDVdLrloFOw" title="Observability and Evals for AI Agents" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
     </div>
     <div class="card"><span class="kicker">While you watch — three things to catch</span>
@@ -170,20 +170,20 @@ failure rate        ~ 14%   (about 1 in 7)</div>
     <tr><td><b>Typical checks</b></td><td>Exact match, numeric match, required fields present, rubric score on the reply</td><td>Which tools were called, in what order, with what arguments; steps used; whether a forbidden action was taken; whether the policy was followed</td></tr>
     <tr><td><b>Catches</b></td><td>Plainly wrong output</td><td>Right answer for the wrong reason; wasted or duplicated calls; policy and safety violations; the lucky guess</td></tr>
     <tr><td><b>Misses</b></td><td>Everything about <em>how</em> — including a run that got lucky, and one that quietly cost 10× more</td><td>A beautiful, policy-perfect path to a wrong answer</td></tr>
-    <tr><td><b>Cost of running</b></td><td>Cheap — you already have the answer</td><td>Needs the full trace stored and a way to assert over it</td></tr>
+    <tr><td><b>Cost of running</b></td><td>Cheap: you already have the answer</td><td>Needs the full trace stored and a way to assert over it</td></tr>
   </table></div>
   <div class="grid3" style="margin-top:20px">
     <div class="card"><span class="kicker">Also measure · latency</span><p class="small" style="margin-top:8px">A correct answer that arrives after the customer left is a failure with good manners. Latency belongs in the eval report, not in a separate performance ticket.</p></div>
-    <div class="card"><span class="kicker">Also measure · cost</span><p class="small" style="margin-top:8px">Tokens and tool calls per run. An agent that is 2 points more accurate and 5× more expensive is a business decision, not an obvious upgrade — and you can only have that conversation with numbers.</p></div>
-    <div class="card"><span class="kicker">Together</span><p class="small" style="margin-top:8px">Four dimensions — final-response quality, trajectory and tool use, latency, cost (<i>Agents Companion</i>, Google/Kaggle). Right, efficient, <em>and</em> affordable. Reporting only the first is how teams ship something nobody can pay for.</p></div>
+    <div class="card"><span class="kicker">Also measure · cost</span><p class="small" style="margin-top:8px">Tokens and tool calls per run. An agent that is 2 points more accurate and 5× more expensive is a business decision, not an obvious upgrade, and you can only have that conversation with numbers.</p></div>
+    <div class="card"><span class="kicker">Together</span><p class="small" style="margin-top:8px">Four dimensions: final-response quality, trajectory and tool use, latency, cost (<i>Agents Companion</i>, Google/Kaggle). Right, efficient, <em>and</em> affordable. Reporting only the first is how teams ship something nobody can pay for.</p></div>
   </div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">Discussion</div>
-  <div class="bigq"><span class="qlabel">Discussion question</span>Your agent returned the correct final answer on all 20 test cases — but on 6 of them it called the paid enrichment API twice, and on 2 it read a customer record it had no business touching. Your outcome eval says 20/20. What should the report say, and what would you have needed to log to say it?</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Your agent returned the correct final answer on all 20 test cases, but on 6 of them it called the paid enrichment API twice, and on 2 it read a customer record it had no business touching. Your outcome eval says 20/20. What should the report say, and what would you have needed to log to say it?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">The report should say <b>outcome 20/20, trajectory 12/20</b> — and treat the trajectory number as the one that governs deployment. Two distinct defects hide behind a perfect outcome score: a <b>cost defect</b> (duplicate paid calls, which scale linearly with volume and will show up as a bill, not as a bug report) and a <b>policy defect</b> (an access violation, which is a compliance incident regardless of whether the answer was right). Neither is visible from the final answer alone.<br /><br />To assert either one you need the per-step record: <b>selected action + arguments</b> (to detect the duplicate call and the record it read), <b>available actions</b> (to show the agent had a compliant alternative), and <b>state before/after</b> (to prove what it touched). That's the six-field evidence standard above — and the reason it is worth the storage. The deeper lesson: an eval set that only grades outputs will happily certify an agent that is expensive and non-compliant.</div>
+  <div class="revealbox">The report should say <b>outcome 20/20, trajectory 12/20</b>, and treat the trajectory number as the one that governs deployment. Two distinct defects hide behind a perfect outcome score: a <b>cost defect</b> (duplicate paid calls, which scale linearly with volume and will show up as a bill, not as a bug report) and a <b>policy defect</b> (an access violation, which is a compliance incident regardless of whether the answer was right). Neither is visible from the final answer alone.<br /><br />To assert either one you need the per-step record: <b>selected action + arguments</b> (to detect the duplicate call and the record it read), <b>available actions</b> (to show the agent had a compliant alternative), and <b>state before/after</b> (to prove what it touched). That's the six-field evidence standard above, and the reason it is worth the storage. The deeper lesson: an eval set that only grades outputs will happily certify an agent that is expensive and non-compliant.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -200,7 +200,7 @@ failure rate        ~ 14%   (about 1 in 7)</div>
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 8 — Evaluation &amp; Reliability<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 8: Evaluation &amp; Reliability<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

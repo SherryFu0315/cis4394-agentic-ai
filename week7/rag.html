@@ -83,7 +83,7 @@
   <div class="grid2">
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Closed book — parametric knowledge</span>
       <p class="small" style="margin-top:8px">Everything the model "knows" on its own is compressed into its weights during training. Three consequences follow, and none of them are fixable by prompting harder:</p>
-      <p class="small"><b>It is frozen.</b> Whatever changed after the training cutoff is invisible. <b>It never saw your data.</b> Your contracts, tickets, and policies were not in the training set, and you would not want them to be. <b>It has no sources.</b> Parametric knowledge is a blend, not a filing cabinet, so the model cannot tell you which document a claim came from — and when it is unsure, fluent guessing looks exactly like knowing.</p>
+      <p class="small"><b>It is frozen.</b> Whatever changed after the training cutoff is invisible. <b>It never saw your data.</b> Your contracts, tickets, and policies were not in the training set, and you would not want them to be. <b>It has no sources.</b> Parametric knowledge is a blend, not a filing cabinet, so the model cannot tell you which document a claim came from, and when it is unsure, fluent guessing looks exactly like knowing.</p>
     </div>
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Open book — retrieval-augmented</span>
       <p class="small" style="margin-top:8px">Lewis et al. (2020) paired a generator with a retriever over an external corpus, so the knowledge lives in documents you control rather than in frozen parameters (<a class="doc" href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">arXiv:2005.11401 ↗</a>). Dense passage retrieval — matching questions to passages by learned embeddings rather than keywords — is the retrieval half of that design (Karpukhin et al., 2020, <a class="doc" href="https://arxiv.org/abs/2004.04906" target="_blank" rel="noopener">arXiv:2004.04906 ↗</a>).</p>
@@ -95,7 +95,7 @@
 <section><div class="wrap">
   <div class="eyebrow">The mechanism underneath</div>
   <h2>Embeddings: meaning as geometry</h2>
-  <p class="lede">Retrieval must find the right passage when the user's words are not the document's words. A customer types "can I send this back?"; the policy says "return window." Zero words in common — and a keyword search returns nothing useful.</p>
+  <p class="lede">Retrieval must find the right passage when the user's words are not the document's words. A customer types "can I send this back?"; the policy says "return window." Zero words in common, and a keyword search returns nothing useful.</p>
   <div class="grid2" style="align-items:start">
     <div>
       <p>An <b>embedding model</b> converts a piece of text into a list of numbers — a vector, typically several hundred values long. The model is trained so that text with similar meaning lands in similar directions, which turns a language problem into a geometry problem: to find related text, find nearby vectors.</p>
@@ -113,7 +113,7 @@
         <circle class="pt" cx="120" cy="182" r="5" /><text x="130" y="196">"how to start a return"</text>
         <circle class="pt far" cx="336" cy="238" r="5" /><text class="dim" x="228" y="256">"employee parking permits"</text>
         <circle class="pt far" cx="318" cy="42" r="5" /><text class="dim" x="212" y="34">"holiday shipping cut-off"</text>
-        <text class="dim" x="20" y="286">Illustration only — real embedding spaces have hundreds of dimensions, not two.</text>
+        <text class="dim" x="20" y="286">Illustration only: real embedding spaces have hundreds of dimensions, not two.</text>
       </svg>
     </div>
   </div>
@@ -152,7 +152,7 @@
     </div>
     <div>
       <div class="ragnote" id="ragNote">Click a stage in the diagram.</div>
-      <div class="callout blue" style="margin-top:14px"><b>Retrieval quality is destiny.</b> The generator can only work with what it is handed. If the right passage is not in the top <em>k</em>, no amount of prompt polish recovers it — the model will either say it does not know (the good outcome) or fill the gap from its parameters (the bad one). Most "the RAG bot is wrong" tickets are retrieval bugs wearing a generation costume.</div>
+      <div class="callout blue" style="margin-top:14px"><b>Retrieval quality is destiny.</b> The generator can only work with what it is handed. If the right passage is not in the top <em>k</em>, no amount of prompt polish recovers it. The model will either say it does not know (the good outcome) or fill the gap from its parameters (the bad one). Most "the RAG bot is wrong" tickets are retrieval bugs wearing a generation costume.</div>
     </div>
   </div>
 </div></section>
@@ -184,9 +184,9 @@
     <div>
       <p>Retrieval alone does not stop a model from inventing things. Three instructions turn retrieved text into an actual constraint, and they belong in the augmented prompt every single time:</p>
       <ol class="steps" style="margin-top:14px">
-        <li><b>Answer only from the context.</b> Explicitly forbid outside knowledge. Without this line, the model happily blends what it retrieved with what it half-remembers from training — and you cannot tell which sentence came from where.</li>
+        <li><b>Answer only from the context.</b> Explicitly forbid outside knowledge. Without this line, the model happily blends what it retrieved with what it half-remembers from training, and you cannot tell which sentence came from where.</li>
         <li><b>Cite the source of each claim.</b> Require the chunk ID or document section next to the statement it supports. Citations are not decoration; they are the mechanism that makes a wrong answer <em>checkable</em> by a human in ten seconds.</li>
-        <li><b>Say "I don't know" when the context is thin.</b> Give the model an approved way to fail — and back it with a rule in your code: if the best similarity score is below a threshold, do not even call the generator. Escalate to a person instead.</li>
+        <li><b>Say "I don't know" when the context is thin.</b> Give the model an approved way to fail, and back it with a rule in your code: if the best similarity score is below a threshold, do not even call the generator. Escalate to a person instead.</li>
       </ol>
       <p class="small" style="margin-top:12px">Then verify: a groundedness check compares each claim in the answer against the retrieved text, and a low-confidence result routes to a human gate — the same gate you placed on irreversible actions in Week 4, now placed on <em>assertions</em>.</p>
     </div>
@@ -207,7 +207,7 @@ supersedes Returns Policy v6 in all regions.
 
 QUESTION
 How long do I have to return a laptop in Georgia?</div>
-      <div class="callout red" style="margin-top:14px"><b>Week 3 callback — the Air Canada lesson.</b> On the <a href="../week3/anatomy.html">prompt anatomy page</a> you read what happened when a chatbot stated a refund policy that did not exist and a tribunal held the airline to it. A grounded, cited answer is not a nicety — it is the difference between a statement your company can stand behind and one it will be held to anyway.</div>
+      <div class="callout red" style="margin-top:14px"><b>Week 3 callback: the Air Canada lesson.</b> On the <a href="../week3/anatomy.html">prompt anatomy page</a> you read what happened when a chatbot stated a refund policy that did not exist and a tribunal held the airline to it. A grounded, cited answer is not a nicety. It is the difference between a statement your company can stand behind and one it will be held to anyway.</div>
     </div>
   </div>
 </div></section>
@@ -217,9 +217,9 @@ How long do I have to return a laptop in Georgia?</div>
   <h2>Agentic RAG — the model decides when to look</h2>
   <p class="lede">Classic RAG retrieves on every question, whether or not retrieval helps. Agentic RAG makes retrieval a <b>tool</b>, and hands the decision to the model inside the loop you built in Week 4.</p>
   <div class="grid3">
-    <div class="card"><span class="kicker">Decide</span><p class="small" style="margin-top:8px">"Do I need to look this up?" A greeting, a formatting request, or arithmetic needs no search — and searching anyway costs latency and drags irrelevant text into the context. A question about your refund policy always needs a search, and the model should refuse to answer it from memory.</p></div>
+    <div class="card"><span class="kicker">Decide</span><p class="small" style="margin-top:8px">"Do I need to look this up?" A greeting, a formatting request, or arithmetic needs no search, and searching anyway costs latency and drags irrelevant text into the context. A question about your refund policy always needs a search, and the model should refuse to answer it from memory.</p></div>
     <div class="card"><span class="kicker">Re-query</span><p class="small" style="margin-top:8px">If the first retrieval comes back weak, the agent can rewrite the query and try again — dropping jargon, adding a synonym, or narrowing by metadata. That is the Observe → Reason → Act loop pointed at the index instead of at the outside world.</p></div>
-    <div class="card"><span class="kicker">Chain</span><p class="small" style="margin-top:8px">Multi-hop questions need more than one retrieval: find the customer's region, then find the policy for that region. One shot at top-<em>k</em> cannot do this; a loop with a stopping condition can. Each hop is a step you can cap and log.</p></div>
+    <div class="card"><span class="kicker">Chain</span><p class="small" style="margin-top:8px">Multi-hop questions need more than one retrieval: find the customer's region, then find the policy for that region. One shot at top-<em>k</em> cannot do this; a loop with a stop condition can. Each hop is a step you can cap and log.</p></div>
   </div>
   <div class="callout" style="margin-top:20px"><b>The cost side.</b> Every extra retrieval is another embedding call and more tokens in the window. The same budget discipline from <a href="../week4/langgraph.html">Week 4</a> applies: cap the number of retrieval hops, cap <em>k</em>, and log the score of what came back so you can tell a genuinely hard question from a badly chunked corpus.</div>
   <div style="margin-top:20px">
@@ -237,15 +237,15 @@ How long do I have to return a laptop in Georgia?</div>
   <table class="plain">
     <tr><th></th><th>RAG (retrieval)</th><th>Fine-tuning</th></tr>
     <tr><td><b>What it changes</b></td><td>The <em>input</em>: relevant passages are added to the prompt at question time. The weights are untouched.</td><td>The <em>weights</em>: continued training on your examples bakes behavior into the model itself.</td></tr>
-    <tr><td><b>Best for</b></td><td>Knowledge — facts, policies, documents, anything the model must be <em>correct</em> about.</td><td>Behavior — tone, format, house style, a narrow repeated task where you want the output shape without a long prompt.</td></tr>
+    <tr><td><b>Best for</b></td><td>Knowledge: facts, policies, documents, anything the model must be <em>correct</em> about.</td><td>Behavior: tone, format, house style, a narrow repeated task where you want the output shape without a long prompt.</td></tr>
     <tr><td><b>Freshness</b></td><td>Immediate. Replace the document, re-index that document, done.</td><td>Frozen at training time. New facts require a new training run.</td></tr>
     <tr><td><b>Traceability</b></td><td>The answer can cite the chunk and version it used.</td><td>None. A fine-tuned claim cannot be traced to a source document.</td></tr>
-    <tr><td><b>Cost to update</b></td><td>Low and incremental — an indexing job, not a training job.</td><td>High and lumpy — curated examples, compute, and a full evaluation pass to check nothing else regressed.</td></tr>
+    <tr><td><b>Cost to update</b></td><td>Low and incremental: an indexing job, not a training job.</td><td>High and lumpy: curated examples, compute, and a full evaluation pass to check nothing else regressed.</td></tr>
     <tr><td><b>Access control</b></td><td>Enforceable at retrieval time: filter by the user's permissions before anything enters the prompt.</td><td>Not enforceable. Whatever went into the training data is in the model, for every user.</td></tr>
   </table>
   </div>
   <div class="grid2" style="margin-top:20px;align-items:start">
-    <div class="card"><span class="kicker">Week 4 callback</span><p class="small" style="margin-top:8px">On the <a href="../week4/patterns.html">reasoning patterns page</a> you ran the weights visualizer: prompting left all twenty edges of the toy network untouched, whereas fine-tuning rewrote them. That picture is the whole argument on this page. Retrieval is a very sophisticated way of changing the <em>input</em> — which is why it can be fresh, private, and citable, and why fine-tuning can be none of those things.</p></div>
+    <div class="card"><span class="kicker">Week 4 callback</span><p class="small" style="margin-top:8px">On the <a href="../week4/patterns.html">reasoning patterns page</a> you ran the weights visualizer: prompting left all twenty edges of the toy network untouched, whereas fine-tuning rewrote them. That picture is the whole argument on this page. Retrieval is a very sophisticated way of changing the <em>input</em>, which is why it can be fresh, private, and citable, and why fine-tuning can be none of those things.</p></div>
     <div class="card"><span class="kicker">Week 3 callback — the budget still binds</span><p class="small" style="margin-top:8px">Retrieved chunks are tokens, and they compete with everything else in the <a href="../week3/context.html">packing game</a>. Raising <em>k</em> from 3 to 20 does not make answers twenty times better; it dilutes the prompt with near-misses and pushes you toward the recall problems of an overstuffed window. Retrieve narrow and relevant, not wide and hopeful.</p></div>
   </div>
   <div class="callout blue" style="margin-top:20px"><b>The usual answer is "both."</b> Fine-tune for the voice and the output format if you truly need them; retrieve for every fact. If someone proposes fine-tuning so the model "knows our policies," ask the two questions that settle it: <em>how often do those facts change</em>, and <em>does the answer need to cite a source?</em></div>
@@ -279,7 +279,7 @@ How long do I have to return a laptop in Georgia?</div>
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 7 — Memory, RAG &amp; Knowledge<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 7: Memory, RAG &amp; Knowledge<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

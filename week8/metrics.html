@@ -129,7 +129,7 @@
       <p class="small" style="margin:12px 6px 2px" id="chartNote"></p>
     </div>
   </div>
-  <div class="callout red" style="margin-top:22px"><b>The manager's version.</b> <span id="mgrLine">An agent that succeeds 90% of the time sounds like a good hire. But a customer who uses it eight times has only a 43% chance of a week without a failure — so most of your customers meet the failure, not the average.</span></div>
+  <div class="callout red" style="margin-top:22px"><b>The manager's version.</b> <span id="mgrLine">An agent that succeeds 90% of the time sounds like a good hire. But a customer who uses it eight times has only a 43% chance of a week without a failure, so most of your customers meet the failure, not the average.</span></div>
 </div></section>
 
 <section><div class="wrap">
@@ -140,11 +140,11 @@
     <tr><th>pass@1 (one run)</th><th>pass^2</th><th>pass^3</th><th>pass^5</th><th>pass^8</th><th>What it means in a sentence</th></tr>
     <tr><td>70%</td><td class="mono">49%</td><td class="mono">34%</td><td class="mono drop">17%</td><td class="mono drop">6%</td><td>Fails more often than it works by the third use. This is a prototype, not a product.</td></tr>
     <tr><td>90%</td><td class="mono">81%</td><td class="mono">73%</td><td class="mono">59%</td><td class="mono drop">43%</td><td>The number everyone celebrates. Most repeat users still hit a failure.</td></tr>
-    <tr><td>99%</td><td class="mono">98%</td><td class="mono">97%</td><td class="mono">95%</td><td class="mono">92%</td><td>Survives repeated use — and going from 90% to 99% is usually far more than 9% more work.</td></tr>
+    <tr><td>99%</td><td class="mono">98%</td><td class="mono">97%</td><td class="mono">95%</td><td class="mono">92%</td><td>Survives repeated use, and going from 90% to 99% is usually far more than 9% more work.</td></tr>
   </table></div>
   <div class="grid2" style="margin-top:20px;align-items:start">
     <div class="card"><span class="kicker">Why the last nine costs the most</span>
-      <p class="small" style="margin-top:8px">Moving 70% → 90% is usually prompt work, a better tool, one retry. Moving 90% → 99% means finding the long tail: the malformed inputs, the empty tool results, the rate limits, the adversarial cases. Each of those is a separate engineering project, and each buys a fraction of a point. Budget accordingly — and notice that the same money spent on <b>narrowing the task</b> often buys more reliability than the same money spent on the agent.</p></div>
+      <p class="small" style="margin-top:8px">Moving 70% → 90% is usually prompt work, a better tool, one retry. Moving 90% → 99% means finding the long tail: the malformed inputs, the empty tool results, the rate limits, the adversarial cases. Each of those is a separate engineering project, and each buys a fraction of a point. Budget accordingly, and notice that the same money spent on <b>narrowing the task</b> often buys more reliability than the same money spent on the agent.</p></div>
     <div class="card"><span class="kicker">The honest way to quote a number</span>
       <p class="small" style="margin-top:8px">“Our agent is 90% accurate” is not a lie, but it is not a deployment statement either. The deployable version names the metric, the k, the dataset, and the date: <em>“On our 40-case eval set, pass@1 = 0.90 and pass^3 = 0.73, measured 10/14. The 27% of cases that fail at least once in three runs are listed here.”</em> That sentence is the deliverable of your capstone eval harness.</p></div>
   </div>
@@ -154,7 +154,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive · click a benchmark</div>
   <h2>Benchmark literacy</h2>
-  <p class="lede">Public benchmarks are the closest thing the field must shared evidence — and the most misquoted numbers in any AI vendor deck. Three you will meet constantly, what each stresses, and how the score gets used misleadingly.</p>
+  <p class="lede">Public benchmarks are the closest thing the field must shared evidence, and the most misquoted numbers in any AI vendor deck. Three you will meet constantly, what each stresses, and how the score gets used misleadingly.</p>
   <div class="arch-shell">
     <div class="arch-list" id="bmList"></div>
     <div class="arch-view" id="bmView"></div>
@@ -167,13 +167,13 @@
   <div class="compare"><table class="plain">
     <tr><th>Benchmark</th><th>Domain</th><th>What it stresses</th><th>Metric usually quoted</th><th>Watch out for</th></tr>
     <tr><td><b>SWE-bench</b><br /><span class="small">Jimenez et al., 2023</span></td><td>Real GitHub issues, Python repos</td><td>Navigating an unfamiliar codebase, long edits, making the repo's own tests pass</td><td>% of issues resolved, single attempt</td><td>Contamination (public issues and fixes); which subset was used; harness differences</td></tr>
-    <tr><td><b>τ-bench</b><br /><span class="small">Yao et al., 2024</span></td><td>Retail and airline customer tasks</td><td>Tool use with a simulated user, while following a written domain policy</td><td><b>pass^k</b> — and pass@1 alongside it</td><td>Domain policies are specific; simulated users are not real ones; airline is harder than retail</td></tr>
+    <tr><td><b>τ-bench</b><br /><span class="small">Yao et al., 2024</span></td><td>Retail and airline customer tasks</td><td>Tool use with a simulated user, while following a written domain policy</td><td><b>pass^k</b>, and pass@1 alongside it</td><td>Domain policies are specific; simulated users are not real ones; airline is harder than retail</td></tr>
     <tr><td><b>WebArena</b><br /><span class="small">Zhou et al., 2023</span></td><td>812 tasks on self-hosted website clones</td><td>Long-horizon, realistic web work across multiple sites</td><td>Task success rate</td><td>Clones are not the live web; the headline numbers are from launch and are dated</td></tr>
   </table></div>
   <div class="grid3" style="margin-top:20px">
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Misquote 1 · contamination</span><p class="small" style="margin-top:8px">If the benchmark's problems and their solutions have been public on the internet for years, some of them may sit in the model's training data. A high score can then reflect recall rather than capability — and it will not transfer to your private codebase or your internal tickets.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Misquote 1 · contamination</span><p class="small" style="margin-top:8px">If the benchmark's problems and their solutions have been public on the internet for years, some of them may sit in the model's training data. A high score can then reflect recall rather than capability, and it will not transfer to your private codebase or your internal tickets.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Misquote 2 · harness differences</span><p class="small" style="margin-top:8px">The same model scores differently depending on the scaffolding around it: which tools it gets, how many steps it is allowed, how many attempts, whether a retry counts. Two “SWE-bench scores” are only comparable if the harnesses were. Ask what the scaffold was.</p></div>
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Misquote 3 · which subset</span><p class="small" style="margin-top:8px">“SWE-bench” names a family: the full 2,294-issue set, the human-validated <b>Verified</b> 500-issue subset, and smaller subsets. A number quoted without its subset is unreadable — and the flattering subset is the one that ends up on the slide.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Misquote 3 · which subset</span><p class="small" style="margin-top:8px">“SWE-bench” names a family: the full 2,294-issue set, the human-validated <b>Verified</b> 500-issue subset, and smaller subsets. A number quoted without its subset is unreadable, and the flattering subset is the one that ends up on the slide.</p></div>
   </div>
   <div class="card" style="margin-top:22px"><span class="kicker">Reading a benchmark critically — the five questions</span>
     <div class="checklist" style="margin-top:10px">
@@ -199,7 +199,7 @@
         <tr><td><b>LLM-as-judge</b></td><td>Open-ended quality: clarity, tone, helpfulness, faithfulness to a source</td><td>Cheap per item, but biased and needs validating</td></tr>
         <tr><td><b>Human review</b></td><td>High-stakes and ambiguous edges: legal risk, safety, anything you will be asked to defend</td><td>Expensive, slow, and the ground truth everything else is calibrated against</td></tr>
       </table></div>
-      <p class="small" style="margin-top:12px"><b>Worked example — one document-QA agent, four checks:</b> the cited document ID → <b>rule</b> (it either matches or it does not). The extracted dollar amount → <b>rule</b>. Whether the answer reads clearly and stays faithful to the source → <b>LLM-judge</b>. Anything flagged as a legal-risk edge case → <b>human</b>. Do not reach for a judge where a rule is exact and free.</p></div>
+      <p class="small" style="margin-top:12px"><b>Worked example: one document-QA agent, four checks:</b> the cited document ID → <b>rule</b> (it either matches or it does not). The extracted dollar amount → <b>rule</b>. Whether the answer reads clearly and stays faithful to the source → <b>LLM-judge</b>. Anything flagged as a legal-risk edge case → <b>human</b>. Do not reach for a judge where a rule is exact and free.</p></div>
     <div class="card"><h3>LLM as a Judge (IBM Technology, 6m08s)</h3>
       <p class="small">The concept, the rubric, and the pitfalls in six minutes. Watch it, then read the four biases below and see how many the video names.</p>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/trfUBIDeI1Y" title="LLM as a Judge: Scaling AI Evaluation Strategies" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
@@ -211,7 +211,7 @@
     <div class="biascard"><h4>Position bias</h4><p>When comparing two answers, judges can favor the one in a particular position rather than the better one. Documented in <b>Zheng et al., 2023</b>. Your ranking can flip when you swap A and B.</p></div>
     <div class="biascard"><h4>Verbosity / length bias</h4><p>Longer, more elaborate answers tend to score higher, whether or not they are more correct. This is the bias students game accidentally: pad the response and the rubric rewards it.</p></div>
     <div class="biascard"><h4>Self-preference</h4><p>A judge can prefer text in its own style or from its own model family. If the judge and the agent are the same model, you are partly grading a family resemblance.</p></div>
-    <div class="biascard"><h4>Sycophancy</h4><p>Agreeable, flattering, confident-sounding output scores well. Confidently wrong answers are exactly the ones a judge is worst at catching — and exactly the ones that hurt in production.</p></div>
+    <div class="biascard"><h4>Sycophancy</h4><p>Agreeable, flattering, confident-sounding output scores well. Confidently wrong answers are exactly the ones a judge is worst at catching, and exactly the ones that hurt in production.</p></div>
   </div>
   <div class="callout red" style="margin-top:20px"><b>Why this is worse than having no eval:</b> a biased judge produces a number, a chart, and a sense of rigor. Teams then make deployment decisions on it and stop looking. An unmeasured system at least keeps people suspicious.</div>
 
@@ -220,7 +220,7 @@
     <li><b>Swap positions and average.</b> Run every pairwise comparison in both orders. If the verdict flips, the judge is reading position, not quality — record that as a disagreement rather than a score.</li>
     <li><b>Write an explicit rubric with anchors, and give a reference answer.</b> “Rate helpfulness 1–5” invites vibes. “2 = answers the question but omits the policy citation” is checkable, and it is what makes two runs of the judge agree with each other.</li>
     <li><b>Prefer pairwise comparison over absolute scores</b> when you can. “Which of these two is better?” is a far more stable judgment than “score this 1–10,” for models and humans alike.</li>
-    <li><b>Calibrate against humans — non-negotiable.</b> Hand-label a sample (say 50 items), run the judge on the same sample, and report the agreement rate. If the judge agrees with your humans 60% of the time, its scores are decoration. Recheck the agreement whenever the rubric, the judge model, or the task changes.</li>
+    <li><b>Calibrate against humans: non-negotiable.</b> Hand-label a sample (say 50 items), run the judge on the same sample, and report the agreement rate. If the judge agrees with your humans 60% of the time, its scores are decoration. Recheck the agreement whenever the rubric, the judge model, or the task changes.</li>
     <li><b>Use rules wherever a rule exists.</b> Every check you can express deterministically is one fewer place for bias to enter, and it is cheaper besides.</li>
   </ol>
   <p class="small" style="margin-top:14px"><a class="doc" href="https://arxiv.org/abs/2306.05685" target="_blank" rel="noopener">Zheng et al., 2023 — Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena (arXiv:2306.05685) ↗</a></p>
@@ -231,7 +231,7 @@
   <div class="bigq"><span class="qlabel">Discussion question</span>A vendor's deck says: “Our coding agent achieves 78% on SWE-bench — near-human performance.” You have four minutes with them. What do you ask, and what would change your mind either way?</div>
   <button class="revealbtn">See the answer</button>
   <div class="revealbox"><b>Four questions, in order of how much they move the number:</b><br />
-  <b>1. Which subset, and which harness?</b> Full set, Verified, or Lite — and what scaffolding did the agent get: how many steps, which tools, how many attempts, did retries count? Two numbers are only comparable if these match.<br />
+  <b>1. Which subset, and which harness?</b> Full set, Verified, or Lite, and what scaffolding did the agent get: how many steps, which tools, how many attempts, did retries count? Two numbers are only comparable if these match.<br />
   <b>2. pass@1 or pass@k?</b> If the agent generated many patches and a test suite picked the winner, that is a pass@k number and it is legitimate <em>only because SWE-bench has a free verifier</em> — my repository at 2 a.m. does not. Ask for the pass^k, or at least the variance across repeated runs.<br />
   <b>3. Contamination?</b> These issues and their accepted fixes have been public for years. Ask what they have measured on issues created <em>after</em> the model's training cutoff, or on a private repo.<br />
   <b>4. What does it do on my tickets?</b> The only question that decides anything. Propose a pilot on 30 of our own issues, scored by our own tests, run three times each, reporting pass@1 and pass^3.<br /><br />
@@ -252,7 +252,7 @@
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 8 — Evaluation &amp; Reliability<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 8: Evaluation &amp; Reliability<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>
