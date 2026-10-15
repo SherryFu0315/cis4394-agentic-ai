@@ -71,7 +71,7 @@ goal is satisfied — not when you stop typing.</div>
 <section><div class="wrap">
   <div class="eyebrow">Interactive · step through a real episode</div>
   <h2>One goal, one loop, eight steps</h2>
-  <p class="lede">This is the loop diagram from Week 2 — same shape, new episode. Press <b>Step</b> and watch the agent answer the Atlanta-vs-statue question with two tools: <code>Search</code> and <code>Calculator</code>.</p>
+  <p class="lede">This is the loop diagram from Week 2: same shape, new episode. Press <b>Step</b> and watch the agent answer the Atlanta-vs-statue question with two tools: <code>Search</code> and <code>Calculator</code>.</p>
   <div class="sim2">
     <div class="loopbox">
       <svg viewBox="0 0 480 330" aria-label="agent loop diagram">
@@ -110,7 +110,7 @@ goal is satisfied — not when you stop typing.</div>
   <ol class="steps">
     <li><b>Assemble the input.</b> The harness packs the goal + current state + latest observations into a prompt (Week 3's context engineering, applied every turn).</li>
     <li><b>The LLM decides.</b> Given what it sees, it picks exactly one thing: call a specific tool with specific arguments, or declare the goal met and finish.</li>
-    <li><b>The harness executes.</b> Tool runs, result comes back. The model never touches the environment directly; the harness does (and can refuse — Week 2's guardrails).</li>
+    <li><b>The harness executes.</b> Tool runs, result comes back. The model never touches the environment directly; the harness does (and can refuse, Week 2's guardrails).</li>
     <li><b>State updates.</b> The observation is appended; facts learned are recorded. This is what makes step 5 smarter than step 2.</li>
     <li><b>The stop check.</b> Goal satisfied? Max-iteration guard hit? Budget burned? If yes, exit; if no, go to 1.</li>
   </ol>
@@ -121,7 +121,7 @@ goal is satisfied — not when you stop typing.</div>
   <div class="eyebrow">Discussion</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your agent can call <code>send_payment()</code>. Looking at the five parts of a loop turn, where exactly would you put the human gate, and why not anywhere else?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">Between <b>step 2 and step 3</b> — after the model has committed to a specific action with specific arguments, before the harness executes it. Earlier (before reasoning) you'd interrupt harmless steps too; later (after execution) the money is already gone. The gate should also be <em>selective</em>: pause only for irreversible or spend actions, or approval fatigue will train humans to click yes. This is exactly where Codex's <code>exec_policy</code> sits in the Week 2 material.</div>
+  <div class="revealbox">Between <b>step 2 and step 3</b>: after the model has committed to a specific action with specific arguments, before the harness executes it. Earlier (before reasoning) you'd interrupt harmless steps too; later (after execution) the money is already gone. The gate should also be <em>selective</em>: pause only for irreversible or spend actions, or approval fatigue will train humans to click yes. This is exactly where Codex's <code>exec_policy</code> sits in the Week 2 material.</div>
 </div></section>
 
 <section><div class="wrap">

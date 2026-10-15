@@ -59,7 +59,7 @@
   <div class="eyebrow">01 · Mechanics</div>
   <h1>The model <em>asks</em>. Your code acts.</h1>
   <p class="lede">Function calling has a reputation for being magic. It is not: the model emits a small piece of structured text naming a function and its arguments, and your program decides what to do about it. Once you see the round trip clearly, every framework, every protocol, and every safety control this semester lands in an obvious place.</p>
-  <p class="small" style="margin-top:12px"><b>Two terms you will see used almost interchangeably, and how this course uses them:</b> a <b>tool call</b> is the model’s request to run one specific function with specific arguments; <b>function calling</b> is the API feature that lets a model make such requests at all. One is the act, the other is the capability.</p>
+  <p class="small" style="margin-top:12px">Two terms you will see used almost interchangeably, and how this course uses them: a <b>tool call</b> is the model’s request to run one specific function with specific arguments; <b>function calling</b> is the API feature that lets a model make such requests at all. One is the act, the other is the capability.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -72,7 +72,7 @@
       <ol class="steps" style="margin-top:14px">
         <li><b>The model proposes.</b> Its entire contribution is a JSON object: which function, which arguments. That is text, produced by the same next-token machinery as everything else it writes.</li>
         <li><b>Your harness disposes.</b> Your code parses that request, checks it against the schema, decides whether it is permitted, and calls the real function. The model has no execution privileges of any kind.</li>
-        <li><b>The result comes back as an observation.</b> The return value is appended to the conversation as a tool message, and the model reads it before deciding again. That is the Week 4 loop, closed.</li>
+        <li>The result comes back as an observation. The return value is appended to the conversation as a tool message, and the model reads it before deciding again. That is the Week 4 loop, closed.</li>
       </ol>
     </div>
     <div class="card"><span class="kicker">The request / execute / respond flow</span>
@@ -123,8 +123,8 @@
       <div class="statepanel" id="simState"><span class="kicker">Agent state</span></div>
     </div>
   </div>
-  <div class="callout"><b>Three things to notice on your way through.</b> <b>(1)</b> The line marked <em>EMITS</em> is only text. Nothing has executed at that moment, which is exactly why a gate can still stop it. <b>(2)</b> The failed <code>fx_rate</code> call did not raise an exception into your users' faces; the validation error was handed <em>back to the model</em> as an observation, and the model repaired its own call. <b>(3)</b> Read the whole trace as the Week 2 evidence standard: <em>state before → observation → available actions → selected action → result → state after</em>. Every tool call produces that record for free.</div>
-  <p class="small" style="margin-top:14px">The <code>fx_rate</code> value of 1.08 above is an <b>illustrative fixed rate returned by a stub tool</b> written for teaching, not a live or historical quote. The euro subtotal (4,817 × 293 × 1.18 = 1,665,429.58) is exact.</p>
+  <div class="callout">Three things to notice on your way through. <b>(1)</b> The line marked <em>EMITS</em> is only text. Nothing has executed at that moment, which is exactly why a gate can still stop it. <b>(2)</b> The failed <code>fx_rate</code> call did not raise an exception into your users' faces; the validation error was handed <em>back to the model</em> as an observation, and the model repaired its own call. <b>(3)</b> Read the whole trace as the Week 2 evidence standard: <em>state before → observation → available actions → selected action → result → state after</em>. Every tool call produces that record for free.</div>
+  <p class="small" style="margin-top:14px">The <code>fx_rate</code> value of 1.08 above is an illustrative fixed rate returned by a stub tool written for teaching, not a live or historical quote. The euro subtotal (4,817 × 293 × 1.18 = 1,665,429.58) is exact.</p>
 </div></section>
 
 <section><div class="wrap">
@@ -132,7 +132,7 @@
   <h2>Two objects, in the order they happen</h2>
   <div class="grid2" style="align-items:start">
     <div>
-      <p class="small"><b>① First — the schema.</b> <span style="color:var(--muted)">You → model, before the conversation starts.</span> Your harness sends the model a list of tool schemas. <b>This is the only thing the model knows about your systems</b> — the menu you hand it: what it may order, and which choices are legal.</p>
+      <p class="small"><b>① First — the schema.</b> <span style="color:var(--muted)">You → model, before the conversation starts.</span> Your harness sends the model a list of tool schemas. This is the only thing the model knows about your systems: the menu you hand it: what it may order, and which choices are legal.</p>
       <div class="codebox">{
   <span class="cn">"name"</span>: <span class="cs">"fx_rate"</span>,
   <span class="cn">"description"</span>: <span class="cs">"Return the current exchange</span>
@@ -191,7 +191,7 @@
     <div>
       <div class="card"><span class="kicker">Read it as three artefacts at once</span>
         <p class="small" style="margin-top:8px"><b>The signature</b> <code>(base: str, quote: str) -&gt; str</code> generates the JSON parameter types the model receives. Change a type hint and you have changed the model's contract.</p>
-        <p class="small"><b>The docstring</b> is the description — the sentence that decides whether the model reaches for this tool at the right moment. Note that it says what the tool is <em>for</em> and one thing the model must <em>not</em> do.</p>
+        <p class="small"><b>The docstring</b> is the description: the sentence that decides whether the model reaches for this tool at the right moment. Note that it says what the tool is <em>for</em> and one thing the model must <em>not</em> do.</p>
         <p class="small"><b>The body</b> is your enforcement point. It returns an error <em>string</em> rather than raising, so a bad call becomes an observation the model can recover from instead of an exception that kills the run. That idea gets its own section on <a href="design.html">page 02</a>.</p>
       </div>
       <div class="card" style="margin-top:14px"><span class="kicker">🎯 Take it to your final project</span><p class="small" style="margin-top:8px">Your capstone agent needs at least two real tools with clean schemas. Start them now, in this shape: typed parameters, a description that states when to use the tool, and errors returned as data. Group Assignment 2 grades exactly these properties.</p></div>
@@ -207,7 +207,7 @@
   <div class="eyebrow">Discussion</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>A vendor tells your CIO that their agent “runs Python, queries the warehouse, and emails customers.” Using this page's vocabulary, what is the <em>one</em> question that tells you how much you should worry?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox"><b>“Show me the tool schemas, and show me who validates the arguments.”</b> The impressive verb list is just the tool inventory — it tells you the agent's <em>capability</em>, and nothing about its <em>limits</em>. What matters is the shape of each schema and where the checks live: does <code>query_warehouse</code> accept arbitrary SQL or a table name from an enum? Does <code>email_customer</code> accept any address, or only addresses already attached to the ticket? Is the validation inside the vendor's harness (auditable, versioned, testable) or inside the prompt (a polite request the model can ignore)? A secondary question worth asking in the same breath: <b>what happens on failure?</b> An agent that crashes on a bad argument is annoying; an agent that silently retries a write tool is a duplicate-payment incident. You are looking for the same ownership split as this page: model proposes, harness disposes, every call logged.</div>
+  <div class="revealbox">“Show me the tool schemas, and show me who validates the arguments.” The impressive verb list is just the tool inventory; it tells you the agent's <em>capability</em>, and nothing about its <em>limits</em>. What matters is the shape of each schema and where the checks live: does <code>query_warehouse</code> accept arbitrary SQL or a table name from an enum? Does <code>email_customer</code> accept any address, or only addresses already attached to the ticket? Is the validation inside the vendor's harness (auditable, versioned, testable) or inside the prompt (a polite request the model can ignore)? A secondary question worth asking in the same breath: <b>what happens on failure?</b> An agent that crashes on a bad argument is annoying; an agent that silently retries a write tool is a duplicate-payment incident. You are looking for the same ownership split as this page: model proposes, harness disposes, every call logged.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -227,11 +227,11 @@
   <h2>Two papers worth knowing by name</h2>
   <div class="grid2">
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">The pattern</span><h3 style="margin-top:6px">ReAct (Yao et al., 2022)</h3>
-      <p class="small">Interleaving reasoning traces with actions — <em>Thought → Action → Observation</em>, looped, so that the model's next decision is grounded in a real result rather than in its own guess. Week 4 used it as a reasoning pattern; this week, the “Action” is literally a tool call and the “Observation” is literally a return value. <a class="doc" href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">arXiv:2210.03629 ↗</a></p></div>
+      <p class="small">Interleaving reasoning traces with actions: <em>Thought → Action → Observation</em>, looped, so that the model's next decision is grounded in a real result rather than in its own guess. Week 4 used it as a reasoning pattern; this week, the “Action” is literally a tool call and the “Observation” is literally a return value. <a class="doc" href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">arXiv:2210.03629 ↗</a></p></div>
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">The capability</span><h3 style="margin-top:6px">Toolformer (Schick et al., 2023)</h3>
-      <p class="small">The paper whose title is the claim: <em>Language Models Can Teach Themselves to Use Tools.</em> It showed that a model can learn, in a largely self-supervised way, <b>which</b> API to call, <b>when</b> to call it, and <b>what</b> to pass — deciding for itself where a tool call helps. That is why tool use is a general capability you can design around, not a trick that needs bespoke training per tool. <a class="doc" href="https://arxiv.org/abs/2302.04761" target="_blank" rel="noopener">arXiv:2302.04761 ↗</a></p></div>
+      <p class="small">The paper whose title is the claim: <em>Language Models Can Teach Themselves to Use Tools.</em> It showed that a model can learn, in a largely self-supervised way, <b>which</b> API to call, <b>when</b> to call it, and <b>what</b> to pass, deciding for itself where a tool call helps. That is why tool use is a general capability you can design around, not a trick that needs bespoke training per tool. <a class="doc" href="https://arxiv.org/abs/2302.04761" target="_blank" rel="noopener">arXiv:2302.04761 ↗</a></p></div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>What this pair means for you as a builder:</b> the model brings the judgement about <em>when</em> to call something; you bring the schema that says <em>what is callable and with what</em>. Neither half works alone — a perfect schema with a model that never triggers it is dead code, and a model eager to act with no schema is an accident waiting for a production database.</div>
+  <div class="callout" style="margin-top:20px">What this pair means for you as a builder: the model brings the judgement about <em>when</em> to call something; you bring the schema that says <em>what is callable and with what</em>. Neither half works alone: a perfect schema with a model that never triggers it is dead code, and a model eager to act with no schema is an accident waiting for a production database.</div>
 </div></section>
 
 <section><div class="wrap">

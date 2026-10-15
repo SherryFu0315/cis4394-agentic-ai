@@ -51,16 +51,16 @@
 </div></header>
 
 <section><div class="wrap">
-  <div class="callout blue"><b>📌 This week's logistics:</b> <b>📝 Quiz 2 is this week</b> — in class, closed-book, 5 multiple-choice. <b>Scope: the Week 4 readings, the Week 5 reading</b> (Ponnambalam, <em>Build AI Agents and Chatbots with LangGraph</em>), <b>and this week’s local tool-calling lab</b> (<a href="local.html">page 03</a>). Sample questions are on the <a href="../week4/exercises.html#quiz">Week 4 practice page →</a>. <b>Group Assignment 2 releases this week</b> on iCollege — <b>new groups, self-enroll</b> (<a href="summary.html#ga2">how, and the build paths</a>). 💻 <b>Bring your laptop</b> with Ollama running and your model downloaded. This week’s lab is <a href="local.html">page 03</a>. And the <a href="../week2/radar.html">Agent Radar</a> continues — check your presenter slot.</div>
+  <div class="callout blue"><b>📌 This week's logistics:</b> <b>📝 Quiz 2 is this week</b>: in class, closed-book, 5 multiple-choice. Scope: the Week 4 readings, the Week 5 reading (Ponnambalam, <em>Build AI Agents and Chatbots with LangGraph</em>), <b>and this week’s local tool-calling lab</b> (<a href="local.html">page 03</a>). Sample questions are on the <a href="../week4/exercises.html#quiz">Week 4 practice page →</a>. <b>Group Assignment 2 releases this week</b> on iCollege — <b>new groups, self-enroll</b> (<a href="summary.html#ga2">how, and the build paths</a>). 💻 <b>Bring your laptop</b> with Ollama running and your model downloaded. This week’s lab is <a href="local.html">page 03</a>. And the <a href="../week2/radar.html">Agent Radar</a> continues — check your presenter slot.</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">The big question</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>When an agent “calls a tool,” what does the language model <em>actually</em> produce, and who runs the code?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">The model produces <b>a structured request and nothing else</b> — a small block of JSON naming a function and its arguments:<div class="codebox" style="margin:12px 0">{"name": "calculator",
+  <div class="revealbox">The model produces <b>a structured request and nothing else</b>: a small block of JSON naming a function and its arguments:<div class="codebox" style="margin:12px 0">{"name": "calculator",
  "arguments": {"expression": "4817*293*1.18"}}</div>It does not execute anything. It cannot. <b>Your harness</b> receives that request, validates the arguments against the schema you wrote, decides whether the call is even allowed, runs the function, and hands the result back as the next observation. Same division of labour as Week 4's loop: <a href="../week4/loop.html">the model proposes, the harness disposes</a>. Everything valuable this week follows from taking that sentence literally, because if the harness is the only thing that executes, the harness is the only place you need to put controls.</div>
-  <p class="small" style="margin-top:18px"><b>Week 4 called this step “Act” and left it as a black box. Here it is, opened:</b></p>
+  <p class="small" style="margin-top:18px">Week 4 called this step “Act” and left it as a black box. Here it is, opened:</p>
   <div class="grid2" style="align-items:start">
     <div class="card"><span class="kicker">Week 4 · the loop</span>
       <div class="codebox" style="margin-top:10px">Observe → Reason → <b>ACT</b> → Update state
@@ -86,7 +86,7 @@
   <p class="lede">Your Berlin supplier invoiced <b>4,817 units at €293 each</b>, plus <b>18% VAT</b>. What is the euro total? Before anyone tells you the answer, <b>find out for yourself</b> what a local model does with this question.</p>
 
   <div class="grouptask"><span class="gk">👥 Group task · Pairs, at a laptop · ~12 minutes</span>
-    <p><b>Everything here is copy-and-paste into one window.</b> Start Ollama, then in a terminal run <code>ollama run qwen2.5:0.5b</code> once — after that you are just typing at a prompt. No files, no folders, no Python.</p>
+    <p>Everything here is copy-and-paste into one window. Start Ollama, then in a terminal run <code>ollama run qwen2.5:0.5b</code> once — after that you are just typing at a prompt. No files, no folders, no Python.</p>
     <p class="prod"><b>Produce:</b> the filled table below, plus one sentence per round: what changed, and why you think it changed.</p>
   </div>
 
@@ -96,12 +96,12 @@
 
   <h3 style="margin-top:18px">Round 2 · Hand it the exact formula — send it 5 times</h3>
   <div class="codebox">What is 4817 * 293 * 1.18? Reply with just the number.</div>
-  <p class="small">Nothing to interpret now — no wording, no percentage, just one multiplication. Does that fix it?</p>
+  <p class="small">Nothing to interpret now: no wording, no percentage, just one multiplication. Does that fix it?</p>
 
   <h3 style="margin-top:18px">Round 3 · <em>You</em> be the tool</h3>
   <p class="small" style="max-width:820px">The model cannot run anything, so for this round <b>you</b> are the code that runs it. Send this, and it will reply with a <em>request</em> instead of an answer:</p>
   <div class="codebox">You have one tool: calculator(expression). You cannot do arithmetic yourself. When you need arithmetic, reply with ONLY this JSON and nothing else: {"tool":"calculator","expression":"..."} . Question: An invoice is 4817 units at 293 EUR each, plus 18% VAT. What is the euro total?</div>
-  <p class="small"><b>Write down the expression it asked for</b> — is it the right formula? Then compute it yourself (phone calculator is fine; the correct value of <code>4817*293*1.18</code> is <b>1665429.58</b>) and hand the result back:</p>
+  <p class="small">Write down the expression it asked for: is it the right formula? Then compute it yourself (phone calculator is fine; the correct value of <code>4817*293*1.18</code> is <b>1665429.58</b>) and hand the result back:</p>
   <div class="codebox">TOOL RESULT: 1665429.58 . Now reply with one short sentence giving the final answer, using exactly that number. Do not output JSON.</div>
   <p class="small">Run the whole round three times. You have just done by hand exactly what the Python on <a href="local.html">page 03</a> does automatically.</p>
 
@@ -116,7 +116,7 @@
     </tbody>
   </table></div>
 
-  <div class="bigq" style="margin-top:22px"><span class="qlabel">Discussion question</span>Rounds 1 and 2 both failed — for the same reason, or different ones? And in Round 3, when the number finally came out right, <em>who</em> computed it?</div>
+  <div class="bigq" style="margin-top:22px"><span class="qlabel">Discussion question</span>Rounds 1 and 2 both failed: for the same reason, or different ones? And in Round 3, when the number finally came out right, <em>who</em> computed it?</div>
   <button class="revealbtn">Compare with the instructor's runs</button>
   <div class="revealbox">
     <p style="margin-top:0"><b>Round 1: asked in words.</b> Five runs, five different answers, spanning five orders of magnitude, none correct (the answer is <b>1,665,429.58</b>):</p>
@@ -124,12 +124,12 @@
 run 2 →         5,182      run 5 →           346
 run 3 →   127,797,491</div>
     <p>Run 4 is the interesting one: it wrote the right formula, <code>4817 * 293 * (1 + 0.18)</code>, and still produced a wrong number.</p>
-    <p><b>Round 2: handed the formula.</b> Wrong every time, and now the wrong answers cluster near the right size, which is worse because they look believable: <code>999,999.8 · 1,286,483.4 · 1,240,908.4 · 115,085.4 · 1,194,414.8</code>. So this was never a wording problem. <b>Nothing in the model multiplies anything</b> — it predicts the most plausible-looking continuation, and for long multiplication that is a number of roughly the right magnitude.</p>
+    <p><b>Round 2: handed the formula.</b> Wrong every time, and now the wrong answers cluster near the right size, which is worse because they look believable: <code>999,999.8 · 1,286,483.4 · 1,240,908.4 · 115,085.4 · 1,194,414.8</code>. So this was never a wording problem. <b>Nothing in the model multiplies anything</b>; it predicts the most plausible-looking continuation, and for long multiplication that is a number of roughly the right magnitude.</p>
     <p><b>Round 3: you as the tool.</b> In our runs the model produced a clean JSON request every time, and the <em>expressions</em> varied: <code>(4817*293)+(4817*293*0.18)</code> — correct — in one run, <code>4817*293 + 4817*0.18</code> — wrong — in others. After the result was handed back, it finished correctly every time.</p>
-    <p style="margin-bottom:0"><b>So the two failures are different.</b> Rounds 1–2 are a <em>computation</em> failure, and handing the arithmetic to something that computes removes it completely — in Round 3 that something was <b>you</b>. What remains is a <em>planning</em> failure: deciding which expression to compute. That one stays with the model, and it is what <a href="local.html">page 03</a> measures.</p>
+    <p style="margin-bottom:0"><b>So the two failures are different.</b> Rounds 1–2 are a <em>computation</em> failure, and handing the arithmetic to something that computes removes it completely; in Round 3 that something was <b>you</b>. What remains is a <em>planning</em> failure: deciding which expression to compute. That one stays with the model, and it is what <a href="local.html">page 03</a> measures.</p>
   </div>
 
-  <div class="callout" style="margin-top:20px"><b>What the tool fixes, and what it does not.</b> The calculator is always exact and always logged. What it cannot do is decide <em>what to compute</em>: asked for "plus 18% VAT" in words, this same small model often hands the calculator a wrong expression — <code>4817*293 + 18/100</code> in one run, <code>4817*293 + 18*293</code> in another. Arithmetic moved into the tool; <b>planning stayed with the model</b>, and that is what <a href="local.html">page 03</a> measures. Bigger models get this particular product right more often, which is also not the point: a token predictor is <em>non-deterministic</em> and <em>unauditable</em>: you cannot promise a controller that the number will be right next month, and you cannot show the work. A tool call gives you exactness, repeatability, and a trace — three things a finance team will ask for.</div>
+  <div class="callout" style="margin-top:20px">What the tool fixes, and what it does not. The calculator is always exact and always logged. What it cannot do is decide <em>what to compute</em>: asked for "plus 18% VAT" in words, this same small model often hands the calculator a wrong expression — <code>4817*293 + 18/100</code> in one run, <code>4817*293 + 18*293</code> in another. Arithmetic moved into the tool; <b>planning stayed with the model</b>, and that is what <a href="local.html">page 03</a> measures. Bigger models get this particular product right more often, which is also not the point: a token predictor is <em>non-deterministic</em> and <em>unauditable</em>: you cannot promise a controller that the number will be right next month, and you cannot show the work. A tool call gives you exactness, repeatability, and a trace: three things a finance team will ask for.</div>
 </div></section>
 
 
@@ -166,7 +166,7 @@ run 3 →   127,797,491</div>
 <section style="padding:0 0 34px"><div class="wrap">
   <a class="navcard" href="summary.html" style="grid-template-columns:56px 1fr auto">
     <span style="font-size:34px">📝</span>
-    <span><span class="tag">After class</span><b>Week 5 Summary</b><span class="small">What to remember from each page · <b>enroll in your Group Assignment 2 team on iCollege</b> (new groups — new teammates encouraged) · the code / no-code / bring-your-own-tool paths · the proposal that is due next week.</span></span>
+    <span><span class="tag">After class</span><b>Week 5 Summary</b><span class="small">What to remember from each page · enroll in your Group Assignment 2 team on iCollege (new groups — new teammates encouraged) · the code / no-code / bring-your-own-tool paths · the proposal that is due next week.</span></span>
     <span class="go">→</span>
   </a>
 </div></section>
@@ -176,7 +176,7 @@ run 3 →   127,797,491</div>
   <h2>Tools = capability + risk surface</h2>
   <div class="grid3">
     <div class="card"><span class="kicker">Capability</span><p class="small" style="margin-top:8px">A model without tools is a very expensive autocomplete. Every tool you add is a verb the agent acquires: <em>read</em>, <em>compute</em>, <em>file</em>, <em>send</em>, <em>pay</em>. The business value of an agent is almost entirely the value of its verbs.</p></div>
-    <div class="card"><span class="kicker">Risk</span><p class="small" style="margin-top:8px">Every verb is also a way to be wrong at scale. A read tool leaks; a write tool destroys; a spend tool costs money. The schema you write is where “what is this agent permitted to do?” gets answered — in code, not in a policy document.</p></div>
+    <div class="card"><span class="kicker">Risk</span><p class="small" style="margin-top:8px">Every verb is also a way to be wrong at scale. A read tool leaks; a write tool destroys; a spend tool costs money. The schema you write is where “what is this agent permitted to do?” gets answered: in code, not in a policy document.</p></div>
     <div class="card"><span class="kicker">Auditability</span><p class="small" style="margin-top:8px">Because every tool call is a structured record — name, arguments, result, timestamp — a tool-using agent is far easier to audit than one that “just knows.” When compliance asks what happened, you replay the calls.</p></div>
   </div>
   <div class="callout" style="margin-top:20px"><b>The manager's version of this week:</b> you do not decide whether an agent is “safe” in the abstract. You decide, tool by tool, which calls run automatically, which run only inside limits you encoded, and which stop and wait for a person. Page 02 turns that into a table you can fill in.</div>
@@ -192,7 +192,7 @@ run 3 →   127,797,491</div>
     <div class="card"><span class="kicker">Gap 3 · True computation</span><p class="small" style="margin-top:8px">Predicting the next token is not arithmetic, and it is certainly not running a SQL query or a pricing model. <b>Closed by:</b> a calculator, a code runner, a query tool.</p></div>
     <div class="card"><span class="kicker">Gap 4 · Actions in the world</span><p class="small" style="margin-top:8px">Text cannot file a ticket, send an email, or issue a refund. <b>Closed by:</b> write tools, and this is exactly where the risk arrives.</p></div>
   </div>
-  <div class="callout blue" style="margin-top:20px"><b>The framing:</b> Anthropic's engineering guide calls this the <b>augmented LLM</b> — a model extended with tools, retrieval, and memory as its basic building block (Anthropic, 2024, <a class="doc" href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building Effective Agents ↗</a>). This week is the <em>tools</em> corner of that picture; retrieval and memory come later in the semester.</div>
+  <div class="callout blue" style="margin-top:20px"><b>The framing:</b> Anthropic's engineering guide calls this the <b>augmented LLM</b>: a model extended with tools, retrieval, and memory as its basic building block (Anthropic, 2024, <a class="doc" href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building Effective Agents ↗</a>). This week is the <em>tools</em> corner of that picture; retrieval and memory come later in the semester.</div>
 </div></section>
 
 <div class="wrap pager">

@@ -73,13 +73,13 @@
       <p>Strip away the marketing and MCP is three ordinary things bolted together:</p>
       <ol class="steps">
         <li><b>A message format.</b> Requests and responses in JSON, following the JSON-RPC convention: name a method, pass parameters, get back a result or an error.</li>
-        <li><b>A vocabulary.</b> A fixed set of things a server can offer and a client can ask for — list the tools, call a tool, list resources, read a resource, get a prompt template.</li>
+        <li><b>A vocabulary.</b> A fixed set of things a server can offer and a client can ask for: list the tools, call a tool, list resources, read a resource, get a prompt template.</li>
         <li><b>A handshake.</b> On connect, both sides announce which protocol version and which capabilities they support, so neither must guess.</li>
       </ol>
       <p class="small" style="margin-top:14px">That is genuinely it. There is no model in the protocol, no intelligence, no orchestration. The cleverness is entirely in the <em>agreement</em>, which is exactly what makes it reusable.</p>
     </div>
     <div class="card"><span class="kicker">The one-sentence version</span>
-      <p style="margin-top:8px">MCP standardizes the boundary between <b>an AI application</b> and <b>the systems it needs to see and touch</b>, so a connector written once works with any application that speaks the protocol.</p>
+      <p style="margin-top:8px">MCP standardizes the boundary between <b>an AI application</b> and the systems it needs to see and touch, so a connector written once works with any application that speaks the protocol.</p>
       <p class="small" style="margin-top:12px">Primary sources: <a class="doc" href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener">Anthropic's announcement (2024) ↗</a> · <a class="doc" href="https://modelcontextprotocol.io/introduction" target="_blank" rel="noopener">the protocol docs ↗</a> · <a class="doc" href="https://www.ibm.com/think/topics/model-context-protocol" target="_blank" rel="noopener">IBM's explainer ↗</a>.</p>
       <p class="small" style="margin-top:12px"><b>You have probably already used it.</b> If you have enabled a connector or an extra tool inside a desktop AI app or a coding assistant this year, you were acting as the <em>host</em> in the picture below. You just did not have to know the word.</p>
     </div>
@@ -113,11 +113,11 @@
         <g class="mnode" id="m7"><rect x="270" y="284" width="196" height="46"/><text x="368" y="306" text-anchor="middle">web search server</text><text class="sub" x="368" y="322" text-anchor="middle">→ an outside API</text></g>
         <text class="mlbl" x="272" y="128">MCP SERVERS: each wraps one system</text>
       </svg>
-      <p class="small" style="margin:10px 6px 4px">Everything inside the dashed box is <b>your application</b>. Everything to the right of it is a separate process — possibly written by someone else.</p>
+      <p class="small" style="margin:10px 6px 4px">Everything inside the dashed box is <b>your application</b>. Everything to the right of it is a separate process, possibly written by someone else.</p>
     </div>
     <div>
       <div class="mnote" id="mNote">Click a box in the diagram.</div>
-      <div class="callout blue" style="margin-top:14px"><b>The sentence that fixes the confusion:</b> the <em>host</em> is the app you use, the <em>client</em> is the piece of the host that speaks the protocol to exactly one server, and the <em>server</em> is the thing that wraps a real system and advertises what it can do. The model never speaks MCP — it asks the host, and the host speaks MCP.</div>
+      <div class="callout blue" style="margin-top:14px"><b>The sentence that fixes the confusion:</b> the <em>host</em> is the app you use, the <em>client</em> is the piece of the host that speaks the protocol to exactly one server, and the <em>server</em> is the thing that wraps a real system and advertises what it can do. The model never speaks MCP; it asks the host, and the host speaks MCP.</div>
     </div>
   </div>
 </div></section>
@@ -139,7 +139,7 @@
     <div>
       <div class="card"><span class="kicker">Who owns which step</span>
         <p class="small" style="margin-top:8px">Steps 1–2 are <b>startup</b>: they happen once, before any user question. Step 3 is the only step the <b>model</b> owns. Steps 4–6 are ordinary software your <b>harness</b> runs, which means they are testable, loggable, and refusable. Same division of labor as the agent loop in <a href="../week4/loop.html">Week 4</a>: the model proposes, the harness disposes.</p>
-        <p class="small" style="margin-top:12px"><b>JSON-RPC</b>, if it is new to you: a minimal convention for calling a function in another process. The request is JSON that names a method and its parameters; the reply is JSON with either a result or an error. No magic, and deliberately boring — boring is what gets adopted.</p>
+        <p class="small" style="margin-top:12px"><b>JSON-RPC</b>, if it is new to you: a minimal convention for calling a function in another process. The request is JSON that names a method and its parameters; the reply is JSON with either a result or an error. No magic, and deliberately boring; boring is what gets adopted.</p>
       </div>
     </div>
   </div>
@@ -148,7 +148,7 @@
 <section><div class="wrap">
   <div class="eyebrow">The three primitives</div>
   <h2>Tools, resources, prompts</h2>
-  <p class="lede">A server can offer three kinds of thing. The distinction that matters is not technical. It is <b>who is in control</b> of each one.</p>
+  <p class="lede">A server can offer three kinds of thing. The distinction that matters is who is in control of each one.</p>
   <div class="grid3">
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">1 · Tools</span><h3 style="margin-top:6px">Model-controlled actions</h3>
       <p class="small">Functions the model may choose to call: <code>create_ticket</code>, <code>send_email</code>, <code>run_query</code>. The server advertises each one with a name, a description, and a parameter schema, and the model picks. <b>Tools act on the world.</b></p>
@@ -180,7 +180,7 @@
     <div class="card"><span class="kicker">Remote · HTTP-based</span>
       <p class="small" style="margin-top:8px">The server runs as a <b>web service</b> that many hosts can reach, with authentication in front of it and streaming for long responses. This is the shape for a shared corporate server. One team runs the CRM server, every agent in the company connects to it. <span style="color:var(--muted)">The exact HTTP mechanism has been revised across spec versions, so pin down which version a vendor implements before you promise interoperability.</span></p></div>
   </div>
-  <div class="callout" style="margin-top:18px"><b>Why you care as a buyer:</b> the messages are identical either way — only the pipe changes. So &ldquo;we support MCP&rdquo; is not one claim, it is at least four: which side (client or server), which primitives, which transport and auth model, and which spec version. Ask all four.</div>
+  <div class="callout" style="margin-top:18px"><b>Why you care as a buyer:</b> the messages are identical either way; only the pipe changes. So &ldquo;we support MCP&rdquo; is not one claim, it is at least four: which side (client or server), which primitives, which transport and auth model, and which spec version. Ask all four.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -197,7 +197,7 @@
       <tr><td><b>Reuse across teams</b></td><td>Copy-paste, then drift</td><td>One server, one owner, one version to pin</td></tr>
     </table>
   </div>
-  <div class="callout blue" style="margin-top:18px"><b>MCP does not replace function calling — it feeds it.</b> The model still emits a tool call exactly as it did in Week 5. MCP only standardizes where that tool came from, how it was described, and who runs it. If you can explain that sentence in an interview you are ahead of most candidates.</div>
+  <div class="callout blue" style="margin-top:18px">MCP does not replace function calling; it feeds it. The model still emits a tool call exactly as it did in Week 5. MCP only standardizes where that tool came from, how it was described, and who runs it. If you can explain that sentence in an interview you are ahead of most candidates.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -210,15 +210,15 @@
     <div class="rail"><h3>Over-broad scope</h3><p class="small">A database server handed full read-write credentials because that was the fastest way to make the demo work. The blast radius of any mistake — model, server, or human — is now the whole database. Least privilege is not paranoia; it is scoping.</p></div>
   </div>
   <div class="card" style="margin-top:18px"><span class="kicker">Controls that help</span>
-    <p class="small" style="margin-top:8px"><b>Allow-list</b> which servers may be connected, and who may approve a new one. <b>Pin versions</b> — do not auto-update a server that runs code on your machine. <b>Scope credentials</b> to the narrowest role that works, read-only wherever possible. <b>Gate the acting tools</b> — the human gate from Week 5 belongs on writes, spend, and outbound messages, not on every read. <b>Log at the protocol boundary</b>, which is the gift of having a boundary at all: one place records every call, argument, and result, so the Week 2 evidence standard — <em>state before → observation → available actions → selected action → result → state after</em> — is something you can produce.</p></div>
-  <div class="callout" style="margin-top:18px"><b>Week 10 preview:</b> we return to this with the full threat model, including what happens when private data, untrusted content, and an outbound channel meet in the same agent. For now, carry one rule: <b>a connector is a trust decision, and somebody must own it.</b></div>
+    <p class="small" style="margin-top:8px"><b>Allow-list</b> which servers may be connected, and who may approve a new one. <b>Pin versions</b>: do not auto-update a server that runs code on your machine. <b>Scope credentials</b> to the narrowest role that works, read-only wherever possible. <b>Gate the acting tools</b>: the human gate from Week 5 belongs on writes, spend, and outbound messages, not on every read. <b>Log at the protocol boundary</b>, which is the gift of having a boundary at all: one place records every call, argument, and result, so the Week 2 evidence standard — <em>state before → observation → available actions → selected action → result → state after</em> — is something you can produce.</p></div>
+  <div class="callout" style="margin-top:18px"><b>Week 10 preview:</b> we return to this with the full threat model, including what happens when private data, untrusted content, and an outbound channel meet in the same agent. For now, carry one rule: a connector is a trust decision, and somebody must own it.</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">Discussion</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>A vendor's slide says &ldquo;fully MCP-compatible.&rdquo; You have thirty seconds with their engineer. What do you ask?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox"><b>Which side are you?</b> A product can be a host/client (it can consume servers) or a server (it can be consumed) — these are opposite claims and vendors blur them. <b>Which primitives?</b> Tools only, or resources and prompts too? &ldquo;Compatible&rdquo; with one primitive is a real but much smaller claim. <b>Which transport and which auth model?</b> Local stdio only is very different from a remote server with real authentication. <b>Which spec version</b>, and what happens when it moves? Then the closing move: <b>ask for a live demo against a server you choose</b>, not one they bring. Interoperability that has only ever been tested against the vendor's own implementation is not interoperability. It is a coincidence.</div>
+  <div class="revealbox"><b>Which side are you?</b> A product can be a host/client (it can consume servers) or a server (it can be consumed); these are opposite claims and vendors blur them. <b>Which primitives?</b> Tools only, or resources and prompts too? &ldquo;Compatible&rdquo; with one primitive is a real but much smaller claim. <b>Which transport and which auth model?</b> Local stdio only is very different from a remote server with real authentication. <b>Which spec version</b>, and what happens when it moves? Then the closing move: ask for a live demo against a server you choose, not one they bring. Interoperability that has only ever been tested against the vendor's own implementation is not interoperability. It is a coincidence.</div>
 </div></section>
 
 <section><div class="wrap">

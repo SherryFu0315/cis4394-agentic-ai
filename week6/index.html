@@ -59,24 +59,24 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">Week 6 · Module 2 · Interoperability</div>
   <h1>MCP &amp; A2A — the <em>standards</em> layer.</h1>
-  <p class="lede"><a href="../week5/mechanics.html">Week 5</a> you hand-wired tools into one agent. That works — once. Do it for five agents and twenty systems and you are maintaining a hundred pieces of custom glue. This week: the two open protocols that turn that multiplication into an addition — <b>MCP</b> for the tools and data underneath an agent, <b>A2A</b> for other agents beside it.</p>
+  <p class="lede"><a href="../week5/mechanics.html">Week 5</a> you hand-wired tools into one agent. That works — once. Do it for five agents and twenty systems and you are maintaining a hundred pieces of custom glue. This week: the two open protocols that turn that multiplication into an addition: <b>MCP</b> for the tools and data underneath an agent, <b>A2A</b> for other agents beside it.</p>
 </div></header>
 
 <section><div class="wrap">
-  <div class="callout blue"><b>📌 This week's logistics:</b> the <b>final-project proposal is due this week</b> on iCollege. The two sections’ deadlines are a day apart, so <b>check iCollege for your section’s due date</b>. See the <a href="exercises.html#proposal">proposal checklist</a> below before you submit. <b>Group Assignment 2</b> is in progress and is <b>due in Week 8</b>. <b>No quiz this week.</b> The <a href="../week2/radar.html">Agent Radar</a> presenter slots continue — sign up for an open week.</div>
+  <div class="callout blue"><b>📌 This week's logistics:</b> the <b>final-project proposal is due this week</b> on iCollege. The two sections’ deadlines are a day apart, so check iCollege for your section’s due date. See the <a href="exercises.html#proposal">proposal checklist</a> below before you submit. <b>Group Assignment 2</b> is in progress and is <b>due in Week 8</b>. <b>No quiz this week.</b> The <a href="../week2/radar.html">Agent Radar</a> presenter slots continue — sign up for an open week.</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">The big question</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your company builds five agents. Each one needs the CRM, the data warehouse, email, and the ticketing system. How many integrations does your team write, and how many do they <em>maintain</em> when the CRM changes its API?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">Written the hand-wired way: <b>5 × 4 = 20</b> integrations, and when the CRM ships a breaking change you fix it in <b>five</b> places — each written by a different team, at a different time, with different error handling. Written against a shared protocol: each agent speaks the protocol once and each system exposes a server once, so it is <b>5 + 4 = 9</b> pieces, and the CRM change is fixed in <b>one</b> place for everybody. That collapse — from a product to a sum — is the entire business case for MCP and A2A, and it is why this week is about plumbing rather than intelligence.</div>
+  <div class="revealbox">Written the hand-wired way: <b>5 × 4 = 20</b> integrations, and when the CRM ships a breaking change you fix it in <b>five</b> places, each written by a different team, at a different time, with different error handling. Written against a shared protocol: each agent speaks the protocol once and each system exposes a server once, so it is <b>5 + 4 = 9</b> pieces, and the CRM change is fixed in <b>one</b> place for everybody. That collapse — from a product to a sum — is the entire business case for MCP and A2A, and it is why this week is about plumbing rather than intelligence.</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">Interactive · the integration tax</div>
   <h2>M × N, or M + N</h2>
-  <p class="lede">Move the sliders to size your organization, then flip between the two worlds. The red spaghetti is what every team builds first. The blue hub is what a standard buys you — the same connections, without the combinatorics.</p>
+  <p class="lede">Move the sliders to size your organization, then flip between the two worlds. The red spaghetti is what every team builds first. The blue hub is what a standard buys you: the same connections, without the combinatorics.</p>
   <div class="nmwrap">
     <div class="nmbox">
       <svg id="nmSvg" viewBox="0 0 520 340" aria-label="M by N integrations versus a shared protocol hub"></svg>
@@ -92,13 +92,13 @@
         </div>
       </div>
       <div class="grid2" style="margin-top:14px">
-        <div class="card"><span class="kicker">Bespoke</span><div class="bigcount red" id="cntBespoke">20</div><p class="small" style="margin-top:8px">connections to build and maintain — one per agent-system pair.</p></div>
-        <div class="card"><span class="kicker">With a shared protocol</span><div class="bigcount" id="cntProto">9</div><p class="small" style="margin-top:8px">connections — M clients plus N servers, each written once.</p></div>
+        <div class="card"><span class="kicker">Bespoke</span><div class="bigcount red" id="cntBespoke">20</div><p class="small" style="margin-top:8px">connections to build and maintain: one per agent-system pair.</p></div>
+        <div class="card"><span class="kicker">With a shared protocol</span><div class="bigcount" id="cntProto">9</div><p class="small" style="margin-top:8px">connections: M clients plus N servers, each written once.</p></div>
       </div>
-      <div class="callout" id="nmVerdict" style="margin-top:14px"><b>That is a 55% smaller maintenance surface</b>, and the gap widens every time you add an agent or a system.</div>
+      <div class="callout" id="nmVerdict" style="margin-top:14px">That is a 55% smaller maintenance surface, and the gap widens every time you add an agent or a system.</div>
     </div>
   </div>
-  <div class="callout blue" style="margin-top:20px"><b>Read the arithmetic honestly.</b> A standard does not remove the <em>work</em> of connecting to a CRM; somebody still writes that connector. It removes the <b>combinatorics</b> — the reason the same connector gets written five times. The payoff is in reuse, so it compounds: at 2 agents × 4 systems you save a quarter of the surface; at 20 × 30 you are comparing 600 bespoke integrations to 50. <span class="small">(Illustrative arithmetic, not measured data.)</span></div>
+  <div class="callout blue" style="margin-top:20px"><b>Read the arithmetic honestly.</b> A standard does not remove the <em>work</em> of connecting to a CRM; somebody still writes that connector. It removes the <b>combinatorics</b>, the reason the same connector gets written five times. The payoff is in reuse, so it compounds: at 2 agents × 4 systems you save a quarter of the surface; at 20 × 30 you are comparing 600 bespoke integrations to 50. <span class="small">(Illustrative arithmetic, not measured data.)</span></div>
 </div></section>
 
 <section><div class="wrap">
@@ -115,10 +115,10 @@
 <section><div class="wrap">
   <div class="eyebrow">Two standards, two directions</div>
   <h2>One goes down. One goes sideways.</h2>
-  <p class="lede">The single most useful thing you can memorize this week: <b>MCP connects an agent to tools and data. A2A connects an agent to other agents.</b> They are complementary, not competing. A single agent can speak both at once.</p>
+  <p class="lede">The single most useful thing you can memorize this week: MCP connects an agent to tools and data. A2A connects an agent to other agents. They are complementary, not competing. A single agent can speak both at once.</p>
   <div class="grid2">
     <div class="card"><span class="kicker">MCP · vertical</span><h3 style="margin-top:6px">Agent ↔ tools &amp; data</h3>
-      <p class="small">Your agent reaches <em>down</em> into a filesystem, a database, a ticketing API, a document store. The thing on the other end is not intelligent — it exposes capabilities and data, and your agent decides what to do with them. Open standard, introduced by Anthropic (2024); broadly adopted across the industry during 2025.</p>
+      <p class="small">Your agent reaches <em>down</em> into a filesystem, a database, a ticketing API, a document store. The thing on the other end is not intelligent; it exposes capabilities and data, and your agent decides what to do with them. Open standard, introduced by Anthropic (2024); broadly adopted across the industry during 2025.</p>
       <p class="small" style="margin-top:10px"><a class="doc" href="mcp.html">Page 01 · How MCP works →</a></p></div>
     <div class="card"><span class="kicker">A2A · horizontal</span><h3 style="margin-top:6px">Agent ↔ agent</h3>
       <p class="small">Your agent reaches <em>sideways</em> to another agent — possibly built by another team, another vendor, another company — and <b>delegates</b> a task rather than calling a function. The other side has its own goals, its own tools, and its own judgment. Announced by Google in April 2025 and contributed to the Linux Foundation in June 2025.</p>
@@ -157,7 +157,7 @@
     <div class="card"><span class="kicker">Leverage</span><p class="small" style="margin-top:8px">If your sixty connectors are written against one vendor's proprietary format, your renewal conversation has no exit. If they are written against an open protocol, switching hosts is a configuration change. Optionality <em>is</em> negotiating power.</p></div>
     <div class="card"><span class="kicker">Trust &amp; audit</span><p class="small" style="margin-top:8px">A protocol boundary is also a control point: one place to log every call, allow-list every server, pin every version, and put the human gate. Ad-hoc glue has no such place, which is why nobody can tell you what it did last Tuesday.</p></div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>🎯 Take it to your final project:</b> your proposal is due this week. Add one paragraph naming the boundary in your system, which capability could you expose as an MCP tool, or at minimum, what does your tool interface look like written down as a contract? Then name the one call in it that gets a human gate. Interoperability is a design habit you build early, not a migration you do later.</div>
+  <div class="callout" style="margin-top:20px">🎯 Take it to your final project: your proposal is due this week. Add one paragraph naming the boundary in your system, which capability could you expose as an MCP tool, or at minimum, what does your tool interface look like written down as a contract? Then name the one call in it that gets a human gate. Interoperability is a design habit you build early, not a migration you do later.</div>
 </div></section>
 
 <div class="wrap pager">
@@ -214,8 +214,8 @@ function drawNM(){
   document.getElementById('cntProto').textContent=pro;
   const cut=Math.round((1-pro/bes)*100);
   document.getElementById('nmVerdict').innerHTML=(cut>0
-    ? '<b>That is a '+cut+'% smaller maintenance surface</b> at '+M+' agents and '+N+' systems'
-    : '<b>At this size the standard saves nothing</b> ('+bes+' vs '+pro+')')+
+    ? 'That is a '+cut+'% smaller maintenance surface at '+M+' agents and '+N+' systems'
+    : 'At this size the standard saves nothing ('+bes+' vs '+pro+')')+
     ' — and the gap widens every time you add an agent or a system. Small shops rarely feel it; that is why the pitch lands with enterprises first.';
   document.getElementById('nmCap').innerHTML=hubMode
     ? 'Each agent speaks the protocol once; each system exposes one server. New agent? It gets all '+N+' systems for free.'

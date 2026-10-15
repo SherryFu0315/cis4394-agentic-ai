@@ -81,7 +81,7 @@
 → "Booked Thu 3:00 pm, Langdale 102."</div>
       <p class="small" style="margin-top:10px">You state an <b>outcome</b>, not a call. The other side may plan, use tools you cannot see, take minutes rather than milliseconds, and <em>ask you something mid-task</em>. That last one is why a request/response API is not enough.</p></div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>So A2A's design problems are different from MCP's:</b> how does one agent <em>find</em> another and learn what it can do? How do two agents keep a long-running conversation straight? How does an agent ask a clarifying question without breaking the protocol? And — the one that makes managers sit up — how do you delegate across an organizational boundary without exposing your internals?</div>
+  <div class="callout" style="margin-top:20px">So A2A's design problems are different from MCP's: how does one agent <em>find</em> another and learn what it can do? How do two agents keep a long-running conversation straight? How does an agent ask a clarifying question without breaking the protocol? And — the one that makes managers sit up — how do you delegate across an organizational boundary without exposing your internals?</div>
 </div></section>
 
 <section><div class="wrap">
@@ -91,17 +91,17 @@
     <div>
       <p>A2A (Agent2Agent) is an open protocol for agents built by different teams, on different frameworks, from different vendors, to discover each other and work together over ordinary web infrastructure. Its three moving parts:</p>
       <ol class="steps">
-        <li><b>The Agent Card.</b> A published description of an agent — who it is, where to reach it, what it can do, and how to authenticate. This is how discovery happens: read the card, decide whether this agent is worth talking to.</li>
+        <li><b>The Agent Card.</b> A published description of an agent: who it is, where to reach it, what it can do, and how to authenticate. This is how discovery happens: read the card, decide whether this agent is worth talking to.</li>
         <li><b>The Task.</b> A unit of delegated work with an identity and a lifecycle. Tasks can be long-running, so both sides can track one across many messages instead of pretending everything finishes in one HTTP round trip.</li>
-        <li><b>Messages and artifacts.</b> The back-and-forth inside a task, plus the outputs it produces — a booking confirmation, a document, a table of results.</li>
+        <li><b>Messages and artifacts.</b> The back-and-forth inside a task, plus the outputs it produces: a booking confirmation, a document, a table of results.</li>
       </ol>
       <p class="small" style="margin-top:14px">Two design commitments worth naming, because they are what makes it enterprise-shaped: it runs on <b>plain web standards</b> (HTTP and JSON, so your existing gateways, auth, and logging apply), and agents are treated as <b>opaque</b> — you expose what you can do, not how you do it. Your prompts, your model choice, and your internal tools stay yours.</p>
       <p class="small" style="margin-top:12px">Primary sources: <a class="doc" href="https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/" target="_blank" rel="noopener">Google's announcement (2025) ↗</a> · <a class="doc" href="https://a2a-protocol.org" target="_blank" rel="noopener">the A2A protocol site ↗</a>.</p>
     </div>
     <div>
       <div class="card"><span class="kicker">An honest note on maturity</span>
-        <p class="small" style="margin-top:8px">MCP had a year of adoption before A2A was announced, and it shows. A2A moved to a neutral foundation quickly and has real vendor backing, but <b>the open question is adoption, not design</b> — cross-organization agent delegation requires two organizations to want it, plus answers to questions the protocol alone cannot settle: who is liable when a delegated task goes wrong, how you audit an agent you do not run, and what a service-level agreement means when the other side is probabilistic.</p>
-        <p class="small" style="margin-top:10px">Learn it for the <b>concepts</b> — discovery, delegation, task lifecycle. Those survive whichever protocol wins. Be skeptical of anyone claiming the standards war is settled; in this material we would rather teach you the shape of the problem than a winner.</p></div>
+        <p class="small" style="margin-top:8px">MCP had a year of adoption before A2A was announced, and it shows. A2A moved to a neutral foundation quickly and has real vendor backing, but the open question is adoption, not design: cross-organization agent delegation requires two organizations to want it, plus answers to questions the protocol alone cannot settle: who is liable when a delegated task goes wrong, how you audit an agent you do not run, and what a service-level agreement means when the other side is probabilistic.</p>
+        <p class="small" style="margin-top:10px">Learn it for the <b>concepts</b>: discovery, delegation, task lifecycle. Those survive whichever protocol wins. Be skeptical of anyone claiming the standards war is settled; in this material we would rather teach you the shape of the problem than a winner.</p></div>
       <div class="callout blue" style="margin-top:14px"><b>Interview framing:</b> &ldquo;MCP is how my agent reaches its tools; A2A is how my agent reaches someone else's agent. One is vertical, one is horizontal, and a serious system will use both.&rdquo;</div>
     </div>
   </div>
@@ -110,7 +110,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive · click the fields</div>
   <h2>Anatomy of an Agent Card</h2>
-  <p class="lede">An Agent Card is a small JSON document an agent publishes so others can find and evaluate it — the A2A analogue of an MCP server advertising its tools. Click any highlighted field to see what it is doing and what a careful reader would ask about it.</p>
+  <p class="lede">An Agent Card is a small JSON document an agent publishes so others can find and evaluate it, the A2A analogue of an MCP server advertising its tools. Click any highlighted field to see what it is doing and what a careful reader would ask about it.</p>
   <div class="cardwrap">
     <div>
       <div class="codebox" style="margin-top:0">{
@@ -130,7 +130,7 @@
       "description": "Reserve a slot for a student" }
   ]</span>
 }</div>
-      <p class="small" style="margin-top:10px"><b>Illustrative and simplified</b> — a teaching example, not a spec excerpt. Field names and required properties change between protocol versions; check <a class="doc" href="https://a2a-protocol.org" target="_blank" rel="noopener">a2a-protocol.org ↗</a> for the current definition before you write one.</p>
+      <p class="small" style="margin-top:10px"><b>Illustrative and simplified</b>: a teaching example, not a spec excerpt. Field names and required properties change between protocol versions; check <a class="doc" href="https://a2a-protocol.org" target="_blank" rel="noopener">a2a-protocol.org ↗</a> for the current definition before you write one.</p>
     </div>
     <div>
       <div class="fldnote" id="fldNote">Click a highlighted field in the JSON.</div>
@@ -142,7 +142,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive · step through a delegation</div>
   <h2>The task lifecycle</h2>
-  <p class="lede">A campus advising agent delegates to the tutoring center's agent — a different department, a different codebase, a different owner. Press <b>Step</b> and watch the task move through its states. The amber state is the interesting one.</p>
+  <p class="lede">A campus advising agent delegates to the tutoring center's agent: a different department, a different codebase, a different owner. Press <b>Step</b> and watch the task move through its states. The amber state is the interesting one.</p>
   <div class="sim2">
     <div class="loopbox">
       <svg viewBox="0 0 460 296" aria-label="A2A task lifecycle">
@@ -171,7 +171,7 @@
       <div class="statepanel" id="simState"><span class="kicker">Task state</span></div>
     </div>
   </div>
-  <div class="callout blue"><b>Notice what crossed the boundary and what did not.</b> The advising agent never learned which model the tutoring agent uses, what its prompt says, or which database it queried. It learned one thing: the outcome. That opacity is the feature. It is what makes delegation between two organizations conceivable at all.</div>
+  <div class="callout blue">Notice what crossed the boundary and what did not. The advising agent never learned which model the tutoring agent uses, what its prompt says, or which database it queried. It learned one thing: the outcome. That opacity is the feature. It is what makes delegation between two organizations conceivable at all.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -219,7 +219,7 @@
 <section><div class="wrap">
   <div class="eyebrow">The decision</div>
   <h2>Do you even need a protocol here?</h2>
-  <p class="lede">The most common mistake this week is reaching for A2A when the honest answer is &ldquo;these are two nodes in a graph I control.&rdquo; Three options, one question that separates them: <b>am I crossing a boundary I do not own?</b></p>
+  <p class="lede">The most common mistake this week is reaching for A2A when the honest answer is &ldquo;these are two nodes in a graph I control.&rdquo; Three options, one question that separates them: am I crossing a boundary I do not own?</p>
   <div class="grid3">
     <div class="card"><span class="kicker">In-graph edges</span><h3 style="margin-top:6px">Same app, same deploy</h3>
       <p class="small">A researcher node and a writer node in one LangGraph. They share state, ship together, and are versioned together. Adding a protocol here buys you serialization overhead and a second failure mode in exchange for nothing. Use edges. <a class="doc" href="../week4/langgraph.html">Week 4 →</a></p>
@@ -229,14 +229,14 @@
     <div class="card"><span class="kicker">A2A</span><h3 style="margin-top:6px">You need someone else's judgment</h3>
       <p class="small">The work belongs to another team, vendor, or company: they own the data, the rules, and the accountability. You want an outcome without inheriting their internals, and you may need a back-and-forth to get there. That is delegation, and that is A2A's case.</p></div>
   </div>
-  <div class="callout red" style="margin-top:20px"><b>The manager's version of the same question:</b> a protocol boundary is also a <em>contract</em> boundary. Crossing an organizational line means someone must answer: who authenticates whom, what data is allowed to travel, what is logged on each side, who is liable when the delegated task fails, and how you audit an agent you cannot inspect. If nobody in the room can answer those, the technology choice is premature.</div>
+  <div class="callout red" style="margin-top:20px">The manager's version of the same question: a protocol boundary is also a <em>contract</em> boundary. Crossing an organizational line means someone must answer: who authenticates whom, what data is allowed to travel, what is logged on each side, who is liable when the delegated task fails, and how you audit an agent you cannot inspect. If nobody in the room can answer those, the technology choice is premature.</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">Discussion</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your procurement agent negotiates delivery dates with a supplier's agent over A2A. The supplier's agent commits to a date it cannot meet. What did your side need to have in place before that call, and what should it have logged?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox"><b>Before:</b> an authenticated, allow-listed counterparty (you delegate to agents you have onboarded, not to any card you find); an explicit scope for what the agent may agree to — a mandate with limits on price, quantity, and date; and a <b>human gate</b> on anything that becomes binding, which is the Week 5 rule surviving contact with another company. Autonomy is fine for &ldquo;ask when they could ship&rdquo;; it is not fine for &ldquo;accept.&rdquo; <b>Logged:</b> the Agent Card version you talked to (capability claims change), the task id, every message in both directions with timestamps, the artifact returned, which human approved what, and the mandate limits in force at the time. <b>The uncomfortable part:</b> none of that makes the supplier's agent honest. The protocol standardizes the conversation, not the counterparty — commitments across organizations still need contracts, penalties, and reconciliation, exactly as they did when humans made the call. Interoperability solves the plumbing; it does not solve trust.</div>
+  <div class="revealbox"><b>Before:</b> an authenticated, allow-listed counterparty (you delegate to agents you have onboarded, not to any card you find); an explicit scope for what the agent may agree to — a mandate with limits on price, quantity, and date; and a <b>human gate</b> on anything that becomes binding, which is the Week 5 rule surviving contact with another company. Autonomy is fine for &ldquo;ask when they could ship&rdquo;; it is not fine for &ldquo;accept.&rdquo; <b>Logged:</b> the Agent Card version you talked to (capability claims change), the task id, every message in both directions with timestamps, the artifact returned, which human approved what, and the mandate limits in force at the time. <b>The uncomfortable part:</b> none of that makes the supplier's agent honest. The protocol standardizes the conversation, not the counterparty; commitments across organizations still need contracts, penalties, and reconciliation, exactly as they did when humans made the call. Interoperability solves the plumbing; it does not solve trust.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -248,7 +248,7 @@
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/Fbr_Solax1w" title="Google Cloud Tech: Introduction to Agent2Agent (A2A) Protocol" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
     </div>
     <div class="card"><span class="kicker">Read it as a strategist</span>
-      <p class="small" style="margin-top:8px">This is a vendor introducing a standard it created, which is not a criticism. It is context. When you watch, separate three layers: <b>the problem</b> (agents from different builders cannot find or talk to each other), which is real and would exist without any vendor; <b>the design</b> (cards, tasks, opacity), which you can evaluate on its merits; and <b>the pitch</b> (that this particular design should be the industry's), which is a claim about the future, not a fact about the present.</p>
+      <p class="small" style="margin-top:8px">This is a vendor introducing a standard it created, which is context, not a criticism. When you watch, separate three layers: <b>the problem</b> (agents from different builders cannot find or talk to each other), which is real and would exist without any vendor; <b>the design</b> (cards, tasks, opacity), which you can evaluate on its merits; and <b>the pitch</b> (that this particular design should be the industry's), which is a claim about the future, not a fact about the present.</p>
       <p class="small" style="margin-top:10px">Whoever's format becomes the default captures the ecosystem around it. That is the platform economics behind every standards announcement you will read this year, and why open governance under a neutral foundation is a substantive move rather than a press-release detail.</p>
       <p class="small" style="margin-top:10px">Free deep dives: <a class="doc" href="https://github.com/microsoft/ai-agents-for-beginners" target="_blank" rel="noopener">Microsoft — AI Agents for Beginners ↗</a> · <a class="doc" href="https://huggingface.co/learn/agents-course" target="_blank" rel="noopener">Hugging Face Agents Course ↗</a></p>
     </div>

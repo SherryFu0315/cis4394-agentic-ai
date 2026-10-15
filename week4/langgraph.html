@@ -60,7 +60,7 @@
   <div class="eyebrow">03 · Hands-on</div>
   <h1>LangGraph — the loop you <em>own</em>.</h1>
   <p class="lede">LangGraph is an open-source library that makes the agent loop <b>explicit</b>: your agent is a graph of nodes connected by edges, passing a typed state. Nothing hidden, which is exactly why enterprises like it.</p>
-  <div class="callout blue" style="margin-top:18px"><b>Reference page: read it when you need it.</b> We build agents in plain Python first (<a href="../week5/local.html">Week 5, page 03</a>), and LangGraph gets a proper treatment in <b>Week 9</b>, where orchestrating several agents needs it. The code below uses a cloud model; to run the same graph on your own laptop with Ollama, only the model line changes — see Step 6 of the Week 5 lab.</div>
+  <div class="callout blue" style="margin-top:18px">Reference page: read it when you need it. We build agents in plain Python first (<a href="../week5/local.html">Week 5, page 03</a>), and LangGraph gets a proper treatment in <b>Week 9</b>, where orchestrating several agents needs it. The code below uses a cloud model; to run the same graph on your own laptop with Ollama, only the model line changes; see Step 6 of the Week 5 lab.</div>
 </div></header>
 
 <section><div class="wrap">
@@ -107,7 +107,7 @@
   <h2>A minimal agent in ~30 lines</h2>
   <div class="grid2" style="align-items:start">
     <div>
-      <p class="small"><b>1 · State, a tool, a model.</b> The state is a message list; the tool is a plain Python function with a docstring (that docstring <em>is</em> the tool's description to the model — Week 2's tool-inventory lesson).</p>
+      <p class="small">1 · State, a tool, a model. The state is a message list; the tool is a plain Python function with a docstring (that docstring <em>is</em> the tool's description to the model, Week 2's tool-inventory lesson).</p>
       <div class="codebox"><span class="cm"># pip install langgraph langchain-google-genai</span>
 <span class="ck">from</span> typing <span class="ck">import</span> Annotated
 <span class="ck">from</span> typing_extensions <span class="ck">import</span> TypedDict
@@ -194,11 +194,11 @@ g.add_conditional_edges(<span class="cs">"model"</span>, guarded_condition)</div
   <div class="eyebrow">Watch</div>
   <h2>Two short videos</h2>
   <div class="grid2">
-    <div class="card"><h3>Introduction to LangGraph (LangChain, official)</h3><p class="small">The free LangChain Academy course in 2½ minutes — nodes, edges, state, memory, human-in-the-loop. The full course is this week's optional deep dive.</p>
+    <div class="card"><h3>Introduction to LangGraph (LangChain, official)</h3><p class="small">The free LangChain Academy course in 2½ minutes: nodes, edges, state, memory, human-in-the-loop. The full course is this week's optional deep dive.</p>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/29XE10U6ooc" title="LangChain Academy: Introduction to LangGraph" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
       <p class="small" style="margin-top:10px"><a class="doc" href="https://academy.langchain.com/courses/intro-to-langgraph" target="_blank" rel="noopener">Free full course ↗</a></p>
     </div>
-    <div class="card"><h3>Why Agentic AI Fails (IBM Technology, 12 min)</h3><p class="small">Infinite loops, planning errors, and runaway agents — the failure modes that motivate everything on this page: stop conditions, guards, and reflection.</p>
+    <div class="card"><h3>Why Agentic AI Fails (IBM Technology, 12 min)</h3><p class="small">Infinite loops, planning errors, and runaway agents: the failure modes that motivate everything on this page: stop conditions, guards, and reflection.</p>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/D37Ijn2o5U0" title="IBM Technology: Why Agentic AI Fails" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
     </div>
   </div>
