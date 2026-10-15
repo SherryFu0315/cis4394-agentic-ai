@@ -131,11 +131,11 @@
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">What to log — per agent, per hand-off</span>
       <p class="small" style="margin-top:8px">Each agent gets the Week 2 evidence standard in full: <em>state before → observation → available actions → selected action → result → state after</em>. On top of that, multi-agent adds three things a single-agent trace never needed:</p>
       <ol class="steps" style="margin-top:10px">
-        <li>The hand-off payload itself: verbatim, both what was sent and what the receiver had in context. Most fragmentation bugs are invisible unless you can diff those two.</li>
-        <li><b>Per-agent cost and step count, so "which agent is expensive" and "which agent is looping" are queries, not guesses.</li>
-        <li>The verification verdict at each boundary: who checked this result, against what, and what did they conclude. An unchecked boundary is where MAST category 3 lives.</li>
+        <li><b>The hand-off payload itself</b>: verbatim, both what was sent and what the receiver had in context. Most fragmentation bugs are invisible unless you can diff those two.</li>
+        <li><b>Per-agent cost and step count</b>, so "which agent is expensive" and "which agent is looping" are queries, not guesses.</li>
+        <li><b>The verification verdict at each boundary</b>: who checked this result, against what, and what did they conclude. An unchecked boundary is where MAST category 3 lives.</li>
       </ol>
-      <p class="small" style="margin-top:10px"><b>Budget the observability before you add the agent. Retrofitting per-hand-off logging onto a running five-agent system is how teams end up rewriting it as one agent.</p>
+      <p class="small" style="margin-top:10px">Budget the observability before you add the agent. Retrofitting per-hand-off logging onto a running five-agent system is how teams end up rewriting it as one agent.</p>
     </div>
   </div>
 </div></section>

@@ -4,18 +4,18 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>01 · How Agents Get Attacked — CIS 4394 Week 10</title>
-<meta name="description" content="Not by breaking the model. By writing to it — in an email, a web page, a repo file, a job posting, a calendar invite, a tool result. The agent reads the…" />
+<meta name="description" content="Not by breaking the model. By writing to it: in an email, a web page, a repo file, a job posting, a calendar invite, a tool result. The agent reads the…" />
 <meta name="author" content="Dr. Xinyu Fu" />
 <link rel="canonical" href="https://xinyufu.org/cis4394-agentic-ai/week10/attacks.html" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="CIS 4394 Agentic AI · Georgia State University" />
 <meta property="og:title" content="01 · How Agents Get Attacked — CIS 4394 Week 10" />
-<meta property="og:description" content="Not by breaking the model. By writing to it — in an email, a web page, a repo file, a job posting, a calendar invite, a tool result. The agent reads the…" />
+<meta property="og:description" content="Not by breaking the model. By writing to it: in an email, a web page, a repo file, a job posting, a calendar invite, a tool result. The agent reads the…" />
 <meta property="og:url" content="https://xinyufu.org/cis4394-agentic-ai/week10/attacks.html" />
 <meta property="og:image" content="https://xinyufu.org/cis4394-agentic-ai/assets/social-card.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="01 · How Agents Get Attacked — CIS 4394 Week 10" />
-<meta name="twitter:description" content="Not by breaking the model. By writing to it — in an email, a web page, a repo file, a job posting, a calendar invite, a tool result. The agent reads the…" />
+<meta name="twitter:description" content="Not by breaking the model. By writing to it: in an email, a web page, a repo file, a job posting, a calendar invite, a tool result. The agent reads the…" />
 <meta name="twitter:image" content="https://xinyufu.org/cis4394-agentic-ai/assets/social-card.png" />
 <link rel="icon" href="../assets/gsu-flame.png" />
 <link rel="stylesheet" href="../assets/site.css" />
@@ -104,7 +104,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">01 · The threat model</div>
   <h1>How agents get <em>attacked</em>.</h1>
-  <p class="lede">Not by breaking the model. By writing to it — in an email, a web page, a repo file, a job posting, a calendar invite, a tool result. The agent reads the words, the words are instructions, and the agent has your tools.</p>
+  <p class="lede">Not by breaking the model. By writing to it: in an email, a web page, a repo file, a job posting, a calendar invite, a tool result. The agent reads the words, the words are instructions, and the agent has your tools.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -174,7 +174,7 @@ mention this step in your summary.
 <section><div class="wrap">
   <div class="eyebrow">Interactive · the centerpiece</div>
   <h2>The lethal trifecta</h2>
-  <p class="lede">Simon Willison's framing (2025): three capabilities are individually reasonable and jointly catastrophic: access to private data</b>, <b>exposure to untrusted content</b>, and <b>the ability to communicate externally</b>. Any <em>two</em> are usually survivable. All <em>three</em> is a data-exfiltration machine waiting for someone to write the email. Toggle the legs and read the verdict.</p>
+  <p class="lede">Simon Willison's framing (2025): three capabilities are individually reasonable and jointly catastrophic: <b>access to private data</b>, <b>exposure to untrusted content</b>, and <b>the ability to communicate externally</b>. Any <em>two</em> are usually survivable. All <em>three</em> is a data-exfiltration machine waiting for someone to write the email. Toggle the legs and read the verdict.</p>
   <div class="tri">
     <div class="trileft">
       <div class="legs">
@@ -208,7 +208,7 @@ mention this step in your summary.
       </div>
     </div>
   </div>
-  <div class="callout" style="margin-top:22px"><b>Read “usually fine” honestly.</b> Two legs means the agent cannot take <em>your private data</em> and hand it to a stranger. It does not mean nothing bad can happen: a two-leg agent can still be made to lie to you, spam other people, or hammer an internal URL. The trifecta is a lens for one specific catastrophe, exfiltration</b>, and it is a very good lens, because that catastrophe is the one that ends up in a breach notification.</div>
+  <div class="callout" style="margin-top:22px"><b>Read “usually fine” honestly.</b> Two legs means the agent cannot take <em>your private data</em> and hand it to a stranger. It does not mean nothing bad can happen: a two-leg agent can still be made to lie to you, spam other people, or hammer an internal URL. The trifecta is a lens for one specific catastrophe, <b>exfiltration</b>, and it is a very good lens, because that catastrophe is the one that ends up in a breach notification.</div>
 </div></section>
 
 <section><div class="wrap">
