@@ -50,7 +50,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">04 · Practice</div>
   <h1>Now make it <em>reliable</em>.</h1>
-  <p class="lede">Rewrite a failing prompt, run the hands-on with a real reliability check, learn from three famous chatbot disasters — and write the system prompt your capstone will use.</p>
+  <p class="lede">Rewrite a failing prompt, run the hands-on with a real reliability check, learn from three famous chatbot disasters, and write the system prompt your capstone will use.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -106,7 +106,7 @@ output: {"sentiment":"mixed","one_line_summary":"Great blender, slow shipping","
       <p class="small" style="margin-top:8px">Run the <b>same document five times</b>:</p>
       <ul style="padding-left:18px;font-size:14.5px;line-height:1.9;margin:8px 0 0">
         <li><b>Consistency:</b> are all five outputs identical JSON?</li>
-        <li><b>Accuracy:</b> spot-check the values against the source — a prompt can be perfectly consistent and perfectly wrong.</li>
+        <li><b>Accuracy:</b> spot-check the values against the source. A prompt can be perfectly consistent and perfectly wrong.</li>
       </ul>
       <p class="small" style="margin-top:10px">Track both numbers. This “run it k times” habit becomes formal in Week 8 — it’s called <b>pass^k</b>, and your capstone’s eval harness is built on it.</p>
     </div>
@@ -122,7 +122,7 @@ output: {"sentiment":"mixed","one_line_summary":"Great blender, slow shipping","
     <div class="rail" style="border-top-color:var(--red)"><span class="kicker">Feb 2024</span><h3 style="margin-top:6px">Air Canada pays up</h3><p class="small">A tribunal held Air Canada <b>liable</b> for a refund policy its chatbot invented — the airline argued the bot was “responsible for its own actions” and lost. Invented policy + no human gate on binding claims = real legal cost.</p><p class="small" style="margin-top:8px"><a class="doc" href="https://arstechnica.com/tech-policy/2024/02/air-canada-must-honor-refund-policy-invented-by-airlines-chatbot/" target="_blank" rel="noopener">Ars Technica ↗</a></p></div>
   </div>
   <div class="grouptask" style="margin-top:22px"><span class="gk">👥 Group task · Think-pair-share · 5 minutes</span>
-    <p>Three questions: <b>1)</b> Which of this week’s techniques would have prevented the $1 offer? <b>2)</b> Where is the line between a helpfully flexible bot and an unsafe one — and who owns that line? <b>3)</b> What is the <em>one</em> reliability check you would demand before launch?</p>
+    <p>Three questions: <b>1)</b> Which of this week’s techniques would have prevented the $1 offer? <b>2)</b> Where is the line between a helpfully flexible bot and an unsafe one, and who owns that line? <b>3)</b> What is the <em>one</em> reliability check you would demand before launch?</p>
     <p class="prod"><b>Produce:</b> one answer per question; we’ll cold-call pairs.</p>
   </div>
   <div class="card" style="margin-top:14px">
@@ -147,7 +147,7 @@ output: {"sentiment":"mixed","one_line_summary":"Great blender, slow shipping","
   </div>
   <h3 style="margin-top:26px">So which one do you imitate? Both — for different jobs</h3>
   <p class="small" style="max-width:820px">Three questions separate them: <b>who writes it, when it loads, and who wins a conflict.</b></p>
-  <div style="overflow:auto;margin-top:12px"><table class="plain"><thead><tr><th></th><th>System prompt — imitate <code>gpt_5_2_prompt.md</code></th><th>AGENTS.md-style file — you <em>design the slot</em></th></tr></thead><tbody>
+  <div style="overflow:auto;margin-top:12px"><table class="plain"><thead><tr><th></th><th>System prompt: imitate <code>gpt_5_2_prompt.md</code></th><th>AGENTS.md-style file — you <em>design the slot</em></th></tr></thead><tbody>
     <tr><td><b>Who writes it</b></td><td>The developer — <b>you</b></td><td>Your agent’s <b>user</b> / the project it works in</td></tr>
     <tr><td><b>When it loads</b></td><td>Built in; present on every run</td><td>Read from the environment at <b>runtime</b></td></tr>
     <tr><td><b>What goes in it</b></td><td>Role, scope, refusal &amp; approval rules, output format — the constitution</td><td>This project’s / this user’s specifics — the project handbook</td></tr>
@@ -161,8 +161,8 @@ output: {"sentiment":"mixed","one_line_summary":"Great blender, slow shipping","
   <div class="eyebrow">Watch</div>
   <h2>This week’s videos</h2>
   <div class="videogrid2">
-    <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/ysPbXH0LpIE" title="Anthropic — Prompting 101" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Anthropic — Prompting 101 (25 min)</b>The anchor video: the same anatomy and techniques, from the people who write system prompts for a living.</div></div>
-    <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/T9aRN5JkmL8" title="Anthropic — AI prompt engineering: a deep dive" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Anthropic — Prompt engineering: a deep dive (77 min)</b>Optional: a roundtable with Anthropic prompt engineers for those who want the full picture.</div></div>
+    <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/ysPbXH0LpIE" title="Anthropic — Prompting 101" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Anthropic: Prompting 101 (25 min)</b>The anchor video: the same anatomy and techniques, from the people who write system prompts for a living.</div></div>
+    <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/T9aRN5JkmL8" title="Anthropic — AI prompt engineering: a deep dive" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Anthropic: Prompt engineering: a deep dive (77 min)</b>Optional: a roundtable with Anthropic prompt engineers for those who want the full picture.</div></div>
   </div>
 </div></section>
 
@@ -179,7 +179,7 @@ output: {"sentiment":"mixed","one_line_summary":"Great blender, slow shipping","
     <li><b>Structure is the coupling point</b> — fixed JSON is what lets a model plug into a system.</li>
     <li><b>Context beats cleverness</b> — the right facts in the window outperform a fancier phrasing.</li>
     <li><b>The window is a budget</b> — curate it; stuffing causes context rot.</li>
-    <li><b>Match technique to failure</b> — and turn the temperature down before you automate.</li>
+    <li><b>Match technique to failure</b>, and turn the temperature down before you automate.</li>
     <li><b>Prompt and context first, fine-tune last</b> — climb the ladder in order.</li>
   </ol>
   <div class="callout" style="margin-top:22px"><b>Next week:</b> Reasoning, Planning &amp; the Agent Loop — we meet <b>LangGraph</b> and make the model act, not just answer. GA1 is due; the capstone proposal releases. <i>(Quiz 1 covers Weeks 1–3 readings — listed on the <a class="doc" href="../week2/summary.html#quiz">Week 2 Summary page</a>.)</i><br /><br />
@@ -198,7 +198,7 @@ output: {"sentiment":"mixed","one_line_summary":"Great blender, slow shipping","
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 3 — Prompting &amp; Context Engineering<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 3: Prompting &amp; Context Engineering<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

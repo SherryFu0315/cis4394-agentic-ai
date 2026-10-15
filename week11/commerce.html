@@ -80,11 +80,11 @@
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">1 · Irreversibility</span>
       <p class="small" style="margin-top:8px">Your retry logic was built on an assumption that just broke: that doing the thing twice is harmless. It is not. A timeout on <code>place_order()</code> is genuinely ambiguous — did the order go through? Retrying blindly is how one purchase becomes two. The fix has a name (<b>idempotency</b>) and it lives on <a class="doc" href="deploy.html">page 02</a>.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">2 · Liability</span>
-      <p class="small" style="margin-top:8px">When an agent buys the wrong thing, somebody eats the cost: the customer, the merchant, the agent's operator, or the payment provider. That allocation is decided by contracts and by <em>what can be proven</em> — which is why “what did the user authorize?” must be a question the system can answer, not a question the lawyers argue about afterward.</p></div>
+      <p class="small" style="margin-top:8px">When an agent buys the wrong thing, somebody eats the cost: the customer, the merchant, the agent's operator, or the payment provider. That allocation is decided by contracts and by <em>what can be proven</em>, which is why “what did the user authorize?” must be a question the system can answer, not a question the lawyers argue about afterward.</p></div>
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">3 · Identity &amp; authorization</span>
       <p class="small" style="margin-top:8px">Two different questions, often confused. <b>Identity:</b> is this really the customer's agent? <b>Authorization:</b> is this specific purchase inside what the customer allowed — this item, this amount, this window? A credential proves the first. Only an explicit record of the user's instruction proves the second.</p></div>
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">4 · The merchant's problem</span>
-      <p class="small" style="margin-top:8px">From the store's side, a helpful agent and a scraping bot look similar: automated traffic, no human rhythm, no mouse movement. Years of fraud tooling was tuned to <em>block</em> exactly that pattern. Merchants now need a way to tell “a customer's agent, acting with permission” apart from abuse — and to keep the sale rather than refuse it.</p></div>
+      <p class="small" style="margin-top:8px">From the store's side, a helpful agent and a scraping bot look similar: automated traffic, no human rhythm, no mouse movement. Years of fraud tooling was tuned to <em>block</em> exactly that pattern. Merchants now need a way to tell “a customer's agent, acting with permission” apart from abuse, and to keep the sale rather than refuse it.</p></div>
   </div>
   <div class="callout" style="margin-top:20px"><b>Notice the direction of travel.</b> Every one of these four problems is solved by making something explicit that a human click used to leave implicit: what was authorized, by whom, for how much, and until when.</div>
 </div></section>
@@ -146,7 +146,7 @@
     <tr><td>How consent is carried</td><td>Mandates as verifiable credentials (intent → cart → payment), signed and checkable after the fact.</td><td>The buyer's confirmed cart plus a shared payment token scoped to that purchase.</td></tr>
     <tr><td>Who most needs to care</td><td>Issuers, networks, wallets, and anyone who must answer “was this authorized?”</td><td>Merchants and agent platforms wiring up a working buy button inside a conversation.</td></tr>
     <tr><td>Openness</td><td>Published openly by Google with partner input; check the current specification before building.</td><td>Specification published on an open repository under Apache-2.0; check the repo for the current version.</td></tr>
-    <tr><td>Maturity (as of this course)</td><td colspan="2"><b>Both are early.</b> Both were announced in 2025, both are still being revised, and they overlap in places and complement each other in others. Nothing here says one has won — and any page that tells you which one won is guessing.</td></tr>
+    <tr><td>Maturity (as of this course)</td><td colspan="2"><b>Both are early.</b> Both were announced in 2025, both are still being revised, and they overlap in places and complement each other in others. Nothing here says one has won, and any page that tells you which one won is guessing.</td></tr>
   </table>
   </div>
   <div class="callout red" style="margin-top:20px"><b>How to talk about this in an interview (or a memo).</b> Say what each protocol tries to make checkable, say that both are new and moving, and say what you would do about it: build the <em>capability</em> — an explicit record of authorization, a scoped payment credential, a receipt that links back to both — behind an interface you can re-point. Betting your architecture on one 2025 standard is how you inherit a migration. Never quote adoption figures you have not read in the primary source this week; in a fast-moving standards race those numbers go stale faster than anything else on the page.</div>
@@ -161,9 +161,9 @@
     <tr><th>Control</th><th>What it stops</th><th>Where it lives</th></tr>
     <tr><td><b>Spending cap</b></td><td>The runaway: an agent that misreads a price, a quantity, or a loop and spends far past what anyone intended. Caps come in layers — per transaction, per day, per month.</td><td>The harness and the payment credential. Enforced before the tool runs, and again by whatever issues the funds.</td></tr>
     <tr><td><b>Merchant allow-list</b></td><td>Purchases from places nobody vetted — including the storefront that a poisoned search result invented. If it is not on the list, the call fails.</td><td>Tool configuration. The agent cannot add to its own list.</td></tr>
-    <tr><td><b>Per-transaction mandate</b></td><td>Scope creep between approval and execution: an approval for one item at one price being reused for a different, larger purchase.</td><td>The authorization record that travels with the payment — the idea AP2 is trying to standardize.</td></tr>
+    <tr><td><b>Per-transaction mandate</b></td><td>Scope creep between approval and execution: an approval for one item at one price being reused for a different, larger purchase.</td><td>The authorization record that travels with the payment. The idea AP2 is trying to standardize.</td></tr>
     <tr><td><b>Receipt</b></td><td>Silent action. Every completed purchase produces an artifact a human can read, tied to the approval that permitted it.</td><td>Your system of record, plus the customer's inbox.</td></tr>
-    <tr><td><b>Audit trail</b></td><td>Unanswerable questions later: what did the agent see, what else could it have chosen, why this vendor, who approved it.</td><td>Trace storage — the Week 2 evidence standard, retained for as long as a dispute could arrive.</td></tr>
+    <tr><td><b>Audit trail</b></td><td>Unanswerable questions later: what did the agent see, what else could it have chosen, why this vendor, who approved it.</td><td>Trace storage: the Week 2 evidence standard, retained for as long as a dispute could arrive.</td></tr>
   </table>
   </div>
   <h2 style="margin-top:38px">The spend ladder</h2>
@@ -171,7 +171,7 @@
   <div class="ladder">
     <div class="rung"><div class="t">Auto-run<span>reversible, routine, small</span></div><p>Reading a catalog, checking inventory, pricing options, drafting the cart. Nothing here costs anything to undo, so gating it only teaches people to stop reading approvals. Log it; do not interrupt for it.</p></div>
     <div class="rung"><div class="t">Capped<span>spends, but bounded</span></div><p>A repeat purchase of a previously approved item, from an allow-listed vendor, under a fixed per-transaction and monthly limit. The agent may act, but the limit is enforced in code, and hitting the cap raises an alert rather than silently failing.</p></div>
-    <div class="rung"><div class="t">Approval required<span>irreversible, novel, or large</span></div><p>New vendor, new item, amount above the cap, anything that touches a contract or a subscription. The agent proposes; a named human approves. This rung is small on purpose — a long approval queue is an approval queue nobody reads.</p></div>
+    <div class="rung"><div class="t">Approval required<span>irreversible, novel, or large</span></div><p>New vendor, new item, amount above the cap, anything that touches a contract or a subscription. The agent proposes; a named human approves. This rung is small on purpose. A long approval queue is an approval queue nobody reads.</p></div>
   </div>
   <div class="callout" style="margin-top:20px"><b>The approval screen is part of the control.</b> A gate that shows “Agent wants to place an order — Approve?” is theatre. Show the decision: the exact items and quantities, the total, the vendor and whether it is allow-listed, the budget before and after, which instruction this purchase is meant to satisfy, and what the agent will do instead if you decline.</div>
 </div></section>
@@ -197,7 +197,7 @@
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 11 — Agentic Commerce<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 11: Agentic Commerce<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

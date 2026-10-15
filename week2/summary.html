@@ -83,10 +83,10 @@
         history.append(result)                              # layer 6
     else:
         return response                                     # stop condition</div>
-    <p class="small" style="margin-top:10px">The real Rust adds streaming, cancellation, compaction, errors, parallel tools — but architecturally, <b>that is Codex</b>. The single takeaway of Week 2: <b>the LLM is only one component of the agent.</b></p>
+    <p class="small" style="margin-top:10px">The real Rust adds streaming, cancellation, compaction, errors, parallel tools, but architecturally, <b>that is Codex</b>. The single takeaway of Week 2: <b>the LLM is only one component of the agent.</b></p>
   </div>
 
-  <div class="callout blue" style="margin-top:18px"><b>Want to read the repo yourself? Go in this order:</b> <code>core/src/session/turn.rs</code> (the loop) → <code>core/src/tools/</code> → <code>protocol/…/base_instructions/default.md</code> → <code>core/src/session/turn_context.rs</code> → <code>core/src/exec_policy.rs</code> → config / history / memories. Loop first — or you’ll drown in infrastructure.</div>
+  <div class="callout blue" style="margin-top:18px"><b>Want to read the repo yourself? Go in this order:</b> <code>core/src/session/turn.rs</code> (the loop) → <code>core/src/tools/</code> → <code>protocol/…/base_instructions/default.md</code> → <code>core/src/session/turn_context.rs</code> → <code>core/src/exec_policy.rs</code> → config / history / memories. Loop first, or you’ll drown in infrastructure.</div>
 </div></section>
 
 <section id="ga1"><div class="wrap">
@@ -107,7 +107,7 @@
     <div class="card">
       <h3>The rules</h3>
       <ul style="padding-left:18px;font-size:14.5px;margin:14px 0 0;line-height:1.9">
-        <li><b>1–6 members.</b> Working solo is allowed — you still must join a group (of one).</li>
+        <li><b>1–6 members.</b> Working solo is allowed. You still must join a group (of one).</li>
         <li><b>Join the group you mean to join.</b> Coordinate with your teammates first — don’t drop into a group of strangers, and don’t “save seats” in multiple groups.</li>
         <li><b>Your own section only.</b> Groups don’t transfer between sections.</li>
         <li><b>Deadline:</b> GA1 is due <b>Tue Sept 15</b> (Wednesday section) / <b>Wed Sept 16</b> (Thursday section), 11:59 pm EST — enroll well before then.</li>
@@ -132,7 +132,7 @@
           <li>Paste the full starter prompt from <code>prompts/opal_starter_prompt.md</code> (starter kit).</li>
           <li>Add three inputs by pasting the files as text: <code>resume.md</code> (facts), <code>preferences.md</code> (constraints), <code>data/jobs.json</code> (jobs).</li>
           <li>Build the flow: an <b>evaluate</b> step → <b>routing</b> (recommend / investigate / down-rank / ask) → a <b>user-input step</b> for Approve / Edit / Reject → a <b>draft</b> step that only runs after approval.</li>
-          <li>Click <b>Preview</b> to run; test with J001 first, then all four cases. Screenshot every run — those are your evidence.</li>
+          <li>Click <b>Preview</b> to run; test with J001 first, then all four cases. Screenshot every run: those are your evidence.</li>
         </ol>
         <p class="small" style="margin-top:10px">Illustrated official guide: <a class="doc" href="https://developers.google.com/opal" target="_blank" rel="noopener">developers.google.com/opal ↗</a> · account requirements: <a class="doc" href="https://support.google.com/gemini/answer/16802014" target="_blank" rel="noopener">Google Help ↗</a></p>
       </div>
@@ -157,8 +157,8 @@
         <p class="small" style="margin-top:10px">Illustrated official guide: <a class="doc" href="https://docs.langchain.com/langsmith/fleet" target="_blank" rel="noopener">Fleet docs ↗</a> · free hands-on course: <a class="doc" href="https://academy.langchain.com/courses/quickstart-agent-builder" target="_blank" rel="noopener">LangChain Academy ↗</a></p>
       </div>
       <div>
-        <div class="videocard" style="margin-bottom:12px"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/t2EYd57rvQg" title="Introducing LangSmith Fleet" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Official: Introducing Fleet (7 min)</b>LangChain, Mar 2026 — what Fleet is and the core flow.</div></div>
-        <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/97iiCrHPOpw" title="Get Started with LangSmith Agent Builder" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Official: hands-on getting started (7 min)</b>LangChain — recorded under the old name “Agent Builder”; same product, some labels have changed.</div></div>
+        <div class="videocard" style="margin-bottom:12px"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/t2EYd57rvQg" title="Introducing LangSmith Fleet" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Official: Introducing Fleet (7 min)</b>LangChain, Mar 2026: what Fleet is and the core flow.</div></div>
+        <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/97iiCrHPOpw" title="Get Started with LangSmith Agent Builder" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Official: hands-on getting started (7 min)</b>LangChain: recorded under the old name “Agent Builder”; same product, some labels have changed.</div></div>
       </div>
     </div>
   </div>
@@ -182,7 +182,7 @@ adk web                     # dev UI + traces at localhost:8000</div>
       </div>
       <div>
         <div class="videocard" style="margin-bottom:12px"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/zgrOwow_uTQ" title="Introducing Agent Development Kit" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Official: Introducing ADK (9 min)</b>Google for Developers.</div></div>
-        <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/44C8u0CDtSo" title="Getting started with Agent Development Kit" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Official: getting started (19 min)</b>Google for Developers — from install to a working agent.</div></div>
+        <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/44C8u0CDtSo" title="Getting started with Agent Development Kit" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Official: getting started (19 min)</b>Google for Developers: from install to a working agent.</div></div>
       </div>
     </div>
   </div>

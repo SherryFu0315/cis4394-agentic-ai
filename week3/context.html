@@ -60,7 +60,7 @@
   <div class="eyebrow">The constraint</div>
   <h2>The context window is a budget</h2>
   <div class="grid2" style="align-items:start">
-    <div class="card"><p class="small">A <b>token</b> is roughly ¾ of an English word. The <b>context window</b> is the fixed number of tokens the model can attend to per call — and <em>everything</em> competes for it: the system prompt, conversation history, retrieved data, the current question, and room for the answer itself.</p>
+    <div class="card"><p class="small">A <b>token</b> is roughly ¾ of an English word. The <b>context window</b> is the fixed number of tokens the model can attend to per call, and <em>everything</em> competes for it: the system prompt, conversation history, retrieved data, the current question, and room for the answer itself.</p>
     <p class="small" style="margin-top:8px">HF Agents Course tie-in (this week’s reading): context is the agent’s <b>working memory</b>. And like any working memory: more is not better.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Context rot</span><p class="small" style="margin-top:8px">As the window fills with long or noisy input, accuracy and instruction-following <b>degrade</b>: models “lose the middle,” forget rules stated early, and drift — documented across 2024–25 long-context evaluations, including Chroma’s <i>Context Rot</i> report (2025).</p><p class="small" style="margin-top:8px"><b>Practical rule:</b> put the most important instructions first <em>and</em> last, and test at the lengths you’ll run.</p></div>
   </div>
@@ -70,7 +70,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive · Exercise B preview</div>
   <h2>The packing game: fit the agent in 4,000 tokens</h2>
-  <p class="lede">You’re shipping a customer-support agent. Everything below “wants” to be in context — but it totals far more than your 4,000-token budget (you must leave <b>≥500 tokens</b> of room for the answer). For each item choose <b>Keep · Summarize · Drop</b>, then check your packing.</p>
+  <p class="lede">You’re shipping a customer-support agent. Everything below “wants” to be in context, but it totals far more than your 4,000-token budget (you must leave <b>≥500 tokens</b> of room for the answer). For each item choose <b>Keep · Summarize · Drop</b>, then check your packing.</p>
   <div class="packer" id="packer"></div>
 </div></section>
 
@@ -81,7 +81,7 @@
     <div class="card"><p class="small">Anthropic engineer Thariq Shihipar reported removing <b>over 80%</b> of <b>Claude Code’s</b> system prompt for Claude 5–generation models — with <b>no measurable loss on coding evals</b> (Cat Wu &amp; Thariq Shihipar, Claude Code team, interviewed at the AI Engineer World’s Fair, July 2026). What got cut: examples (“it was just more creative than the examples we gave it”), “do not do this” rules, and absolute instructions that were only 90% true.</p>
     <p class="small" style="margin-top:8px"><b>Read it carefully:</b> this is a <em>capability-driven simplification</em> — “the model got better, so the prompt could get shorter.” It is NOT “prompts don’t matter.” And it’s Claude Code’s prompt (the CLI coding agent), not the Claude.ai app — older models kept the full prompt. Viral restatements over-generalize; cite the primary interview.</p>
     <p class="small" style="margin-top:8px"><a class="doc" href="https://simonwillison.net/2026/Jul/21/cat-and-thariq/" target="_blank" rel="noopener">The interview write-up (Simon Willison, Jul 2026) ↗</a> &nbsp;·&nbsp; <a class="doc" href="https://the-decoder.com/anthropic-says-it-cut-80-percent-of-claude-codes-system-prompt-because-fable-5-models-want-a-smaller-system-prompt/" target="_blank" rel="noopener">News coverage (The Decoder) ↗</a></p></div>
-    <div class="card" style="background:#101319;border-color:#101319"><div style="font-size:clamp(40px,4.5vw,60px);font-weight:700;color:#fff">&gt;80%</div><p class="small" style="color:#b9bdc7">of the system prompt removed, no measurable eval loss — as reported, 2026.</p>
+    <div class="card" style="background:#101319;border-color:#101319"><div style="font-size:clamp(40px,4.5vw,60px);font-weight:700;color:#fff">&gt;80%</div><p class="small" style="color:#b9bdc7">of the system prompt removed, no measurable eval loss, as reported, 2026.</p>
     <p class="small" style="color:#b9bdc7;margin-top:10px"><b style="color:#fff">Three takeaways for your prompts:</b><br />1 · Less can beat more.<br />2 · Match scaffolding to capability — don’t over-constrain a strong model.<br />3 · Curate, don’t stuff — context rot is real.</p></div>
   </div>
 </div></section>
@@ -93,7 +93,7 @@
     <tr><td><b>What changes</b></td><td>What the model sees</td><td>The model’s weights</td></tr>
     <tr><td><b>Cost &amp; speed</b></td><td>Free · instant</td><td>Data + compute + upkeep · weeks</td></tr>
     <tr><td><b>Data needed</b></td><td>None (a few examples)</td><td>Hundreds+ curated examples</td></tr>
-    <tr><td><b>Best for</b></td><td>Almost everything — start here</td><td>Consistent style at massive scale · cutting prompt cost · deep domain behavior</td></tr>
+    <tr><td><b>Best for</b></td><td>Almost everything: start here</td><td>Consistent style at massive scale · cutting prompt cost · deep domain behavior</td></tr>
   </tbody></table></div>
   <div class="callout" style="margin-top:20px"><b>The order:</b> prompt → few-shot → better context / RAG → fine-tune, <b>last</b>. Every rung you skip is money and weeks you didn’t need to spend.</div>
 </div></section>
@@ -106,7 +106,7 @@
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 3 — Prompting &amp; Context Engineering<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 3: Prompting &amp; Context Engineering<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

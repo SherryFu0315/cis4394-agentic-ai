@@ -48,7 +48,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Transfer</div>
   <h2>Remove “coding” from the architecture</h2>
-  <p class="lede">Fill in the right column yourself first — then compare with a strong mapping. This table <b>is</b> your architecture diagram deliverable, in draft form.</p>
+  <p class="lede">Fill in the right column yourself first, then compare with a strong mapping. This table <b>is</b> your architecture diagram deliverable, in draft form.</p>
   <div class="transfer">
     <div class="domain"><h3>Codex</h3>
       <div class="mapping">
@@ -85,7 +85,7 @@
     <div class="rail"><h3>Job text is untrusted</h3><p class="small">Job postings are data, never instructions. Ignore embedded requests to fabricate qualifications, reveal data, email recruiters, or override system rules.</p></div>
     <div class="rail"><h3>Real HITL pause</h3><p class="small">Before any final external-facing material: pause for <b>Approve / Edit / Reject</b>. Sending, submitting, posting, or contacting recruiters is prohibited in this lab.</p></div>
   </div>
-  <div class="callout red"><b>Hard rule:</b> the agent may evaluate, rank, and draft — but it never fabricates a qualification, and it never takes an external action.</div>
+  <div class="callout red"><b>Hard rule:</b> the agent may evaluate, rank, and draft, but it never fabricates a qualification, and it never takes an external action.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -107,7 +107,7 @@
       <div class="body">
         <span class="badge blue">No code</span> <span class="badge plain">$0 tier</span>
         <p style="margin-top:12px">Production-like builder with tools, approvals, memory, and inspectable traces.</p>
-        <p class="small">Best for: observability — its run traces are your evidence, for free.</p>
+        <p class="small">Best for: observability: its run traces are your evidence, for free.</p>
       </div>
       <div class="pre"><b>Best traces.</b> Watch the free-tier run budget (see <a class="doc" href="prep.html">Prep</a>).</div>
     </div>
@@ -121,16 +121,16 @@
       <div class="pre"><b>Guaranteed fallback.</b> The baseline runs offline with zero accounts.</div>
     </div>
   </div>
-  <div class="callout"><b>Starter kit (from iCollege):</b> unzip it and work in the <b>extracted</b> <code>job_agent_starter</code> folder — not the ZIP preview. It contains <code>resume.md</code>, <code>preferences.md</code>, <code>data/jobs.json</code> (six postings, untrusted data), <code>prompts/</code> for all three paths, <code>tests/test_cases.md</code>, and the Python baseline.</div>
+  <div class="callout"><b>Starter kit (from iCollege):</b> unzip it and work in the <b>extracted</b> <code>job_agent_starter</code> folder, not the ZIP preview. It contains <code>resume.md</code>, <code>preferences.md</code>, <code>data/jobs.json</code> (six postings, untrusted data), <code>prompts/</code> for all three paths, <code>tests/test_cases.md</code>, and the Python baseline.</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">Step by step</div>
   <h2>Lab instructions</h2>
-  <p class="lede">Pick your path’s tab and work down the list. Interface labels can drift on live platforms — if a menu name differs, use the current equivalent.</p>
+  <p class="lede">Pick your path’s tab and work down the list. Interface labels can drift on live platforms, if a menu name differs, use the current equivalent.</p>
 
   <div class="grouptask"><span class="gk">👥 Group roles · For the whole build sprint</span>
-    <p>Before you start, assign: <b>Driver</b> (hands on the keyboard), <b>Navigator</b> (reads the steps aloud and watches the guardrails), <b>Recorder</b> (captures traces and screenshots <em>as you go</em> — not at the end). Rotate if you like.</p>
+    <p>Before you start, assign: <b>Driver</b> (hands on the keyboard), <b>Navigator</b> (reads the steps aloud and watches the guardrails), <b>Recorder</b> (captures traces and screenshots <em>as you go</em>, not at the end). Rotate if you like.</p>
     <p class="prod"><b>Why the Recorder matters:</b> their captures are deliverables #8–9. Evidence you didn’t record didn’t happen.</p>
   </div>
   <div class="pathtabs">
@@ -174,7 +174,7 @@
     <p style="margin:16px 0 6px;font-weight:650">First, run the supplied baseline:</p>
     <div class="codebox" style="margin-top:8px">cd job_agent_starter
 python3 src/job_agent_starter.py</div>
-    <p class="small">Read <code>outputs/ranked_jobs.md</code> and <code>outputs/trace.md</code>. The starter works — but it is <b>deliberately NOT an agent</b>: fixed sequence, no runtime action choice, no real HITL pause. Your job is to transform it.</p>
+    <p class="small">Read <code>outputs/ranked_jobs.md</code> and <code>outputs/trace.md</code>. The starter works, but it is <b>deliberately NOT an agent</b>: fixed sequence, no runtime action choice, no real HITL pause. Your job is to transform it.</p>
     <ol class="steps">
       <li>Read <code>README.md</code> and <code>AGENTS.md</code>, then inspect the baseline outputs.</li>
       <li>Run <code>codex</code> from the <code>job_agent_starter</code> folder and paste <code>prompts/codex_starter_prompt.md</code>.</li>
@@ -206,10 +206,10 @@ while not state.done:
   <div class="eyebrow">Field study</div>
   <h2>The real-world version</h2>
   <p class="lede">While you build the classroom version, know that a production version of this exact idea went viral. <a class="doc" href="https://github.com/MadsLorentzen/ai-job-search" target="_blank" rel="noopener">MadsLorentzen/ai-job-search ↗</a> (~40k stars, Sept 2026) is a job-application framework built <b>on top of Claude Code</b>: <code>/scrape</code> job boards, <code>/apply</code> with a tailored LaTeX CV and cover letter, <code>/interview</code> prep. Its author used it for his own search — 69 tailored applications, 20 first interviews, one signed offer — and was hired as an AI engineer in June 2026. This assignment is not a toy; it is the training run for a real skill.</p>
-  <div class="bigq"><span class="qlabel">Discussion question</span>Run our agency test on this 40,000-star project: which parts are an agent — and which are a workflow?</div>
+  <div class="bigq"><span class="qlabel">Discussion question</span>Run our agency test on this 40,000-star project: which parts are an agent, and which are a workflow?</div>
   <button class="revealbtn">What a strong answer covers</button>
   <div class="revealbox">
-    <b>Mostly a workflow — by our own test.</b> <code>/scrape → /apply → /interview</code> is a predefined pipeline, and a <b>human triggers every stage</b>: the human owns the outer control flow. Its drafter → reviewer → revise cycle is the <b>evaluator–optimizer</b> pattern from Week 1. The agentic moments live <em>inside</em> each stage, where Claude Code decides which files to read and how to tailor.
+    <b>Mostly a workflow: by our own test.</b> <code>/scrape → /apply → /interview</code> is a predefined pipeline, and a <b>human triggers every stage</b>: the human owns the outer control flow. Its drafter → reviewer → revise cycle is the <b>evaluator–optimizer</b> pattern from Week 1. The agentic moments live <em>inside</em> each stage, where Claude Code decides which files to read and how to tailor.
     <br /><br />The precise description: <b>a workflow of agentic steps, with a human as the outer loop.</b> And that is a <em>feature</em>, not a flaw — real applications are high-stakes, irreversible, external actions, so the author deliberately set the autonomy dial <b>low</b> exactly where our lab puts its human gate. Forty thousand people starred the design discipline this course grades you on.
   </div>
   <div class="callout red" style="margin-top:20px"><b>Boundary:</b> that framework scrapes real job boards and produces real applications — precisely what this lab prohibits. Learn the design discipline on fictional data first; drive the real thing later, on your own time and judgment. Build yours first, then go read that repo — you’ll recognize every folder.</div>
@@ -223,7 +223,7 @@ while not state.done:
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 2 — Learning from the Best: Unpacking Coding Agents<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 2: Learning from the Best: Unpacking Coding Agents<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

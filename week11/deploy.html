@@ -69,7 +69,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">02 · From notebook to production</div>
   <h1>Shipping an <em>agent</em>.</h1>
-  <p class="lede">Two halves, one lesson. First: computer-use agents — the most general thing an agent can do, and the least reliable, according to the benchmarks built to measure it. Then: what changes when a working notebook becomes something that runs unattended, costs money per run, and must be turned off at 2 a.m. by someone who did not write it.</p>
+  <p class="lede">Two halves, one lesson. First: computer-use agents: the most general thing an agent can do, and the least reliable, according to the benchmarks built to measure it. Then: what changes when a working notebook becomes something that runs unattended, costs money per run, and must be turned off at 2 a.m. by someone who did not write it.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -162,8 +162,8 @@ can operate.</div>
 <section><div class="wrap">
   <div class="eyebrow">The other half</div>
   <h2>What changes from notebook to production</h2>
-  <div class="shift"><span><span class="b">One user — you</span></span><span class="ar">→</span><span><span class="b">Thousands of runs</span>, concurrent, at hours nobody chose</span></div>
-  <div class="shift"><span><span class="b">You are watching every run</span></span><span class="ar">→</span><span><span class="b">Nobody is watching</span> — unless you built something that watches</span></div>
+  <div class="shift"><span><span class="b">One user: you</span></span><span class="ar">→</span><span><span class="b">Thousands of runs</span>, concurrent, at hours nobody chose</span></div>
+  <div class="shift"><span><span class="b">You are watching every run</span></span><span class="ar">→</span><span><span class="b">Nobody is watching</span>, unless you built something that watches</span></div>
   <div class="shift"><span><span class="b">The happy path</span>, on inputs you picked</span><span class="ar">→</span><span><span class="b">Adversarial and weird inputs</span>, including deliberate ones</span></div>
   <div class="shift"><span><span class="b">Cost is invisible</span> — a free tier, a few calls</span><span class="ar">→</span><span><span class="b">Cost is metered</span> and shows up on somebody's budget line</span></div>
   <div class="shift"><span><span class="b">"It worked"</span></span><span class="ar">→</span><span><span class="b">A commitment</span>: how often, how fast, and what happens when it does not</span></div>
@@ -174,7 +174,7 @@ can operate.</div>
 <section><div class="wrap">
   <div class="eyebrow">Money</div>
   <h2>What does one run cost?</h2>
-  <p class="lede">Not “what does the model cost per million tokens” — that is a price, not a cost. The number a manager needs is the cost of one <em>completed</em> task, which is a different and larger thing.</p>
+  <p class="lede">Not “what does the model cost per million tokens”. That is a price, not a cost. The number a manager needs is the cost of one <em>completed</em> task, which is a different and larger thing.</p>
   <div class="eq">cost per completed task  &asymp;  <b>tokens per step</b> &times; <b>price per token</b> &times; <b>steps per run</b> &times; <b>attempts per completed task</b></div>
   <div class="grid2" style="align-items:start;margin-top:18px">
     <div class="card"><span class="kicker">Why agents cost more than they look like they should</span>
@@ -198,7 +198,7 @@ can operate.</div>
   <h2>The latency budget</h2>
   <div class="grid2">
     <div class="card"><span class="kicker">Steps are round-trips</span><p class="small" style="margin-top:8px">A multi-step agent is a sequence of network calls to a large model, each one waiting on the last. What feels instant in a notebook becomes tens of seconds in a product, and the user has no way to tell “thinking” from “broken.” Latency is a product decision before it is an engineering one: stream partial progress, show which step it is on, and pick a smaller model for the steps that do not need the big one.</p></div>
-    <div class="card"><span class="kicker">Rate limits are a real constraint</span><p class="small" style="margin-top:8px">Your provider caps requests and tokens per minute. One agent at a time never notices; a hundred concurrent runs discover it at once — as errors, in production, usually on the busiest day. Handle it deliberately: a queue, exponential backoff with jitter, and a concurrency limit you chose rather than one the provider imposes on you mid-run.</p></div>
+    <div class="card"><span class="kicker">Rate limits are a real constraint</span><p class="small" style="margin-top:8px">Your provider caps requests and tokens per minute. One agent at a time never notices; a hundred concurrent runs discover it at once, as errors, in production, usually on the busiest day. Handle it deliberately: a queue, exponential backoff with jitter, and a concurrency limit you chose rather than one the provider imposes on you mid-run.</p></div>
   </div>
 </div></section>
 
@@ -236,7 +236,7 @@ place_order(sku, qty, idempotency_key=key)
   <div class="card" style="margin-top:22px"><span class="kicker">Deployment checklist</span>
     <h3 style="margin-top:6px">Before this agent runs unattended</h3>
     <div class="checklist">
-      <label><input type="checkbox" /> <span>An eval suite with known-good answers, and a recorded score I would be willing to show someone — not a single successful demo run.</span></label>
+      <label><input type="checkbox" /> <span>An eval suite with known-good answers, and a recorded score I would be willing to show someone, not a single successful demo run.</span></label>
       <label><input type="checkbox" /> <span>A hard max-iteration guard and a spend cap, enforced in the harness, that the model cannot argue past.</span></label>
       <label><input type="checkbox" /> <span>Every irreversible action identified by name, and each one either gated by a human or bounded by a cap I would accept losing.</span></label>
       <label><input type="checkbox" /> <span>Idempotency keys on every action that spends, sends, or creates — generated before the first attempt.</span></label>
@@ -276,7 +276,7 @@ place_order(sku, qty, idempotency_key=key)
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 11 — Agentic Commerce<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 11: Agentic Commerce<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>

@@ -60,7 +60,7 @@
   <h2>Few-shot: show, don’t describe</h2>
   <div class="grid2" style="align-items:start">
     <div class="card">
-      <p class="small"><b>Zero-shot</b> = no examples. <b>One-shot</b> = one worked pair. <b>Few-shot</b> = several. Models pattern-match on examples far more reliably than they follow prose descriptions — the effect that made GPT-3 famous (Brown et al., 2020).</p>
+      <p class="small"><b>Zero-shot</b> = no examples. <b>One-shot</b> = one worked pair. <b>Few-shot</b> = several. Models pattern-match on examples far more reliably than they follow prose descriptions. The effect that made GPT-3 famous (Brown et al., 2020).</p>
       <p class="small" style="margin-top:8px"><b>Best for:</b> locking output format, label strings, and edge-case behavior. Three labeled tickets lock <code>BILLING / TECHNICAL / SALES</code> exactly, so downstream code can switch on them.</p>
     </div>
     <div class="codebox" style="margin:0">ticket: "I was charged twice"        → {"category":"BILLING"}
@@ -92,7 +92,7 @@ ticket: "Password reset email never arrives" → ?</div>
   <div class="eyebrow">Technique 3</div>
   <h2>Structured JSON output: the coupling point</h2>
   <div class="grid2" style="align-items:start">
-    <div class="card"><p class="small">Free text cannot pipe into a database. <code>{"field": value}</code> can. Forcing a fixed, machine-readable shape is what turns “a model that answers” into “a component in a system” — the flow is <b>free text → JSON → database / next agent</b>.</p>
+    <div class="card"><p class="small">Free text cannot pipe into a database. <code>{"field": value}</code> can. Forcing a fixed, machine-readable shape is what turns “a model that answers” into “a component in a system”. The flow is <b>free text → JSON → database / next agent</b>.</p>
     <p class="small" style="margin-top:8px"><b>Caution:</b> validate. Well-formed JSON can still contain wrong values — schema conformance is not accuracy (the hands-on tests both).</p></div>
     <div class="codebox" style="margin:0">SCHEMA
 {"vendor": str, "invoice_no": str,
@@ -118,7 +118,7 @@ output: {"vendor":"DataCorp","invoice_no":"DC-2291",
     <div class="diallabels"><span>0 · deterministic</span><span>0.5 · balanced</span><span>1.0 · creative</span></div>
     <div class="tempout">
       <div class="tempcard"><span class="lab2">Run 1</span><span id="t1"></span></div>
-      <div class="tempcard"><span class="lab2">Run 2 — same prompt, run again</span><span id="t2"></span></div>
+      <div class="tempcard"><span class="lab2">Run 2: same prompt, run again</span><span id="t2"></span></div>
     </div>
     <p class="small" id="tnote" style="margin-top:14px"></p>
   </div>
@@ -145,7 +145,7 @@ output: {"vendor":"DataCorp","invoice_no":"DC-2291",
     <div class="rung"><span><b>Structured output</b><span class="small">Fixed JSON so machines can consume the answer</span></span><span class="cost">free · minutes</span></div>
     <div class="rung"><span><b>Tuned temperature</b><span class="small">Down for automation, up for ideation</span></span><span class="cost">free · seconds</span></div>
     <div class="rung"><span><b>Curated context</b><span class="small">The right facts in the window — next page</span></span><span class="cost">engineering time</span></div>
-    <div class="rung"><span><b>Fine-tuning</b><span class="small">Train the weights — last resort, needs data + upkeep</span></span><span class="cost">$$ · weeks</span></div>
+    <div class="rung"><span><b>Fine-tuning</b><span class="small">Train the weights: last resort, needs data + upkeep</span></span><span class="cost">$$ · weeks</span></div>
   </div>
 </div></section>
 
@@ -157,7 +157,7 @@ output: {"vendor":"DataCorp","invoice_no":"DC-2291",
 <footer class="footer"><div class="wrap">
   <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
   <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
-  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 3 — Prompting &amp; Context Engineering<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 3: Prompting &amp; Context Engineering<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
   <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
   <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
 </div></footer>
