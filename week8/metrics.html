@@ -85,20 +85,20 @@
   <div class="eyebrow">The definitions</div>
   <h2>Read the symbol carefully</h2>
   <div class="grid2" style="align-items:start">
-    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">pass@k — a generosity metric</span>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">pass@k: a generosity metric</span>
       <h3 style="margin-top:8px">“At least ONE of k samples passes.”</h3>
       <p class="small">Introduced for evaluating code generation on HumanEval (<b>Chen et al., 2021</b>). You let the model generate <em>k</em> candidate solutions for one problem and count the problem as solved if <b>any single one</b> of them passes the unit tests. It answers: <em>if I can sample k times and cheaply check which one is right, how often is a correct answer somewhere in the batch?</em></p>
       <div class="formula">pass@k = P(<span class="hi">at least one</span> of k passes)
         = 1 - (1 - p)^k      <span class="hi">// rises toward 1 as k grows</span></div>
-      <p class="small"><b>Rises</b> with k. Bigger k always looks better. That is legitimate <em>when a cheap, reliable verifier exists</em> — unit tests, a compiler, a checksum — because the verifier is what lets you pick the winner out of the batch.</p>
+      <p class="small"><b>Rises</b> with k. Bigger k always looks better. That is legitimate <em>when a cheap, reliable verifier exists</em> (unit tests, a compiler, a checksum), because the verifier is what lets you pick the winner out of the batch.</p>
       <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2107.03374" target="_blank" rel="noopener">Chen et al., 2021 — Evaluating LLMs Trained on Code (arXiv:2107.03374) ↗</a></p>
     </div>
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">pass^k — a consistency metric</span>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">pass^k: a consistency metric</span>
       <h3 style="margin-top:8px">“ALL k independent trials succeed.”</h3>
       <p class="small">Introduced by <b>τ-bench</b> (<b>Yao et al., 2024</b>) precisely because pass@k was flattering agents that could not be relied on. Run the same task <em>k</em> independent times; it counts only if <b>every single run</b> succeeds. It answers: <em>can I hand this to a customer who will use it k times?</em></p>
       <div class="formula">pass^k = P(<span class="lo">all k</span> trials succeed)
         = p^k                <span class="lo">// collapses toward 0 as k grows</span></div>
-      <p class="small"><b>Falls</b> with k — fast. There is no verifier to rescue you: in production nobody generates eight refunds and picks the good one. The customer gets the run they get.</p>
+      <p class="small"><b>Falls</b> with k, fast. There is no verifier to rescue you: in production nobody generates eight refunds and picks the good one. The customer gets the run they get.</p>
       <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noopener">Yao et al., 2024 — τ-bench (arXiv:2406.12045) ↗</a></p>
     </div>
   </div>
@@ -135,7 +135,7 @@
 <section><div class="wrap">
   <div class="eyebrow">The arithmetic, laid out</div>
   <h2>Reliability is exponentially expensive</h2>
-  <p class="lede">Three agents you might describe with the same word — “reliable” — and what happens to each when a real user runs it more than once. Every cell is p<sup>k</sup>, rounded.</p>
+  <p class="lede">Three agents you might describe with the same word, “reliable”, and what happens to each when a real user runs it more than once. Every cell is p<sup>k</sup>, rounded.</p>
   <div class="ptablewrap"><table class="ptable">
     <tr><th>pass@1 (one run)</th><th>pass^2</th><th>pass^3</th><th>pass^5</th><th>pass^8</th><th>What it means in a sentence</th></tr>
     <tr><td>70%</td><td class="mono">49%</td><td class="mono">34%</td><td class="mono drop">17%</td><td class="mono drop">6%</td><td>Fails more often than it works by the third use. This is a prototype, not a product.</td></tr>
@@ -148,7 +148,7 @@
     <div class="card"><span class="kicker">The honest way to quote a number</span>
       <p class="small" style="margin-top:8px">“Our agent is 90% accurate” is not a lie, but it is not a deployment statement either. The deployable version names the metric, the k, the dataset, and the date: <em>“On our 40-case eval set, pass@1 = 0.90 and pass^3 = 0.73, measured 10/14. The 27% of cases that fail at least once in three runs are listed here.”</em> That sentence is the deliverable of your capstone eval harness.</p></div>
   </div>
-  <div class="callout blue" style="margin-top:20px"><b>The reliability gap.</b> The distance between pass@1 and pass^k <em>is</em> the demo-versus-production gap, expressed as a number. Demos are sold on pass@1 (or worse, on one run). Managers ship on pass^k. Naming the gap out loud — “90% single-run, 43% across eight” — is how you keep the conversation honest without pretending the agent is bad.</div>
+  <div class="callout blue" style="margin-top:20px"><b>The reliability gap.</b> The distance between pass@1 and pass^k <em>is</em> the demo-versus-production gap, expressed as a number. Demos are sold on pass@1 (or worse, on one run). Managers ship on pass^k. Naming the gap out loud (“90% single-run, 43% across eight”) is how you keep the conversation honest without pretending the agent is bad.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -175,7 +175,7 @@
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Misquote 2 · harness differences</span><p class="small" style="margin-top:8px">The same model scores differently depending on the scaffolding around it: which tools it gets, how many steps it is allowed, how many attempts, whether a retry counts. Two “SWE-bench scores” are only comparable if the harnesses were. Ask what the scaffold was.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Misquote 3 · which subset</span><p class="small" style="margin-top:8px">“SWE-bench” names a family: the full 2,294-issue set, the human-validated <b>Verified</b> 500-issue subset, and smaller subsets. A number quoted without its subset is unreadable, and the flattering subset is the one that ends up on the slide.</p></div>
   </div>
-  <div class="card" style="margin-top:22px"><span class="kicker">Reading a benchmark critically — the five questions</span>
+  <div class="card" style="margin-top:22px"><span class="kicker">Reading a benchmark critically: the five questions</span>
     <div class="checklist" style="margin-top:10px">
       <label><input type="checkbox" /> <span><b>What is measured?</b> Final answers only, or the trajectory too? Whose tests decide a pass?</span></label>
       <label><input type="checkbox" /> <span><b>pass@1, pass@k, or pass^k?</b> And with what k? A number without its metric is not a number.</span></label>

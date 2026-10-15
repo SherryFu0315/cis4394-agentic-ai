@@ -108,11 +108,11 @@
     <input type="range" id="stepSlider" min="1" max="20" step="1" value="10" />
     <div class="diallabels"><span>1 step</span><span>10 steps</span><span>20 steps</span></div>
     <div class="compgrid">
-      <div class="card"><span class="kicker">Agent A — each step 95% reliable</span>
+      <div class="card"><span class="kicker">Agent A: each step 95% reliable</span>
         <div class="bigpct v" id="pA">59.9%</div>
         <div class="riskbar v" style="margin-top:10px"><i id="barA"></i></div>
         <p class="small" style="margin-top:10px">Whole-task success = 0.95<sup id="expA">10</sup></p></div>
-      <div class="card"><span class="kicker">Agent B — each step 99% reliable</span>
+      <div class="card"><span class="kicker">Agent B: each step 99% reliable</span>
         <div class="bigpct r" id="pB">90.4%</div>
         <div class="riskbar r" style="margin-top:10px"><i id="barB"></i></div>
         <p class="small" style="margin-top:10px">Whole-task success = 0.99<sup id="expB">10</sup></p></div>
@@ -152,7 +152,7 @@ failure rate        ~ 14%   (about 1 in 7)</div>
       <p class="small">Why agent debugging needs traces and spans rather than classic metrics and log lines, and how an eval set gets wired to them. Watch this before page 02.</p>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/FDVdLrloFOw" title="Observability and Evals for AI Agents" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
     </div>
-    <div class="card"><span class="kicker">While you watch — three things to catch</span>
+    <div class="card"><span class="kicker">While you watch: three things to catch</span>
       <p class="small" style="margin-top:8px"><b>1.</b> What a span contains that an ordinary log line does not, and why nesting matters when one bad observation sits eight steps upstream of the wrong answer.</p>
       <p class="small" style="margin-top:8px"><b>2.</b> Where the <b>dataset</b> of test cases lives relative to the running agent: the harness anatomy you'll build on page 03: <code>dataset → agent under test → evaluator → report</code>.</p>
       <p class="small" style="margin-top:8px"><b>3.</b> How an eval turns into a <b>regression test</b>: the same dataset, rerun on every prompt or code change, so “I improved it” becomes a claim with evidence instead of a memory of one good run.</p>
@@ -169,7 +169,7 @@ failure rate        ~ 14%   (about 1 in 7)</div>
     <tr><td><b>Question asked</b></td><td>Is the final answer right?</td><td>Did it get there acceptably?</td></tr>
     <tr><td><b>Typical checks</b></td><td>Exact match, numeric match, required fields present, rubric score on the reply</td><td>Which tools were called, in what order, with what arguments; steps used; whether a forbidden action was taken; whether the policy was followed</td></tr>
     <tr><td><b>Catches</b></td><td>Plainly wrong output</td><td>Right answer for the wrong reason; wasted or duplicated calls; policy and safety violations; the lucky guess</td></tr>
-    <tr><td><b>Misses</b></td><td>Everything about <em>how</em> — including a run that got lucky, and one that quietly cost 10× more</td><td>A beautiful, policy-perfect path to a wrong answer</td></tr>
+    <tr><td><b>Misses</b></td><td>Everything about <em>how</em>, including a run that got lucky, and one that quietly cost 10× more</td><td>A beautiful, policy-perfect path to a wrong answer</td></tr>
     <tr><td><b>Cost of running</b></td><td>Cheap: you already have the answer</td><td>Needs the full trace stored and a way to assert over it</td></tr>
   </table></div>
   <div class="grid3" style="margin-top:20px">
