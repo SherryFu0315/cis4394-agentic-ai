@@ -76,7 +76,7 @@
   <p class="lede">Cemri et al. (2025) studied a large set of multi-agent LLM traces and organized what went wrong into the <b>MAST</b> taxonomy: fourteen failure modes grouped into three categories. The value of a taxonomy is that it turns "it broke" into a diagnosis you can act on, so learn the three categories, and use them as your debugging checklist.</p>
   <div class="mastgrid" style="margin-top:18px">
     <div class="card"><span class="kicker">Category 1</span><h3 style="margin-top:6px">Specification &amp; system design</h3>
-      <p class="small">The failure was baked in before the run started: a role defined too vaguely to constrain behavior, a task description missing the constraint that mattered, an agent that ignores its instructions, or a design with no termination condition. The instruction-decay example on page 01 lives here.</p>
+      <p class="small">The failure was baked in before the run started: a role defined too vaguely to constrain behavior, a task description missing the constraint that mattered, an agent that ignores its instructions, or a design with no stop condition. The instruction-decay example on page 01 lives here.</p>
       <p class="small"><b>Tell:</b> every agent did exactly what it was told, and the result is still wrong.</p></div>
     <div class="card"><span class="kicker">Category 2</span><h3 style="margin-top:6px">Inter-agent misalignment</h3>
       <p class="small">The failure happened <em>between</em> agents: a hand-off that dropped context, agents working from incompatible assumptions, conversations that go in circles, duplicated work, or one agent quietly derailing another's task. This is Cognition's fragmentation argument, catalogued.</p>

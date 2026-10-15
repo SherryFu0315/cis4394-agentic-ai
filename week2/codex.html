@@ -126,7 +126,7 @@
         <tr><td><code>src/exec.rs</code> · <code>unified_exec/</code> · <code>exec_policy/</code></td><td>5 · Environment</td><td>Where words become commands on a real filesystem.</td></tr>
         <tr><td><code>src/state/</code> · <code>session/</code> · <code>context_manager/</code> · a dozen <code>compact*.rs</code> files</td><td>6 · State / Memory</td><td>“Compact” = context compression: deciding what to remember and what to forget takes a dozen files.</td></tr>
         <tr><td><code>src/tasks/</code> · <code>agent/</code> · <code>codex_thread.rs</code></td><td>7 · Loop</td><td>The turn-by-turn skeleton of the loop.</td></tr>
-        <tr><td><code>src/tools/approvals.rs</code> · <code>sandboxing/</code> · <code>guardian/</code></td><td>8 · Guardrails / HITL</td><td>⭐ There is literally a file named <b>approvals.rs</b> — asking the human is a code module, not a courtesy line.</td></tr>
+        <tr><td><code>src/tools/approvals.rs</code> · <code>sandboxing/</code> · <code>guardian/</code></td><td>8 · Guardrails / HITL (human-in-the-loop)</td><td>⭐ There is literally a file named <b>approvals.rs</b> — asking the human is a code module, not a courtesy line.</td></tr>
         <tr><td><code>tests/</code></td><td>9 · Evaluation</td><td>The harness verifies itself, too.</td></tr>
       </tbody></table></div>
       <p class="small" style="margin-top:12px">Last week the nine layers were boxes on a slide. Here they are folders. The abstraction wasn’t invented — it was extracted. <span style="color:var(--muted)">(Structure as of Sept 2026; this repository moves fast — expect renames.)</span></p>
