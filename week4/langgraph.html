@@ -67,7 +67,7 @@
   <div class="eyebrow">Three primitives</div>
   <h2>State · nodes · edges</h2>
   <div class="grid3">
-    <div class="card"><span class="kicker">State</span><h3 style="margin-top:6px">The shared memory</h3><p class="small">A typed dict passed to every node. Ours holds <code>messages</code> — the growing conversation of thoughts, tool calls, and results. Whatever a node returns is merged in.</p></div>
+    <div class="card"><span class="kicker">State</span><h3 style="margin-top:6px">The shared memory</h3><p class="small">A typed dict passed to every node. Ours holds <code>messages</code>: the growing conversation of thoughts, tool calls, and results. Whatever a node returns is merged in.</p></div>
     <div class="card"><span class="kicker">Nodes</span><h3 style="margin-top:6px">Units of work</h3><p class="small">A node is just a function: <code>state in → update out</code>. The two classics: a <b>model</b> node (ask the LLM what to do next) and a <b>tools</b> node (execute what it asked for).</p></div>
     <div class="card"><span class="kicker">Edges</span><h3 style="margin-top:6px">Routing = the loop</h3><p class="small">Normal edges always fire. <b>Conditional</b> edges look at state and choose the next node, and a conditional edge that can route <em>backwards</em> is all a loop is.</p></div>
   </div>
@@ -167,8 +167,8 @@ out = agent.invoke({<span class="cs">"messages"</span>:
 
 g.add_conditional_edges(<span class="cs">"model"</span>, guarded_condition)</div>
     <div>
-      <div class="card"><span class="kicker">Why this matters</span><p class="small" style="margin-top:8px">This is the loop-layer guardrail from the nine layers, in real code: the model can <em>ask</em> for step 9, and the graph simply won't grant it. Runaway loops, infinite retries, and surprise bills all die at this line. (LangGraph also has a built-in <code>recursion_limit</code> — the point is that <b>you</b> set it.)</p></div>
-      <div class="card" style="margin-top:14px"><span class="kicker">🎯 Take it to your final project</span><p class="small" style="margin-top:8px">Your capstone agent must have a named stop condition. This pattern — a counter in state plus a guarded conditional edge — is the reference implementation. Add a reflection node before END and you've covered two rubric lines in one graph.</p></div>
+      <div class="card"><span class="kicker">Why this matters</span><p class="small" style="margin-top:8px">This is the loop-layer guardrail from the nine layers, in real code: the model can <em>ask</em> for step 9, and the graph simply won't grant it. Runaway loops, infinite retries, and surprise bills all die at this line. (LangGraph also has a built-in <code>recursion_limit</code>; the point is that <b>you</b> set it.)</p></div>
+      <div class="card" style="margin-top:14px"><span class="kicker">🎯 Take it to your final project</span><p class="small" style="margin-top:8px">Your capstone agent must have a named stop condition. This pattern (a counter in state plus a guarded conditional edge) is the reference implementation. Add a reflection node before END and you've covered two rubric lines in one graph.</p></div>
     </div>
   </div>
 </div></section>
@@ -186,7 +186,7 @@ g.add_conditional_edges(<span class="cs">"model"</span>, guarded_condition)</div
   <h2>Every framework elaborates this loop</h2>
   <div class="grid2">
     <div class="card"><p class="small">CrewAI, AutoGen, the OpenAI Agents SDK, and the managed platforms you used in Week 2 (Opal, Fleet) all wrap the same model↔tools cycle with the same three primitives under different names. Learn the loop once, and every framework becomes a dialect. <a class="doc" href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noopener">LangGraph docs ↗</a></p></div>
-    <div class="card"><span class="kicker">Auditability — the MIS framing</span><p class="small" style="margin-top:8px">An explicit graph means every decision, tool call, and state change is logged and replayable. When audit or compliance asks “why did the agent do that?”, the answer is a trace, not a shrug. That's the business case for owning the loop instead of renting a black box.</p></div>
+    <div class="card"><span class="kicker">Auditability: the MIS framing</span><p class="small" style="margin-top:8px">An explicit graph means every decision, tool call, and state change is logged and replayable. When audit or compliance asks “why did the agent do that?”, the answer is a trace, not a shrug. That's the business case for owning the loop instead of renting a black box.</p></div>
   </div>
 </div></section>
 

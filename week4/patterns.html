@@ -150,7 +150,7 @@ goal ┤
 <section><div class="wrap">
   <div class="eyebrow">Aside · the one thing that changes the model</div>
   <h2>Prompting changes the <em>input</em>. Fine-tuning changes the <em>weights</em>.</h2>
-  <p class="lede">Everything this week — ReAct, plans, reflection — and everything last week — prompts, context — lives to the <b>left</b> of the model: it changes what the model <em>sees</em>. (Week 2 flashback: prompt ⊂ context ⊂ harness; <b>none touch the weights</b>.) Fine-tuning is different in kind: it rewrites the numbers <em>inside</em>. Watch the difference below. The network's edges are its weights; thicker = stronger.</p>
+  <p class="lede">Everything this week (ReAct, plans, reflection) and everything last week (prompts, context) lives to the <b>left</b> of the model: it changes what the model <em>sees</em>. (Week 2 flashback: prompt ⊂ context ⊂ harness; <b>none touch the weights</b>.) Fine-tuning is different in kind: it rewrites the numbers <em>inside</em>. Watch the difference below. The network's edges are its weights; thicker = stronger.</p>
   <div class="ftwrap">
     <div class="netbox">
       <span class="wbadge" id="wBadge">weights: unchanged 🔒</span>
@@ -168,12 +168,12 @@ goal ┤
     </div>
   </div>
   <div class="grid2" style="margin-top:22px;align-items:start">
-    <div class="card"><span class="kicker">Terminology — clear this up once</span>
+    <div class="card"><span class="kicker">Terminology: clear this up once</span>
       <p class="small" style="margin-top:8px"><b>Parameters (= weights):</b> the numbers inside the model: the edges above, billions of them. They were <em>learned</em> in training, and <b>fine-tuning updates exactly these</b>. Prompting never does.</p>
       <p class="small" style="margin-top:8px"><b>Hyperparameters:</b> NOT inside the model. They're the dials <em>you</em> set on the training process itself: learning rate, number of epochs, batch size. You choose them; the model never “learns” them.</p>
       <p class="small" style="margin-top:8px"><b>Analogy:</b> parameters are the employee's skills after the course; hyperparameters are the course schedule. “Fine-tuning updates the parameters” = the training changed the skills. (Saying it “updates hyperparameters” is the common mix-up; the schedule doesn't change the employee.)</p></div>
     <div class="card"><span class="kicker">Why fine-tune is still the LAST rung</span>
-      <p class="small" style="margin-top:8px">The demo hides the real bill: hundreds+ of curated examples, GPU time, and re-running your evals to make sure the new weights didn't break something else — every time the task changes. A prompt edit ships in minutes; new weights ship in weeks.</p>
+      <p class="small" style="margin-top:8px">The demo hides the real bill: hundreds+ of curated examples, GPU time, and re-running your evals to make sure the new weights didn't break something else, every time the task changes. A prompt edit ships in minutes; new weights ship in weeks.</p>
       <p class="small" style="margin-top:8px">That's the Week 3 ladder: prompt → few-shot → context/RAG → <b>fine-tune last</b> (<a class="doc" href="../week3/context.html">the decision table</a>). Week 7 revisits the fork one more time: RAG vs fine-tuning for company knowledge: retrieval usually wins for <em>facts</em>, fine-tuning for <em>style and format at massive scale</em>.</p></div>
   </div>
 </div></section>
@@ -182,7 +182,7 @@ goal ┤
   <div class="eyebrow">Discussion</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your team automates invoice-coding: 5,000 near-identical invoices a month, and finance must sign off on the procedure. Interleaved ReAct would work. Why is it still the wrong choice?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">Because the task has <b>low volatility and high oversight</b>. ReAct pays a model call per step to buy adaptivity you don't need — 5,000× a month — and its emergent, run-by-run paths are exactly what a sign-off process hates. A plan-then-execute design (or an outright Week 1 workflow) gives finance a fixed, reviewable procedure and costs a fraction. Save the interleaving for the 2% of invoices that fail validation: route those to an agent, or a human.</div>
+  <div class="revealbox">Because the task has <b>low volatility and high oversight</b>. ReAct pays a model call per step to buy adaptivity you don't need (5,000× a month), and its emergent, run-by-run paths are exactly what a sign-off process hates. A plan-then-execute design (or an outright Week 1 workflow) gives finance a fixed, reviewable procedure and costs a fraction. Save the interleaving for the 2% of invoices that fail validation: route those to an agent, or a human.</div>
 </div></section>
 
 <div class="wrap pager">
