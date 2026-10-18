@@ -50,7 +50,7 @@
   <div class="grid2" style="align-items:start">
     <div class="card">
       <h3>That’s the whole trick</h3>
-      <p class="small">Input text goes in; the model outputs a <b>probability distribution over possible next tokens</b>; one gets sampled; repeat. Everything impressive an LLM does is built from that single operation at scale.</p>
+      <p class="small">Input text goes in; the model outputs a probability distribution over possible next tokens; one gets sampled; repeat. Everything impressive an LLM does is built from that single operation at scale.</p>
       <div class="codebox" style="margin-bottom:0">“The capital of France is” →
   Paris   ████████████  92%
   Lyon    █             3%
@@ -103,7 +103,7 @@
         <g class="loopnode" id="ln3"><rect x="30" y="265" width="160" height="46" rx="10"/><text x="110" y="293" text-anchor="middle">Update state</text></g>
         <g class="loopnode pausenode" id="ln4"><rect x="16" y="122" width="176" height="46" rx="10"/><text x="104" y="150" text-anchor="middle">Human gate / Stop</text></g>
       </svg>
-      <p class="small" style="margin:10px 6px 4px">The loop closes: until the <b>stop condition</b> is met or a <b>human gate</b> interrupts. An agent without a stop condition is a bug with a budget.</p>
+      <p class="small" style="margin:10px 6px 4px">The loop closes: until the stop condition is met or a human gate interrupts. An agent without a stop condition is a bug with a budget.</p>
     </div>
     <div class="simright">
       <div class="simctl">

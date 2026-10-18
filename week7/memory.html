@@ -23,7 +23,7 @@
 .memwrap{display:grid;grid-template-columns:minmax(320px,470px) 1fr;gap:20px;align-items:start}
 .memnode{cursor:pointer}
 .memnode rect{fill:#fff;stroke:var(--line2);stroke-width:1.4;rx:10}
-.memnode text{font-family:var(--mono);font-size:var(--fs-xs);font-weight:600;fill:var(--ink)}
+.memnode text{font-family:var(--mono);font-size:12px;font-weight:600;fill:var(--ink)}
 .memnode .sub{font-family:var(--sans);font-size:var(--fs-xs);font-weight:400;fill:var(--muted)}
 .memnode.on rect{fill:var(--blue);stroke:var(--blue)}
 .memnode.on text{fill:#fff}
@@ -58,7 +58,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">01 · Foundations</div>
   <h1>Context is not <em>memory</em>.</h1>
-  <p class="lede">An agent that "remembers" is an agent whose harness <b>wrote something down</b> and <b>read it back</b>. Those are two separate design decisions (a write policy and a read policy), and neither one happens by default.</p>
+  <p class="lede">An agent that "remembers" is an agent whose harness wrote something down and read it back. Those are two separate design decisions (a write policy and a read policy), and neither one happens by default.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -82,7 +82,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive · click each store</div>
   <h2>Four kinds of memory, one architecture</h2>
-  <p class="lede">The standard taxonomy borrows its names from cognitive psychology: <b>working</b>, <b>episodic</b>, <b>semantic</b>, and <b>procedural</b> memory. IBM's explainer uses the same four for agent systems (<a class="doc" href="https://www.ibm.com/think/topics/ai-agent-memory" target="_blank" rel="noopener">IBM Think — What is AI agent memory? ↗</a>). Click a box to see what belongs in it and what it costs you.</p>
+  <p class="lede">The standard taxonomy borrows its names from cognitive psychology: working, episodic, semantic, and procedural memory. IBM's explainer uses the same four for agent systems (<a class="doc" href="https://www.ibm.com/think/topics/ai-agent-memory" target="_blank" rel="noopener">IBM Think — What is AI agent memory? ↗</a>). Click a box to see what belongs in it and what it costs you.</p>
   <div class="memwrap">
     <div class="loopbox">
       <svg viewBox="0 0 460 380" aria-label="agent memory architecture: working memory plus three long-term stores">
@@ -94,13 +94,13 @@
         <text class="memlbl" x="16" y="126">read path: retrieve → inject</text>
         <text class="memlbl" x="16" y="352">write path: the loop decides what is worth storing —</text>
         <text class="memlbl" x="16" y="366">nothing saves itself</text>
-        <g class="memnode vol" id="mem0"><rect x="118" y="46" width="224" height="50"/><text x="230" y="70" text-anchor="middle">working memory</text><text class="sub" x="230" y="86" text-anchor="middle">= the context window · gone at end of run</text></g>
-        <g class="memnode" id="mem9"><rect x="118" y="134" width="224" height="46"/><text x="230" y="155" text-anchor="middle">the agent loop</text><text class="sub" x="230" y="171" text-anchor="middle">reads before deciding · writes after acting</text></g>
+        <g class="memnode vol" id="mem0"><rect x="100" y="46" width="260" height="50"/><text x="230" y="70" text-anchor="middle">working memory</text><text class="sub" x="230" y="86" text-anchor="middle">= the context window · gone at end of run</text></g>
+        <g class="memnode" id="mem9"><rect x="100" y="134" width="260" height="46"/><text x="230" y="155" text-anchor="middle">the agent loop</text><text class="sub" x="230" y="171" text-anchor="middle">reads before deciding · writes after acting</text></g>
         <g class="memnode" id="mem1"><rect x="10" y="238" width="136" height="62"/><text x="78" y="264" text-anchor="middle">episodic</text><text class="sub" x="78" y="282" text-anchor="middle">what happened</text></g>
         <g class="memnode" id="mem2"><rect x="162" y="238" width="136" height="62"/><text x="230" y="264" text-anchor="middle">semantic</text><text class="sub" x="230" y="282" text-anchor="middle">what is true</text></g>
         <g class="memnode" id="mem3"><rect x="314" y="238" width="136" height="62"/><text x="382" y="264" text-anchor="middle">procedural</text><text class="sub" x="382" y="282" text-anchor="middle">how to do it</text></g>
       </svg>
-      <p class="small" style="margin:10px 6px 4px">Amber = volatile. The three boxes at the bottom are <b>long-term</b> stores: they persist between runs, and something must load them back in.</p>
+      <p class="small" style="margin:10px 6px 4px">Amber = volatile. The three boxes at the bottom are long-term stores: they persist between runs, and something must load them back in.</p>
     </div>
     <div>
       <div class="memnote" id="memNote">Click a box in the diagram.</div>
@@ -153,12 +153,12 @@
   <div class="grid3">
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Consent &amp; notice</span><p class="small" style="margin-top:8px">A user talking to an assistant does not obviously expect a durable profile to be built from it. If your agent writes semantic facts about people, someone must be told, and the agent should be able to say what it knows about you when asked.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Retention &amp; deletion</span><p class="small" style="margin-top:8px">"Forget me" must be executable. That means every memory carries an owner ID and a timestamp, and deletion reaches the vector index and the backups too, not just the pretty table in the admin UI.</p></div>
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Contamination</span><p class="small" style="margin-top:8px">Memory is an input channel, so it is an <b>attack surface</b>. Text the agent read in one session and saved becomes an instruction it reads back later: prompt injection with a delay fuse (Week 2's J004). Treat stored memories as untrusted data, not as system prompt.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Contamination</span><p class="small" style="margin-top:8px">Memory is an input channel, so it is an attack surface. Text the agent read in one session and saved becomes an instruction it reads back later: prompt injection with a delay fuse (Week 2's J004). Treat stored memories as untrusted data, not as system prompt.</p></div>
   </div>
   <div style="margin-top:22px">
     <div class="bigq"><span class="qlabel">Discussion question</span>Your firm's support agent has been writing automatic memories for four months. Legal asks: "for customer #8812, show us everything the system remembers, where each item came from, and delete it." What must have been designed in on day one for that request to be answerable in an afternoon rather than a quarter?</div>
     <button class="revealbtn">See the answer</button>
-    <div class="revealbox">Four things, none of which can be retrofitted cheaply. (1) A subject key on every memory. Memories written as free text with no owner field cannot be queried by customer; you end up doing similarity search over your own database and hoping. <b>(2) Provenance.</b> Each memory needs the run ID, the timestamp, and the source turn or document that produced it, so "where did this come from" has an answer and a wrong memory can be traced to a wrong input. (3) A single delete path that reaches every copy: the primary store, the vector index (embeddings of personal text are still personal data), any cache, and the run logs. Deleting the row while the embedding survives is not deletion. <b>(4) An export view</b>: the same read path a human can run, so "show us everything" is a query, not an archaeology project. Notice these are the same properties that make a RAG system auditable on page 02: an ID, a source, a version, a timestamp. Governance is mostly the discipline of never storing a fact without knowing where it came from.</div>
+    <div class="revealbox">Four things, none of which can be retrofitted cheaply. (1) A subject key on every memory. Memories written as free text with no owner field cannot be queried by customer; you end up doing similarity search over your own database and hoping. (2) Provenance. Each memory needs the run ID, the timestamp, and the source turn or document that produced it, so "where did this come from" has an answer and a wrong memory can be traced to a wrong input. (3) A single delete path that reaches every copy: the primary store, the vector index (embeddings of personal text are still personal data), any cache, and the run logs. Deleting the row while the embedding survives is not deletion. (4) An export view: the same read path a human can run, so "show us everything" is a query, not an archaeology project. Notice these are the same properties that make a RAG system auditable on page 02: an ID, a source, a version, a timestamp. Governance is mostly the discipline of never storing a fact without knowing where it came from.</div>
   </div>
 </div></section>
 

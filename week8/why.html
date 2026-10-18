@@ -58,7 +58,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">01 · Why demos lie</div>
   <h1>Evaluating an agent is <em>harder</em> than evaluating a model.</h1>
-  <p class="lede">A model produces one output you can grade. An agent produces a <b>path</b>: a dozen decisions, each one able to poison everything downstream, none of them guaranteed to repeat. Before you can pick a metric, you must understand what makes the measurement hard.</p>
+  <p class="lede">A model produces one output you can grade. An agent produces a path: a dozen decisions, each one able to poison everything downstream, none of them guaranteed to repeat. Before you can pick a metric, you must understand what makes the measurement hard.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -66,7 +66,7 @@
   <h2>What breaks the ordinary testing playbook</h2>
   <div class="grid2">
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">1 · Non-determinism</span>
-      <p class="small" style="margin-top:8px">Ordinary software is a function: the same input gives the same output, so one passing test <em>is</em> proof. An agent samples from a distribution: same input, different path, sometimes a different answer. A single passing run proves the system <b>can</b> succeed, never that it <b>will</b>.</p></div>
+      <p class="small" style="margin-top:8px">Ordinary software is a function: the same input gives the same output, so one passing test <em>is</em> proof. An agent samples from a distribution: same input, different path, sometimes a different answer. A single passing run proves the system can succeed, never that it will.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">2 · Multi-step compounding</span>
       <p class="small" style="margin-top:8px">One wrong step doesn't cost you one step. It poisons every step after it: the agent reasons confidently on top of a bad observation, and the trace still <em>looks</em> coherent. Reliability multiplies down the chain; see the calculator below.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">3 · No single right answer</span>
@@ -80,7 +80,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive · same task, five runs</div>
   <h2>Run the identical task five times</h2>
-  <p class="lede">Below is a fixed, scripted episode of the <a href="../week2/build.html">Week 2 Job Search Agent</a> on <b>one identical input</b>: the same posting, the same prompt, the same tools. Press <b>Run the task</b> five times. Everyone in the class sees the same five outcomes, because the lesson shouldn't depend on your luck.</p>
+  <p class="lede">Below is a fixed, scripted episode of the <a href="../week2/build.html">Week 2 Job Search Agent</a> on one identical input: the same posting, the same prompt, the same tools. Press Run the task five times. Everyone in the class sees the same five outcomes, because the lesson shouldn't depend on your luck.</p>
   <div class="stepwrap">
     <div>
       <div class="simctl" style="margin-bottom:12px">
@@ -102,7 +102,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive · the compounding problem</div>
   <h2>Per-step reliability is not task reliability</h2>
-  <p class="lede">Suppose every single step of your agent is independently reliable at some rate. Drag the number of steps and watch what happens to the probability that the <b>whole task</b> comes out clean. Two agents: one with 95% steps, one with 99% steps.</p>
+  <p class="lede">Suppose every single step of your agent is independently reliable at some rate. Drag the number of steps and watch what happens to the probability that the whole task comes out clean. Two agents: one with 95% steps, one with 99% steps.</p>
   <div class="dialwrap">
     <label class="small" for="stepSlider" style="font-weight:700;color:var(--ink)">Steps in the task: <span id="stepOut" style="color:var(--blue)">10</span></label>
     <input type="range" id="stepSlider" min="1" max="20" step="1" value="10" />
@@ -121,7 +121,7 @@
   </div>
   <div class="grid2" style="margin-top:20px;align-items:start">
     <div class="card"><span class="kicker">Worked example · a 5-step refund agent</span>
-      <p class="small" style="margin-top:8px">Steps aren't all equally reliable. Say: read the ticket <b>0.99</b> → look up the order <b>0.97</b> → check the refund policy <b>0.95</b> → compute the amount <b>0.98</b> → issue the refund <b>0.96</b>.</p>
+      <p class="small" style="margin-top:8px">Steps aren't all equally reliable. Say: read the ticket 0.99 → look up the order 0.97 → check the refund policy 0.95 → compute the amount 0.98 → issue the refund 0.96.</p>
       <div class="codebox" style="margin-top:10px">0.99 x 0.97 x 0.95 x 0.98 x 0.96
   = 0.8583
 
@@ -129,7 +129,7 @@ whole-task success  ~ 86%
 failure rate        ~ 14%   (about 1 in 7)</div>
       <p class="small">Every step looks fine in isolation. Nobody on the team would flag a 0.95. The product still fails roughly one refund in seven. <em>(Illustrative per-step numbers; an original teaching example, not measured data.)</em></p></div>
     <div class="card"><span class="kicker">The MIS takeaway</span>
-      <p class="small" style="margin-top:8px">Reliability is engineered <b>per step</b> and experienced <b>per task</b>. Two design consequences follow, and both are decisions you own rather than model choices:</p>
+      <p class="small" style="margin-top:8px">Reliability is engineered per step and experienced per task. Two design consequences follow, and both are decisions you own rather than model choices:</p>
       <p class="small" style="margin-top:8px"><b>Shorten the chain.</b> Fewer steps means fewer multiplications. A deterministic tool or a plain workflow branch that replaces three agent steps buys more reliability than a bigger model usually does.</p>
       <p class="small" style="margin-top:8px"><b>Verify inside the chain.</b> A check after the fragile step (did the lookup return anything? does the amount match the policy?) stops the poison from propagating. That's the <a href="../week4/patterns.html">reflection pattern</a> from Week 4 in its most boring, most valuable form.</p></div>
   </div>
@@ -138,10 +138,10 @@ failure rate        ~ 14%   (about 1 in 7)</div>
 <section><div class="wrap">
   <div class="eyebrow">Interactive · click each field</div>
   <h2>What you have to log, per step</h2>
-  <p class="lede">You cannot evaluate what you did not record. This is the <b>evidence standard</b> from <a href="../week2/evaluate.html">Week 2</a>, and it is the minimum unit of an agent trace: six fields, every step, every run. Click each one for what it buys you.</p>
+  <p class="lede">You cannot evaluate what you did not record. This is the evidence standard from <a href="../week2/evaluate.html">Week 2</a>, and it is the minimum unit of an agent trace: six fields, every step, every run. Click each one for what it buys you.</p>
   <div class="tabs" id="logTabs"></div>
   <div class="card" id="logPanel" style="min-height:190px"></div>
-  <div class="callout blue" style="margin-top:20px"><b>Vocabulary:</b> the full recording of one run is a <b>trace</b>; each nested unit inside it (one model call, one tool call) is a <b>span</b>, with its own inputs, outputs, tokens, latency, and cost. <b>Observability</b> is the practice of collecting traces from real production runs so you can debug, watch for drift, track spend, and answer an auditor. It is the difference between “the agent did something weird last Tuesday” and a replayable record of exactly what it did.</div>
+  <div class="callout blue" style="margin-top:20px"><b>Vocabulary:</b> the full recording of one run is a trace; each nested unit inside it (one model call, one tool call) is a span, with its own inputs, outputs, tokens, latency, and cost. Observability is the practice of collecting traces from real production runs so you can debug, watch for drift, track spend, and answer an auditor. It is the difference between “the agent did something weird last Tuesday” and a replayable record of exactly what it did.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -154,8 +154,8 @@ failure rate        ~ 14%   (about 1 in 7)</div>
     </div>
     <div class="card"><span class="kicker">While you watch: three things to catch</span>
       <p class="small" style="margin-top:8px"><b>1.</b> What a span contains that an ordinary log line does not, and why nesting matters when one bad observation sits eight steps upstream of the wrong answer.</p>
-      <p class="small" style="margin-top:8px"><b>2.</b> Where the <b>dataset</b> of test cases lives relative to the running agent: the harness anatomy you'll build on page 03: <code>dataset → agent under test → evaluator → report</code>.</p>
-      <p class="small" style="margin-top:8px"><b>3.</b> How an eval turns into a <b>regression test</b>: the same dataset, rerun on every prompt or code change, so “I improved it” becomes a claim with evidence instead of a memory of one good run.</p>
+      <p class="small" style="margin-top:8px"><b>2.</b> Where the dataset of test cases lives relative to the running agent: the harness anatomy you'll build on page 03: <code>dataset → agent under test → evaluator → report</code>.</p>
+      <p class="small" style="margin-top:8px"><b>3.</b> How an eval turns into a regression test: the same dataset, rerun on every prompt or code change, so “I improved it” becomes a claim with evidence instead of a memory of one good run.</p>
       <div class="callout" style="margin-top:14px;margin-bottom:0"><b>Tooling note:</b> the mechanics are the same whichever platform you use. What transfers is the shape: cases, evaluator, repeat runs, a report you can hand someone.</div>
     </div>
   </div>
@@ -183,7 +183,7 @@ failure rate        ~ 14%   (about 1 in 7)</div>
   <div class="eyebrow">Discussion</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your agent returned the correct final answer on all 20 test cases, but on 6 of them it called the paid enrichment API twice, and on 2 it read a customer record it had no business touching. Your outcome eval says 20/20. What should the report say, and what would you have needed to log to say it?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">The report should say <b>outcome 20/20, trajectory 12/20</b>, and treat the trajectory number as the one that governs deployment. Two distinct defects hide behind a perfect outcome score: a <b>cost defect</b> (duplicate paid calls, which scale linearly with volume and will show up as a bill, not as a bug report) and a <b>policy defect</b> (an access violation, which is a compliance incident regardless of whether the answer was right). Neither is visible from the final answer alone.<br /><br />To assert either one you need the per-step record: <b>selected action + arguments</b> (to detect the duplicate call and the record it read), <b>available actions</b> (to show the agent had a compliant alternative), and <b>state before/after</b> (to prove what it touched). That's the six-field evidence standard above, and the reason it is worth the storage. The deeper lesson: an eval set that only grades outputs will happily certify an agent that is expensive and non-compliant.</div>
+  <div class="revealbox">The report should say outcome 20/20, trajectory 12/20, and treat the trajectory number as the one that governs deployment. Two distinct defects hide behind a perfect outcome score: a cost defect (duplicate paid calls, which scale linearly with volume and will show up as a bill, not as a bug report) and a policy defect (an access violation, which is a compliance incident regardless of whether the answer was right). Neither is visible from the final answer alone.<br /><br />To assert either one you need the per-step record: selected action + arguments (to detect the duplicate call and the record it read), available actions (to show the agent had a compliant alternative), and state before/after (to prove what it touched). That's the six-field evidence standard above, and the reason it is worth the storage. The deeper lesson: an eval set that only grades outputs will happily certify an agent that is expensive and non-compliant.</div>
 </div></section>
 
 <section><div class="wrap">

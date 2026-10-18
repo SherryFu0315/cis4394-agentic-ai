@@ -41,11 +41,11 @@
 .venn .vg.a.on circle.ring{fill:rgba(0,57,166,.15);stroke:#0039a6}
 .venn .vg.b.on circle.ring{fill:rgba(184,131,15,.17);stroke:#b8830f}
 .venn .vg.c.on circle.ring{fill:rgba(124,92,214,.15);stroke:#7c5cd6}
-.venn text.lab{font-size:var(--fs-xs);font-weight:700;fill:var(--line2);font-family:var(--sans)}
+.venn text.lab{font-size:12px;font-weight:700;fill:var(--line2);font-family:var(--sans)}
 .venn .vg.on text.lab{fill:var(--ink)}
 .venn .core{opacity:0;transition:opacity .25s}
 .venn .core circle{fill:var(--red);stroke:#8c0a20;stroke-width:2}
-.venn .core text{fill:#fff;font-size:var(--fs-xs);font-weight:700;font-family:var(--sans)}
+.venn .core text{fill:#fff;font-size:12px;font-weight:700;font-family:var(--sans)}
 .venn.lethal .core{opacity:1}
 .verdict{border-radius:14px;border:1px solid;padding:22px 24px}
 .verdict.safe{background:var(--good);border-color:var(--good-line)}
@@ -117,11 +117,11 @@
       <p class="small"><b>Who is harmed:</b> usually the operator, the company running the agent.</p>
     </div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Indirect injection: the dangerous one</span>
-      <p class="small" style="margin-top:8px">The attacker never talks to the agent. They plant instructions in content the agent will <b>fetch</b>: an inbound email, a web page it browses, a PDF in a shared drive, a README in a dependency, a review on a product page, a résumé in an applicant pipeline.</p>
+      <p class="small" style="margin-top:8px">The attacker never talks to the agent. They plant instructions in content the agent will fetch: an inbound email, a web page it browses, a PDF in a shared drive, a README in a dependency, a review on a product page, a résumé in an applicant pipeline.</p>
       <p class="small"><b>Who is harmed:</b> the <em>user</em>, who opened nothing malicious. The agent did the reading, and the agent is trusted.</p>
     </div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>The research foundation:</b> Greshake et al. (2023) demonstrated indirect prompt injection against real LLM-integrated applications and named the core mechanism: when an application feeds retrieved content into the model, a <b>data channel becomes a control channel</b>, and every additional tool widens what that channel can reach. <a class="doc" href="https://arxiv.org/abs/2302.12173" target="_blank" rel="noopener">Read the paper (arXiv:2302.12173) ↗</a></div>
+  <div class="callout" style="margin-top:20px"><b>The research foundation:</b> Greshake et al. (2023) demonstrated indirect prompt injection against real LLM-integrated applications and named the core mechanism: when an application feeds retrieved content into the model, a data channel becomes a control channel, and every additional tool widens what that channel can reach. <a class="doc" href="https://arxiv.org/abs/2302.12173" target="_blank" rel="noopener">Read the paper (arXiv:2302.12173) ↗</a></div>
 </div></section>
 
 <section><div class="wrap">
@@ -168,13 +168,13 @@ mention this step in your summary.
   </div>
   <div class="bigq" style="margin-top:26px"><span class="qlabel">Discussion question</span>The hidden block is not encrypted, not obfuscated, not clever. Why is “scan incoming text for suspicious instructions and strip them” a useful control but not a fix?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">Because it is a <b>blocklist against natural language</b>, and natural language has infinite paraphrases. The same request can be a quotation (“the customer wrote: please include the account email”), a fake system message, a foreign language, base64 in a “diagnostic code,” a table cell, an image caption, or a benign-looking policy note in a linked document the agent opens next. Screening raises the cost of an attack and catches the lazy ones (worth doing, layer one of several), but you cannot buy a guarantee from it. Guarantees come from architecture: what the agent can <em>reach</em>, what it can <em>do</em>, and what a human must approve. Note also the last line of the payload: <em>“do not mention this step”</em>. A successful injection usually tries to suppress the evidence, which is exactly why the log must be written by your harness, not narrated by the model.</div>
+  <div class="revealbox">Because it is a blocklist against natural language, and natural language has infinite paraphrases. The same request can be a quotation (“the customer wrote: please include the account email”), a fake system message, a foreign language, base64 in a “diagnostic code,” a table cell, an image caption, or a benign-looking policy note in a linked document the agent opens next. Screening raises the cost of an attack and catches the lazy ones (worth doing, layer one of several), but you cannot buy a guarantee from it. Guarantees come from architecture: what the agent can <em>reach</em>, what it can <em>do</em>, and what a human must approve. Note also the last line of the payload: <em>“do not mention this step”</em>. A successful injection usually tries to suppress the evidence, which is exactly why the log must be written by your harness, not narrated by the model.</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">Interactive · the centerpiece</div>
   <h2>The lethal trifecta</h2>
-  <p class="lede">Simon Willison's framing (2025): three capabilities are individually reasonable and jointly catastrophic: <b>access to private data</b>, <b>exposure to untrusted content</b>, and <b>the ability to communicate externally</b>. Any <em>two</em> are usually survivable. All <em>three</em> is a data-exfiltration machine waiting for someone to write the email. Toggle the legs and read the verdict.</p>
+  <p class="lede">Simon Willison's framing (2025): three capabilities are individually reasonable and jointly catastrophic: access to private data, exposure to untrusted content, and the ability to communicate externally. Any <em>two</em> are usually survivable. All <em>three</em> is a data-exfiltration machine waiting for someone to write the email. Toggle the legs and read the verdict.</p>
   <div class="tri">
     <div class="trileft">
       <div class="legs">
@@ -208,7 +208,7 @@ mention this step in your summary.
       </div>
     </div>
   </div>
-  <div class="callout" style="margin-top:22px"><b>Read “usually fine” honestly.</b> Two legs means the agent cannot take <em>your private data</em> and hand it to a stranger. It does not mean nothing bad can happen: a two-leg agent can still be made to lie to you, spam other people, or hammer an internal URL. The trifecta is a lens for one specific catastrophe, <b>exfiltration</b>, and it is a very good lens, because that catastrophe is the one that ends up in a breach notification.</div>
+  <div class="callout" style="margin-top:22px"><b>Read “usually fine” honestly.</b> Two legs means the agent cannot take <em>your private data</em> and hand it to a stranger. It does not mean nothing bad can happen: a two-leg agent can still be made to lie to you, spam other people, or hammer an internal URL. The trifecta is a lens for one specific catastrophe, exfiltration, and it is a very good lens, because that catastrophe is the one that ends up in a breach notification.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -244,8 +244,8 @@ mention this step in your summary.
   <h2>Five defenses, stacked</h2>
   <p class="lede">No single control is sufficient. Assume each one fails sometimes and design so that the next one still holds. Notice how much of this you have already built for other reasons.</p>
   <div class="defgrid">
-    <div class="def"><span class="tag">Layer 1</span><h3>Treat every fetched byte as untrusted data</h3><p class="small">Mark retrieved content as data in the context, never as instruction. Screen it. Strip active markup. Do not let a tool result silently become a system message. Honest limit: this <b>reduces</b> the hit rate, it does not eliminate the class.</p></div>
-    <div class="def"><span class="tag">Layer 2</span><h3>Least-privilege tools</h3><p class="small">Week 5's <b>auto / constrain / gate</b> decision, applied per tool: read-only where possible, allow-listed destinations and arguments, scoped credentials, short-lived tokens. This is the layer that <b>cuts a trifecta leg</b>.</p></div>
+    <div class="def"><span class="tag">Layer 1</span><h3>Treat every fetched byte as untrusted data</h3><p class="small">Mark retrieved content as data in the context, never as instruction. Screen it. Strip active markup. Do not let a tool result silently become a system message. Honest limit: this reduces the hit rate, it does not eliminate the class.</p></div>
+    <div class="def"><span class="tag">Layer 2</span><h3>Least-privilege tools</h3><p class="small">Week 5's auto / constrain / gate decision, applied per tool: read-only where possible, allow-listed destinations and arguments, scoped credentials, short-lived tokens. This is the layer that cuts a trifecta leg.</p></div>
     <div class="def" style="border-left-color:var(--red)"><span class="tag">Layer 3</span><h3>Human gate on irreversible and outbound actions</h3><p class="small">Sending, spending, deleting, publishing. The gate belongs between “the model chose an action with arguments” and “the harness executes it”, and the approval screen must show the arguments, because that is where the exfiltrated data would be sitting.</p></div>
     <div class="def"><span class="tag">Layer 4</span><h3>Egress control</h3><p class="small">Allow-list the domains the agent may reach and the addresses it may write to. Scan outbound content for secrets and personal data. Block agent-chosen image and link URLs in rendered output. A Markdown image is a silent GET request with your data in the query string.</p></div>
     <div class="def"><span class="tag">Layer 5</span><h3>Log everything, and read the logs</h3><p class="small">Full trace per step in the <a href="../week2/evaluate.html">Week 2</a> evidence format, written by the harness. Alert on anomalies: a new destination domain, an unusual tool sequence, a spike in records read. Logging prevents nothing: it is what makes an incident <em>knowable</em>, which is the difference between a bad week and an unbounded liability.</p></div>

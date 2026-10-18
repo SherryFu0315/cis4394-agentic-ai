@@ -53,7 +53,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">After class · Week 2</div>
   <h1>Week 2, wrapped. And what’s next.</h1>
-  <p class="lede">Four things on this page: the full answer key for the repo scavenger hunt, how to join a group for Group Assignment 1, clear step-by-step tutorials for each build path, and a heads-up on <b>Quiz 1</b> with sample questions.</p>
+  <p class="lede">Four things on this page: the full answer key for the repo scavenger hunt, how to join a group for Group Assignment 1, clear step-by-step tutorials for each build path, and a heads-up on Quiz 1 with sample questions.</p>
 </div></header>
 
 <section id="answerkey"><div class="wrap">
@@ -68,8 +68,8 @@
     <tr><td><b>05 Environment</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/tests/suite/prompt_caching.rs" target="_blank" rel="noopener"><code>core/tests/suite/prompt_caching.rs</code></a></td><td>Codex injects environment context: the tests check for <code>&lt;cwd&gt;</code>, <code>&lt;shell&gt;</code>, <code>&lt;current_date&gt;</code>, <code>&lt;timezone&gt;</code> tags. The environment is the world the agent can observe and act on.</td></tr>
     <tr><td><b>06 State / Memory</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/config.schema.json" target="_blank" rel="noopener"><code>core/config.schema.json</code></a></td><td>History persists to <code>~/.codex/history.jsonl</code>, and a separate <code>memories</code> subsystem exists. Three kinds: turn state → conversation state → long-lived memory. You don’t need all three to be an agent.</td></tr>
     <tr><td><b>07 Agent Loop</b> ⭐</td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/src/session/turn.rs" target="_blank" rel="noopener"><code>core/src/session/turn.rs</code></a></td><td><b>Read this file first.</b> Its comments state the whole algorithm: if the model requests a function call, execute it and send the output back; if it sends only a message, the turn is complete. That’s the agent loop, and its stop condition, in two sentences.</td></tr>
-    <tr><td><b>08 Guardrails / HITL</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/src/exec_policy.rs" target="_blank" rel="noopener"><code>core/src/exec_policy.rs</code></a></td><td><code>Decision::Prompt → NeedsApproval</code>: policy code sits <b>between reasoning and action</b>: allow, forbid, or ask the human. Model intention ≠ execution permission. This is runtime enforcement, not a polite prompt line.</td></tr>
-    <tr><td><b>09 Evaluation</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/protocol/src/prompts/base_instructions/default.md" target="_blank" rel="noopener"><code>protocol/…/base_instructions/default.md</code></a></td><td>The base instructions tell the agent to verify its work with the project’s own tests and builds. Evaluation doesn’t need another LLM: <code>pytest</code> passing is evaluation. And a failing test <b>feeds the loop</b>: fail → observe → reason → retry.</td></tr>
+    <tr><td><b>08 Guardrails / HITL</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/core/src/exec_policy.rs" target="_blank" rel="noopener"><code>core/src/exec_policy.rs</code></a></td><td><code>Decision::Prompt → NeedsApproval</code>: policy code sits between reasoning and action: allow, forbid, or ask the human. Model intention ≠ execution permission. This is runtime enforcement, not a polite prompt line.</td></tr>
+    <tr><td><b>09 Evaluation</b></td><td><a class="doc" href="https://github.com/openai/codex/blob/main/codex-rs/protocol/src/prompts/base_instructions/default.md" target="_blank" rel="noopener"><code>protocol/…/base_instructions/default.md</code></a></td><td>The base instructions tell the agent to verify its work with the project’s own tests and builds. Evaluation doesn’t need another LLM: <code>pytest</code> passing is evaluation. And a failing test feeds the loop: fail → observe → reason → retry.</td></tr>
   </tbody></table></div>
 
   <div class="card" style="margin-top:20px">
@@ -110,7 +110,7 @@
         <li><b>1–6 members.</b> Working solo is allowed. You still must join a group (of one).</li>
         <li>Join the group you mean to join. Coordinate with your teammates first; don’t drop into a group of strangers, and don’t “save seats” in multiple groups.</li>
         <li><b>Your own section only.</b> Groups don’t transfer between sections.</li>
-        <li><b>Deadline:</b> GA1 is due <b>Tue Sept 15</b> (Wednesday section) / <b>Wed Sept 16</b> (Thursday section), 11:59 pm EST; enroll well before then.</li>
+        <li><b>Deadline:</b> GA1 is due Tue Sept 15 (Wednesday section) / Wed Sept 16 (Thursday section), 11:59 pm EST; enroll well before then.</li>
       </ul>
     </div>
   </div>
@@ -128,7 +128,7 @@
         <ol class="steps">
           <li>Use a personal Gmail; your GSU account is blocked from Labs. You must be 18+.</li>
           <li>On a computer, open <a class="doc" href="https://gemini.google.com/" target="_blank" rel="noopener">gemini.google.com ↗</a> → left sidebar → Gems.</li>
-          <li>Under <b>My Gems from Labs</b>, click New Gem; this opens the Opal editor (boxes connected by arrows; each box is a step).</li>
+          <li>Under My Gems from Labs, click New Gem; this opens the Opal editor (boxes connected by arrows; each box is a step).</li>
           <li>Paste the full starter prompt from <code>prompts/opal_starter_prompt.md</code> (starter kit).</li>
           <li>Add three inputs by pasting the files as text: <code>resume.md</code> (facts), <code>preferences.md</code> (constraints), <code>data/jobs.json</code> (jobs).</li>
           <li>Build the flow: an evaluate step → routing (recommend / investigate / down-rank / ask) → a user-input step for Approve / Edit / Reject → a draft step that only runs after approval.</li>
@@ -167,7 +167,7 @@
     <h3>🅒 Code path: Google ADK (recommended)</h3>
     <div class="grid2" style="align-items:start;margin-top:12px">
       <div>
-        <p class="small">For those coding GA1, we recommend Google’s <b>Agent Development Kit (ADK)</b>: an official, open-source Python framework that runs on the <b>same free Gemini API key</b> you created in Week 1, and ships a built-in dev UI with a trace view (instant evidence for deliverables #8–9).</p>
+        <p class="small">For those coding GA1, we recommend Google’s Agent Development Kit (ADK): an official, open-source Python framework that runs on the same free Gemini API key you created in Week 1, and ships a built-in dev UI with a trace view (instant evidence for deliverables #8–9).</p>
         <div class="codebox" style="margin-top:12px">pip install google-adk
 adk create job_agent        # scaffold
 # put your GOOGLE_API_KEY in job_agent/.env

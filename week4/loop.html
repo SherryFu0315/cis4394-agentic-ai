@@ -41,7 +41,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">01 · Foundations</div>
   <h1>The agent <em>loop</em>.</h1>
-  <p class="lede">A chatbot answers the last message. An agent pursues a <b>goal</b> across steps: observing, reasoning, acting, and checking whether it's done. That cycle is the unit of agent behavior, and everything else this semester elaborates it.</p>
+  <p class="lede">A chatbot answers the last message. An agent pursues a goal across steps: observing, reasoning, acting, and checking whether it's done. That cycle is the unit of agent behavior, and everything else this semester elaborates it.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -63,7 +63,7 @@ building, or 2× the Statue of Liberty?"
 The agent decomposes, calls tools, keeps
 STATE across steps, and STOPS when the
 goal is satisfied — not when you stop typing.</div>
-      <p class="small" style="margin-top:10px">Three defining pieces: a <b>goal</b>, persistent <b>state</b>, and a <b>termination condition</b> (Wang et al., 2023 survey framing).</p>
+      <p class="small" style="margin-top:10px">Three defining pieces: a goal, persistent state, and a termination condition (Wang et al., 2023 survey framing).</p>
     </div>
   </div>
 </div></section>
@@ -71,7 +71,7 @@ goal is satisfied — not when you stop typing.</div>
 <section><div class="wrap">
   <div class="eyebrow">Interactive · step through a real episode</div>
   <h2>One goal, one loop, eight steps</h2>
-  <p class="lede">This is the loop diagram from Week 2: same shape, new episode. Press <b>Step</b> and watch the agent answer the Atlanta-vs-statue question with two tools: <code>Search</code> and <code>Calculator</code>.</p>
+  <p class="lede">This is the loop diagram from Week 2: same shape, new episode. Press Step and watch the agent answer the Atlanta-vs-statue question with two tools: <code>Search</code> and <code>Calculator</code>.</p>
   <div class="sim2">
     <div class="loopbox">
       <svg viewBox="0 0 480 330" aria-label="agent loop diagram">
@@ -88,7 +88,7 @@ goal is satisfied — not when you stop typing.</div>
         <g class="loopnode" id="ln3"><rect x="30" y="265" width="160" height="46" rx="10"/><text x="110" y="293" text-anchor="middle">Update state</text></g>
         <g class="loopnode pausenode" id="ln4"><rect x="16" y="122" width="176" height="46" rx="10"/><text x="104" y="150" text-anchor="middle">Done? → Finish</text></g>
       </svg>
-      <p class="small" style="margin:10px 6px 4px">The amber node is the <b>stop check</b>: after every state update, the loop asks whether the goal is satisfied, or whether it has run out of budget.</p>
+      <p class="small" style="margin:10px 6px 4px">The amber node is the stop check: after every state update, the loop asks whether the goal is satisfied, or whether it has run out of budget.</p>
     </div>
     <div class="simright">
       <div class="simctl">
@@ -121,7 +121,7 @@ goal is satisfied — not when you stop typing.</div>
   <div class="eyebrow">Discussion</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your agent can call <code>send_payment()</code>. Looking at the five parts of a loop turn, where exactly would you put the human gate, and why not anywhere else?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">Between <b>step 2 and step 3</b>: after the model has committed to a specific action with specific arguments, before the harness executes it. Earlier (before reasoning) you'd interrupt harmless steps too; later (after execution) the money is already gone. The gate should also be <em>selective</em>: pause only for irreversible or spend actions, or approval fatigue will train humans to click yes. This is exactly where Codex's <code>exec_policy</code> sits in the Week 2 material.</div>
+  <div class="revealbox">Between step 2 and step 3: after the model has committed to a specific action with specific arguments, before the harness executes it. Earlier (before reasoning) you'd interrupt harmless steps too; later (after execution) the money is already gone. The gate should also be <em>selective</em>: pause only for irreversible or spend actions, or approval fatigue will train humans to click yes. This is exactly where Codex's <code>exec_policy</code> sits in the Week 2 material.</div>
 </div></section>
 
 <section><div class="wrap">

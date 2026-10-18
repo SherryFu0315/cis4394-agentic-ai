@@ -26,7 +26,7 @@
 .tracebox .ok{color:#9ad0a0}
 .tracebox .no{color:#ff9d9d}
 .ansgraph rect{fill:#fff;stroke:var(--line2);stroke-width:1.3}
-.ansgraph text{font-family:var(--mono);font-size:var(--fs-xs);font-weight:600;fill:var(--ink)}
+.ansgraph text{font-family:var(--mono);font-size:12px;font-weight:600;fill:var(--ink)}
 .ansgraph .lead rect{fill:var(--blue);stroke:var(--blue)}
 .ansgraph .lead text{fill:#fff}
 .ansgraph .shared rect{fill:#fff7ea;stroke:#dbb96a}
@@ -63,7 +63,7 @@
   <div class="eyebrow">Exercise A</div>
   <h2>Decompose, or not?</h2>
   <div class="grouptask"><span class="gk">👥 Group task · Pairs · ~20 minutes</span>
-    <p>You are handed a <b>conference-planning agent</b>. Its job: for a two-day departmental conference with a fixed total budget, choose a <b>venue</b>, arrange <b>catering</b>, invite and confirm <b>speakers</b>, and keep the whole thing inside <b>budget</b>. On paper or a whiteboard, draw it <b>twice</b>: (1) as a single agent with tools, and (2) as a supervisor with four workers. On both drawings, mark in one colour every piece of <b>shared mutable state</b> (anything two parts of the system both read and write) and in another colour every <b>hand-off point</b> (anywhere information must travel from one box to another). Then apply the test out loud: do these subtasks run in parallel, and can each one be verified on its own?</p>
+    <p>You are handed a conference-planning agent. Its job: for a two-day departmental conference with a fixed total budget, choose a venue, arrange catering, invite and confirm speakers, and keep the whole thing inside budget. On paper or a whiteboard, draw it twice: (1) as a single agent with tools, and (2) as a supervisor with four workers. On both drawings, mark in one colour every piece of shared mutable state (anything two parts of the system both read and write) and in another colour every hand-off point (anywhere information must travel from one box to another). Then apply the test out loud: do these subtasks run in parallel, and can each one be verified on its own?</p>
     <p class="prod"><b>Produce:</b> both sketches, with shared state and hand-offs marked, plus a one-line verdict that names the test, e.g. "single agent, because X and Y are coupled through the budget and neither is verifiable alone."</p>
   </div>
   <div class="card" style="margin-top:16px">
@@ -77,7 +77,7 @@
       <div class="loopbox" style="background:#fff;margin-top:14px">
         <svg class="ansgraph" viewBox="0 0 720 250" aria-label="reference sketch: one planning owner with parallel read-only research">
           <g class="lead"><rect x="250" y="26" width="220" height="46" rx="11"/><text x="360" y="55" text-anchor="middle">planner (owns the plan)</text></g>
-          <g class="shared"><rect x="272" y="96" width="176" height="40" rx="10"/><text x="360" y="121" text-anchor="middle">budget · dates · headcount</text></g>
+          <g class="shared"><rect x="258" y="96" width="204" height="40" rx="10"/><text x="360" y="121" text-anchor="middle">budget · dates · headcount</text></g>
           <line x1="360" y1="72" x2="360" y2="96" />
           <line class="dash" x1="300" y1="136" x2="120" y2="176" /><line class="dash" x1="340" y1="136" x2="290" y2="176" />
           <line class="dash" x1="380" y1="136" x2="440" y2="176" /><line class="dash" x1="420" y1="136" x2="605" y2="176" />
@@ -85,8 +85,9 @@
           <g><rect x="212" y="178" width="156" height="42" rx="10"/><text x="290" y="204" text-anchor="middle">caterer quotes</text></g>
           <g><rect x="378" y="178" width="124" height="42" rx="10"/><text x="440" y="204" text-anchor="middle">speaker fees</text></g>
           <g><rect x="522" y="178" width="166" height="42" rx="10"/><text x="605" y="204" text-anchor="middle">travel prices</text></g>
-          <text class="lbl" x="252" y="163">parallel, read-only, each result verifiable against its own source</text>
-          <text class="lbl" x="188" y="242">dashed = returns options with prices · never a commitment · booking runs through the planner, behind a human gate</text>
+          <text class="lbl" x="360" y="163" text-anchor="middle">parallel, read-only, each result verifiable against its own source</text>
+          <text class="lbl" x="360" y="232" text-anchor="middle">dashed = returns options with prices, never a commitment</text>
+          <text class="lbl" x="360" y="247" text-anchor="middle">booking runs through the planner, behind a human gate</text>
         </svg>
       </div>
     </div>
@@ -97,8 +98,8 @@
   <div class="eyebrow">Exercise B</div>
   <h2>Assign the blame</h2>
   <div class="grouptask"><span class="gk">👥 Group task · Groups of three · ~15 minutes</span>
-    <p>Below is a trace from a fictional three-agent <b>quarterly-reporting</b> system. Read it carefully, then answer three things.</p>
-<ul class="pts"><li><b>(1)</b> Which agent malfunctioned?</li><li><b>(2)</b> Which <b>MAST category</b> is the <em>root</em> failure (specification &amp; system design, inter-agent misalignment, or task verification &amp; termination), and which category is a secondary contributor?</li><li><b>(3)</b> Name the <b>one log line</b> you wish this system had recorded that would have made the failure obvious in seconds.</li></ul>
+    <p>Below is a trace from a fictional three-agent quarterly-reporting system. Read it carefully, then answer three things.</p>
+<ul class="pts"><li><b>(1)</b> Which agent malfunctioned?</li><li><b>(2)</b> Which MAST category is the <em>root</em> failure (specification &amp; system design, inter-agent misalignment, or task verification &amp; termination), and which category is a secondary contributor?</li><li><b>(3)</b> Name the one log line you wish this system had recorded that would have made the failure obvious in seconds.</li></ul>
     <p class="prod"><b>Produce:</b> your category call with the exact line of the trace that proves it, plus your one missing log, written in the form "for every X, record Y."</p>
   </div>
   <p class="small" style="margin-top:6px"><b>Fictional teaching case.</b> User request: <em>"Summarize Q3 revenue by region for the board deck. Use the finalized figures only; the preliminary numbers in the shared drive are not approved for external use."</em></p>
@@ -135,11 +136,11 @@
   <p class="lede"><b>Meridian Ridge Capital</b> is a fictional mid-sized investment-research firm. Last quarter it replaced its single research agent with a five-agent pipeline, and the demo was spectacular.</p>
   <div class="grid2" style="align-items:start">
     <div class="card"><span class="kicker">The architecture</span>
-      <p class="small" style="margin-top:8px">An <b>intake supervisor</b> takes an analyst's question about a company and fans it out to four specialists: a <b>filings agent</b> (reads the last four quarterly reports), a <b>macro agent</b> (sector and rate environment), a <b>news agent</b> (press coverage and announcements from the last 90 days), and a <b>memo writer</b> that turns whatever comes back into a two-page investment memo in house style.</p>
+      <p class="small" style="margin-top:8px">An intake supervisor takes an analyst's question about a company and fans it out to four specialists: a filings agent (reads the last four quarterly reports), a macro agent (sector and rate environment), a news agent (press coverage and announcements from the last 90 days), and a memo writer that turns whatever comes back into a two-page investment memo in house style.</p>
       <p class="small">Throughput went up roughly fivefold. The memos are clean, well-organized, and confident. Analysts loved them for six weeks.</p>
     </div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">What broke</span>
-      <p class="small" style="margin-top:8px">Two analysts asked about the same company two days apart and got two memos with <b>opposite conclusions</b>. One described margin expansion and a strengthening position; the other described margin compression and rising input costs. Both cited real evidence. Both read as authoritative.</p>
+      <p class="small" style="margin-top:8px">Two analysts asked about the same company two days apart and got two memos with opposite conclusions. One described margin expansion and a strengthening position; the other described margin compression and rising input costs. Both cited real evidence. Both read as authoritative.</p>
       <p class="small">The reconstruction: the filings agent had used the most recent <em>filed</em> quarter; the news agent had picked up a pre-announcement covering the quarter after it; the macro agent had summarized input costs at sector level while the filings agent had company-specific figures. Nothing in the pipeline ever compared the four specialists' outputs to each other. The memo writer's job was to write well, and it did, twice, from two different sets of inputs, with no idea the first memo existed.</p>
       <p class="small">The compliance question that followed was worse than the technical one: <em>which memo did we send to a client, and can we reconstruct why it said what it said?</em></p>
     </div>
@@ -157,7 +158,7 @@
   <div style="margin-top:18px">
     <div class="bigq"><span class="qlabel">Discussion question 3</span>Meridian Ridge's CTO asks whether to fix the pipeline or collapse it back to one agent. What evidence decides it, and what would you tell the board?</div>
     <button class="revealbtn">See the answer</button>
-    <div class="revealbox">Run the test, then run the ablation. Start with the test: <em>parallel and independently verifiable?</em> The four research pulls genuinely are parallel and each is checkable against its own source. That half holds. But the <b>memo</b> is a single coherent artifact whose correctness is a property of the whole, so the final stage was never independently verifiable, and that is the stage that failed. That asymmetry is the answer in miniature: <b>keep the fan-out, collapse the judgement.</b> Parallel retrieval into one context; one agent that reconciles and writes, holding all four fragments at once; the gate from question 2 in front of it.<br /><br><b>The evidence that decides it</b> is an eval set of real analyst questions with known-correct conclusions, run against three designs (the old single agent, the five-agent pipeline, and the collapsed hybrid), scored on conclusion accuracy and on contradiction rate across repeated runs of the same question (the pass^k intuition from Week 8: an architecture that gives different answers to the same question twice has a reliability problem no average score will show). Ablate one specialist at a time; any agent whose removal does not move the score is coordination cost with no payoff. Report cost per memo alongside, at real volume.<br /><br><b>What to tell the board:</b> the AI was not wrong; the system had no owner of the conclusion: four correct fragments and nobody responsible for whether they added up. Fluent output is not evidence, and throughput measured without a contradiction rate measured the wrong thing. The remedy is one accountable owner of the judgement, a reconciliation gate with a human on conflicts, and a per-memo trace that answers "why did it say that", which, incidentally, is also the answer to the compliance question, and the reason the trace must exist before the incident rather than after it.</div>
+    <div class="revealbox">Run the test, then run the ablation. Start with the test: <em>parallel and independently verifiable?</em> The four research pulls genuinely are parallel and each is checkable against its own source. That half holds. But the memo is a single coherent artifact whose correctness is a property of the whole, so the final stage was never independently verifiable, and that is the stage that failed. That asymmetry is the answer in miniature: keep the fan-out, collapse the judgement. Parallel retrieval into one context; one agent that reconciles and writes, holding all four fragments at once; the gate from question 2 in front of it.<br /><br><b>The evidence that decides it</b> is an eval set of real analyst questions with known-correct conclusions, run against three designs (the old single agent, the five-agent pipeline, and the collapsed hybrid), scored on conclusion accuracy and on contradiction rate across repeated runs of the same question (the pass^k intuition from Week 8: an architecture that gives different answers to the same question twice has a reliability problem no average score will show). Ablate one specialist at a time; any agent whose removal does not move the score is coordination cost with no payoff. Report cost per memo alongside, at real volume.<br /><br><b>What to tell the board:</b> the AI was not wrong; the system had no owner of the conclusion: four correct fragments and nobody responsible for whether they added up. Fluent output is not evidence, and throughput measured without a contradiction rate measured the wrong thing. The remedy is one accountable owner of the judgement, a reconciliation gate with a human on conflicts, and a per-memo trace that answers "why did it say that", which, incidentally, is also the answer to the compliance question, and the reason the trace must exist before the incident rather than after it.</div>
   </div>
 </div></section>
 
@@ -203,7 +204,7 @@
 <section><div class="wrap">
   <div class="callout" style="margin-top:22px">
 <div class="ptxt" style="margin-top:22px"><b>Next week:</b> Security, Trust &amp; Governance, covering the lethal trifecta, prompt injection as an architecture problem, and the two documents every AI professional should know (NIST AI RMF, EU AI Act).</div>
-<div class="ptxt"><b>Quiz 4 is next week</b>: in class, closed-book, 5 multiple-choice. Scope: the Week 9 readings above + the Week 10 readings below. Sample questions: <a class="doc" href="#quiz">above on this page ↑</a>. <b>Capstone Milestone II releases next week.</b></div>
+<div class="ptxt"><b>Quiz 4 is next week</b>: in class, closed-book, 5 multiple-choice. Scope: the Week 9 readings above + the Week 10 readings below. Sample questions: <a class="doc" href="#quiz">above on this page ↑</a>. Capstone Milestone II releases next week.</div>
 <div class="ptxt"><b>Week 10 readings:</b></div>
 <ul class="pts"><li><a class="doc" href="https://www.linkedin.com/learning/navigating-the-eu-ai-act" target="_blank" rel="noopener">Ingold &amp; Hickok — Navigating the EU AI Act (LinkedIn Learning) ↗</a>, free with your GSU login via the <a class="doc" href="https://technology.gsu.edu/technology-services/technology-professional-training/linkedin-learning/" target="_blank" rel="noopener">GSU portal ↗</a></li><li><a class="doc" href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener">NIST AI Risk Management Framework (free) ↗</a></li><li><a class="doc" href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/" target="_blank" rel="noopener">Willison — The lethal trifecta (free) ↗</a> and the <a class="doc" href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/" target="_blank" rel="noopener">OWASP Agentic Top 10 (free) ↗</a></li></ul>
 <div class="ptxt">Full list on the Week 10 site.</div>

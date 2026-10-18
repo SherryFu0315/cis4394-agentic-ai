@@ -45,13 +45,13 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">Week 11 · Module 4 · Deployment &amp; Applications</div>
   <h1>When the agent can <em>spend</em>.</h1>
-  <p class="lede">A shopping agent that finds, compares and <b>buys</b> is the whole course in one transaction: tools, protocols, memory, evaluation, and, above all, the human gate. Every other week you could fix a bad run by running it again. This week the run moves money, and “mostly works” stops being an acceptable answer.</p>
+  <p class="lede">A shopping agent that finds, compares and buys is the whole course in one transaction: tools, protocols, memory, evaluation, and, above all, the human gate. Every other week you could fix a bad run by running it again. This week the run moves money, and “mostly works” stops being an acceptable answer.</p>
 </div></header>
 
 <section><div class="wrap">
   <div class="callout blue">
 <div class="ptxt"><b>📌 This week's logistics:</b></div>
-<ul class="pts"><li>Group Assignment 3 is due this week, on your own section's iCollege page (team submission plus peer evaluation).</li><li>Capstone Milestone II is due next week: Weeks 12 and 13 are <b>Capstone Studios</b>: build time in your own section, no new lecture material.</li><li><b>No quiz this week.</b></li><li><b>Two make-up quizzes</b> are offered: one in <b>Week 13</b> and one in <b>Week 14</b>. You may take both; the better of the two replaces your lowest score from Quizzes 1–4.</li></ul>
+<ul class="pts"><li>Group Assignment 3 is due this week, on your own section's iCollege page (team submission plus peer evaluation).</li><li>Capstone Milestone II is due next week: Weeks 12 and 13 are Capstone Studios: build time in your own section, no new lecture material.</li><li><b>No quiz this week.</b></li><li><b>Two make-up quizzes</b> are offered: one in Week 13 and one in Week 14. You may take both; the better of the two replaces your lowest score from Quizzes 1–4.</li></ul>
 </div>
 </div></section>
 
@@ -59,7 +59,7 @@
   <div class="eyebrow">The big question</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your agent has worked all semester. Today you give it a payment method. Name the single property of the task that changed, and every design decision that must change with it.</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox"><b>Irreversibility.</b> Everything else follows from it. A failed summary is retried; a failed <code>place_order()</code> is a return, a chargeback, a phone call, and sometimes a loss. So: retries need <b>idempotency</b> (a retried order must not become a second order); the loop needs a <b>hard spend cap</b> enforced in the harness, not requested in the prompt; the trace stops being a debugging convenience and becomes the <b>evidence</b> that answers “who authorized this?”; and the <b>human gate</b> moves from a nice-to-must the thing the system is designed around. Reliability that was “good enough for a draft” is now the difference between a product and a liability.</div>
+  <div class="revealbox"><b>Irreversibility.</b> Everything else follows from it. A failed summary is retried; a failed <code>place_order()</code> is a return, a chargeback, a phone call, and sometimes a loss. So: retries need idempotency (a retried order must not become a second order); the loop needs a hard spend cap enforced in the harness, not requested in the prompt; the trace stops being a debugging convenience and becomes the evidence that answers “who authorized this?”; and the human gate moves from a nice-to-must the thing the system is designed around. Reliability that was “good enough for a draft” is now the difference between a product and a liability.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -138,10 +138,10 @@ Flow.mount(document.getElementById('flow-w11'),{
       {move:['user','agent'],packet:'intent mandate',say:'<b>Intent mandate.</b> The human states what the agent may buy, how much, and until when. This is signed once and referenced by every later step.',payload:'intent: restock copy paper\nlimit:  ≤ 10 cases, ≤ $400 total\nvalid:  this month\nauto:   under $400 → run; over → ask me',set:{spend:400}},
       {move:['agent','merchant'],packet:'search: copy paper, case',say:'The agent searches the catalog like any shopper.'},
       {move:['merchant','agent'],packet:'listing: $29.90 / case',tone:'ok',payload:'SKU 4471  Copy paper, 92 bright\n  unit: case (10 reams)   price: $29.90'},
-      {at:'agent',say:'The agent builds a <b>cart mandate</b>: the exact items, quantities and total it intends to pay. Not a vibe; a document.',payload:'cart: 10 × SKU 4471 @ $29.90 = $299.00\nref:  intent #I-2201\nkey:  7f3a…  (idempotency: this cart, once)'},
+      {at:'agent',say:'The agent builds a cart mandate: the exact items, quantities and total it intends to pay. Not a vibe; a document.',payload:'cart: 10 × SKU 4471 @ $29.90 = $299.00\nref:  intent #I-2201\nkey:  7f3a…  (idempotency: this cart, once)'},
       {move:['agent','cap'],packet:'cart $299.00',say:'Policy check, in code: is the total under the cap? is this idempotency key new? does the SKU match the intent?'},
       {at:'cap',tone:'ok',say:'$299 ≤ $400, key unseen, item matches. Auto-run.',payload:'cap:        299.00 ≤ 400.00   ✓\nidempotent: key 7f3a… new     ✓\nscope:      "copy paper" ∈ intent ✓'},
-      {move:['cap','pay'],packet:'authorize $299.00',tone:'ok',say:'The credential is <b>scoped</b>: this merchant, this amount, this month. If it leaks, the damage has a ceiling.'},
+      {move:['cap','pay'],packet:'authorize $299.00',tone:'ok',say:'The credential is scoped: this merchant, this amount, this month. If it leaks, the damage has a ceiling.'},
       {move:['pay','ledger'],packet:'$299.00 captured',tone:'ok',set:{orders:1}},
       {move:['ledger','agent'],packet:'receipt + trace id',tone:'ok',end:true,say:'Done, with a receipt the agent did not write: the ledger is the source of truth. The human saw nothing, which was the point of the mandate, and can audit everything, which was the point of the trace.'}
     ]},
@@ -205,7 +205,7 @@ Flow.mount(document.getElementById('flow-w11'),{
   <div class="eyebrow">Why managers care</div>
   <h2>The three questions a CFO asks first</h2>
   <div class="grid3">
-    <div class="card"><span class="kicker">Cost</span><p class="small" style="margin-top:8px">Not “what does the model cost” but <b>what does one completed task cost</b>: tokens per step, times steps, times attempts, plus the human minutes spent reviewing and fixing. Until you can quote that number, you cannot compare the agent to the person doing the job today.</p></div>
+    <div class="card"><span class="kicker">Cost</span><p class="small" style="margin-top:8px">Not “what does the model cost” but what does one completed task cost: tokens per step, times steps, times attempts, plus the human minutes spent reviewing and fixing. Until you can quote that number, you cannot compare the agent to the person doing the job today.</p></div>
     <div class="card"><span class="kicker">Trust</span><p class="small" style="margin-top:8px">Trust here is a set of enforced limits. A spend cap, an allow-list of merchants, an approval step on anything irreversible, and a kill switch. Each one is a line of code somebody can point at.</p></div>
     <div class="card"><span class="kicker">Auditability</span><p class="small" style="margin-top:8px">When a purchase is disputed, someone must be able to reconstruct it: what the user authorized, what the agent saw, what it chose, and what it paid. Your Week 2 evidence standard (<em>state before → observation → available actions → selected action → result → state after</em>) becomes a financial control.</p></div>
   </div>

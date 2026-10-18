@@ -26,9 +26,9 @@
 .nl{stroke:#c8102e;stroke-width:1;opacity:.42}
 .nl.hub{stroke:#0039a6;stroke-width:1.6;opacity:.85}
 .nbox rect{fill:#fff;stroke:var(--line2);stroke-width:1.2;rx:8}
-.nbox text{font-family:var(--sans);font-size:var(--fs-xs);font-weight:600;fill:var(--ink)}
+.nbox text{font-family:var(--sans);font-size:12px;font-weight:600;fill:var(--ink)}
 .hubbox rect{fill:var(--blue-soft);stroke:var(--blue);stroke-width:1.6;rx:10}
-.hubbox text{font-family:var(--sans);font-size:var(--fs-xs);font-weight:700;fill:var(--blue)}
+.hubbox text{font-family:var(--sans);font-size:12px;font-weight:700;fill:var(--blue)}
 .colhead{font-family:var(--sans);font-size:var(--fs-xs);letter-spacing:.14em;font-weight:700;fill:var(--muted)}
 .sliderow{display:grid;grid-template-columns:120px 1fr 52px;gap:12px;align-items:center;margin-bottom:10px}
 .sliderow label{font-size:var(--fs-xs);font-weight:600;color:var(--muted)}
@@ -59,13 +59,13 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">Week 6 · Module 2 · Interoperability</div>
   <h1>MCP &amp; A2A: the <em>standards</em> layer.</h1>
-  <p class="lede"><a href="../week5/mechanics.html">Week 5</a> you hand-wired tools into one agent. That works, once. Do it for five agents and twenty systems and you are maintaining a hundred pieces of custom glue. This week: the two open protocols that turn that multiplication into an addition: <b>MCP</b> for the tools and data underneath an agent, <b>A2A</b> for other agents beside it.</p>
+  <p class="lede"><a href="../week5/mechanics.html">Week 5</a> you hand-wired tools into one agent. That works, once. Do it for five agents and twenty systems and you are maintaining a hundred pieces of custom glue. This week: the two open protocols that turn that multiplication into an addition: MCP for the tools and data underneath an agent, A2A for other agents beside it.</p>
 </div></header>
 
 <section><div class="wrap">
   <div class="callout blue">
 <div class="ptxt"><b>📌 This week's logistics:</b></div>
-<ul class="pts"><li>The <b>final-project proposal is due this week</b> on iCollege. The two sections’ deadlines are a day apart, so check iCollege for your section’s due date. See the <a href="exercises.html#proposal">proposal checklist</a> below before you submit.</li><li><b>Group Assignment 2</b> is in progress and is <b>due in Week 8</b>.</li><li><b>No quiz this week.</b></li><li>The <a href="../week2/radar.html">Agent Radar</a> presenter slots continue; sign up for an open week.</li></ul>
+<ul class="pts"><li>The final-project proposal is due this week on iCollege. The two sections’ deadlines are a day apart, so check iCollege for your section’s due date. See the <a href="exercises.html#proposal">proposal checklist</a> below before you submit.</li><li><b>Group Assignment 2</b> is in progress and is due in Week 8.</li><li><b>No quiz this week.</b></li><li>The <a href="../week2/radar.html">Agent Radar</a> presenter slots continue; sign up for an open week.</li></ul>
 </div>
 </div></section>
 
@@ -73,7 +73,7 @@
   <div class="eyebrow">The big question</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your company builds five agents. Each one needs the CRM, the data warehouse, email, and the ticketing system. How many integrations does your team write, and how many do they <em>maintain</em> when the CRM changes its API?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">Written the hand-wired way: <b>5 × 4 = 20</b> integrations, and when the CRM ships a breaking change you fix it in <b>five</b> places, each written by a different team, at a different time, with different error handling. Written against a shared protocol: each agent speaks the protocol once and each system exposes a server once, so it is <b>5 + 4 = 9</b> pieces, and the CRM change is fixed in <b>one</b> place for everybody. That collapse, from a product to a sum, is the entire business case for MCP and A2A, and it is why this week is about plumbing rather than intelligence.</div>
+  <div class="revealbox">Written the hand-wired way: 5 × 4 = 20 integrations, and when the CRM ships a breaking change you fix it in five places, each written by a different team, at a different time, with different error handling. Written against a shared protocol: each agent speaks the protocol once and each system exposes a server once, so it is 5 + 4 = 9 pieces, and the CRM change is fixed in one place for everybody. That collapse, from a product to a sum, is the entire business case for MCP and A2A, and it is why this week is about plumbing rather than intelligence.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -101,7 +101,7 @@
       <div class="callout" id="nmVerdict" style="margin-top:14px">That is a 55% smaller maintenance surface, and the gap widens every time you add an agent or a system.</div>
     </div>
   </div>
-  <div class="callout blue" style="margin-top:20px"><b>Read the arithmetic honestly.</b> A standard does not remove the <em>work</em> of connecting to a CRM; somebody still writes that connector. It removes the <b>combinatorics</b>, the reason the same connector gets written five times. The payoff is in reuse, so it compounds: at 2 agents × 4 systems you save a quarter of the surface; at 20 × 30 you are comparing 600 bespoke integrations to 50. <span class="small">(Illustrative arithmetic, not measured data.)</span></div>
+  <div class="callout blue" style="margin-top:20px"><b>Read the arithmetic honestly.</b> A standard does not remove the <em>work</em> of connecting to a CRM; somebody still writes that connector. It removes the combinatorics, the reason the same connector gets written five times. The payoff is in reuse, so it compounds: at 2 agents × 4 systems you save a quarter of the surface; at 20 × 30 you are comparing 600 bespoke integrations to 50. <span class="small">(Illustrative arithmetic, not measured data.)</span></div>
 </div></section>
 
 <section><div class="wrap">
@@ -109,9 +109,9 @@
   <h2>&ldquo;USB-C for AI&rdquo;, and where it breaks down</h2>
   <div class="grid2">
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">The analogy</span>
-      <p class="small" style="margin-top:8px">Before USB-C, every device shipped its own charger and its own cable. The port did not make laptops better; it made <em>everything else</em> plug in. MCP is pitched the same way: one connector shape between an AI application and the tools and data it needs, so a connector built for one agent works for the next one. Anthropic used exactly this framing when it introduced MCP as an open standard in <b>November 2024</b> (<a class="doc" href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener">Anthropic, 2024 ↗</a>).</p></div>
+      <p class="small" style="margin-top:8px">Before USB-C, every device shipped its own charger and its own cable. The port did not make laptops better; it made <em>everything else</em> plug in. MCP is pitched the same way: one connector shape between an AI application and the tools and data it needs, so a connector built for one agent works for the next one. Anthropic used exactly this framing when it introduced MCP as an open standard in November 2024 (<a class="doc" href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener">Anthropic, 2024 ↗</a>).</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Where the analogy leaks</span>
-      <p class="small" style="margin-top:8px">A USB-C cable cannot lie to you. An MCP server can: it runs code, it returns text your model will read as instruction-shaped input, and it sits <em>inside</em> your trust boundary the moment you connect it. Plugging in a charger is a hardware decision; plugging in a server is a <b>supply-chain</b> decision. Hold onto that difference. It is the security thread that runs through page 01 and the case on page 03.</p></div>
+      <p class="small" style="margin-top:8px">A USB-C cable cannot lie to you. An MCP server can: it runs code, it returns text your model will read as instruction-shaped input, and it sits <em>inside</em> your trust boundary the moment you connect it. Plugging in a charger is a hardware decision; plugging in a server is a supply-chain decision. Hold onto that difference. It is the security thread that runs through page 01 and the case on page 03.</p></div>
   </div>
 </div></section>
 
@@ -124,7 +124,7 @@
       <p class="small">Your agent reaches <em>down</em> into a filesystem, a database, a ticketing API, a document store. The thing on the other end is not intelligent; it exposes capabilities and data, and your agent decides what to do with them. Open standard, introduced by Anthropic (2024); broadly adopted across the industry during 2025.</p>
       <p class="small" style="margin-top:10px"><a class="doc" href="mcp.html">Page 01 · How MCP works →</a></p></div>
     <div class="card"><span class="kicker">A2A · horizontal</span><h3 style="margin-top:6px">Agent ↔ agent</h3>
-      <p class="small">Your agent reaches <em>sideways</em> to another agent (possibly built by another team, another vendor, another company) and <b>delegates</b> a task rather than calling a function. The other side has its own goals, its own tools, and its own judgment. Announced by Google in April 2025 and contributed to the Linux Foundation in June 2025.</p>
+      <p class="small">Your agent reaches <em>sideways</em> to another agent (possibly built by another team, another vendor, another company) and delegates a task rather than calling a function. The other side has its own goals, its own tools, and its own judgment. Announced by Google in April 2025 and contributed to the Linux Foundation in June 2025.</p>
       <p class="small" style="margin-top:10px"><a class="doc" href="a2a.html">Page 02 · How A2A works →</a></p></div>
   </div>
   <div class="callout" style="margin-top:20px"><b>And a third option people forget:</b> if both &ldquo;agents&rdquo; live inside <em>your own</em> application (two nodes in one LangGraph from <a href="../week4/langgraph.html">Week 4</a>), you need neither protocol. They are just edges in a graph you own. Reach for a protocol when you cross a boundary you do not control: another team's deployment, another vendor, another company.</div>
@@ -172,9 +172,9 @@ Flow.mount(document.getElementById('flow-w6'),{
       {move:['host','model'],packet:'observation',tone:'ok',end:true,say:'Six messages, three tools discovered, zero credentials crossed. The vertical plug: the host gained a capability without the model learning anything about how it works. Note that <code>book</code> and <code>cancel</code> are also visible now; the host’s policy decides which ones need a gate.'}
     ]},
     a2a:{name:'A2A',intro:'Your advising agent needs a tutoring slot from an agent another department runs. Press Play.',steps:[
-      {mark:{server:'dim',cal:'dim'},move:['host','card'],packet:'GET /.well-known/agent.json',say:'<b>1 · discovery.</b> Your agent fetches the other agent’s <b>Agent Card</b>: what it can do, how to talk to it, how to authenticate.',set:{msgs:1}},
+      {mark:{server:'dim',cal:'dim'},move:['host','card'],packet:'GET /.well-known/agent.json',say:'<b>1 · discovery.</b> Your agent fetches the other agent’s Agent Card: what it can do, how to talk to it, how to authenticate.',set:{msgs:1}},
       {move:['card','host'],packet:'card',tone:'ok',payload:'{"name":"Tutoring Center Agent",\n "skills":[{"id":"book_tutoring","description":"Schedule a tutoring session"}],\n "url":"https://tutoring.gsu.edu/a2a",\n "auth":{"schemes":["bearer"]}}',set:{msgs:1}},
-      {move:['host','agentB'],packet:'task: tutoring for calc, this week',say:'<b>2 · delegate.</b> You send a <b>task</b>, in plain language plus structured fields. You are asking for an outcome, not calling a function.',set:{msgs:1},payload:'→ tasks/send {"message":{"role":"user","parts":[\n     {"text":"Book a calculus tutoring slot for student 9021 this week"}]}}'},
+      {move:['host','agentB'],packet:'task: tutoring for calc, this week',say:'<b>2 · delegate.</b> You send a task, in plain language plus structured fields. You are asking for an outcome, not calling a function.',set:{msgs:1},payload:'→ tasks/send {"message":{"role":"user","parts":[\n     {"text":"Book a calculus tutoring slot for student 9021 this week"}]}}'},
       {move:['agentB','btools'],packet:'their own loop',tone:'ok',say:'The tutoring agent runs its own loop with its own tools and data. Which tools? You do not know, and that is the point.'},
       {move:['btools','agentB'],packet:'…',tone:'ok'},
       {move:['agentB','host'],packet:'state: input-required',tone:'warn',say:'<b>3 · a clarifying round trip.</b> A2A tasks have states. This one needs more information before it can finish.',set:{msgs:1},payload:'← {"status":{"state":"input-required"},\n   "message":"Online or in person?"}'},
@@ -183,7 +183,7 @@ Flow.mount(document.getElementById('flow-w6'),{
       {move:['agentB','host'],packet:'artifact: confirmation',tone:'ok',end:true,set:{msgs:1},payload:'← {"status":{"state":"completed"},\n   "artifacts":[{"parts":[{"text":"Thu 2:00 pm, Library 204, tutor: J. Ortiz"}]}]}',say:'Seven messages. What crossed: a card, a task, a question, an answer, an artifact. What did not: their database, their tools, their credentials, their prompt. The horizontal handshake delegates an <i>outcome</i>.'}
     ]},
     boundary:{name:'Why the boundary',intro:'What happens when the boundary is drawn wrong. Press Play.',steps:[
-      {mark:{card:'dim',btools:'dim'},move:['host','server'],packet:'tools/list',say:'A well-meaning developer connects the host to a server that exposes <b>everything</b>: 40 tools, including delete_all_events.',set:{msgs:1}},
+      {mark:{card:'dim',btools:'dim'},move:['host','server'],packet:'tools/list',say:'A well-meaning developer connects the host to a server that exposes everything: 40 tools, including delete_all_events.',set:{msgs:1}},
       {move:['server','host'],packet:'40 schemas',tone:'warn',set:{msgs:1,tools:40}},
       {move:['host','model'],packet:'tool list (40)',tone:'warn',say:'Forty schemas now sit in every prompt: thousands of tokens, and forty ways to be wrong. Tool choice accuracy drops as the list grows.'},
       {move:['model','host'],packet:'call delete_all_events(Priya)',tone:'bad',say:'A confused model picks a destructive tool for a harmless request. The server will happily run it.'},
@@ -253,7 +253,7 @@ function drawNM(){
   const topPad=52, span=262;
   const ay=i=>topPad+span*(i+0.5)/M;
   const ty=j=>topPad+span*(j+0.5)/N;
-  let s='<text class="colhead" x="22" y="32">AGENTS / APPS</text><text class="colhead" x="386" y="32">TOOLS / SYSTEMS</text>';
+  let s='<text class="colhead" x="22" y="32">AGENTS / APPS</text><text class="colhead" x="378" y="32">TOOLS / SYSTEMS</text>';
   let lines='';
   if(!hubMode){
     for(let i=0;i<M;i++)for(let j=0;j<N;j++){

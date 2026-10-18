@@ -53,7 +53,7 @@
 <section><div class="wrap">
   <div class="callout blue">
 <div class="ptxt"><b>📝 This week's logistics:</b></div>
-<ul class="pts"><li><b>Quiz 3 is this week</b>: in class, closed-book, 5 multiple-choice. <b>Scope: the Weeks 6–8 readings.</b> Sample questions are on the <a href="../week7/exercises.html#quiz">Week 7 page</a>.</li><li>Group Assignment 2 is due this week (own section, iCollege).</li><li><b>Group Assignment 3 releases this week</b>, and <b>capstone Milestone I releases</b> (due Week 9).</li><li><a href="../week2/radar.html">Agent Radar</a> continues. The presenter slot is open.</li></ul>
+<ul class="pts"><li><b>Quiz 3 is this week</b>: in class, closed-book, 5 multiple-choice. Scope: the Weeks 6–8 readings. Sample questions are on the <a href="../week7/exercises.html#quiz">Week 7 page</a>.</li><li>Group Assignment 2 is due this week (own section, iCollege).</li><li><b>Group Assignment 3 releases this week</b>, and capstone Milestone I releases (due Week 9).</li><li><a href="../week2/radar.html">Agent Radar</a> continues. The presenter slot is open.</li></ul>
 </div>
 </div></section>
 
@@ -61,7 +61,7 @@
   <div class="eyebrow">The big question</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your agent completed the task perfectly when you demoed it to your manager. What is the chance it completes the <em>next eight</em> customer runs perfectly?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">From one run you cannot know; that's the whole point. One success is a sample of size 1 from a probabilistic system, and you chose the sample. But you can reason about it: if each run independently succeeds <b>90%</b> of the time (a number most teams would be thrilled with), then all eight succeeding is 0.9<sup>8</sup> = <b>0.4305, about 43%</b>. The customer who runs your agent eight times is more likely than not to see it fail at least once. That gap between “90% reliable” and “43% of customers get a clean week” is what this whole week is about, and page <a href="metrics.html">02</a> gives it a name: <b>pass^k</b>.</div>
+  <div class="revealbox">From one run you cannot know; that's the whole point. One success is a sample of size 1 from a probabilistic system, and you chose the sample. But you can reason about it: if each run independently succeeds 90% of the time (a number most teams would be thrilled with), then all eight succeeding is 0.9<sup>8</sup> = 0.4305, about 43%. The customer who runs your agent eight times is more likely than not to see it fail at least once. That gap between “90% reliable” and “43% of customers get a clean week” is what this whole week is about, and page <a href="metrics.html">02</a> gives it a name: pass^k.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -78,7 +78,7 @@
       <div class="runstrip">
         <div class="runchip pass">✓</div><div class="runchip pass">✓</div><div class="runchip fail">✗</div><div class="runchip pass">✓</div><div class="runchip fail">✗</div>
       </div>
-      <p class="small" style="margin-top:10px">Same agent, same prompt, same task, five more times. Nothing broke, nothing was “deployed wrong.” The system is simply <b>non-deterministic</b>, and you had been quoting a sample of size one. Run it yourself on page <a href="why.html">01</a>.</p>
+      <p class="small" style="margin-top:10px">Same agent, same prompt, same task, five more times. Nothing broke, nothing was “deployed wrong.” The system is simply non-deterministic, and you had been quoting a sample of size one. Run it yourself on page <a href="why.html">01</a>.</p>
     </div>
   </div>
   <div class="callout" style="margin-top:20px"><b>The course line, one more time:</b> in Week 2 you evaluated an agent instead of admiring it; in Week 3 you proved a prompt change helped with a <a href="../week3/exercises.html">reliability check</a> instead of a vibe. This week that instinct becomes an engineering discipline with metrics, harnesses, and benchmarks: the thing that stands between a prototype and a deployment.</div>
@@ -92,7 +92,7 @@
     <div class="arch-list" id="gapList"></div>
     <div class="arch-view" id="gapView"></div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>The umbrella term:</b> <b>distribution shift</b>: the inputs your agent meets in production are drawn from a different distribution than the ones you tested on. Evaluation is how you find out <em>how different</em>, before your customers do.</div>
+  <div class="callout" style="margin-top:20px"><b>The umbrella term:</b> distribution shift: the inputs your agent meets in production are drawn from a different distribution than the ones you tested on. Evaluation is how you find out <em>how different</em>, before your customers do.</div>
 </div></section>
 
 <section class="flowsec"><div class="wrap">
@@ -140,9 +140,9 @@ Flow.mount(document.getElementById('flow-w8'),{
       {mark:{scorer:'dim'},move:['set','runner'],packet:'5 tasks × 3 runs',say:'The scripted checks are replaced by a judge prompt: “Rate this trace 1–5 for task completion and safety.”'},
       {move:['runner','agent'],packet:'15 runs'},{move:['agent','runner'],packet:'15 traces'},
       {move:['runner','judge'],packet:'trace + rubric',say:'The judge reads each trace and the rubric. It is a model, so it has a model’s habits.',set:{judged:15}},
-      {at:'judge',tone:'warn',payload:'T2 run 2 (skipped the gate):\n  judge: "The agent completed the refund efficiently.\n          Completion 5/5, Safety 4/5 → PASS"',say:'The judge <b>never abstains</b> and rarely fails anything: the gate skip reads as efficiency. Its scores cluster at 4 and 5.'},
+      {at:'judge',tone:'warn',payload:'T2 run 2 (skipped the gate):\n  judge: "The agent completed the refund efficiently.\n          Completion 5/5, Safety 4/5 → PASS"',say:'The judge never abstains and rarely fails anything: the gate skip reads as efficiency. Its scores cluster at 4 and 5.'},
       {move:['judge','board'],packet:'14/15 pass',tone:'warn',payload:'judge:   pass@1 = 14/15 = 93%   pass^3 = 4/5 = 80%\nscripts: pass@1 = 12/15 = 80%   pass^3 = 2/5 = 40%',set:{runs:15,passed:14}},
-      {at:'board',tone:'bad',end:true,say:'The judge inflated every number and hid the two failures a manager most needs to see. Judges are useful for things a script cannot check (tone, helpfulness), but they must be <b>calibrated against humans</b> on a sample first, and safety checks stay scripted.'}
+      {at:'board',tone:'bad',end:true,say:'The judge inflated every number and hid the two failures a manager most needs to see. Judges are useful for things a script cannot check (tone, helpfulness), but they must be calibrated against humans on a sample first, and safety checks stay scripted.'}
     ]}
   }
 });

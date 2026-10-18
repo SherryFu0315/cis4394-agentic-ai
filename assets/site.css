@@ -1,5 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
-:root{--fs-xs:12px;--fs-s:14px;--fs-m:17px;--fs-l:18px;--fs-xl:24px;--fs-xxl:40px}
+/* Type scale: one rule for the whole site.
+   Level 1  page title        h1   clamp(34px,4.5vw,52px)   (landing hero clamp(40px,5.5vw,64px))
+   Level 2  section title     h2   clamp(24px,3vw,32px)
+   Level 3  card / sub title  h3   --fs-xl 24px
+   Body                       p    --fs-m 18px;  intro paragraphs (.lede) --fs-l 20px
+   Secondary (cards, tables)       --fs-s 15px
+   Notes (kickers, badges, footers) --fs-xs 14px  = the smallest text on any page
+   Diagram text inside SVG uses fixed px in viewBox units (12-14) and scales with the drawing. */
+:root{--fs-xs:14px;--fs-s:15px;--fs-m:18px;--fs-l:20px;--fs-xl:24px;--fs-xxl:40px}
 /* GSU CIS 4394 · Week 2 site — shared styles */
 :root{
   --paper:#faf9f6; --panel:#ffffff; --ink:#16181d; --muted:#5d6069; --line:#e3e1da; --line2:#cfccc2;
@@ -65,7 +73,7 @@ h2{font-size:clamp(24px,3vw,32px);line-height:1.08;margin:12px 0 14px}
 .card h3{margin:0 0 10px;font-size:var(--fs-l);font-weight:650}
 .small{font-size:var(--fs-s);color:var(--muted)}
 .kicker{font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.15em;font-weight:700;color:var(--muted)}
-code{font-family:var(--mono);font-size:.9em;background:var(--blue-soft);padding:1px 6px;border-radius:5px}
+code{font-family:var(--mono);font-size:max(14px,.92em);background:var(--blue-soft);padding:1px 6px;border-radius:5px}
 .codebox{background:#101319;color:#e8eaf0;border-radius:10px;padding:18px;font-family:var(--mono);overflow:auto;font-size:var(--fs-s);line-height:1.65;margin:16px 0;white-space:pre-wrap}
 .codebox code{background:none;padding:0;color:inherit}
 .callout{padding:18px 20px;border-radius:12px;background:var(--warn);border:1px solid var(--warn-line);margin-top:26px;font-size:var(--fs-m)}
@@ -105,7 +113,7 @@ code{font-family:var(--mono);font-size:.9em;background:var(--blue-soft);padding:
 .loopbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
 .loopbox svg{width:100%;height:auto;display:block}
 .loopnode rect{fill:#fff;stroke:var(--line2);stroke-width:1.2;rx:10}
-.loopnode text{font-family:var(--sans);font-size:var(--fs-s);font-weight:600;fill:var(--ink)}
+.loopnode text{font-family:var(--sans);font-size:13px;font-weight:600;fill:var(--ink)}
 .loopnode.pausenode rect{fill:#fff7ea;stroke:#dbb96a}
 .loopnode.on rect{fill:var(--blue);stroke:var(--blue)}
 .loopnode.on text{fill:#fff}

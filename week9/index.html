@@ -24,7 +24,7 @@
 .linkwrap svg{width:100%;height:auto}
 .lkline{stroke:#cfccc2;stroke-width:1.4}
 .lknode circle{fill:#fff;stroke:var(--blue);stroke-width:1.8}
-.lknode text{font-family:var(--mono);font-size:var(--fs-xs);font-weight:700;fill:var(--ink)}
+.lknode text{font-family:var(--mono);font-size:12px;font-weight:700;fill:var(--ink)}
 .lkcount{font-family:var(--serif);font-size:var(--fs-xxl);font-weight:600;line-height:1.1}
 @media(max-width:880px){.linkwrap{grid-template-columns:1fr}}
 </style>
@@ -50,13 +50,13 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">Week 9 · Module 3 · Systems</div>
   <h1>Multi-agent systems, and when <em>not</em> to build one.</h1>
-  <p class="lede">Every overloaded agent tempts you with the same fix: <b>add more agents</b>. Sometimes that is exactly right. More often you have just bought yourself coordination overhead, a bigger token bill, and a new class of failure that is much harder to debug. This week you learn the patterns, and the honest test for whether you need them.</p>
+  <p class="lede">Every overloaded agent tempts you with the same fix: add more agents. Sometimes that is exactly right. More often you have just bought yourself coordination overhead, a bigger token bill, and a new class of failure that is much harder to debug. This week you learn the patterns, and the honest test for whether you need them.</p>
 </div></header>
 
 <section><div class="wrap">
   <div class="callout blue">
 <div class="ptxt"><b>📌 This week's logistics:</b></div>
-<ul class="pts"><li>💻 <b>Bring your laptop</b>, and <b>install Gradio at home before class</b> (<code>python3 -m pip install gradio</code>, 300 MB; it will not work on classroom Wi-Fi).</li><li>This week’s lab is <a href="local.html">page 03</a>.</li><li>Capstone Milestone I is due this week. Submit on iCollege in your own section (details in the section below).</li><li><b>📝 Quiz 4 is next week</b>: in class, closed-book, 5 multiple-choice; the scope and five sample questions are at the bottom of this week's <a href="exercises.html#quiz">Practice page</a>.</li><li><b>Group Assignment 3 is in progress</b>, due Week 11.</li><li><b>Capstone Milestone II releases next week.</b></li></ul>
+<ul class="pts"><li>💻 <b>Bring your laptop</b>, and install Gradio at home before class (<code>python3 -m pip install gradio</code>, 300 MB; it will not work on classroom Wi-Fi).</li><li>This week’s lab is <a href="local.html">page 03</a>.</li><li>Capstone Milestone I is due this week. Submit on iCollege in your own section (details in the section below).</li><li><b>📝 Quiz 4 is next week</b>: in class, closed-book, 5 multiple-choice; the scope and five sample questions are at the bottom of this week's <a href="exercises.html#quiz">Practice page</a>.</li><li><b>Group Assignment 3 is in progress</b>, due Week 11.</li><li><b>Capstone Milestone II releases next week.</b></li></ul>
 </div>
 </div></section>
 
@@ -64,14 +64,14 @@
   <div class="eyebrow">The big question</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your agent is overloaded: too many tools, a context window stuffed with three jobs' worth of instructions, and results that drift. Is the right move to split it into four agents?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">Only if the work actually <b>decomposes</b>. Ask one question, not "how many agents": can this task be cut into subtasks that run in parallel and can each be verified on their own? If yes (breadth-first research, four independent searches, four checkable answers), splitting buys you real parallelism and clean context per worker. If the subtasks form one dependent chain, or if they all read and write the same evolving artifact, splitting buys you nothing and costs you a great deal: every hand-off is a place for context to be dropped, and every agent is another full model call. "My agent is overloaded" is often a <em>context engineering</em> problem (Week 3) or a <em>tool design</em> problem (Week 5) wearing an org-chart costume.</div>
+  <div class="revealbox">Only if the work actually decomposes. Ask one question, not "how many agents": can this task be cut into subtasks that run in parallel and can each be verified on their own? If yes (breadth-first research, four independent searches, four checkable answers), splitting buys you real parallelism and clean context per worker. If the subtasks form one dependent chain, or if they all read and write the same evolving artifact, splitting buys you nothing and costs you a great deal: every hand-off is a place for context to be dropped, and every agent is another full model call. "My agent is overloaded" is often a <em>context engineering</em> problem (Week 3) or a <em>tool design</em> problem (Week 5) wearing an org-chart costume.</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">The honest headline</div>
   <h2>More agents = more coordination</h2>
   <div class="grid3">
-    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">What you gain</span><p class="small" style="margin-top:8px"><b>Specialization</b> (a narrow role with a narrow tool set), <b>context isolation</b> (each worker gets a clean window instead of one bloated one), and <b>parallelism</b> (four searches at once instead of four in a row). These are real. They are why Anthropic's own research system is multi-agent.</p></div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">What you gain</span><p class="small" style="margin-top:8px"><b>Specialization</b> (a narrow role with a narrow tool set), context isolation (each worker gets a clean window instead of one bloated one), and parallelism (four searches at once instead of four in a row). These are real. They are why Anthropic's own research system is multi-agent.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">What you pay</span><ul class="pts small" style="margin-top:8px"><li><b>Coordination:</b> every hand-off is a contract that can be under-specified.</li><li><b>Context fragmentation:</b> two agents holding different pictures of the same task make confidently conflicting decisions.</li><li><b>Tokens:</b> each agent is a full model call with its own prompt overhead.</li></ul></div>
     <div class="card" style="border-top:3px solid #8a6d1d"><span class="kicker">What gets harder</span><p class="small" style="margin-top:8px"><b>Attribution.</b> A single-agent run has one trace to read. A five-agent run fails somewhere in the seams, and "whose fault was that?" becomes a research question, unless you paid, up front, for per-agent and per-hand-off logging (Week 8's evaluation discipline).</p></div>
   </div>
@@ -80,7 +80,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive · the arithmetic of a team</div>
   <h2>Click a team size</h2>
-  <p class="lede">Capability grows roughly with the number of agents. The number of <b>relationships</b> that can go wrong grows faster. This is the oldest result in organization design, and it did not stop being true when the workers became language models.</p>
+  <p class="lede">Capability grows roughly with the number of agents. The number of relationships that can go wrong grows faster. This is the oldest result in organization design, and it did not stop being true when the workers became language models.</p>
   <div class="linkwrap">
     <div class="loopbox">
       <svg viewBox="0 0 320 300" aria-label="agents and the links between them">
@@ -203,20 +203,20 @@ Flow.mount(document.getElementById('flow-w9'),{
   <div class="eyebrow">Why managers care</div>
   <h2>An agent team is a hiring decision</h2>
   <div class="grid3">
-    <div class="card"><span class="kicker">Cost</span><p class="small" style="margin-top:8px">Each agent is a recurring per-run expense, not a one-time build cost. Anthropic reports that their multi-agent research system consumed roughly <b>15× the tokens</b> of a chat interaction (Anthropic Engineering, 2025; figure as reported, approximate). Parallel search buys <em>breadth</em>, not savings. A second agent must earn that line item.</p></div>
+    <div class="card"><span class="kicker">Cost</span><p class="small" style="margin-top:8px">Each agent is a recurring per-run expense, not a one-time build cost. Anthropic reports that their multi-agent research system consumed roughly 15× the tokens of a chat interaction (Anthropic Engineering, 2025; figure as reported, approximate). Parallel search buys <em>breadth</em>, not savings. A second agent must earn that line item.</p></div>
     <div class="card"><span class="kicker">Trust</span><p class="small" style="margin-top:8px">Two agents that disagree do not announce it. They produce two confident, incompatible outputs and let a human discover the contradiction. Your users cannot see the seam. That is a trust failure before it is a technical one.</p></div>
-    <div class="card"><span class="kicker">Auditability</span><p class="small" style="margin-top:8px">"Why did the system do that?" has a clean answer only if every agent's trace carries the Week 2 evidence standard (<em>state before → observation → available actions → selected action → result → state after</em>) plus the hand-off payload. Budget observability <b>before</b> you add the agent.</p></div>
+    <div class="card"><span class="kicker">Auditability</span><p class="small" style="margin-top:8px">"Why did the system do that?" has a clean answer only if every agent's trace carries the Week 2 evidence standard (<em>state before → observation → available actions → selected action → result → state after</em>) plus the hand-off payload. Budget observability before you add the agent.</p></div>
   </div>
 </div></section>
 
 <section id="milestone"><div class="wrap">
   <div class="eyebrow">Due this week</div>
   <h2>Capstone Milestone I: your first working agent (5 pts, individual)</h2>
-  <p class="lede">The first step after your proposal: <b>make it run.</b> Milestone I is a working demo of <b>at least one agent</b> on the task you proposed, not a plan, not slides. Submit on iCollege in your own section; the full brief is in the Milestone I dropbox.</p>
+  <p class="lede">The first step after your proposal: make it run. Milestone I is a working demo of at least one agent on the task you proposed, not a plan, not slides. Submit on iCollege in your own section; the full brief is in the Milestone I dropbox.</p>
   <div class="grid2" style="align-items:start">
     <div class="card"><span class="kicker">Required</span>
       <ul style="padding-left:18px;font-size:var(--fs-s);margin:10px 0 0;line-height:1.9">
-        <li>One agent that runs end to end on a real input from your task, with <b>at least one real tool</b> and a <b>stop condition</b> (max-iteration guard). Code or no-code; free tiers only; no API keys in the submission.</li>
+        <li>One agent that runs end to end on a real input from your task, with at least one real tool and a stop condition (max-iteration guard). Code or no-code; free tiers only; no API keys in the submission.</li>
         <li><b>A demo:</b> a 2–3 minute screen recording, or a live demo in class, showing one full run. (The chat app from <a href="local.html">page 03</a> is a good way to do this.)</li>
         <li><b>One execution trace</b> of that run: reasoning → tool calls → observations → answer.</li>
         <li><b>A README</b> with the exact steps to run it.</li>

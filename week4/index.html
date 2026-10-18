@@ -41,13 +41,13 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">Week 4 · Module 1 · Foundations</div>
   <h1>Reasoning, planning &amp; the agent <em>loop</em>.</h1>
-  <p class="lede">Week 3 was about one great prompt. This week the model gets to send <b>many</b> prompts: a loop where it sees a result, thinks, and chooses its own next step. The loop is the part of an agent that <b>you</b> own: you can read it, budget it, audit it, and stop it.</p>
+  <p class="lede">Week 3 was about one great prompt. This week the model gets to send many prompts: a loop where it sees a result, thinks, and chooses its own next step. The loop is the part of an agent that you own: you can read it, budget it, audit it, and stop it.</p>
 </div></header>
 
 <section><div class="wrap">
   <div class="callout blue">
 <div class="ptxt"><b>📌 This week's logistics:</b></div>
-<ul class="pts"><li><b>Group Assignment 1 is due</b> on iCollege. The two sections’ deadlines are a day apart, so check iCollege for your section’s due date (<a href="../week2/summary.html#ga1">enrollment &amp; submission details</a>).</li><li>The <b>final-project proposal</b> is released on iCollege this week.</li><li>The <a href="../week2/radar.html">Agent Radar</a> presenter slot for next week is open; sign up.</li></ul>
+<ul class="pts"><li><b>Group Assignment 1 is due</b> on iCollege. The two sections’ deadlines are a day apart, so check iCollege for your section’s due date (<a href="../week2/summary.html#ga1">enrollment &amp; submission details</a>).</li><li>The final-project proposal is released on iCollege this week.</li><li>The <a href="../week2/radar.html">Agent Radar</a> presenter slot for next week is open; sign up.</li></ul>
 </div>
 </div></section>
 
@@ -55,7 +55,7 @@
   <div class="eyebrow">The big question</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>In Week 2 you watched Codex loop: observe → decide → act, over and over. Who decides that the loop should run <em>one more time</em>, and who decides that it should stop?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">The <b>model</b> proposes ("I'm not done: the tests still fail"), but the <b>harness</b> disposes: the loop code you write decides whether to grant another iteration, checking the stop condition, the max-iteration guard, and the budget. An agent that "knows when to stop" is really a loop that checks. This week you build that loop yourself: first on paper, then in LangGraph.</div>
+  <div class="revealbox">The model proposes ("I'm not done: the tests still fail"), but the harness disposes: the loop code you write decides whether to grant another iteration, checking the stop condition, the max-iteration guard, and the budget. An agent that "knows when to stop" is really a loop that checks. This week you build that loop yourself: first on paper, then in LangGraph.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -98,7 +98,7 @@ Flow.mount(document.getElementById('flow-w4'),{
   w:760,h:340,title:'The agent loop with a stop condition and a guard',
   counters:[{key:'iter',label:'iterations'},{key:'calls',label:'tool calls'},{key:'tokens',label:'tokens'}],
   nodes:[
-    {id:'user',x:28,y:142,w:112,h:56,label:'Goal',sub:'“Boston, 3 nights, < $900?”',kind:'user'},
+    {id:'user',x:28,y:142,w:112,h:56,label:'Goal',sub:'“Boston under $900?”',kind:'user'},
     {id:'model',x:214,y:142,w:140,h:56,label:'Reason',sub:'model picks next action',kind:'model'},
     {id:'check',x:214,y:36,w:140,h:56,label:'Stop condition',sub:'answer complete?',kind:'gate'},
     {id:'guard',x:214,y:250,w:140,h:56,label:'Max-iteration guard',sub:'N = 5',kind:'gate',badge:'cap'},
@@ -115,7 +115,7 @@ Flow.mount(document.getElementById('flow-w4'),{
   start:'good',
   scenarios:{
     good:{name:'Three iterations',steps:[
-      {move:['user','model'],packet:'goal + tools',say:'The goal and the tool list enter the loop. From here the <b>model</b> decides what happens next.',payload:'goal: can I do 3 nights in Boston (flight ATL→BOS + hotel) under $900?\ntools: search_flights, search_hotels, calculator\nstop:  a yes/no with the total\nguard: 5 iterations',set:{tokens:220}},
+      {move:['user','model'],packet:'goal + tools',say:'The goal and the tool list enter the loop. From here the model decides what happens next.',payload:'goal: can I do 3 nights in Boston (flight ATL→BOS + hotel) under $900?\ntools: search_flights, search_hotels, calculator\nstop:  a yes/no with the total\nguard: 5 iterations',set:{tokens:220}},
       {at:'model',say:'Iteration 1. Reason: I need a flight price first.',payload:'thought: need flight price ATL→BOS\naction: search_flights(ATL, BOS, 3 nights)',set:{iter:1,tokens:60}},
       {move:['model','flights'],packet:'search_flights(ATL→BOS)',set:{calls:1}},
       {move:['flights','model'],packet:'$318 round trip',tone:'ok',say:'Observe: a number comes back. It is appended to the context; the model will see it in the next iteration.',set:{tokens:40}},
@@ -128,7 +128,7 @@ Flow.mount(document.getElementById('flow-w4'),{
       {at:'model',say:'Iteration 3. Reason: add it up. The model does not trust itself with arithmetic, so it calls the calculator.',payload:'thought: 318 + 3×174 = ?\naction: calculator("318 + 3*174")',set:{iter:1,tokens:60}},
       {move:['model','calc'],packet:'318 + 3×174',set:{calls:1}},
       {move:['calc','model'],packet:'840',tone:'ok',set:{tokens:20}},
-      {move:['model','check'],packet:'“Yes: $840, under $900.”',tone:'ok',say:'The stop condition is met: a yes/no with a total. The loop exits because the <b>goal</b> was reached, not because a counter ran out.'},
+      {move:['model','check'],packet:'“Yes: $840, under $900.”',tone:'ok',say:'The stop condition is met: a yes/no with a total. The loop exits because the goal was reached, not because a counter ran out.'},
       {move:['check','ans'],packet:'final answer',tone:'ok',end:true,say:'Three iterations, three tool calls, one answer. Note what the trace shows that the answer does not: which number came from where.'}
     ]},
     stuck:{name:'Stuck',intro:'Same loop, but the hotel tool returns an error the model does not understand. Press Play.',steps:[
@@ -150,7 +150,7 @@ Flow.mount(document.getElementById('flow-w4'),{
       {move:['model','guard'],packet:'iteration 4 of 5',tone:'warn'},{move:['guard','model'],packet:'continue'},
       {at:'model',tone:'warn',payload:'action: search_hotels(Boston, 3)',set:{iter:1,tokens:60}},
       {move:['model','hotels'],packet:'search_hotels (same)',tone:'bad',set:{calls:1}},{move:['hotels','model'],packet:'error',tone:'bad',set:{tokens:40}},
-      {move:['model','guard'],packet:'iteration 5 of 5',tone:'bad',say:'The <b>guard fires</b>. Without it this loop runs until the API bill or the user’s patience ends.',mark:{model:'blocked'}},
+      {move:['model','guard'],packet:'iteration 5 of 5',tone:'bad',say:'The guard fires. Without it this loop runs until the API bill or the user’s patience ends.',mark:{model:'blocked'}},
       {move:['guard','ans'],packet:'stopped: max iterations',tone:'bad',end:true,say:'The run ends with a clear failure: “could not complete; hotel search kept erroring”. The guard did not solve the problem; it bounded the damage. Solving it means a better model, or a harness that detects a repeated observation and changes something.'}
     ]}
   }

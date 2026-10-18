@@ -78,7 +78,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">02 · Metrics &amp; benchmarks</div>
   <h1>One symbol apart. <em>Opposite</em> stories.</h1>
-  <p class="lede"><b>pass@k</b> and <b>pass^k</b> look almost identical on a slide and mean nearly opposite things. One is the most generous number you can quote about an agent; the other is the number your customer lives in. Learning to tell them apart is the single most useful thing on this site.</p>
+  <p class="lede"><b>pass@k</b> and pass^k look almost identical on a slide and mean nearly opposite things. One is the most generous number you can quote about an agent; the other is the number your customer lives in. Learning to tell them apart is the single most useful thing on this site.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -87,7 +87,7 @@
   <div class="grid2" style="align-items:start">
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">pass@k: a generosity metric</span>
       <h3 style="margin-top:8px">“At least ONE of k samples passes.”</h3>
-      <p class="small">Introduced for evaluating code generation on HumanEval (<b>Chen et al., 2021</b>). You let the model generate <em>k</em> candidate solutions for one problem and count the problem as solved if <b>any single one</b> of them passes the unit tests. It answers: <em>if I can sample k times and cheaply check which one is right, how often is a correct answer somewhere in the batch?</em></p>
+      <p class="small">Introduced for evaluating code generation on HumanEval (Chen et al., 2021). You let the model generate <em>k</em> candidate solutions for one problem and count the problem as solved if any single one of them passes the unit tests. It answers: <em>if I can sample k times and cheaply check which one is right, how often is a correct answer somewhere in the batch?</em></p>
       <div class="formula">pass@k = P(<span class="hi">at least one</span> of k passes)
         = 1 - (1 - p)^k      <span class="hi">// rises toward 1 as k grows</span></div>
       <p class="small"><b>Rises</b> with k. Bigger k always looks better. That is legitimate <em>when a cheap, reliable verifier exists</em> (unit tests, a compiler, a checksum), because the verifier is what lets you pick the winner out of the batch.</p>
@@ -95,20 +95,20 @@
     </div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">pass^k: a consistency metric</span>
       <h3 style="margin-top:8px">“ALL k independent trials succeed.”</h3>
-      <p class="small">Introduced by <b>τ-bench</b> (<b>Yao et al., 2024</b>) precisely because pass@k was flattering agents that could not be relied on. Run the same task <em>k</em> independent times; it counts only if <b>every single run</b> succeeds. It answers: <em>can I hand this to a customer who will use it k times?</em></p>
+      <p class="small">Introduced by τ-bench (Yao et al., 2024) precisely because pass@k was flattering agents that could not be relied on. Run the same task <em>k</em> independent times; it counts only if every single run succeeds. It answers: <em>can I hand this to a customer who will use it k times?</em></p>
       <div class="formula">pass^k = P(<span class="lo">all k</span> trials succeed)
         = p^k                <span class="lo">// collapses toward 0 as k grows</span></div>
       <p class="small"><b>Falls</b> with k, fast. There is no verifier to rescue you: in production nobody generates eight refunds and picks the good one. The customer gets the run they get.</p>
       <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noopener">Yao et al., 2024 — τ-bench (arXiv:2406.12045) ↗</a></p>
     </div>
   </div>
-  <div class="callout" style="margin-top:20px">Both formulas above assume independent trials each succeeding with probability p, the clean textbook case. Real runs are not perfectly independent (a badly worded test case fails every time; a flaky API fails in bursts), so treat these as the model that makes the <em>shape</em> obvious, and measure your own agent to get the real numbers. In practice you estimate <b>pass@1</b> (= p) by running many trials and counting how many passed, then compute the rest.</div>
+  <div class="callout" style="margin-top:20px">Both formulas above assume independent trials each succeeding with probability p, the clean textbook case. Real runs are not perfectly independent (a badly worded test case fails every time; a flaky API fails in bursts), so treat these as the model that makes the <em>shape</em> obvious, and measure your own agent to get the real numbers. In practice you estimate pass@1 (= p) by running many trials and counting how many passed, then compute the rest.</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">Interactive · the whole week in one widget</div>
   <h2>Move the dials. Watch the two curves separate.</h2>
-  <p class="lede">Set the per-run success rate <b>p</b> and the number of trials <b>k</b>. The blue curve is pass@k (at least one succeeds). The red curve is pass^k (all of them succeed). Same agent. Same p. Opposite conclusions.</p>
+  <p class="lede">Set the per-run success rate p and the number of trials k. The blue curve is pass@k (at least one succeeds). The red curve is pass^k (all of them succeed). Same agent. Same p. Opposite conclusions.</p>
   <div class="calcwrap">
     <div class="dialwrap">
       <label class="ctl" for="pSlider">Per-run success rate p = <span id="pOut">90%</span></label>
@@ -144,7 +144,7 @@
   </table></div>
   <div class="grid2" style="margin-top:20px;align-items:start">
     <div class="card"><span class="kicker">Why the last nine costs the most</span>
-      <p class="small" style="margin-top:8px">Moving 70% → 90% is usually prompt work, a better tool, one retry. Moving 90% → 99% means finding the long tail: the malformed inputs, the empty tool results, the rate limits, the adversarial cases. Each of those is a separate engineering project, and each buys a fraction of a point. Budget accordingly, and notice that the same money spent on <b>narrowing the task</b> often buys more reliability than the same money spent on the agent.</p></div>
+      <p class="small" style="margin-top:8px">Moving 70% → 90% is usually prompt work, a better tool, one retry. Moving 90% → 99% means finding the long tail: the malformed inputs, the empty tool results, the rate limits, the adversarial cases. Each of those is a separate engineering project, and each buys a fraction of a point. Budget accordingly, and notice that the same money spent on narrowing the task often buys more reliability than the same money spent on the agent.</p></div>
     <div class="card"><span class="kicker">The honest way to quote a number</span>
       <p class="small" style="margin-top:8px">“Our agent is 90% accurate” is not a lie, but it is not a deployment statement either. The deployable version names the metric, the k, the dataset, and the date: <em>“On our 40-case eval set, pass@1 = 0.90 and pass^3 = 0.73, measured 10/14. The 27% of cases that fail at least once in three runs are listed here.”</em> That sentence is the deliverable of your capstone eval harness.</p></div>
   </div>
@@ -173,7 +173,7 @@
   <div class="grid3" style="margin-top:20px">
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Misquote 1 · contamination</span><p class="small" style="margin-top:8px">If the benchmark's problems and their solutions have been public on the internet for years, some of them may sit in the model's training data. A high score can then reflect recall rather than capability, and it will not transfer to your private codebase or your internal tickets.</p></div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Misquote 2 · harness differences</span><p class="small" style="margin-top:8px">The same model scores differently depending on the scaffolding around it: which tools it gets, how many steps it is allowed, how many attempts, whether a retry counts. Two “SWE-bench scores” are only comparable if the harnesses were. Ask what the scaffold was.</p></div>
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Misquote 3 · which subset</span><p class="small" style="margin-top:8px">“SWE-bench” names a family: the full 2,294-issue set, the human-validated <b>Verified</b> 500-issue subset, and smaller subsets. A number quoted without its subset is unreadable, and the flattering subset is the one that ends up on the slide.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Misquote 3 · which subset</span><p class="small" style="margin-top:8px">“SWE-bench” names a family: the full 2,294-issue set, the human-validated Verified 500-issue subset, and smaller subsets. A number quoted without its subset is unreadable, and the flattering subset is the one that ends up on the slide.</p></div>
   </div>
   <div class="card" style="margin-top:22px"><span class="kicker">Reading a benchmark critically: the five questions</span>
     <div class="checklist" style="margin-top:10px">
@@ -190,7 +190,7 @@
 <section><div class="wrap">
   <div class="eyebrow">The evaluator problem</div>
   <h2>LLM-as-judge: useful, biased, and easy to trust too much</h2>
-  <p class="lede">Most of what an agent produces has no exact right answer, so you need a grader for open-ended output. The obvious move is to have a strong model grade it against a rubric or a reference (<b>Zheng et al., 2023</b>). It scales beautifully. It is also a fallible evaluator, and the failure mode is that it <em>looks</em> rigorous.</p>
+  <p class="lede">Most of what an agent produces has no exact right answer, so you need a grader for open-ended output. The obvious move is to have a strong model grade it against a rubric or a reference (Zheng et al., 2023). It scales beautifully. It is also a fallible evaluator, and the failure mode is that it <em>looks</em> rigorous.</p>
   <div class="grid2" style="align-items:start">
     <div class="card"><h3>Pick the evaluator per check, not per project</h3>
       <div class="compare" style="margin-top:8px"><table class="plain">
@@ -199,7 +199,7 @@
         <tr><td><b>LLM-as-judge</b></td><td>Open-ended quality: clarity, tone, helpfulness, faithfulness to a source</td><td>Cheap per item, but biased and needs validating</td></tr>
         <tr><td><b>Human review</b></td><td>High-stakes and ambiguous edges: legal risk, safety, anything you will be asked to defend</td><td>Expensive, slow, and the ground truth everything else is calibrated against</td></tr>
       </table></div>
-      <p class="small" style="margin-top:12px">Worked example: one document-QA agent, four checks: the cited document ID → <b>rule</b> (it either matches or it does not). The extracted dollar amount → <b>rule</b>. Whether the answer reads clearly and stays faithful to the source → <b>LLM-judge</b>. Anything flagged as a legal-risk edge case → <b>human</b>. Do not reach for a judge where a rule is exact and free.</p></div>
+      <p class="small" style="margin-top:12px">Worked example: one document-QA agent, four checks: the cited document ID → rule (it either matches or it does not). The extracted dollar amount → rule. Whether the answer reads clearly and stays faithful to the source → LLM-judge. Anything flagged as a legal-risk edge case → human. Do not reach for a judge where a rule is exact and free.</p></div>
     <div class="card"><h3>LLM as a Judge (IBM Technology, 6m08s)</h3>
       <p class="small">The concept, the rubric, and the pitfalls in six minutes. Watch it, then read the four biases below and see how many the video names.</p>
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/trfUBIDeI1Y" title="LLM as a Judge: Scaling AI Evaluation Strategies" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
@@ -208,7 +208,7 @@
 
   <h3 style="margin-top:34px;font-size:var(--fs-xl)">The four biases you must be able to name</h3>
   <div class="biasgrid">
-    <div class="biascard"><h4>Position bias</h4><p>When comparing two answers, judges can favor the one in a particular position rather than the better one. Documented in <b>Zheng et al., 2023</b>. Your ranking can flip when you swap A and B.</p></div>
+    <div class="biascard"><h4>Position bias</h4><p>When comparing two answers, judges can favor the one in a particular position rather than the better one. Documented in Zheng et al., 2023. Your ranking can flip when you swap A and B.</p></div>
     <div class="biascard"><h4>Verbosity / length bias</h4><p>Longer, more elaborate answers tend to score higher, whether or not they are more correct. This is the bias students game accidentally: pad the response and the rubric rewards it.</p></div>
     <div class="biascard"><h4>Self-preference</h4><p>A judge can prefer text in its own style or from its own model family. If the judge and the agent are the same model, you are partly grading a family resemblance.</p></div>
     <div class="biascard"><h4>Sycophancy</h4><p>Agreeable, flattering, confident-sounding output scores well. Confidently wrong answers are exactly the ones a judge is worst at catching, and exactly the ones that hurt in production.</p></div>
@@ -235,7 +235,7 @@
   <b>2. pass@1 or pass@k?</b> If the agent generated many patches and a test suite picked the winner, that is a pass@k number and it is legitimate <em>only because SWE-bench has a free verifier</em>; my repository at 2 a.m. does not. Ask for the pass^k, or at least the variance across repeated runs.<br />
   <b>3. Contamination?</b> These issues and their accepted fixes have been public for years. Ask what they have measured on issues created <em>after</em> the model's training cutoff, or on a private repo.<br />
   4. What does it do on my tickets? The only question that decides anything. Propose a pilot on 30 of our own issues, scored by our own tests, run three times each, reporting pass@1 and pass^3.<br /><br />
-  <b>What would change my mind:</b> a strong result on our own private cases at pass^3, with traces I can inspect. <b>What would not:</b> a bigger benchmark number. And note the rhetorical move to reject explicitly: “near-human performance” compares a benchmark score against a human baseline measured on that same benchmark, which says nothing about human performance on our work.</div>
+  <b>What would change my mind:</b> a strong result on our own private cases at pass^3, with traces I can inspect. What would not: a bigger benchmark number. And note the rhetorical move to reject explicitly: “near-human performance” compares a benchmark score against a human baseline measured on that same benchmark, which says nothing about human performance on our work.</div>
 </div></section>
 
 <section><div class="wrap">

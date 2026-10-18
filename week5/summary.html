@@ -48,7 +48,7 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">After class · Week 5</div>
   <h1>Week 5, wrapped. And what’s next.</h1>
-  <p class="lede">Four things on this page: a recap of what you should now be able to do, how to <b>self-enroll in a group</b> for Group Assignment 2 (new groups, and I want to see new names together), the build paths you can choose from, and the <b>proposal that is due next week</b>.</p>
+  <p class="lede">Four things on this page: a recap of what you should now be able to do, how to self-enroll in a group for Group Assignment 2 (new groups, and I want to see new names together), the build paths you can choose from, and the proposal that is due next week.</p>
 </div></header>
 
 <section id="recap"><div class="wrap">
@@ -56,9 +56,9 @@
   <h2>Week 5 in one sentence per page</h2>
   <p class="lede">The model proposes a tool call; your harness disposes. Everything this week followed from taking that one sentence literally, because if your code is the only thing that executes, your code is the only place controls need to live.</p>
   <div style="overflow:auto"><table class="plain recaptable"><thead><tr><th>Page</th><th>The one thing to remember</th></tr></thead><tbody>
-    <tr><td><b><a class="doc" href="mechanics.html">01 · Function calling</a></b></td><td>A “tool call” is <b>two objects in order</b>: the schema you write first (name, typed parameters, description), and the call the model emits second: a small JSON block naming a function and its arguments. The model never executes. Your harness parses, validates, runs, and appends the return value as the next observation.</td></tr>
+    <tr><td><b><a class="doc" href="mechanics.html">01 · Function calling</a></b></td><td>A “tool call” is two objects in order: the schema you write first (name, typed parameters, description), and the call the model emits second: a small JSON block naming a function and its arguments. The model never executes. Your harness parses, validates, runs, and appends the return value as the next observation.</td></tr>
     <tr><td><b><a class="doc" href="design.html">02 · Schemas, errors &amp; gates</a></b></td><td>A rule in the prompt is a request. A rule in the schema is a wall. Three rails: least privilege (expose the narrowest tool that does the job), constrain the inputs (enum, min/max, required), separate duties (never one tool that both decides and pays). Then sort every tool by blast radius: auto-run · constrain · human-gate.</td></tr>
-    <tr><td><b><a class="doc" href="local.html">03 · Build it locally</a></b></td><td>You ran a real agent loop on your own laptop, free, with no API key. A 0.5B model can call a tool correctly and still fail the task, and the fix was <b>never “a bigger model.”</b> It was a coarser tool, a tighter docstring, and a negative rule. <b>Tool design is the lever.</b></td></tr>
+    <tr><td><b><a class="doc" href="local.html">03 · Build it locally</a></b></td><td>You ran a real agent loop on your own laptop, free, with no API key. A 0.5B model can call a tool correctly and still fail the task, and the fix was never “a bigger model.” It was a coarser tool, a tighter docstring, and a negative rule. Tool design is the lever.</td></tr>
     <tr><td><b><a class="doc" href="exercises.html">04 · Practice &amp; case</a></b></td><td>Gate the effect, not the input. Reading hostile data is survivable; acting on it is not. And gate selectively: a gate nobody reads is a rubber stamp, not a control.</td></tr>
   </tbody></table></div>
   <div class="callout blue" style="margin-top:18px">If you keep only one line from this week: <em>define two tools with clean schemas, return errors as data, and put a human gate on anything irreversible.</em> That is the headline skill, and it is close to a list of what Group Assignment 2 grades.</div>
@@ -67,11 +67,11 @@
 <section id="ga2"><div class="wrap">
   <div class="eyebrow">Action required</div>
   <h2>Enroll in a group for Group Assignment 2</h2>
-  <p class="lede">GA2 is released on <b>iCollege</b>: build a <b>tool-using agent</b>: a loop, at least two tools with real schemas, a max-iteration guard, one clean execution trace, and a one-page design note. It is submitted as a group, and you must self-enroll in a group yourself.</p>
+  <p class="lede">GA2 is released on iCollege: build a tool-using agent: a loop, at least two tools with real schemas, a max-iteration guard, one clean execution trace, and a one-page design note. It is submitted as a group, and you must self-enroll in a group yourself.</p>
 
   <div class="grouptask"><span class="gk">👥 New groups for GA2: you do not keep your GA1 team</span>
     <p style="margin:10px 0 0">Your GA1 group does not carry over. The GA2 groups on iCollege are empty and separate, so everyone enrolls again from scratch. You <em>may</em> re-form your GA1 team if you want to, but I would rather you didn’t.</p>
-    <p style="margin:10px 0 0">Work with at least one person you have not worked with yet. Two selfish reasons, not just a nice sentiment: (1) GA2 is the assignment where <b>skill mix decides the grade</b>: the design note and the failure-mode analysis are worth as much as the code, and a team of all-coders or all-non-coders usually loses points on the half they are weaker at; (2) this is the last group assignment before you commit to capstone teams, so it is a low-cost way to find out who you want to build with for the rest of the semester.</p>
+    <p style="margin:10px 0 0">Work with at least one person you have not worked with yet. Two selfish reasons, not just a nice sentiment: (1) GA2 is the assignment where skill mix decides the grade: the design note and the failure-mode analysis are worth as much as the code, and a team of all-coders or all-non-coders usually loses points on the half they are weaker at; (2) this is the last group assignment before you commit to capstone teams, so it is a low-cost way to find out who you want to build with for the rest of the semester.</p>
   </div>
 
   <div class="grid2" style="align-items:start;margin-top:20px">
@@ -80,7 +80,7 @@
       <ol class="steps" style="margin-top:14px">
         <li>Open your section’s course on <a class="doc" href="https://gastate.view.usg.edu/" target="_blank" rel="noopener">iCollege ↗</a>.</li>
         <li>Go to Assessments → Groups.</li>
-        <li>In the dropdown, pick the <b>Group Assignment 2</b> category, not the GA1 one.</li>
+        <li>In the dropdown, pick the Group Assignment 2 category, not the GA1 one.</li>
         <li>Click View Available Groups.</li>
         <li>Find a group with space and click Join Group.</li>
         <li>Confirm your name appears in the member list.</li>
@@ -93,19 +93,19 @@
         <li><b>Different teammates are encouraged</b>: same team as GA1 is allowed, a new mix is better.</li>
         <li><b>Your own section only.</b> Groups do not transfer between sections, and I cannot grade you through the other section.</li>
         <li><b>Don’t save seats</b> in multiple groups. Join once, join the group you mean.</li>
-        <li><b>One team submission</b>, plus <b>each member’s own peer-evaluation form</b>. Team grades can be adjusted for uneven contribution.</li>
+        <li><b>One team submission</b>, plus each member’s own peer-evaluation form. Team grades can be adjusted for uneven contribution.</li>
         <li><b>Due date:</b> the two sections are a day apart; check iCollege for your section’s due date. GA2 is due in Week 8.</li>
       </ul>
     </div>
   </div>
 
-  <div class="callout" style="margin-top:20px"><b>Can’t find teammates?</b> Post in the iCollege discussion board with what you bring (code / writing / domain idea) and what you want to build, or come find me after class; I will pair you up. <b>Nobody works alone on GA2</b>, and nobody gets left without a group.</div>
+  <div class="callout" style="margin-top:20px"><b>Can’t find teammates?</b> Post in the iCollege discussion board with what you bring (code / writing / domain idea) and what you want to build, or come find me after class; I will pair you up. Nobody works alone on GA2, and nobody gets left without a group.</div>
 </div></section>
 
 <section id="paths"><div class="wrap">
   <div class="eyebrow">Your choice</div>
   <h2>Two paths, and a third if you have a favourite tool</h2>
-  <p class="lede">GA2 is graded on agent design, not on which framework you typed it into. Both official paths are held to the <b>same standard</b>: no-code is not graded easier, and it does not excuse you from the design thinking. Pick <b>one path per team</b> and name it in the first line of your design note.</p>
+  <p class="lede">GA2 is graded on agent design, not on which framework you typed it into. Both official paths are held to the same standard: no-code is not graded easier, and it does not excuse you from the design thinking. Pick one path per team and name it in the first line of your design note.</p>
 
   <div class="grid3" style="margin-top:6px">
     <div class="card pathcard blue"><span class="kicker">🅐 Code path</span>
@@ -116,12 +116,12 @@
         <li><b>LangGraph</b>: the framework version of the same loop, on the Gemini free tier. We give it a proper treatment in <a class="doc" href="../week9/patterns.html">Week 9</a>.</li>
         <li>Any other SDK you already know.</li>
       </ul>
-      <p class="small" style="margin-top:10px">Deliver: the code, a <code>README</code> with exact run steps, sample inputs. <b>No API key in the repo.</b></p>
+      <p class="small" style="margin-top:10px">Deliver: the code, a <code>README</code> with exact run steps, sample inputs. No API key in the repo.</p>
     </div>
     <div class="card pathcard blue"><span class="kicker">🅑 No-code path</span>
       <h3 style="margin-top:6px">Build the flow</h3>
       <p class="small">If your team would rather not write code, build the same agent in a visual builder: <a class="doc" href="https://smith.langchain.com/" target="_blank" rel="noopener">LangSmith Fleet ↗</a> (free tier) is the supported default, and you met it in Week 2.</p>
-      <p class="small" style="margin-top:10px">The requirements are <b>identical</b>: two tools, a loop with a stop condition, one trace, the design note. You will not be graded easier for going no-code, and you cannot use it to skip the tool/gate/failure-mode thinking.</p>
+      <p class="small" style="margin-top:10px">The requirements are identical: two tools, a loop with a stop condition, one trace, the design note. You will not be graded easier for going no-code, and you cannot use it to skip the tool/gate/failure-mode thinking.</p>
       <p class="small" style="margin-top:10px">Deliver: the exported flow or a shareable link, plus screenshots of the tool config and the loop/guard settings.</p>
     </div>
     <div class="card pathcard"><span class="kicker">🅒 Your own tool</span>
@@ -140,18 +140,18 @@
       <li>An auto-run / constrain / gate decision per tool, with the reason. Anything irreversible (money, email, deletion) is gated.</li>
       <li>A loop with a working max-iteration guard that stops <em>gracefully</em> and says it could not finish. A missing or fake guard is an automatic heavy deduction.</li>
       <li><b>One clean execution trace</b>: reasoning → tool call with arguments → observation → … → final answer. A final answer with no visible tool calls proves nothing.</li>
-      <li><b>A one-page design note</b>: tools, loop, <b>three specific failure modes</b> with mitigations, and your AI-use disclosure. “The AI could be wrong” is not a failure mode.</li>
+      <li><b>A one-page design note</b>: tools, loop, three specific failure modes with mitigations, and your AI-use disclosure. “The AI could be wrong” is not a failure mode.</li>
     </ul>
     <p class="small" style="margin-top:12px">Full instructions and the point-by-point rubric are on iCollege, if anything here differs, iCollege wins.</p>
   </div>
 
-  <div class="callout blue" style="margin-top:18px">🎯 Why this one is worth doing properly: GA2 is essentially your <b>capstone Milestone I</b>: a single agent, running end to end, with a real tool and a stop condition. The schemas, the loop and the guard all carry forward. Build it well now as a team and Milestone I is largely already written.</div>
+  <div class="callout blue" style="margin-top:18px">🎯 Why this one is worth doing properly: GA2 is essentially your capstone Milestone I: a single agent, running end to end, with a real tool and a stop condition. The schemas, the loop and the guard all carry forward. Build it well now as a team and Milestone I is largely already written.</div>
 </div></section>
 
 <section id="proposal"><div class="wrap">
   <div class="eyebrow">Due next week</div>
   <h2>Your final-project proposal</h2>
-  <p class="lede">The proposal is due next week, submitted on <b>iCollege in your own section</b>. The two sections’ deadlines are a day apart, so check iCollege for your section’s due date. The official prompt and rubric live on iCollege. This is just a last pass before you submit.</p>
+  <p class="lede">The proposal is due next week, submitted on iCollege in your own section. The two sections’ deadlines are a day apart, so check iCollege for your section’s due date. The official prompt and rubric live on iCollege. This is just a last pass before you submit.</p>
   <div class="grid2" style="align-items:start">
     <div class="card">
       <h3>Before you submit, check</h3>
@@ -174,7 +174,7 @@
   <div class="callout" style="margin-top:20px">
 <div class="ptxt" style="margin-top:20px">📌 Everything live at once, in one list:</div>
 <ul class="pts"><li><b>Group Assignment 2</b>: enroll in a group now, due Week 8.</li><li><b>Final-project proposal</b>: due next week.</li><li><b>No quiz next week.</b> <a href="../week2/radar.html">Agent Radar</a> presenter slots for the coming weeks are still open.</li></ul>
-<div class="ptxt">All deadlines: <b>your own section’s iCollege</b>.</div>
+<div class="ptxt">All deadlines: your own section’s iCollege.</div>
 </div>
 </div></section>
 

@@ -41,13 +41,13 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">Week 7 · Module 2 · Building Blocks</div>
   <h1>Memory, RAG &amp; <em>knowledge</em>.</h1>
-  <p class="lede">Week 6 gave your agent <b>reach</b>: protocols that let it call tools and talk to other agents. This week is about what it <b>knows</b>: what survives the end of a run, and how a model that has never seen your company's documents can still answer questions about them, with a citation.</p>
+  <p class="lede">Week 6 gave your agent reach: protocols that let it call tools and talk to other agents. This week is about what it knows: what survives the end of a run, and how a model that has never seen your company's documents can still answer questions about them, with a citation.</p>
 </div></header>
 
 <section><div class="wrap">
   <div class="callout blue">
 <div class="ptxt"><b>📌 This week's logistics:</b></div>
-<ul class="pts"><li>💻 <b>Bring your laptop</b> with Ollama and your model from Week 4.</li><li>This week’s lab is <a href="local.html">page 03</a>; before class run <code>ollama pull nomic-embed-text</code> (274 MB).</li><li>Group Assignment 2 is now due next week (Week 8); see your own section's due date and the submission link on <b>iCollege</b>.</li><li><b>📝 Quiz 3 is NEXT week</b>: in class, closed-book, 5 multiple-choice; the full scope and five sample questions are at the bottom of this week's <a href="exercises.html#quiz">Practice page ↓</a>.</li><li><a href="../week2/radar.html">Agent Radar</a> continues. Check whose slot is next.</li></ul>
+<ul class="pts"><li>💻 <b>Bring your laptop</b> with Ollama and your model from Week 4.</li><li>This week’s lab is <a href="local.html">page 03</a>; before class run <code>ollama pull nomic-embed-text</code> (274 MB).</li><li>Group Assignment 2 is now due next week (Week 8); see your own section's due date and the submission link on iCollege.</li><li><b>📝 Quiz 3 is NEXT week</b>: in class, closed-book, 5 multiple-choice; the full scope and five sample questions are at the bottom of this week's <a href="exercises.html#quiz">Practice page ↓</a>.</li><li><a href="../week2/radar.html">Agent Radar</a> continues. Check whose slot is next.</li></ul>
 </div>
 </div></section>
 
@@ -55,7 +55,7 @@
   <div class="eyebrow">The big question</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your Week 4 agent finished its run, printed a good answer, and exited. Everything it figured out along the way is gone. Which part of that is a <em>bug</em>, and which part is just how a context window works?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">Neither part is a bug in the model. It is a <b>missing component</b> in your system. The context window is <em>working</em> memory: a scratchpad the model sees for one turn, sized by a token budget you pay for (Week 3). It was never storage, and making it bigger does not make it storage. It just makes each turn more expensive and, past a point, less accurate. Anything that should outlive the run must be deliberately <b>written</b> somewhere (a database, a file, a vector index) and deliberately <b>read back</b> later. That write/read decision is a design choice you own, and it is this entire week: <b>memory</b> for what the agent learned, <b>retrieval</b> for what your organization already wrote down.</div>
+  <div class="revealbox">Neither part is a bug in the model. It is a missing component in your system. The context window is <em>working</em> memory: a scratchpad the model sees for one turn, sized by a token budget you pay for (Week 3). It was never storage, and making it bigger does not make it storage. It just makes each turn more expensive and, past a point, less accurate. Anything that should outlive the run must be deliberately written somewhere (a database, a file, a vector index) and deliberately read back later. That write/read decision is a design choice you own, and it is this entire week: memory for what the agent learned, retrieval for what your organization already wrote down.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -81,10 +81,10 @@ Tue 8:02  Rep: What is the refund window in GA?
           Bot: 30 days for Georgia customers.
                Source: Returns Policy v7, §3.2,
                effective 2026-07-01.             ✓</div>
-      <p class="small" style="margin-top:10px">Two different mechanisms did two different jobs: <b>memory</b> carried a durable fact about this user across sessions; <b>retrieval</b> pulled the current policy text into the prompt at question time, and returned a source the rep can click.</p>
+      <p class="small" style="margin-top:10px">Two different mechanisms did two different jobs: memory carried a durable fact about this user across sessions; retrieval pulled the current policy text into the prompt at question time, and returned a source the rep can click.</p>
     </div>
   </div>
-  <div class="callout" style="margin-top:20px"><b>The through-line for the week:</b> a model's parameters are frozen at its training cutoff, and they never contained your contracts, your tickets, or your policies. You do not fix that by making the model bigger. You fix it by <b>storing</b> what matters and <b>retrieving</b> it at the moment of the question.</div>
+  <div class="callout" style="margin-top:20px"><b>The through-line for the week:</b> a model's parameters are frozen at its training cutoff, and they never contained your contracts, your tickets, or your policies. You do not fix that by making the model bigger. You fix it by storing what matters and retrieving it at the moment of the question.</div>
 </div></section>
 
 <section class="flowsec"><div class="wrap">
@@ -145,7 +145,7 @@ Flow.mount(document.getElementById('flow-w7'),{
       {move:['index','build'],packet:'1 passage (wrong)',tone:'warn',set:{tokens:900}},
       {move:['q','build'],packet:'question'},
       {move:['build','llm'],packet:'prompt',tone:'warn',set:{tokens:28}},
-      {move:['llm','ans'],packet:'“Quiz 3 is in Week 3, closed-book. [1]”',tone:'bad',end:true,say:'Wrong, and <b>cited</b>. The citation is honest: that is the passage it used. A citation proves provenance, not correctness. Fix the retrieval knobs (smaller chunks, TOP_K=3, a re-ranker), not the prompt.'}
+      {move:['llm','ans'],packet:'“Quiz 3 is in Week 3, closed-book. [1]”',tone:'bad',end:true,say:'Wrong, and cited. The citation is honest: that is the passage it used. A citation proves provenance, not correctness. Fix the retrieval knobs (smaller chunks, TOP_K=3, a re-ranker), not the prompt.'}
     ]}
   }
 });
@@ -183,7 +183,7 @@ Flow.mount(document.getElementById('flow-w7'),{
   <div class="grid3">
     <div class="card"><span class="kicker">Leverage</span><p class="small" style="margin-top:8px">A fact your best rep taught the agent on Monday should be available to every rep on Tuesday. Without a memory or knowledge layer, each session re-learns the same things and each employee's discovery dies with their tab. Retrieval turns documents your company <em>already paid to write</em> into an answer surface.</p></div>
     <div class="card"><span class="kicker">Trust &amp; auditability</span><p class="small" style="margin-top:8px">A retrieved answer can name its source: this document, this section, this version. That is the difference between "the bot said so" and "the policy says so, here it is." When the answer is wrong, you can point at the chunk that caused it, and fix the document instead of arguing with the model.</p></div>
-    <div class="card"><span class="kicker">Cost &amp; governance</span><p class="small" style="margin-top:8px">Retrieval updates by replacing a file, not by retraining; a policy change ships the same day. But the moment you store user facts or index internal documents, you own <b>data</b>: access control at retrieval time, consent, retention, and deletion. Memory is a feature <em>and</em> a liability; page 01 takes that seriously.</p></div>
+    <div class="card"><span class="kicker">Cost &amp; governance</span><p class="small" style="margin-top:8px">Retrieval updates by replacing a file, not by retraining; a policy change ships the same day. But the moment you store user facts or index internal documents, you own data: access control at retrieval time, consent, retention, and deletion. Memory is a feature <em>and</em> a liability; page 01 takes that seriously.</p></div>
   </div>
 </div></section>
 

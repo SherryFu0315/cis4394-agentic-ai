@@ -25,7 +25,7 @@
 .svgbox svg{width:100%;height:auto;display:block}
 .wheel g.fn{cursor:pointer}
 .wheel g.fn circle,.wheel g.fn rect{fill:#fff;stroke:var(--line2);stroke-width:1.6;transition:fill .18s,stroke .18s}
-.wheel g.fn text{font-family:var(--sans);font-size:var(--fs-s);font-weight:700;fill:var(--ink);pointer-events:none}
+.wheel g.fn text{font-family:var(--sans);font-size:13px;font-weight:700;fill:var(--ink);pointer-events:none}
 .wheel g.fn .sub{font-size:var(--fs-xs);font-weight:400;fill:var(--muted)}
 .wheel g.fn:hover circle,.wheel g.fn:hover rect{stroke:var(--blue)}
 .wheel g.fn.sel circle,.wheel g.fn.sel rect{fill:var(--blue);stroke:var(--blue)}
@@ -34,7 +34,7 @@
 .wheel path.spoke{stroke:var(--line2);stroke-width:1.4;fill:none}
 .pyr g.tier{cursor:pointer}
 .pyr g.tier polygon{stroke:var(--line2);stroke-width:1.5;transition:stroke .18s,stroke-width .18s}
-.pyr g.tier text{font-family:var(--sans);font-size:var(--fs-s);font-weight:700;fill:var(--ink);pointer-events:none}
+.pyr g.tier text{font-family:var(--sans);font-size:13px;font-weight:700;fill:var(--ink);pointer-events:none}
 .pyr g.tier:hover polygon{stroke:var(--blue)}
 .pyr g.tier.sel polygon{stroke:var(--ink);stroke-width:3}
 .pyr .t1 polygon{fill:#f6d6da}
@@ -76,23 +76,23 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">02 · Trust &amp; governance</div>
   <h1>Two documents every AI professional should <em>know</em>.</h1>
-  <p class="lede">One is voluntary and American and tells you <b>how to organize the work</b>. One is binding and European and tells you what you owe, based on how risky your system is. Neither is hard. Being the person in the room who has read them is a career advantage that costs you one afternoon.</p>
+  <p class="lede">One is voluntary and American and tells you how to organize the work. One is binding and European and tells you what you owe, based on how risky your system is. Neither is hard. Being the person in the room who has read them is a career advantage that costs you one afternoon.</p>
 </div></header>
 
 <section><div class="wrap">
-  <div class="callout"><b>Honest note before anything else:</b> this area is <em>moving</em>. Frameworks get revised, profiles get added, and the application dates and details of the EU regulation are phased and have been subject to political argument. Nothing on this page is legal advice, and no slide is a citation. When something rides on it (a job, a client, a grade on Milestone II), cite the <b>primary document</b> and check the date on the version you read. Both primary sources are linked below, free.</div>
+  <div class="callout"><b>Honest note before anything else:</b> this area is <em>moving</em>. Frameworks get revised, profiles get added, and the application dates and details of the EU regulation are phased and have been subject to political argument. Nothing on this page is legal advice, and no slide is a citation. When something rides on it (a job, a client, a grade on Milestone II), cite the primary document and check the date on the version you read. Both primary sources are linked below, free.</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">Interactive · click a function</div>
   <h2>NIST AI Risk Management Framework</h2>
-  <p class="lede">AI RMF 1.0 (NIST AI 100-1, published January 2023) is a <b>voluntary</b> framework from the US National Institute of Standards and Technology. It is a public-domain US Government work. You may adapt it freely with citation, which is why it is the safest backbone for a company policy or a capstone appendix. Its whole structure is four functions. <b>Click each one.</b></p>
+  <p class="lede">AI RMF 1.0 (NIST AI 100-1, published January 2023) is a voluntary framework from the US National Institute of Standards and Technology. It is a public-domain US Government work. You may adapt it freely with citation, which is why it is the safest backbone for a company policy or a capstone appendix. Its whole structure is four functions. Click each one.</p>
   <div class="fwwrap">
     <div class="svgbox">
       <svg class="wheel" id="wheel" viewBox="0 0 380 330" aria-label="NIST AI RMF four functions">
         <path class="spoke" d="M 190 148 L 190 78" /><path class="spoke" d="M 190 192 L 190 258" /><path class="spoke" d="M 148 170 L 80 170" /><path class="spoke" d="M 232 170 L 300 170" />
         <g class="fn sel" data-k="govern"><circle cx="190" cy="170" r="58"/><text x="190" y="167" text-anchor="middle">GOVERN</text><text class="sub" x="190" y="185" text-anchor="middle">the culture &amp; the owner</text></g>
-        <g class="fn" data-k="map"><rect x="112" y="20" width="156" height="56" rx="12"/><text x="190" y="44" text-anchor="middle">MAP</text><text class="sub" x="190" y="62" text-anchor="middle">context &amp; what could go wrong</text></g>
+        <g class="fn" data-k="map"><rect x="112" y="20" width="156" height="56" rx="12"/><text x="190" y="44" text-anchor="middle">MAP</text><text class="sub" x="190" y="62" text-anchor="middle">context &amp; the risks</text></g>
         <g class="fn" data-k="measure"><rect x="4" y="142" width="140" height="56" rx="12"/><text x="74" y="166" text-anchor="middle">MEASURE</text><text class="sub" x="74" y="184" text-anchor="middle">analyze, test, track</text></g>
         <g class="fn" data-k="manage"><rect x="236" y="142" width="140" height="56" rx="12"/><text x="306" y="166" text-anchor="middle">MANAGE</text><text class="sub" x="306" y="184" text-anchor="middle">act on the risks</text></g>
         <g class="fn" data-k="whole"><rect x="96" y="260" width="188" height="52" rx="12"/><text x="190" y="284" text-anchor="middle">The loop, together</text><text class="sub" x="190" y="301" text-anchor="middle">why this is not a checklist</text></g>
@@ -115,11 +115,11 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive · click a tier</div>
   <h2>The EU AI Act</h2>
-  <p class="lede">Regulation (EU) 2024/1689 is <b>binding law</b>, not guidance, and it is structured around a simple idea: obligations scale with risk. The same technology sits in a different tier depending on <b>what you point it at</b>. Click each band.</p>
+  <p class="lede">Regulation (EU) 2024/1689 is binding law, not guidance, and it is structured around a simple idea: obligations scale with risk. The same technology sits in a different tier depending on what you point it at. Click each band.</p>
   <div class="fwwrap">
     <div class="svgbox">
       <svg class="pyr" id="pyr" viewBox="0 0 420 300" aria-label="EU AI Act risk tiers pyramid">
-        <g class="tier t1 sel" data-k="unacceptable"><polygon points="210,18 255,84 165,84"/><text x="210" y="72" text-anchor="middle" style="font-size:11px">Unacceptable</text></g>
+        <g class="tier t1 sel" data-k="unacceptable"><polygon points="210,18 255,84 165,84"/><text x="210" y="72" text-anchor="middle" style="font-size:12px">Unacceptable</text></g>
         <g class="tier t2" data-k="high"><polygon points="165,84 255,84 300,150 120,150"/><text x="210" y="126" text-anchor="middle">High risk</text></g>
         <g class="tier t3" data-k="limited"><polygon points="120,150 300,150 345,216 75,216"/><text x="210" y="192" text-anchor="middle">Limited risk · transparency</text></g>
         <g class="tier t4" data-k="minimal"><polygon points="75,216 345,216 390,282 30,282"/><text x="210" y="258" text-anchor="middle">Minimal risk</text></g>
@@ -131,7 +131,7 @@
   <div class="grid2" style="margin-top:22px;align-items:start">
     <div class="card"><span class="kicker">Go to the source</span>
       <p class="small" style="margin-top:10px"><a class="doc" href="https://artificialintelligenceact.eu/the-act/" target="_blank" rel="noopener">The AI Act — readable structure and article-by-article text ↗</a><br /><span class="small">A navigable presentation of the regulation. Useful for finding which article or annex governs a use case.</span></p>
-      <p class="small" style="margin-top:12px">Key facts to keep straight: it is <b>Regulation (EU) 2024/1689</b>, published in the Official Journal in July 2024 and in force since <b>1 August 2024</b>. Its obligations do not all start at once: different duties apply from different dates, and the schedule has been actively debated. Read the dates in the text you are citing, and say which version you read.</p>
+      <p class="small" style="margin-top:12px">Key facts to keep straight: it is Regulation (EU) 2024/1689, published in the Official Journal in July 2024 and in force since 1 August 2024. Its obligations do not all start at once: different duties apply from different dates, and the schedule has been actively debated. Read the dates in the text you are citing, and say which version you read.</p>
     </div>
     <div class="card"><h3>“But we are in Georgia.”</h3><p class="small" style="margin-top:8px">Three reasons this is still your problem.</p>
 <ul class="pts small"><li><b>One:</b> whether the Act reaches a given US-built product is a scoping question you answer from the regulation, not from a rule of thumb, and the answer is often yes for anything sold into or used from Europe.</li><li><b>Two:</b> big vendors comply globally because maintaining two products is expensive, so the requirements arrive in your procurement questionnaires either way.</li><li><b>Three:</b> the tier structure (<em>obligations proportional to consequence</em>) is simply a good way to think, and it is the structure US regulators, insurers, and enterprise buyers are converging on regardless of what any single legislature does next.</li></ul></div>
@@ -148,9 +148,9 @@
         <tr><td>Who issues it</td><td>NIST, a US standards agency (Dept. of Commerce). Developed openly with industry input.</td><td>The European Parliament and Council. It is legislation.</td></tr>
         <tr><td>Binding?</td><td><b>No</b>: voluntary. Its force comes from contracts, procurement, insurers, and courts asking whether you followed a recognized practice.</td><td><b>Yes</b>: binding regulation, with supervisory authorities and penalties. Consult the text for what applies and when.</td></tr>
         <tr><td>What it asks of you</td><td>Organize the work: govern it, map the context, measure what you claim, manage what you find. It tells you the <em>process</em>, not the answer.</td><td>Classify the system by risk, then meet the duties attached to that tier: documentation, data and human-oversight requirements, transparency to the people affected.</td></tr>
-        <tr><td>Unit of analysis</td><td>Your <b>organization and lifecycle</b>. Who owns this, and how do risks get found and handled over time?</td><td>The <b>system and its use case</b>. What is this thing pointed at, and who bears the consequence?</td></tr>
+        <tr><td>Unit of analysis</td><td>Your organization and lifecycle. Who owns this, and how do risks get found and handled over time?</td><td>The system and its use case. What is this thing pointed at, and who bears the consequence?</td></tr>
         <tr><td>Licence to reuse</td><td>Public domain (US Government work); adapt with citation.</td><td>Official EU text: cite and link with attribution; not an open remix licence.</td></tr>
-        <tr><td>What it means for your capstone</td><td>Use its four functions as the <b>headings</b> of your Milestone II security section. It is free structure that a reviewer recognizes.</td><td>State the tier you believe your agent lands in and <b>why</b>, in one paragraph, citing the article or annex you relied on. Being wrong with reasoning beats being silent.</td></tr>
+        <tr><td>What it means for your capstone</td><td>Use its four functions as the headings of your Milestone II security section. It is free structure that a reviewer recognizes.</td><td>State the tier you believe your agent lands in and why, in one paragraph, citing the article or annex you relied on. Being wrong with reasoning beats being silent.</td></tr>
       </tbody>
     </table>
   </div>
@@ -183,7 +183,7 @@
   <div class="callout blue" style="margin-top:22px">Governance is mostly writing down what you built and naming who owns it. That is why MIS graduates are unusually well positioned here: the scarce skill is sitting between the engineers and the auditors and speaking both languages, not training models, and very few people can.</div>
   <div class="bigq" style="margin-top:26px"><span class="qlabel">Discussion question</span>Your startup has eight engineers and no compliance function. A prospective enterprise customer asks: “What is your AI governance process?” What do you say, and what would make the answer credible instead of aspirational?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">Do not claim a program you do not have; enterprise buyers have heard that and can tell. Say what is true and show the artifacts: <b>(1)</b> we map to the NIST AI RMF and here are our four sections; <b>(2)</b> here is our tool inventory, with an owner per tool and the scope of each credential; <b>(3)</b> these actions require human approval and here is a sample approval record; <b>(4)</b> here is our trace format and retention period, and here is a real trace with the sensitive fields removed; <b>(5)</b> here is our eval suite, its pass threshold, and the last run; <b>(6)</b> this named person owns the agent's behavior and here is how to reach them during an incident. Six artifacts, all of which you can produce in a week if you built the system properly, and none of which require a compliance department. Credibility comes from <em>evidence and a named owner</em>, not from a policy document. The artifacts are the answer, the policy just describes them.</div>
+  <div class="revealbox">Do not claim a program you do not have; enterprise buyers have heard that and can tell. Say what is true and show the artifacts: (1) we map to the NIST AI RMF and here are our four sections; (2) here is our tool inventory, with an owner per tool and the scope of each credential; (3) these actions require human approval and here is a sample approval record; (4) here is our trace format and retention period, and here is a real trace with the sensitive fields removed; (5) here is our eval suite, its pass threshold, and the last run; (6) this named person owns the agent's behavior and here is how to reach them during an incident. Six artifacts, all of which you can produce in a week if you built the system properly, and none of which require a compliance department. Credibility comes from <em>evidence and a named owner</em>, not from a policy document. The artifacts are the answer, the policy just describes them.</div>
 </div></section>
 
 <div class="wrap pager">

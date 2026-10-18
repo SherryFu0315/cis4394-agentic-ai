@@ -45,7 +45,7 @@
   <p class="lede">You skimmed a real coding agent before class. Now we take it apart, not to memorize a repository, but to extract a reusable architecture for agentic systems.</p>
   <div class="bigq" style="margin-bottom:0"><span class="qlabel">Discussion question</span>If Codex had the exact same model, but no access to files, shell commands, tools, state, or permissions, would it still be Codex?</div>
   <button class="revealbtn">What a strong answer covers</button>
-  <div class="revealbox">No: you would have a chatbot that talks <em>about</em> code. Everything that makes it Codex (reading files, running tests, applying patches, pausing for approval) lives in the <b>harness</b>. The model supplies reasoning; the product is the loop built around it. (Corollary: swap the model and most of the product survives; remove the harness and nothing does.)</div>
+  <div class="revealbox">No: you would have a chatbot that talks <em>about</em> code. Everything that makes it Codex (reading files, running tests, applying patches, pausing for approval) lives in the harness. The model supplies reasoning; the product is the loop built around it. (Corollary: swap the model and most of the product survives; remove the harness and nothing does.)</div>
 </div></header>
 
 <section><div class="wrap">
@@ -58,7 +58,7 @@
     <div class="rail" style="border-top-color:var(--blue)"><span class="kicker">Shift 3 · now</span><h3 style="margin-top:6px">Harness Engineering</h3><p class="small" style="font-weight:600;color:var(--ink)">“Can the model execute reliably in the real world?”</p><p class="small">Tools, environment, state, sandboxing, approvals, the loop. Where the industry’s effort, and its hiring, has moved.</p></div>
   </div>
   <div class="grouptask"><span class="gk">👥 Group task · 2 minutes</span>
-    <p>Before scrolling: are these three <b>replacements</b> for each other, or something else? Agree on <b>one sentence</b> describing the relationship between them.</p>
+    <p>Before scrolling: are these three replacements for each other, or something else? Agree on one sentence describing the relationship between them.</p>
     <p class="prod"><b>Then:</b> scroll to the figure and check your sentence against it.</p>
   </div>
   <div class="card" style="margin-top:26px;padding:28px">
@@ -94,12 +94,12 @@
 <section><div class="wrap">
   <div class="eyebrow">Open the hood</div>
   <h2>A field guide to the Codex repository</h2>
-  <p class="lede"><a class="doc" href="https://github.com/openai/codex" target="_blank" rel="noopener">github.com/openai/codex ↗</a> is not a model repository: <b>the model isn’t in it</b>. Everything you’ll see is harness. We’re here to recognize structure, not to read Rust.</p>
+  <p class="lede"><a class="doc" href="https://github.com/openai/codex" target="_blank" rel="noopener">github.com/openai/codex ↗</a> is not a model repository: the model isn’t in it. Everything you’ll see is harness. We’re here to recognize structure, not to read Rust.</p>
   <div class="grid2" style="align-items:start">
     <div class="card">
       <h3>The top level, in one pass</h3>
       <div style="overflow:auto"><table class="plain"><tbody>
-        <tr><td><code>codex-rs/</code></td><td>The engine room: the agent’s core, written in Rust. <b>Today’s destination.</b></td></tr>
+        <tr><td><code>codex-rs/</code></td><td>The engine room: the agent’s core, written in Rust. Today’s destination.</td></tr>
         <tr><td><code>codex-cli/</code></td><td>The npm wrapper you install (<code>@openai/codex</code>): a shell around the Rust engine.</td></tr>
         <tr><td><code>sdk/</code> · <code>docs/</code></td><td>For developers embedding Codex; documentation.</td></tr>
         <tr><td><code>AGENTS.md</code> · <code>.codex/</code></td><td>⭐ The repo carries its <em>own</em> agent instructions: OpenAI uses Codex to build Codex. Layer 3, live, eating its own dog food.</td></tr>
@@ -108,25 +108,25 @@
     </div>
     <div class="card">
       <h3>Why we go to <code>codex-rs/core</code></h3>
-      <p class="small"><code>codex-rs/</code> holds <b>111 modules</b>; pause on that number: is “a chatbot with some tools” 111 modules big? That is the true size of a production harness.</p>
-      <p class="small" style="margin-top:8px">We go to <code>core</code> because its own README says so: <i>“This crate implements the <b>business logic</b> for Codex… used by the various Codex UIs.”</i> Every interface is a shell; the agent lives here. And your pre-class reading, <code>gpt_5_2_prompt.md</code>, lives at this address.</p>
+      <p class="small"><code>codex-rs/</code> holds 111 modules; pause on that number: is “a chatbot with some tools” 111 modules big? That is the true size of a production harness.</p>
+      <p class="small" style="margin-top:8px">We go to <code>core</code> because its own README says so: <i>“This crate implements the business logic for Codex… used by the various Codex UIs.”</i> Every interface is a shell; the agent lives here. And your pre-class reading, <code>gpt_5_2_prompt.md</code>, lives at this address.</p>
       <p class="small" style="margin-top:8px">Neighbors whose names alone tell the story: <code>apply-patch</code>, <code>sandboxing</code>, <code>shell-escalation</code>, <code>rollout</code> (traces), <code>tui</code>.</p>
     </div>
   </div>
   <div class="grouptask"><span class="gk">👥 Group task · Repo scavenger race · 10 minutes</span>
-    <p>Your group claims <b>two layers</b> of the nine. Open <a class="doc" href="https://github.com/openai/codex" target="_blank" rel="noopener">github.com/openai/codex ↗</a> and find real file or folder evidence for each; names count as evidence.</p>
+    <p>Your group claims two layers of the nine. Open <a class="doc" href="https://github.com/openai/codex" target="_blank" rel="noopener">github.com/openai/codex ↗</a> and find real file or folder evidence for each; names count as evidence.</p>
     <p class="prod"><b>Produce:</b> one sentence per layer: “Layer __ lives in <code>____</code>, because ____.” Report back in one breath. Then open the map below to check yourselves.</p>
   </div>
   <div class="card" style="margin-top:18px">
     <button class="revealbtn">Open the map of core/: what’s inside, layer by layer</button>
     <div class="revealbox">
       <div style="overflow:auto"><table class="plain"><thead><tr><th>Inside <code>core/</code></th><th>Layer</th><th>What it tells you</th></tr></thead><tbody>
-        <tr><td><code>gpt_5_2_prompt.md</code>, plus <b>four sibling prompt files</b>, one per model</td><td>3 · Instructions</td><td>⭐ Five prompts, one harness: the model is a swappable engine. Last section’s “swap the model” answer, sitting in a file listing.</td></tr>
+        <tr><td><code>gpt_5_2_prompt.md</code>, plus four sibling prompt files, one per model</td><td>3 · Instructions</td><td>⭐ Five prompts, one harness: the model is a swappable engine. Last section’s “swap the model” answer, sitting in a file listing.</td></tr>
         <tr><td><code>src/tools/</code>, with <code>registry.rs</code>, <code>orchestrator.rs</code>, <code>parallel.rs</code></td><td>4 · Tools</td><td>Tools are a subsystem (registry, scheduling, parallel execution), not a sentence in a prompt.</td></tr>
         <tr><td><code>src/exec.rs</code> · <code>unified_exec/</code> · <code>exec_policy/</code></td><td>5 · Environment</td><td>Where words become commands on a real filesystem.</td></tr>
         <tr><td><code>src/state/</code> · <code>session/</code> · <code>context_manager/</code> · a dozen <code>compact*.rs</code> files</td><td>6 · State / Memory</td><td>“Compact” = context compression: deciding what to remember and what to forget takes a dozen files.</td></tr>
         <tr><td><code>src/tasks/</code> · <code>agent/</code> · <code>codex_thread.rs</code></td><td>7 · Loop</td><td>The turn-by-turn skeleton of the loop.</td></tr>
-        <tr><td><code>src/tools/approvals.rs</code> · <code>sandboxing/</code> · <code>guardian/</code></td><td>8 · Guardrails / HITL (human-in-the-loop)</td><td>⭐ There is literally a file named <b>approvals.rs</b> : asking the human is a code module, not a courtesy line.</td></tr>
+        <tr><td><code>src/tools/approvals.rs</code> · <code>sandboxing/</code> · <code>guardian/</code></td><td>8 · Guardrails / HITL (human-in-the-loop)</td><td>⭐ There is literally a file named approvals.rs : asking the human is a code module, not a courtesy line.</td></tr>
         <tr><td><code>tests/</code></td><td>9 · Evaluation</td><td>The harness verifies itself, too.</td></tr>
       </tbody></table></div>
       <p class="small" style="margin-top:12px">Last week the nine layers were boxes on a slide. Here they are folders. The abstraction wasn’t invented. It was extracted. <span style="color:var(--muted)">(Structure as of Sept 2026; this repository moves fast; expect renames.)</span></p>
@@ -139,7 +139,7 @@
   <h2>Anatomy of a coding agent</h2>
   <p class="lede">Click each layer. Together they answer one question: what must surround a language model before it can <em>do</em> things?</p>
   <div class="grouptask"><span class="gk">👥 Group task · Jigsaw · 5 min prep + 60 seconds each</span>
-    <p>Your group claims <b>two layers</b> below. Read them, discuss the layer’s question, and agree on your answer; <em>then</em> check it against the Suggested answer.</p>
+    <p>Your group claims two layers below. Read them, discuss the layer’s question, and agree on your answer; <em>then</em> check it against the Suggested answer.</p>
     <p class="prod"><b>Produce:</b> teach your layers to the class in 60 seconds each, in your own words; no reading the panel aloud.</p>
   </div>
   <div class="arch-shell">
@@ -157,14 +157,14 @@
     <div class="revealbox">
       <div style="overflow:auto"><table class="plain"><thead><tr><th>Layer</th><th>Where</th><th>What the prompt says</th></tr></thead><tbody>
         <tr><td><b>1 &middot; Goal</b></td><td>Task execution</td><td>&ldquo;keep going until the query or task is completely resolved, before ending your turn&rdquo;: the goal persists across many actions.</td></tr>
-        <tr><td><b>2 &middot; Model / Reasoning</b></td><td>Opening line</td><td>&ldquo;You are <b>GPT-5.2</b> running in the Codex CLI&rdquo;: the very first sentence separates the model from the harness: this whole file is the harness talking <em>to</em> the model.</td></tr>
-        <tr><td><b>3 &middot; Instructions</b></td><td>AGENTS.md spec</td><td>The entire file <b>is</b> this layer. It even defines scope and precedence: nested AGENTS.md files win over outer ones; direct system/user instructions win over AGENTS.md.</td></tr>
+        <tr><td><b>2 &middot; Model / Reasoning</b></td><td>Opening line</td><td>&ldquo;You are GPT-5.2 running in the Codex CLI&rdquo;: the very first sentence separates the model from the harness: this whole file is the harness talking <em>to</em> the model.</td></tr>
+        <tr><td><b>3 &middot; Instructions</b></td><td>AGENTS.md spec</td><td>The entire file is this layer. It even defines scope and precedence: nested AGENTS.md files win over outer ones; direct system/user instructions win over AGENTS.md.</td></tr>
         <tr><td><b>4 &middot; Tools</b></td><td>Tool Guidelines</td><td>A whole chapter: shell commands, <code>apply_patch</code> (with its full patch format), <code>update_plan</code> &mdash; &ldquo;Emit function calls to run terminal commands and apply patches.&rdquo;</td></tr>
-        <tr><td><b>5 &middot; Environment</b></td><td>Capabilities</td><td>&ldquo;files <b>in the workspace</b>&rdquo;; &ldquo;the repo(s) in the current environment&rdquo;: the world it acts on is the repository.</td></tr>
-        <tr><td><b>6 &middot; State / Memory</b></td><td>Planning</td><td><code>update_plan</code> is an explicit state machine: &ldquo;exactly one item <b>in_progress</b> at a time&rdquo;; &ldquo;Do not let the plan go stale while coding.&rdquo;</td></tr>
-        <tr><td><b>7 &middot; Agent Loop</b></td><td>Autonomy &amp; Task execution</td><td>&ldquo;carry changes through implementation, <b>verification</b>&hellip;&rdquo;; &ldquo;<b>persevere even when function calls fail</b>. Only terminate your turn when you are sure that the problem is solved&rdquo;: a loop with an explicit stop condition.</td></tr>
-        <tr><td><b>8 &middot; Guardrails / HITL</b></td><td>Capabilities &amp; Validating</td><td>&ldquo;function calls be <b>escalated to the user for approval</b> before running&rdquo;; three approval modes are named &mdash; <b>never / untrusted / on-request</b>.</td></tr>
-        <tr><td><b>9 &middot; Evaluation</b></td><td>Validating your work</td><td>&ldquo;If the codebase has tests&hellip; use them to <b>verify changes</b>&rdquo;: plus a strategy: start with the most specific tests, then broaden.</td></tr>
+        <tr><td><b>5 &middot; Environment</b></td><td>Capabilities</td><td>&ldquo;files in the workspace&rdquo;; &ldquo;the repo(s) in the current environment&rdquo;: the world it acts on is the repository.</td></tr>
+        <tr><td><b>6 &middot; State / Memory</b></td><td>Planning</td><td><code>update_plan</code> is an explicit state machine: &ldquo;exactly one item in_progress at a time&rdquo;; &ldquo;Do not let the plan go stale while coding.&rdquo;</td></tr>
+        <tr><td><b>7 &middot; Agent Loop</b></td><td>Autonomy &amp; Task execution</td><td>&ldquo;carry changes through implementation, verification&hellip;&rdquo;; &ldquo;persevere even when function calls fail. Only terminate your turn when you are sure that the problem is solved&rdquo;: a loop with an explicit stop condition.</td></tr>
+        <tr><td><b>8 &middot; Guardrails / HITL</b></td><td>Capabilities &amp; Validating</td><td>&ldquo;function calls be escalated to the user for approval before running&rdquo;; three approval modes are named &mdash; never / untrusted / on-request.</td></tr>
+        <tr><td><b>9 &middot; Evaluation</b></td><td>Validating your work</td><td>&ldquo;If the codebase has tests&hellip; use them to verify changes&rdquo;: plus a strategy: start with the most specific tests, then broaden.</td></tr>
       </tbody></table></div>
       <ul class="pts small" style="margin-top:14px"><li><b>Two things sharp readers notice:</b> the <code>## Responsiveness</code> heading is empty &mdash; system prompts are engineering artifacts, not magic; and the file references a &ldquo;Sandbox and approvals&rdquo; section that isn&rsquo;t in it &mdash; the harness assembles the full instructions at runtime, and this file is only one piece.</li><li><b>One honest gap:</b> there is no cross-session long-term memory here; not every product ships all nine layers, and spotting which are missing is itself the skill. (Quotes from the Apache-2.0 <code>openai/codex</code> repository as of Sept 2026; the file evolves.)</li></ul>
     </div>
@@ -174,7 +174,7 @@
 <section><div class="wrap">
   <div class="eyebrow">See it move</div>
   <h2>Watch the loop run</h2>
-  <p class="lede">The abstract diagram becomes concrete when you watch one real episode: <b>Codex fixes a failing test.</b> Step through it: watch which node is active, what appears in the terminal, and how state accumulates.</p>
+  <p class="lede">The abstract diagram becomes concrete when you watch one real episode: Codex fixes a failing test. Step through it: watch which node is active, what appears in the terminal, and how state accumulates.</p>
   <div class="sim2">
     <div class="loopbox">
       <svg viewBox="0 0 480 330" aria-label="agent loop diagram">
@@ -191,7 +191,7 @@
         <g class="loopnode" id="ln3"><rect x="30" y="265" width="160" height="46" rx="10"/><text x="110" y="293" text-anchor="middle">Update state</text></g>
         <g class="loopnode pausenode" id="ln4"><rect x="16" y="122" width="176" height="46" rx="10"/><text x="104" y="150" text-anchor="middle">Need human? Pause</text></g>
       </svg>
-      <p class="small" style="margin:10px 6px 4px">The loop closes: <b>update state → observe again</b>. The pause node is where human approval interrupts autonomy.</p>
+      <p class="small" style="margin:10px 6px 4px">The loop closes: update state → observe again. The pause node is where human approval interrupts autonomy.</p>
     </div>
     <div class="simright">
       <div class="simctl">
@@ -204,7 +204,7 @@
       <div class="statepanel" id="simState"><span class="kicker">Agent state</span></div>
     </div>
   </div>
-  <div class="callout"><b>Key idea:</b> the model supplies reasoning, but the <b>agent harness</b> supplies capabilities, state, control flow, permissions, and access to the environment. Notice how much of the episode above is harness, not model.</div>
+  <div class="callout"><b>Key idea:</b> the model supplies reasoning, but the agent harness supplies capabilities, state, control flow, permissions, and access to the environment. Notice how much of the episode above is harness, not model.</div>
 </div></section>
 
 <section><div class="wrap">

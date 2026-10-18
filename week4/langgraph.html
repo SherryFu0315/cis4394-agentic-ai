@@ -23,7 +23,7 @@
 .lgwrap{display:grid;grid-template-columns:minmax(320px,460px) 1fr;gap:20px;align-items:start}
 .lgnode{cursor:pointer}
 .lgnode rect{fill:#fff;stroke:var(--line2);stroke-width:1.4;rx:10}
-.lgnode text{font-family:var(--mono);font-size:var(--fs-s);font-weight:600;fill:var(--ink)}
+.lgnode text{font-family:var(--mono);font-size:13px;font-weight:600;fill:var(--ink)}
 .lgnode.term rect{fill:#f1f3f7;stroke:var(--line2);rx:22}
 .lgnode.on rect{fill:var(--blue);stroke:var(--blue)}
 .lgnode.on text{fill:#fff}
@@ -59,8 +59,8 @@
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">03 · Hands-on</div>
   <h1>LangGraph: the loop you <em>own</em>.</h1>
-  <p class="lede">LangGraph is an open-source library that makes the agent loop <b>explicit</b>: your agent is a graph of nodes connected by edges, passing a typed state. Nothing hidden, which is exactly why enterprises like it.</p>
-  <div class="callout blue" style="margin-top:18px">Reference page: read it when you need it. We build agents in plain Python first (<a href="../week5/local.html">Week 5, page 03</a>), and LangGraph gets a proper treatment in <b>Week 9</b>, where orchestrating several agents needs it. The code below uses a cloud model; to run the same graph on your own laptop with Ollama, only the model line changes; see Step 6 of the Week 5 lab.</div>
+  <p class="lede">LangGraph is an open-source library that makes the agent loop explicit: your agent is a graph of nodes connected by edges, passing a typed state. Nothing hidden, which is exactly why enterprises like it.</p>
+  <div class="callout blue" style="margin-top:18px">Reference page: read it when you need it. We build agents in plain Python first (<a href="../week5/local.html">Week 5, page 03</a>), and LangGraph gets a proper treatment in Week 9, where orchestrating several agents needs it. The code below uses a cloud model; to run the same graph on your own laptop with Ollama, only the model line changes; see Step 6 of the Week 5 lab.</div>
 </div></header>
 
 <section><div class="wrap">
@@ -68,8 +68,8 @@
   <h2>State · nodes · edges</h2>
   <div class="grid3">
     <div class="card"><span class="kicker">State</span><h3 style="margin-top:6px">The shared memory</h3><p class="small">A typed dict passed to every node. Ours holds <code>messages</code>: the growing conversation of thoughts, tool calls, and results. Whatever a node returns is merged in.</p></div>
-    <div class="card"><span class="kicker">Nodes</span><h3 style="margin-top:6px">Units of work</h3><p class="small">A node is just a function: <code>state in → update out</code>. The two classics: a <b>model</b> node (ask the LLM what to do next) and a <b>tools</b> node (execute what it asked for).</p></div>
-    <div class="card"><span class="kicker">Edges</span><h3 style="margin-top:6px">Routing = the loop</h3><p class="small">Normal edges always fire. <b>Conditional</b> edges look at state and choose the next node, and a conditional edge that can route <em>backwards</em> is all a loop is.</p></div>
+    <div class="card"><span class="kicker">Nodes</span><h3 style="margin-top:6px">Units of work</h3><p class="small">A node is just a function: <code>state in → update out</code>. The two classics: a model node (ask the LLM what to do next) and a tools node (execute what it asked for).</p></div>
+    <div class="card"><span class="kicker">Edges</span><h3 style="margin-top:6px">Routing = the loop</h3><p class="small">Normal edges always fire. Conditional edges look at state and choose the next node, and a conditional edge that can route <em>backwards</em> is all a loop is.</p></div>
   </div>
 </div></section>
 
@@ -93,7 +93,7 @@
         <g class="lgnode" id="lg3"><rect x="115" y="296" width="110" height="48"/><text x="170" y="325" text-anchor="middle">tools</text></g>
         <g class="lgnode term" id="lg4"><rect x="35" y="240" width="90" height="44"/><text x="80" y="267" text-anchor="middle">END</text></g>
       </svg>
-      <p class="small" style="margin:10px 6px 4px">Dashed edge = the loop-back: <b>tools → model</b>. The amber diamond-in-spirit is the conditional edge deciding “tool call or finish?”</p>
+      <p class="small" style="margin:10px 6px 4px">Dashed edge = the loop-back: tools → model. The amber diamond-in-spirit is the conditional edge deciding “tool call or finish?”</p>
     </div>
     <div>
       <div class="lgnote" id="lgNote">Click a node in the graph.</div>
@@ -167,7 +167,7 @@ out = agent.invoke({<span class="cs">"messages"</span>:
 
 g.add_conditional_edges(<span class="cs">"model"</span>, guarded_condition)</div>
     <div>
-      <div class="card"><span class="kicker">Why this matters</span><p class="small" style="margin-top:8px">This is the loop-layer guardrail from the nine layers, in real code: the model can <em>ask</em> for step 9, and the graph simply won't grant it. Runaway loops, infinite retries, and surprise bills all die at this line. (LangGraph also has a built-in <code>recursion_limit</code>; the point is that <b>you</b> set it.)</p></div>
+      <div class="card"><span class="kicker">Why this matters</span><p class="small" style="margin-top:8px">This is the loop-layer guardrail from the nine layers, in real code: the model can <em>ask</em> for step 9, and the graph simply won't grant it. Runaway loops, infinite retries, and surprise bills all die at this line. (LangGraph also has a built-in <code>recursion_limit</code>; the point is that you set it.)</p></div>
       <div class="card" style="margin-top:14px"><span class="kicker">🎯 Take it to your final project</span><p class="small" style="margin-top:8px">Your capstone agent must have a named stop condition. This pattern (a counter in state plus a guarded conditional edge) is the reference implementation. Add a reflection node before END and you've covered two rubric lines in one graph.</p></div>
     </div>
   </div>
@@ -176,7 +176,7 @@ g.add_conditional_edges(<span class="cs">"model"</span>, guarded_condition)</div
 <section><div class="wrap">
   <div class="eyebrow">Group task</div>
   <div class="grouptask"><span class="gk">👥 Group task · Pairs · ~25 minutes</span>
-    <p>Run the minimal agent above on the <b>Gemini free tier</b> (your Week 1 key from <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>; set it as <code>GOOGLE_API_KEY</code>). Then: (1) add a second tool, <code>search_stub(query)</code>, that just returns a canned string with a height; (2) ask the Atlanta-vs-statue question from page 01; (3) add the max-iteration guard with a cap of 3 and watch it cut the run short.</p>
+    <p>Run the minimal agent above on the Gemini free tier (your Week 1 key from <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>; set it as <code>GOOGLE_API_KEY</code>). Then: (1) add a second tool, <code>search_stub(query)</code>, that just returns a canned string with a height; (2) ask the Atlanta-vs-statue question from page 01; (3) add the max-iteration guard with a cap of 3 and watch it cut the run short.</p>
     <p class="prod"><b>Produce:</b> the printed message trace for one successful run, plus one sentence: which edge in your graph is the loop?</p>
   </div>
 </div></section>

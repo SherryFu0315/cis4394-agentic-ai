@@ -26,7 +26,7 @@
 .tracebox .ob{color:#8ab8ff}
 .tracebox .fin{color:#ff9d9d}
 .ansgraph rect{fill:#fff;stroke:var(--line2);stroke-width:1.3;rx:9}
-.ansgraph text{font-family:var(--mono);font-size:var(--fs-xs);font-weight:600;fill:var(--ink)}
+.ansgraph text{font-family:var(--mono);font-size:12px;font-weight:600;fill:var(--ink)}
 .ansgraph .cond rect{fill:#fff7ea;stroke:#dbb96a}
 .ansgraph .term rect{fill:#f1f3f7;rx:20}
 .ansgraph path{stroke:var(--line2);stroke-width:1.5;fill:none;marker-end:url(#arr3)}
@@ -62,7 +62,7 @@
   <div class="eyebrow">Exercise A</div>
   <h2>Annotate the trace</h2>
   <div class="grouptask"><span class="gk">👥 Group task · Pairs · ~10 minutes</span>
-    <p>Below is the full trace of a <b>travel-cost agent</b> answering: <em>“Can I do 3 nights in Boston (flight from Atlanta plus hotel) for under $900?”</em> Mark up a copy (or a screenshot):</p>
+    <p>Below is the full trace of a travel-cost agent answering: <em>“Can I do 3 nights in Boston (flight from Atlanta plus hotel) for under $900?”</em> Mark up a copy (or a screenshot):</p>
 <ul class="pts"><li><b>(1)</b> circle every point where the loop made a <em>decision</em>;</li><li><b>(2)</b> underline the observation that <em>changed</em> the plan;</li><li><b>(3)</b> find one <em>wasted</em> step;</li><li><b>(4)</b> verdict: is this plan-then-execute or interleaved, and how can you tell from the trace alone?</li></ul>
     <p class="prod"><b>Produce:</b> your annotated trace + a one-sentence verdict with evidence.</p>
   </div>
@@ -83,7 +83,7 @@
 <span class="fin">Answer:</span>    Yes: about $783: $228 flights + 3 nights in Cambridge at ~$185. Downtown would bust the budget.</div>
   <div class="card" style="margin-top:16px">
     <button class="revealbtn">Debrief: answer key</button>
-    <div class="revealbox"><b>(1) Decisions:</b> Thought 1 (decompose + set the plan), Thought 3 (accept the Cambridge substitute, the big one), Thought 4 (recognize a dead end and return to plan), Thought 5 (stop check: goal satisfied). <b>(2) The plan-changing observation:</b> Obs 2: the agent came for one number and the environment offered a better option; feeding that back is what a one-shot answer can never do. <b>(3) The wasted step:</b> Action 3. “Cheapest month” doesn't serve a this-weekend goal; a max-iteration guard or a sharper Thought 3 would have saved one call. Honest traces show waste; that's a feature. (4) Verdict: interleaved (ReAct-style), with a light plan on top. The tell: Action 4 depends on the <em>content</em> of Obs 2 (185 wasn't knowable when the plan was made). In strict plan-then-execute, Thought 1's plan would have been executed verbatim, and would have concluded “no, $930+ busts it.”</div>
+    <div class="revealbox"><b>(1) Decisions:</b> Thought 1 (decompose + set the plan), Thought 3 (accept the Cambridge substitute, the big one), Thought 4 (recognize a dead end and return to plan), Thought 5 (stop check: goal satisfied). (2) The plan-changing observation: Obs 2: the agent came for one number and the environment offered a better option; feeding that back is what a one-shot answer can never do. (3) The wasted step: Action 3. “Cheapest month” doesn't serve a this-weekend goal; a max-iteration guard or a sharper Thought 3 would have saved one call. Honest traces show waste; that's a feature. (4) Verdict: interleaved (ReAct-style), with a light plan on top. The tell: Action 4 depends on the <em>content</em> of Obs 2 (185 wasn't knowable when the plan was made). In strict plan-then-execute, Thought 1's plan would have been executed verbatim, and would have concluded “no, $930+ busts it.”</div>
   </div>
 </div></section>
 
@@ -91,7 +91,7 @@
   <div class="eyebrow">Exercise B</div>
   <h2>Draw the state graph</h2>
   <div class="grouptask"><span class="gk">👥 Group task · Pairs · ~15 minutes</span>
-    <p>On paper or a whiteboard, design a LangGraph-style graph for an agent that (1) makes a plan, (2) executes one step, (3) reflects on the result, and loops or finishes. Your drawing must label: the <b>state fields</b> that persist across nodes (e.g., <code>task</code>, <code>plan</code>, <code>past_steps</code>, <code>results</code>, <code>critique</code>); every <b>node</b>; which edges are <b>fixed</b> vs <b>conditional</b>; and the <b>stop condition</b> that prevents an infinite loop.</p>
+    <p>On paper or a whiteboard, design a LangGraph-style graph for an agent that (1) makes a plan, (2) executes one step, (3) reflects on the result, and loops or finishes. Your drawing must label: the state fields that persist across nodes (e.g., <code>task</code>, <code>plan</code>, <code>past_steps</code>, <code>results</code>, <code>critique</code>); every node; which edges are fixed vs conditional; and the stop condition that prevents an infinite loop.</p>
     <p class="prod"><b>Produce:</b> a photo of the graph + one sentence: where would ReAct collapse two of your nodes into one?</p>
   </div>
   <div class="card">
@@ -110,12 +110,12 @@
         <g><rect x="302" y="100" width="118" height="50"/><text x="361" y="130" text-anchor="middle">executor</text></g>
         <g class="cond"><rect x="464" y="100" width="136" height="50"/><text x="532" y="130" text-anchor="middle">reflector ?</text></g>
         <g class="term"><rect x="644" y="103" width="60" height="44"/><text x="674" y="130" text-anchor="middle">END</text></g>
-        <text class="lbl" x="470" y="55">not done &amp; steps &lt; N → back to executor</text>
-        <text class="lbl" x="604" y="168">done, or steps ≥ N</text>
+        <text class="lbl" x="706" y="55" text-anchor="end">not done &amp; steps &lt; N → back to executor</text>
+        <text class="lbl" x="706" y="168" text-anchor="end">done, or steps ≥ N</text>
         <text class="lbl" x="140" y="212">state: { task, plan, past_steps, results, critique, steps }</text>
       </svg>
       </div>
-      <ul class="pts" style="margin-top:12px"><li><b>Fixed edges:</b> START→planner, planner→executor, executor→reflector.</li><li><b>Conditional edge:</b> reflector: routes back to executor (critique says “not done”, steps &lt; N) or to END (done, or the <b>max-iteration guard</b> fires at N).</li><li><b>The ReAct collapse:</b> ReAct merges <em>planner + executor</em> into one looping “model” node that re-decides the next step every turn; you trade the reviewable up-front plan for adaptivity.</li><li><b>Common miss:</b> teams forget <code>steps</code> in the state: a stop condition that isn't <em>stored</em> anywhere can't be checked.</li></ul>
+      <ul class="pts" style="margin-top:12px"><li><b>Fixed edges:</b> START→planner, planner→executor, executor→reflector.</li><li><b>Conditional edge:</b> reflector: routes back to executor (critique says “not done”, steps &lt; N) or to END (done, or the max-iteration guard fires at N).</li><li><b>The ReAct collapse:</b> ReAct merges <em>planner + executor</em> into one looping “model” node that re-decides the next step every turn; you trade the reviewable up-front plan for adaptivity.</li><li><b>Common miss:</b> teams forget <code>steps</code> in the state: a stop condition that isn't <em>stored</em> anywhere can't be checked.</li></ul>
     </div>
   </div>
 </div></section>
@@ -133,17 +133,17 @@
   <div style="margin-top:18px">
     <div class="bigq"><span class="qlabel">Discussion question 1</span>Which reasoning pattern is Build 2, and what, exactly, did the up-front plan buy that Build 1's fluent answer couldn't?</div>
     <button class="revealbtn">See the answer</button>
-    <div class="revealbox">Plan-then-execute <b>plus a reflection/check loop</b> (the checker is a lightweight reflector). The plan bought a <b>global constraint</b>: $2,500 allocated across cities <em>before</em> any city could greedily overspend. Greedy generation optimizes each step locally; nothing in Build 1 ever “sees” the whole budget at once. The check node bought <b>error detection mid-run</b>: the $950 Rome quote was caught in step 2, not in the customer's inbox.</div>
+    <div class="revealbox">Plan-then-execute plus a reflection/check loop (the checker is a lightweight reflector). The plan bought a global constraint: $2,500 allocated across cities <em>before</em> any city could greedily overspend. Greedy generation optimizes each step locally; nothing in Build 1 ever “sees” the whole budget at once. The check node bought error detection mid-run: the $950 Rome quote was caught in step 2, not in the customer's inbox.</div>
   </div>
   <div style="margin-top:18px">
     <div class="bigq"><span class="qlabel">Discussion question 2</span>The startup adds real booking (money moves). Where does the human gate go in Build 2's graph, and what should the approval screen show?</div>
     <button class="revealbtn">See the answer</button>
-    <div class="revealbox">On the edge <b>into any node that spends</b>: after the checker approves the plan-conforming price, before the booking tool executes. One gate for the full itinerary (batch approval) if bookings are refundable; per-booking gates if not. The screen should show <b>the decision, not the vibes</b>: item, price, remaining budget before/after, which plan line it satisfies, and what the agent will do next if declined. That's the Approve/Edit/Reject pattern from your GA1 rubric, scaled to money.</div>
+    <div class="revealbox">On the edge into any node that spends: after the checker approves the plan-conforming price, before the booking tool executes. One gate for the full itinerary (batch approval) if bookings are refundable; per-booking gates if not. The screen should show the decision, not the vibes: item, price, remaining budget before/after, which plan line it satisfies, and what the agent will do next if declined. That's the Approve/Edit/Reject pattern from your GA1 rubric, scaled to money.</div>
   </div>
   <div style="margin-top:18px">
     <div class="bigq"><span class="qlabel">Discussion question 3</span>Compliance asks: “prove the agent never exceeded budget.” What must Build 2 have logged, per step, for that sentence to be provable?</div>
     <button class="revealbtn">See the answer</button>
-    <div class="revealbox">Per step: <b>state before</b> (remaining budget), the <b>observation</b> (the price quote), the <b>available actions</b>, the <b>selected action + arguments</b>, the <b>result</b>, and <b>state after</b>, plus the checker's verdict at each pass and the final stop reason. That's the Week 2 evidence standard again, now as a compliance artifact: with it, “never exceeded budget” is a query over the trace; without it, it's a promise.</div>
+    <div class="revealbox">Per step: state before (remaining budget), the observation (the price quote), the available actions, the selected action + arguments, the result, and state after, plus the checker's verdict at each pass and the final stop reason. That's the Week 2 evidence standard again, now as a compliance artifact: with it, “never exceeded budget” is a query over the trace; without it, it's a promise.</div>
   </div>
 </div></section>
 
@@ -182,7 +182,7 @@
 <section id="quiz"><div class="wrap">
   <div class="eyebrow">Next week</div>
   <h2>Quiz 2: reasoning, planning &amp; the loop</h2>
-  <p class="lede"><b>Five multiple-choice questions</b>, closed-book, in class. Everything comes from the readings listed above. <b>Scope: the Week 4 readings (Kaggle whitepaper · Intro to LangGraph · ReAct skim) + the Week 5 reading (Ponnambalam, LangGraph, LinkedIn Learning) + the Week 5 local tool-calling lab (<a href="../week5/local.html">Week 5, page 03</a>)</b>, plus this week's core ideas. Try the samples before revealing; the real quiz is the same style and difficulty.</p>
+  <p class="lede"><b>Five multiple-choice questions</b>, closed-book, in class. Everything comes from the readings listed above. Scope: the Week 4 readings (Kaggle whitepaper · Intro to LangGraph · ReAct skim) + the Week 5 reading (Ponnambalam, LangGraph, LinkedIn Learning) + the Week 5 local tool-calling lab (<a href="../week5/local.html">Week 5, page 03</a>), plus this week's core ideas. Try the samples before revealing; the real quiz is the same style and difficulty.</p>
   <div class="card"><h3>Five sample questions</h3><p class="small">Same style and difficulty as the real thing.</p>
     <div id="sampleQuiz"></div>
   </div>

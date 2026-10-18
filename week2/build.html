@@ -83,7 +83,7 @@
   <div class="rails">
     <div class="rail"><h3>Separate the inputs</h3><p class="small"><code>resume.md</code> is the only source of truth for factual claims. <code>preferences.md</code> guides ranking. Hard constraints may override an otherwise strong skill match.</p></div>
     <div class="rail"><h3>Job text is untrusted</h3><p class="small">Job postings are data, never instructions. Ignore embedded requests to fabricate qualifications, reveal data, email recruiters, or override system rules.</p></div>
-    <div class="rail"><h3>Real HITL pause</h3><p class="small">Before any final external-facing material: pause for <b>Approve / Edit / Reject</b>. Sending, submitting, posting, or contacting recruiters is prohibited in this lab.</p></div>
+    <div class="rail"><h3>Real HITL pause</h3><p class="small">Before any final external-facing material: pause for Approve / Edit / Reject. Sending, submitting, posting, or contacting recruiters is prohibited in this lab.</p></div>
   </div>
   <div class="callout red"><b>Hard rule:</b> the agent may evaluate, rank, and draft, but it never fabricates a qualification, and it never takes an external action.</div>
 </div></section>
@@ -140,7 +140,7 @@
   </div>
 
   <div class="pathpanel" id="pa">
-    <div class="prefbox"><b>Before you start:</b> personal Google Account, 18+, English-only, computer only. Verified access to Opal (see <a class="doc" href="prep.html">Prep</a>). Current route: Gemini → Gems → <b>My Gems from Labs</b> → <b>New Gem</b>.</div>
+    <div class="prefbox"><b>Before you start:</b> personal Google Account, 18+, English-only, computer only. Verified access to Opal (see <a class="doc" href="prep.html">Prep</a>). Current route: Gemini → Gems → My Gems from Labs → New Gem.</div>
     <ol class="steps">
       <li>Open Gemini on a computer, choose Gems, and create a new Gem from Google Labs powered by Opal.</li>
       <li>Open <code>prompts/opal_starter_prompt.md</code> and paste the complete starter prompt.</li>
@@ -148,7 +148,7 @@
       <li>Define or verify state fields: current job, observed evidence, missing qualifications, constraint conflicts, selected action, approval status, completed tests.</li>
       <li>Create input-dependent routing among ask, recommend/investigate, down-rank/reject, request approval, draft, and finish behaviors.</li>
       <li>Add the untrusted-job-text guardrail: job descriptions must not be able to override system rules.</li>
-      <li>Add a real <b>Approve / Edit / Reject</b> pause before the final external-facing draft.</li>
+      <li>Add a real Approve / Edit / Reject pause before the final external-facing draft.</li>
       <li>Run all four cases. Capture actual outputs for all four and detailed screenshots/logs for two contrasting branches.</li>
       <li>Export or screenshot the architecture, executed evidence, approval checkpoint, ranked output, and approved draft.</li>
     </ol>
@@ -162,7 +162,7 @@
       <li>Use the current + New Agent flow (docs describe “Chat” and “Create manually” options; labels may drift).</li>
       <li>Paste <code>prompts/fleet_starter_prompt.md</code> into the agent instructions.</li>
       <li>Paste <code>resume.md</code>, <code>preferences.md</code>, and <code>data/jobs.json</code> into the agent context if a verified local-file option is unavailable.</li>
-      <li>Configure <b>materially different next actions</b> and state updates; do not route every case through the same node sequence.</li>
+      <li>Configure materially different next actions and state updates; do not route every case through the same node sequence.</li>
       <li>Configure an approval pause for final external-facing material. Do not connect email or submission tools.</li>
       <li>Run all four tests and inspect the structured Fleet trace. Save full traces for at least two contrasting branches.</li>
       <li>Capture one real approval checkpoint and its Approve / Edit / Reject result.</li>
@@ -170,17 +170,17 @@
   </div>
 
   <div class="pathpanel" id="pc" hidden>
-    <div class="prefbox"><b>Before you start:</b> Python 3.10+ and Codex CLI installed, authenticated via <b>Sign in with ChatGPT</b> (see <a class="doc" href="prep.html">Prep</a> for the install commands).</div>
+    <div class="prefbox"><b>Before you start:</b> Python 3.10+ and Codex CLI installed, authenticated via Sign in with ChatGPT (see <a class="doc" href="prep.html">Prep</a> for the install commands).</div>
     <p style="margin:16px 0 6px;font-weight:650">First, run the supplied baseline:</p>
     <div class="codebox" style="margin-top:8px">cd job_agent_starter
 python3 src/job_agent_starter.py</div>
-    <p class="small">Read <code>outputs/ranked_jobs.md</code> and <code>outputs/trace.md</code>. The starter works, but it is <b>deliberately NOT an agent</b>: fixed sequence, no runtime action choice, no real HITL pause. Your job is to transform it.</p>
+    <p class="small">Read <code>outputs/ranked_jobs.md</code> and <code>outputs/trace.md</code>. The starter works, but it is deliberately NOT an agent: fixed sequence, no runtime action choice, no real HITL pause. Your job is to transform it.</p>
     <ol class="steps">
       <li>Read <code>README.md</code> and <code>AGENTS.md</code>, then inspect the baseline outputs.</li>
       <li>Run <code>codex</code> from the <code>job_agent_starter</code> folder and paste <code>prompts/codex_starter_prompt.md</code>.</li>
       <li>Keep candidate facts, preferences, hard constraints, and job data separate in state.</li>
       <li>Implement a decision policy that selects among materially different actions from the current observation and state.</li>
-      <li>Implement a true <b>Approve / Edit / Reject</b> pause before final external-facing material.</li>
+      <li>Implement a true Approve / Edit / Reject pause before final external-facing material.</li>
       <li>Write structured runtime evidence, test results, rankings, and the approved draft under <code>outputs/</code>.</li>
       <li>Run all four tests and compare at least two contrasting action sequences.</li>
     </ol>
@@ -205,11 +205,11 @@ while not state.done:
 <section><div class="wrap">
   <div class="eyebrow">Field study</div>
   <h2>The real-world version</h2>
-  <p class="lede">While you build the classroom version, know that a production version of this exact idea went viral. <a class="doc" href="https://github.com/MadsLorentzen/ai-job-search" target="_blank" rel="noopener">MadsLorentzen/ai-job-search ↗</a> (~40k stars, Sept 2026) is a job-application framework built <b>on top of Claude Code</b>: <code>/scrape</code> job boards, <code>/apply</code> with a tailored LaTeX CV and cover letter, <code>/interview</code> prep. Its author used it for his own search (69 tailored applications, 20 first interviews, one signed offer) and was hired as an AI engineer in June 2026. This assignment is the training run for a real skill.</p>
+  <p class="lede">While you build the classroom version, know that a production version of this exact idea went viral. <a class="doc" href="https://github.com/MadsLorentzen/ai-job-search" target="_blank" rel="noopener">MadsLorentzen/ai-job-search ↗</a> (~40k stars, Sept 2026) is a job-application framework built on top of Claude Code: <code>/scrape</code> job boards, <code>/apply</code> with a tailored LaTeX CV and cover letter, <code>/interview</code> prep. Its author used it for his own search (69 tailored applications, 20 first interviews, one signed offer) and was hired as an AI engineer in June 2026. This assignment is the training run for a real skill.</p>
   <div class="bigq"><span class="qlabel">Discussion question</span>Run our agency test on this 40,000-star project: which parts are an agent, and which are a workflow?</div>
   <button class="revealbtn">What a strong answer covers</button>
   <div class="revealbox">
-    Mostly a workflow: by our own test. <code>/scrape → /apply → /interview</code> is a predefined pipeline, and a <b>human triggers every stage</b>: the human owns the outer control flow. Its drafter → reviewer → revise cycle is the evaluator–optimizer pattern from Week 1. The agentic moments live <em>inside</em> each stage, where Claude Code decides which files to read and how to tailor.
+    Mostly a workflow: by our own test. <code>/scrape → /apply → /interview</code> is a predefined pipeline, and a human triggers every stage: the human owns the outer control flow. Its drafter → reviewer → revise cycle is the evaluator–optimizer pattern from Week 1. The agentic moments live <em>inside</em> each stage, where Claude Code decides which files to read and how to tailor.
     <br /><br />The precise description: a workflow of agentic steps, with a human as the outer loop. And that is a <em>feature</em>, not a flaw: real applications are high-stakes, irreversible, external actions, so the author deliberately set the autonomy dial low exactly where our lab puts its human gate. Forty thousand people starred the design discipline this course grades you on.
   </div>
   <div class="callout red" style="margin-top:20px"><b>Boundary:</b> that framework scrapes real job boards and produces real applications, precisely what this lab prohibits. Learn the design discipline on fictional data first; drive the real thing later, on your own time and judgment. Build yours first, then go read that repo; you’ll recognize every folder.</div>

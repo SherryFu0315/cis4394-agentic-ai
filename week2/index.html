@@ -106,7 +106,7 @@ Flow.mount(document.getElementById('flow-w2'),{
       {move:['harness','shell'],packet:'pytest -q',tone:'ok',set:{tools:1}},
       {move:['shell','harness'],packet:'1 failed: rounds 19.995 → 19.99',tone:'bad',say:'The failure message is the most valuable observation in the run. It tells the model exactly what to change.',set:{tokens:600}},
       {move:['harness','model'],packet:'observation',set:{calls:1}},
-      {move:['model','harness'],packet:'apply_patch(tax.py, +round_half_up)',tone:'warn',say:'Now the model wants to <b>write</b>. Writes change the world, so the harness policy routes this through you.'},
+      {move:['model','harness'],packet:'apply_patch(tax.py, +round_half_up)',tone:'warn',say:'Now the model wants to write. Writes change the world, so the harness policy routes this through you.'},
       {move:['harness','gate'],packet:'edit 1 file: tax.py (+3 −1)?',tone:'warn',say:'The run pauses with a diff. You are the gate.',choice:[{label:'Approve the patch',goto:'approved',tone:'ok'},{label:'Reject',goto:'rejected',tone:'bad'}]}
     ]},
     approved:{name:'…approved',hidden:true,steps:[

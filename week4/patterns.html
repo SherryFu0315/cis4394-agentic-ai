@@ -85,7 +85,7 @@
       <div class="mini">Thought → Action → Observation
 Thought → Action → Observation
 … → Answer</div>
-      <p class="small">Decide the <b>next</b> step only after seeing the last result. Grounds reasoning in real observations: fewer hallucinations, natural error recovery. Cost: a model call per step; can wander.</p>
+      <p class="small">Decide the next step only after seeing the last result. Grounds reasoning in real observations: fewer hallucinations, natural error recovery. Cost: a model call per step; can wander.</p>
       <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">Yao et al., 2022 (ICLR 2023) ↗</a></p>
     </div>
     <div class="rail"><h3>Plan-then-execute</h3>
@@ -99,7 +99,7 @@ Execute 1 → 2 → 3
       <div class="mini">Generate → Critique
 → Revise → Critique
 → good enough? → Answer</div>
-      <p class="small">A second pass that critiques the first, with the critique stored and fed back (Reflexion: verbal self-feedback in episodic memory). Shines when the target is <b>checkable</b>: code, math. Each pass roughly doubles cost.</p>
+      <p class="small">A second pass that critiques the first, with the critique stored and fed back (Reflexion: verbal self-feedback in episodic memory). Shines when the target is checkable: code, math. Each pass roughly doubles cost.</p>
       <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2303.11366" target="_blank" rel="noopener">Shinn et al., NeurIPS 2023 ↗</a></p>
     </div>
     <div class="rail"><h3>Tree of Thoughts</h3>
@@ -107,7 +107,7 @@ Execute 1 → 2 → 3
 goal ┤
      thought B ┬ B1 → score
                └ B2 → best ✓</div>
-      <p class="small">Generate <b>several</b> candidate thoughts, score them, expand the promising ones, backtrack from dead ends. Big gains on branching, search-heavy puzzles; very token-hungry.</p>
+      <p class="small">Generate several candidate thoughts, score them, expand the promising ones, backtrack from dead ends. Big gains on branching, search-heavy puzzles; very token-hungry.</p>
       <p class="small" style="margin-top:8px"><a class="doc" href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noopener">Yao et al., ToT, NeurIPS 2023 ↗</a></p>
     </div>
   </div>
@@ -125,7 +125,7 @@ goal ┤
     <tr><td>Auditability</td><td>One blob of reasoning</td><td>Plan reviewable before execution</td><td>Full step-by-step trace</td><td>Full tree (large)</td></tr>
     <tr><td>Best for</td><td>Single-shot reasoning, no tools</td><td>Stable, well-understood workflows</td><td>Volatile tasks where results steer next steps</td><td>Puzzles/search where partial states can be scored</td></tr>
   </table></div>
-  <div class="callout blue" style="margin-top:18px"><b>The MIS rule of thumb:</b> choose by <b>task volatility</b> and <b>oversight needs</b>. Predictable + high-compliance → plan first (auditors can read the plan). Surprising environments → interleave. Branching search + a way to score partial progress → only then pay for ToT.</div>
+  <div class="callout blue" style="margin-top:18px"><b>The MIS rule of thumb:</b> choose by task volatility and oversight needs. Predictable + high-compliance → plan first (auditors can read the plan). Surprising environments → interleave. Branching search + a way to score partial progress → only then pay for ToT.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -137,25 +137,25 @@ goal ┤
 <section><div class="wrap">
   <div class="eyebrow">Interactive · the cost of thinking harder</div>
   <h2>Every “think again” is an invoice line</h2>
-  <p class="lede">Click a strategy. Bars show <b>illustrative</b> multipliers vs a single call (real numbers depend on model, prompt size, and tools; measure your own).</p>
+  <p class="lede">Click a strategy. Bars show illustrative multipliers vs a single call (real numbers depend on model, prompt size, and tools; measure your own).</p>
   <div class="simctl" style="margin-bottom:6px">
     <button class="primary" data-cost="0">1 call (CoT)</button>
     <button class="ghost" data-cost="1">8-step ReAct loop</button>
     <button class="ghost" data-cost="2">8 steps + reflection</button>
   </div>
   <div id="costbars"></div>
-  <div class="callout" style="margin-top:18px">Budget the loop: four dials you own: a <b>max-iteration guard</b> (max iterations), a <b>token/$ budget</b> per run, an explicit <b>stop condition</b> (“done when X”), and the <b>human-gate placement</b>. The manager's question is never “is it smart?”; it's “what does a run cost, and when do I trust it unattended?”</div>
+  <div class="callout" style="margin-top:18px">Budget the loop: four dials you own: a max-iteration guard (max iterations), a token/$ budget per run, an explicit stop condition (“done when X”), and the human-gate placement. The manager's question is never “is it smart?”; it's “what does a run cost, and when do I trust it unattended?”</div>
 </div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">Aside · the one thing that changes the model</div>
   <h2>Prompting changes the <em>input</em>. Fine-tuning changes the <em>weights</em>.</h2>
-  <p class="lede">Everything this week (ReAct, plans, reflection) and everything last week (prompts, context) lives to the <b>left</b> of the model: it changes what the model <em>sees</em>. (Week 2 flashback: prompt ⊂ context ⊂ harness; <b>none touch the weights</b>.) Fine-tuning is different in kind: it rewrites the numbers <em>inside</em>. Watch the difference below. The network's edges are its weights; thicker = stronger.</p>
+  <p class="lede">Everything this week (ReAct, plans, reflection) and everything last week (prompts, context) lives to the left of the model: it changes what the model <em>sees</em>. (Week 2 flashback: prompt ⊂ context ⊂ harness; none touch the weights.) Fine-tuning is different in kind: it rewrites the numbers <em>inside</em>. Watch the difference below. The network's edges are its weights; thicker = stronger.</p>
   <div class="ftwrap">
     <div class="netbox">
       <span class="wbadge" id="wBadge">weights: unchanged 🔒</span>
       <svg id="netsvg" viewBox="0 0 440 300" aria-label="miniature neural network with visible weights"></svg>
-      <p class="small" style="margin:10px 6px 2px">A toy 3–4–2 network. A real LLM has <b>billions</b> of these edges; that's all "parameters" means: the numbers on the arrows. <span id="wCount">Changed in this demo: <b>0 of 20</b>.</span></p>
+      <p class="small" style="margin:10px 6px 2px">A toy 3–4–2 network. A real LLM has billions of these edges; that's all "parameters" means: the numbers on the arrows. <span id="wCount">Changed in this demo: 0 of 20.</span></p>
     </div>
     <div>
       <div class="simctl" style="margin-bottom:10px">
@@ -169,12 +169,12 @@ goal ┤
   </div>
   <div class="grid2" style="margin-top:22px;align-items:start">
     <div class="card"><span class="kicker">Terminology: clear this up once</span>
-      <p class="small" style="margin-top:8px"><b>Parameters (= weights):</b> the numbers inside the model: the edges above, billions of them. They were <em>learned</em> in training, and <b>fine-tuning updates exactly these</b>. Prompting never does.</p>
+      <p class="small" style="margin-top:8px"><b>Parameters (= weights):</b> the numbers inside the model: the edges above, billions of them. They were <em>learned</em> in training, and fine-tuning updates exactly these. Prompting never does.</p>
       <p class="small" style="margin-top:8px"><b>Hyperparameters:</b> NOT inside the model. They're the dials <em>you</em> set on the training process itself: learning rate, number of epochs, batch size. You choose them; the model never “learns” them.</p>
       <p class="small" style="margin-top:8px"><b>Analogy:</b> parameters are the employee's skills after the course; hyperparameters are the course schedule. “Fine-tuning updates the parameters” = the training changed the skills. (Saying it “updates hyperparameters” is the common mix-up; the schedule doesn't change the employee.)</p></div>
     <div class="card"><span class="kicker">Why fine-tune is still the LAST rung</span>
       <p class="small" style="margin-top:8px">The demo hides the real bill: hundreds+ of curated examples, GPU time, and re-running your evals to make sure the new weights didn't break something else, every time the task changes. A prompt edit ships in minutes; new weights ship in weeks.</p>
-      <p class="small" style="margin-top:8px">That's the Week 3 ladder: prompt → few-shot → context/RAG → <b>fine-tune last</b> (<a class="doc" href="../week3/context.html">the decision table</a>). Week 7 revisits the fork one more time: RAG vs fine-tuning for company knowledge: retrieval usually wins for <em>facts</em>, fine-tuning for <em>style and format at massive scale</em>.</p></div>
+      <p class="small" style="margin-top:8px">That's the Week 3 ladder: prompt → few-shot → context/RAG → fine-tune last (<a class="doc" href="../week3/context.html">the decision table</a>). Week 7 revisits the fork one more time: RAG vs fine-tuning for company knowledge: retrieval usually wins for <em>facts</em>, fine-tuning for <em>style and format at massive scale</em>.</p></div>
   </div>
 </div></section>
 
@@ -182,7 +182,7 @@ goal ┤
   <div class="eyebrow">Discussion</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>Your team automates invoice-coding: 5,000 near-identical invoices a month, and finance must sign off on the procedure. Interleaved ReAct would work. Why is it still the wrong choice?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">Because the task has <b>low volatility and high oversight</b>. ReAct pays a model call per step to buy adaptivity you don't need (5,000× a month), and its emergent, run-by-run paths are exactly what a sign-off process hates. A plan-then-execute design (or an outright Week 1 workflow) gives finance a fixed, reviewable procedure and costs a fraction. Save the interleaving for the 2% of invoices that fail validation: route those to an agent, or a human.</div>
+  <div class="revealbox">Because the task has low volatility and high oversight. ReAct pays a model call per step to buy adaptivity you don't need (5,000× a month), and its emergent, run-by-run paths are exactly what a sign-off process hates. A plan-then-execute design (or an outright Week 1 workflow) gives finance a fixed, reviewable procedure and costs a fraction. Save the interleaving for the 2% of invoices that fail validation: route those to an agent, or a human.</div>
 </div></section>
 
 <div class="wrap pager">

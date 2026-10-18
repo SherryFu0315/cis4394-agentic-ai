@@ -101,21 +101,21 @@ Flow.mount(document.getElementById('flow-w1'),{
       {move:['model','user'],packet:'“How about Tuesday at 2 pm?”',tone:'warn',end:true,say:'Fluent and useless: nobody checked a calendar, and the model will say “Tuesday at 2” to everyone. A chatbot owns nothing but words. Zero tool calls, zero decisions about the world.'}
     ]},
     workflow:{name:'Workflow',intro:'A workflow: your code owns the steps; the model is one step inside it. Press Play.',steps:[
-      {mark:{stop:'dim'},move:['user','program'],packet:'“Find me a time with Priya.”',say:'The request enters <b>your program</b>. The steps are written in code and always run in the same order.',payload:'def schedule(request):\n    slots = calendar.free("Priya", next_week)\n    draft = model.write_email(slots)\n    email.send(to="priya", body=draft)'},
+      {mark:{stop:'dim'},move:['user','program'],packet:'“Find me a time with Priya.”',say:'The request enters your program. The steps are written in code and always run in the same order.',payload:'def schedule(request):\n    slots = calendar.free("Priya", next_week)\n    draft = model.write_email(slots)\n    email.send(to="priya", body=draft)'},
       {move:['program','calendar'],packet:'calendar.free("Priya")',tone:'ok',say:'Step 1 is a plain function call. The model is not involved.',set:{calls:1}},
       {move:['calendar','program'],packet:'[Tue 10:00, Wed 15:00]',tone:'ok',say:'Real data comes back. The program decides, by code, that the next step is to draft an email.'},
       {move:['program','model'],packet:'“write a polite email offering these slots”',say:'Step 2: the model writes one paragraph. It is given the slots; it did not choose them.',set:{tokens:220}},
       {move:['model','program'],packet:'draft text',set:{tokens:90}},
       {move:['program','email'],packet:'email.send(priya, draft)',tone:'warn',say:'Step 3 sends the email, because the code says so. No one asked whether the draft was good.',set:{calls:1}},
-      {at:'program',tone:'ok',end:true,say:'Predictable, cheap and auditable: every run does the same three things. Also brittle: if Priya’s calendar is private, this workflow fails the same way every time, and the model cannot do anything about it. The model made <b>zero</b> decisions.'}
+      {at:'program',tone:'ok',end:true,say:'Predictable, cheap and auditable: every run does the same three things. Also brittle: if Priya’s calendar is private, this workflow fails the same way every time, and the model cannot do anything about it. The model made zero decisions.'}
     ]},
     agent:{name:'Agent',intro:'An agent: the model owns control flow and decides each next step. Press Play.',steps:[
       {mark:{program:'dim'},move:['user','model'],packet:'“Find me a time with Priya.”',say:'The request goes to the model, together with a list of tools it <i>may</i> call and a goal.',payload:'tools: calendar.free(person, range)\n       email.send(to, body)\ngoal:  a confirmed meeting time',set:{tokens:160}},
       {at:'model',say:'The model decides what to do first. Nothing in code forced this choice.',payload:'thought: I need Priya’s availability\naction: calendar.free("Priya", next_week)',set:{decisions:1,tokens:60}},
       {move:['model','calendar'],packet:'calendar.free("Priya")',set:{calls:1}},
-      {move:['calendar','model'],packet:'error: no access to this calendar',tone:'bad',say:'The tool fails. In the workflow this was the end. Here it is just an <b>observation</b> the model reads.',set:{tokens:40}},
+      {move:['calendar','model'],packet:'error: no access to this calendar',tone:'bad',say:'The tool fails. In the workflow this was the end. Here it is just an observation the model reads.',set:{tokens:40}},
       {at:'model',tone:'warn',say:'The model re-plans. Second decision: instead of guessing, ask Priya for options. But sending email is an action that leaves the building.',payload:'thought: I cannot read her calendar.\n         Ask her for three options instead.\naction: email.send("priya", "...")  ← external',set:{decisions:1,tokens:70}},
-      {move:['model','stop'],packet:'goal met? no → may I send?',tone:'warn',say:'Before acting, the loop checks its <b>stop condition</b> (a confirmed time: not yet) and whether this action needs a human. Sending to an outside person does.',set:{decisions:1}},
+      {move:['model','stop'],packet:'goal met? no → may I send?',tone:'warn',say:'Before acting, the loop checks its stop condition (a confirmed time: not yet) and whether this action needs a human. Sending to an outside person does.',set:{decisions:1}},
       {move:['stop','model'],packet:'ask the user first',tone:'warn'},
       {move:['model','user'],packet:'“I can’t see Priya’s calendar. Shall I email her three options?”',tone:'ok',end:true,say:'The model chose the tool, read the failure, changed plan, and stopped at the right moment. That is what makes it an agent, and exactly why it needs a stop condition and a human gate. Three decisions, one failed call, no email sent without you.',set:{tokens:50}}
     ]}

@@ -54,7 +54,7 @@ table.plain td,table.plain th{font-size:var(--fs-s);vertical-align:top}
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">03 · Hands-on lab</div>
   <h1>Give your local model an <em>open book</em>.</h1>
-  <p class="lede">The model you installed in Week 4 has never seen this course. Today you embed the course website on your own laptop, retrieve the right passage for a question, and watch the <b>same model</b> go from a confident wrong answer to a cited right one. No API key, no vector database to install, nothing leaves your machine.</p>
+  <p class="lede">The model you installed in Week 4 has never seen this course. Today you embed the course website on your own laptop, retrieve the right passage for a question, and watch the same model go from a confident wrong answer to a cited right one. No API key, no vector database to install, nothing leaves your machine.</p>
   <div class="callout red" style="margin-top:18px"><b>The one sentence to keep:</b> RAG does not make the model smarter. It gives the model a better desk. Same brain; the right page is now open in front of it. </div>
 </div></header>
 
@@ -109,7 +109,7 @@ dir                <span class="cm"># you should see 7_rag_local.py and corpus\<
 example chunk:
 <span class="p">[week3_index #1]</span>
 This week: 📝 Quiz 1 (Weeks 1–3 foundations, 5 multiple choice, closed-book) …</div>
-  <p>Each chunk keeps its <b>metadata</b>, which page it came from and where on the page. That label is what lets the answer carry a citation later. Now embed for real (about 20 seconds; a progress counter runs):</p>
+  <p>Each chunk keeps its metadata, which page it came from and where on the page. That label is what lets the answer carry a citation later. Now embed for real (about 20 seconds; a progress counter runs):</p>
   <div class="oscmd">
     <div><div class="lab">Mac</div><div class="codebox" style="margin:0">python3 7_rag_local.py index</div></div>
     <div><div class="lab">Windows</div><div class="codebox" style="margin:0">python 7_rag_local.py index</div></div>
@@ -121,7 +121,7 @@ This week: 📝 Quiz 1 (Weeks 1–3 foundations, 5 multiple choice, closed-book)
 <section><div class="wrap">
   <div class="eyebrow">Step 4 · retrieval only</div>
   <h2>Look at what gets retrieved before anyone generates anything</h2>
-  <p>Most RAG failures are retrieval failures, and you can only see them if you look at this step on its own. <code>search</code> embeds your question, finds the three closest chunks, and <b>stops</b>: no model, no answer.</p>
+  <p>Most RAG failures are retrieval failures, and you can only see them if you look at this step on its own. <code>search</code> embeds your question, finds the three closest chunks, and stops: no model, no answer.</p>
   <div class="oscmd">
     <div><div class="lab">Mac</div><div class="codebox" style="margin:0">python3 7_rag_local.py search "When is Quiz 3 and what does it cover?"</div></div>
     <div><div class="lab">Windows</div><div class="codebox" style="margin:0">python 7_rag_local.py search "When is Quiz 3 and what does it cover?"</div></div>
@@ -145,10 +145,10 @@ This week: 📝 Quiz 1 (Weeks 1–3 foundations, 5 multiple choice, closed-book)
   <p class="small" style="margin:10px 0 4px">With a 3B reader (<code>llama3.2</code>, 2 GB), the instructor's laptop gets this every time:</p>
   <div class="term2"><span class="p">OPEN BOOK (llama3.2):</span>
   <span class="ok">Quiz 3 is next week, in-class, closed-book, and covers the weeks 6-8 readings (MCP/A2A LinkedIn courses, the RAG course, HF unit, and the Agents Companion whitepaper). [2]</span></div>
-  <p>Nothing about the model changed between Step 2 and now. The desk changed. And it cited <b>[2]</b>, the chunk that was ranked second, because the model, not the ranking, decided which passage answered the question.</p>
+  <p>Nothing about the model changed between Step 2 and now. The desk changed. And it cited [2], the chunk that was ranked second, because the model, not the ranking, decided which passage answered the question.</p>
   <div class="callout blue" style="margin-top:14px">If your model is <code>qwen2.5:0.5b</code>, expect a rougher ride. Run it five times and count:
   <div class="codebox" style="margin:10px 0">python3 7_rag_local.py ask --runs=5 "When is Quiz 3 and what does it cover?"</div>
-  On the instructor's laptop the 0.5B model got the scope right in <b>3 of 5</b> runs and said "Week 3" in the other two. The desk is the same desk. The 0.5B model is a weaker <em>reader</em>: it finds the passage and still garbles it. Counting runs like this is <b>next week's entire topic</b> (pass^k). If you want the reliable version, <code>ollama pull llama3.2</code> (2 GB) and put <code>MODEL=llama3.2</code> in front of the command (Windows PowerShell: <code>$env:MODEL="llama3.2"; python 7_rag_local.py ask …</code>).</div>
+  On the instructor's laptop the 0.5B model got the scope right in 3 of 5 runs and said "Week 3" in the other two. The desk is the same desk. The 0.5B model is a weaker <em>reader</em>: it finds the passage and still garbles it. Counting runs like this is next week's entire topic (pass^k). If you want the reliable version, <code>ollama pull llama3.2</code> (2 GB) and put <code>MODEL=llama3.2</code> in front of the command (Windows PowerShell: <code>$env:MODEL="llama3.2"; python 7_rag_local.py ask …</code>).</div>
 </div></section>
 
 <section><div class="wrap">
@@ -176,14 +176,14 @@ This week: 📝 Quiz 1 (Weeks 1–3 foundations, 5 multiple choice, closed-book)
       <div class="codebox" style="margin-top:10px">TOP_K=1 python3 7_rag_local.py ask "When is Quiz 3 and what does it cover?"</div>
       <div class="term2" style="margin:10px 0 0"><span class="p">RETRIEVED (top 1): [1] week2_evaluate #4   ← the Quiz 1 chunk</span>
 <span class="ask">There is no mention of Quiz 3 in the passage. [1]</span></div>
-      <p class="small" style="margin-top:10px">The right chunk was ranked second, so with one slot it never reached the desk. The model did the honest thing and still failed you. <b>Retrieval quality is destiny</b>: the generator cannot recover a passage it was never shown.</p>
+      <p class="small" style="margin-top:10px">The right chunk was ranked second, so with one slot it never reached the desk. The model did the honest thing and still failed you. Retrieval quality is destiny: the generator cannot recover a passage it was never shown.</p>
     </div>
     <div class="card"><span class="kicker">Knob 2 · how big the chunks are</span>
       <div class="codebox" style="margin-top:10px">CHUNK_CHARS=3000 INDEX_FILE=big.json python3 7_rag_local.py index
 CHUNK_CHARS=3000 INDEX_FILE=big.json python3 7_rag_local.py ask "When is Quiz 3 and what does it cover?"</div>
       <div class="term2" style="margin:10px 0 0"><span class="p">RETRIEVED (top 3): week5_summary #3 · index #1 · week3_exercises #2</span>
 <span class="bad">Quiz 3 covers Weeks 5-6 readings, which includes the topic of Tool Use &amp; Function Calling. [1]</span></div>
-      <p class="small" style="margin-top:10px">Chunks four times bigger carry four times more unrelated text, so every vector points in a vaguer direction and the Quiz 3 chunk falls out of the top three. The model then answered from the wrong page: <b>wrong, confident, and with a citation.</b> A citation proves the model read the passage. It does not prove the passage was the right one.</p>
+      <p class="small" style="margin-top:10px">Chunks four times bigger carry four times more unrelated text, so every vector points in a vaguer direction and the Quiz 3 chunk falls out of the top three. The model then answered from the wrong page: wrong, confident, and with a citation. A citation proves the model read the passage. It does not prove the passage was the right one.</p>
     </div>
   </div>
 </div></section>
@@ -191,14 +191,14 @@ CHUNK_CHARS=3000 INDEX_FILE=big.json python3 7_rag_local.py ask "When is Quiz 3 
 <section><div class="wrap">
   <div class="eyebrow">Concept check</div>
   <h2>Three questions before the group task</h2>
-  <div class="card" style="margin-bottom:12px"><p style="margin:0;font-weight:600">1 · Between Step 2 and Step 5, what changed: list everything that did and everything that did not.</p><button class="revealbtn">Reveal</button><div class="revealbox"><b>Did not change:</b> the model, its weights, its training data, its reasoning ability. <b>Did change:</b> the prompt; it now contains three passages and an instruction to answer only from them and cite. That is the whole of RAG: a prompt-construction step placed before generation. The model learned nothing; it was handed the right page. This is why RAG is the cheap way to give a model access to private or recent documents, and why it is useless when the problem is the model's <em>reasoning</em> rather than its <em>knowledge</em>.</div></div>
+  <div class="card" style="margin-bottom:12px"><p style="margin:0;font-weight:600">1 · Between Step 2 and Step 5, what changed: list everything that did and everything that did not.</p><button class="revealbtn">Reveal</button><div class="revealbox"><b>Did not change:</b> the model, its weights, its training data, its reasoning ability. Did change: the prompt; it now contains three passages and an instruction to answer only from them and cite. That is the whole of RAG: a prompt-construction step placed before generation. The model learned nothing; it was handed the right page. This is why RAG is the cheap way to give a model access to private or recent documents, and why it is useless when the problem is the model's <em>reasoning</em> rather than its <em>knowledge</em>.</div></div>
   <div class="card" style="margin-bottom:12px"><p style="margin:0;font-weight:600">2 · In Step 7, Knob 1 produced an honest "no mention of Quiz 3." Where is the bug: in the model, the retriever, or the prompt?</p><button class="revealbtn">Reveal</button><div class="revealbox">The retriever. The embedding ranked the Quiz 1 chunk above the Quiz 3 chunk because, as vectors, they mean nearly the same thing; with <code>TOP_K=1</code> only the wrong one was shown. The model behaved correctly on what it was given and the prompt did its job. Fixes live at the retrieval layer: a larger k, chunk metadata the query can filter on ("week 7"), a keyword match combined with the vector match (hybrid search), or a re-ranking step. Blaming the model here would send you to a bigger model that would fail the same way.</div></div>
   <div class="card"><p style="margin:0;font-weight:600">3 · Knob 2 produced a wrong answer with a citation. In an HR or legal deployment, why is that outcome worse than Step 2's hallucination?</p><button class="revealbtn">Reveal</button><div class="revealbox">Step 2's answer looks like a guess and a reader treats it as one. Knob 2's answer arrives with the costume of evidence (a passage number that really exists), so the reader's skepticism switches off. The citation is accurate about <em>what the model read</em> and silent about <em>whether it should have read that</em>. In practice this is the failure the Lakeside case on page 04 is built around: a confidently wrong policy answer with a source attached. It is why production systems show the retrieved passage next to the answer, keep metadata like version and date, and measure retrieval precision separately from answer quality.</div></div>
 </div></section>
 
 <section><div class="wrap">
   <div class="grouptask"><span class="gk">👥 Group task · Pairs · ~20 minutes</span>
-    <p style="margin:10px 0 0">Pick <b>three questions about this course</b> whose answers you can verify on the website: one easy (the answer sits in one place), one hard (the answer is spread over two pages or two weeks), and one <b>trap</b> (sounds like a course question but is not answered anywhere). For each, run <code>ask --no-rag</code>, <code>search</code>, and <code>ask</code>, and fill one row:</p>
+    <p style="margin:10px 0 0">Pick three questions about this course whose answers you can verify on the website: one easy (the answer sits in one place), one hard (the answer is spread over two pages or two weeks), and one trap (sounds like a course question but is not answered anywhere). For each, run <code>ask --no-rag</code>, <code>search</code>, and <code>ask</code>, and fill one row:</p>
     <div style="overflow:auto;margin-top:12px"><table class="plain"><thead><tr><th>question</th><th>closed book said</th><th>right chunk in top 3?</th><th>open book said</th><th>verdict: right · wrong · abstained</th></tr></thead><tbody>
       <tr><td>easy</td><td></td><td></td><td></td><td></td></tr>
       <tr><td>hard</td><td></td><td></td><td></td><td></td></tr>
@@ -213,7 +213,7 @@ CHUNK_CHARS=3000 INDEX_FILE=big.json python3 7_rag_local.py ask "When is Quiz 3 
 <section><div class="wrap">
   <div class="eyebrow">🎯 Take it to your final project</div>
   <h2>Your corpus is your project's documents</h2>
-  <p>Replace <code>corpus/</code> with the text your agent needs (a product catalog, a policy manual, past tickets) and <code>7_rag_local.py</code> is a working retrieval tool for your capstone with no API bill. Then make retrieval a <b>tool</b> the agent calls when it decides it needs to (the <em>agentic RAG</em> pattern on <a href="rag.html">page 02</a>): the <code>retrieve()</code> function in this script, registered the way <code>calculator</code> was in Week 5's <code>1_agent_raw.py</code>. Three decisions are yours and will be graded: how you chunk, how many passages you pass, and what the model is told to do when the passages do not contain the answer.</p>
+  <p>Replace <code>corpus/</code> with the text your agent needs (a product catalog, a policy manual, past tickets) and <code>7_rag_local.py</code> is a working retrieval tool for your capstone with no API bill. Then make retrieval a tool the agent calls when it decides it needs to (the <em>agentic RAG</em> pattern on <a href="rag.html">page 02</a>): the <code>retrieve()</code> function in this script, registered the way <code>calculator</code> was in Week 5's <code>1_agent_raw.py</code>. Three decisions are yours and will be graded: how you chunk, how many passages you pass, and what the model is told to do when the passages do not contain the answer.</p>
 </div></section>
 
 <section><div class="wrap">

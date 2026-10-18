@@ -59,7 +59,7 @@
   <div class="eyebrow">01 · Mechanics</div>
   <h1>The model <em>asks</em>. Your code acts.</h1>
   <p class="lede">Function calling has a reputation for being magic. It is not: the model emits a small piece of structured text naming a function and its arguments, and your program decides what to do about it. Once you see the round trip clearly, every framework, every protocol, and every safety control this semester lands in an obvious place.</p>
-  <p class="small" style="margin-top:12px">Two terms you will see used almost interchangeably, and how this course uses them: a <b>tool call</b> is the model’s request to run one specific function with specific arguments; <b>function calling</b> is the API feature that lets a model make such requests at all. One is the act, the other is the capability.</p>
+  <p class="small" style="margin-top:12px">Two terms you will see used almost interchangeably, and how this course uses them: a tool call is the model’s request to run one specific function with specific arguments; function calling is the API feature that lets a model make such requests at all. One is the act, the other is the capability.</p>
 </div></header>
 
 <section><div class="wrap">
@@ -67,7 +67,7 @@
   <h2>What a “tool” actually is</h2>
   <div class="grid2" style="align-items:start">
     <div>
-      <p>A <b>tool</b> is an ordinary function in your codebase (<code>calculator()</code>, <code>lookup_order()</code>, <code>send_email()</code>) that you have described to the model in a form it can read. <b>Function calling</b> (also called tool calling) is the model's ability to respond, instead of with prose, with a structured request to run one of those functions with specific arguments.</p>
+      <p>A tool is an ordinary function in your codebase (<code>calculator()</code>, <code>lookup_order()</code>, <code>send_email()</code>) that you have described to the model in a form it can read. Function calling (also called tool calling) is the model's ability to respond, instead of with prose, with a structured request to run one of those functions with specific arguments.</p>
       <p>Three sentences worth memorising:</p>
       <ol class="steps" style="margin-top:14px">
         <li><b>The model proposes.</b> Its entire contribution is a JSON object: which function, which arguments. That is text, produced by the same next-token machinery as everything else it writes.</li>
@@ -94,7 +94,7 @@
 <section><div class="wrap">
   <div class="eyebrow">Interactive · step through one round trip</div>
   <h2>An invoice, two tools, one bad argument</h2>
-  <p class="lede">The episode: <em>“Our Berlin supplier invoiced 4,817 units at €293 each, plus 18% VAT. What is that in USD?”</em> The agent has two tools, <code>calculator</code> and <code>fx_rate</code>, and it will get one call wrong on purpose so you can watch what happens next. Press <b>Step</b>.</p>
+  <p class="lede">The episode: <em>“Our Berlin supplier invoiced 4,817 units at €293 each, plus 18% VAT. What is that in USD?”</em> The agent has two tools, <code>calculator</code> and <code>fx_rate</code>, and it will get one call wrong on purpose so you can watch what happens next. Press Step.</p>
   <div class="sim2">
     <div class="loopbox">
       <svg viewBox="0 0 480 330" aria-label="function calling loop diagram">
@@ -110,7 +110,7 @@
         <g class="loopnode" id="ln3"><rect x="30" y="265" width="160" height="46" rx="10"/><text x="110" y="293" text-anchor="middle">Append result</text></g>
         <g class="loopnode pausenode" id="ln4"><rect x="16" y="122" width="176" height="46" rx="10"/><text x="104" y="150" text-anchor="middle">Final answer</text></g>
       </svg>
-      <p class="small" style="margin:10px 6px 4px">The short arrow from <b>Model decides</b> straight to <b>Final answer</b> is the exit: a turn where the model emits <em>no</em> tool call is how the loop ends. The amber box is therefore a stop condition, not a step.</p>
+      <p class="small" style="margin:10px 6px 4px">The short arrow from Model decides straight to Final answer is the exit: a turn where the model emits <em>no</em> tool call is how the loop ends. The amber box is therefore a stop condition, not a step.</p>
     </div>
     <div class="simright">
       <div class="simctl">
@@ -164,10 +164,10 @@
 }
 <span class="cm"># A REQUEST, not an execution.</span>
 <span class="cm"># Nothing has happened to any system yet.</span></div>
-      <p class="small">Because it is a request, three useful things are possible before anything runs: you can <b>validate</b> it, you can <b>refuse</b> it, and you can <b>show it to a human</b>. Page 02 is entirely about using that window.</p>
+      <p class="small">Because it is a request, three useful things are possible before anything runs: you can validate it, you can refuse it, and you can show it to a human. Page 02 is entirely about using that window.</p>
     </div>
   </div>
-  <div class="callout blue" style="margin-top:20px"><b>The description is a prompt.</b> The model chooses between tools by reading their descriptions, in the same way it reads any other instruction. A vague description (<em>“handles currency stuff”</em>) produces vague behaviour: wrong tool, missing arguments, silent non-use. In Python you usually write that description as a docstring, which means <b>the docstring is the interface</b>, and it deserves the same care as an API contract. Page 02 makes this concrete, and you will break it deliberately in the <a href="exercises.html">hands-on exercise</a>.</div>
+  <div class="callout blue" style="margin-top:20px"><b>The description is a prompt.</b> The model chooses between tools by reading their descriptions, in the same way it reads any other instruction. A vague description (<em>“handles currency stuff”</em>) produces vague behaviour: wrong tool, missing arguments, silent non-use. In Python you usually write that description as a docstring, which means the docstring is the interface, and it deserves the same care as an API contract. Page 02 makes this concrete, and you will break it deliberately in the <a href="exercises.html">hands-on exercise</a>.</div>
 </div></section>
 
 
@@ -175,7 +175,7 @@
 <section><div class="wrap">
   <div class="eyebrow">The code</div>
   <h2>A tool is just a function</h2>
-  <p class="lede">Whatever you build with, defining a tool means defining an ordinary function: the <b>type hints</b> become the parameter types and the <b>docstring</b> becomes the description the model reads. In plain Python you hand the function straight to the model. That is what you will do on <a href="local.html">page 03</a>. The version below adds a framework decorator, which changes nothing about the idea.</p>
+  <p class="lede">Whatever you build with, defining a tool means defining an ordinary function: the type hints become the parameter types and the docstring becomes the description the model reads. In plain Python you hand the function straight to the model. That is what you will do on <a href="local.html">page 03</a>. The version below adds a framework decorator, which changes nothing about the idea.</p>
   <div class="grid2" style="align-items:start">
     <div class="codebox"><span class="ck">from</span> langchain_core.tools <span class="ck">import</span> tool
 
@@ -210,7 +210,7 @@
   <div class="eyebrow">Discussion</div>
   <div class="bigq"><span class="qlabel">Discussion question</span>A vendor tells your CIO that their agent “runs Python, queries the warehouse, and emails customers.” Using this page's vocabulary, what is the <em>one</em> question that tells you how much you should worry?</div>
   <button class="revealbtn">See the answer</button>
-  <div class="revealbox">“Show me the tool schemas, and show me who validates the arguments.” The impressive verb list is just the tool inventory; it tells you the agent's <em>capability</em>, and nothing about its <em>limits</em>. What matters is the shape of each schema and where the checks live: does <code>query_warehouse</code> accept arbitrary SQL or a table name from an enum? Does <code>email_customer</code> accept any address, or only addresses already attached to the ticket? Is the validation inside the vendor's harness (auditable, versioned, testable) or inside the prompt (a polite request the model can ignore)? A secondary question worth asking in the same breath: <b>what happens on failure?</b> An agent that crashes on a bad argument is annoying; an agent that silently retries a write tool is a duplicate-payment incident. You are looking for the same ownership split as this page: model proposes, harness disposes, every call logged.</div>
+  <div class="revealbox">“Show me the tool schemas, and show me who validates the arguments.” The impressive verb list is just the tool inventory; it tells you the agent's <em>capability</em>, and nothing about its <em>limits</em>. What matters is the shape of each schema and where the checks live: does <code>query_warehouse</code> accept arbitrary SQL or a table name from an enum? Does <code>email_customer</code> accept any address, or only addresses already attached to the ticket? Is the validation inside the vendor's harness (auditable, versioned, testable) or inside the prompt (a polite request the model can ignore)? A secondary question worth asking in the same breath: what happens on failure? An agent that crashes on a bad argument is annoying; an agent that silently retries a write tool is a duplicate-payment incident. You are looking for the same ownership split as this page: model proposes, harness disposes, every call logged.</div>
 </div></section>
 
 <section><div class="wrap">
@@ -232,7 +232,7 @@
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">The pattern</span><h3 style="margin-top:6px">ReAct (Yao et al., 2022)</h3>
       <p class="small">Interleaving reasoning traces with actions: <em>Thought → Action → Observation</em>, looped, so that the model's next decision is grounded in a real result rather than in its own guess. Week 4 used it as a reasoning pattern; this week, the “Action” is literally a tool call and the “Observation” is literally a return value. <a class="doc" href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">arXiv:2210.03629 ↗</a></p></div>
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">The capability</span><h3 style="margin-top:6px">Toolformer (Schick et al., 2023)</h3>
-      <p class="small">The paper whose title is the claim: <em>Language Models Can Teach Themselves to Use Tools.</em> It showed that a model can learn, in a largely self-supervised way, <b>which</b> API to call, <b>when</b> to call it, and <b>what</b> to pass, deciding for itself where a tool call helps. That is why tool use is a general capability you can design around, not a trick that needs bespoke training per tool. <a class="doc" href="https://arxiv.org/abs/2302.04761" target="_blank" rel="noopener">arXiv:2302.04761 ↗</a></p></div>
+      <p class="small">The paper whose title is the claim: <em>Language Models Can Teach Themselves to Use Tools.</em> It showed that a model can learn, in a largely self-supervised way, which API to call, when to call it, and what to pass, deciding for itself where a tool call helps. That is why tool use is a general capability you can design around, not a trick that needs bespoke training per tool. <a class="doc" href="https://arxiv.org/abs/2302.04761" target="_blank" rel="noopener">arXiv:2302.04761 ↗</a></p></div>
   </div>
   <div class="callout" style="margin-top:20px">What this pair means for you as a builder: the model brings the judgement about <em>when</em> to call something; you bring the schema that says <em>what is callable and with what</em>. Neither half works alone: a perfect schema with a model that never triggers it is dead code, and a model eager to act with no schema is an accident waiting for a production database.</div>
 </div></section>
