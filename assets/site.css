@@ -336,3 +336,7 @@ a.doc:hover{text-decoration:underline}
 .grouptask p{margin:0;font-size:var(--fs-s)}
 .grouptask .prod{margin-top:8px;font-size:var(--fs-s);color:var(--muted)}
 .grouptask .prod b{color:var(--ink)}
+.instructor{display:flex;gap:24px;align-items:flex-start;max-width:900px}
+.instructor .avatar{width:104px;height:104px;border-radius:50%;object-fit:cover;flex:none;border:1px solid var(--line);background:var(--panel)}
+.instructor h3{margin-top:4px}
+@media(max-width:600px){.instructor{flex-direction:column}}
