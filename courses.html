@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Agentic AI Courses Elsewhere · CIS 4394</title>
+<meta name="description" content="A curated, link-checked list of university courses on AI agents with public websites (Stanford, CMU, Berkeley, Harvard, MIT, NYU Stern, UVA), plus the free open courseware this course draws on." />
+<meta name="author" content="Dr. Xinyu Fu" />
+<link rel="canonical" href="https://xinyufu.org/cis4394-agentic-ai/courses.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="CIS 4394 Agentic AI · Georgia State University" />
+<meta property="og:title" content="Agentic AI Courses Elsewhere · CIS 4394" />
+<meta property="og:description" content="University courses on AI agents with public websites, link-checked, with what each one emphasizes and how this course differs." />
+<meta property="og:url" content="https://xinyufu.org/cis4394-agentic-ai/courses.html" />
+<meta property="og:image" content="https://xinyufu.org/cis4394-agentic-ai/assets/social-card.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Agentic AI Courses Elsewhere · CIS 4394" />
+<meta name="twitter:description" content="University courses on AI agents with public websites, link-checked, with what each one emphasizes." />
+<meta name="twitter:image" content="https://xinyufu.org/cis4394-agentic-ai/assets/social-card.png" />
+<link rel="icon" href="assets/gsu-flame.png" />
+<link rel="stylesheet" href="assets/site.css" />
+<style>
+.crs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.crs .card{display:flex;flex-direction:column}
+.crs .meta{font-size:var(--fs-xs);color:var(--muted);letter-spacing:.04em;text-transform:uppercase;font-weight:700;margin-bottom:6px}
+.crs h3{margin:0 0 6px}
+.crs .who{font-size:var(--fs-s);color:var(--muted);margin-bottom:8px}
+.crs p{font-size:var(--fs-s);margin:0 0 10px}
+.crs .go{margin-top:auto;font-size:var(--fs-s)}
+table.plain td,table.plain th{font-size:var(--fs-s);vertical-align:top}
+@media(max-width:880px){.crs{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="assets/gsu-robinson-logo.png" alt="Georgia State University, J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="assets/path-logo.png" alt="PATH: Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Agentic AI</a>
+  <a href="index.html#weeks">Weeks</a>
+  <a href="index.html#news">News</a>
+  <a href="index.html#materials">Materials</a>
+  <a href="path.html">PATH</a>
+  <a href="courses.html" class="here">Other courses</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">Reference · updated October 17, 2026</div>
+  <h1>Agentic AI courses <em>elsewhere</em>.</h1>
+  <p class="lede">Universities started teaching agents as a subject of its own in 2024, and most of the good courses publish their syllabi, slides and sometimes lectures. This page collects the ones with a public website, says what each emphasizes, and notes how this course differs. Every link was opened and checked on the date above; course sites move, so tell me if one breaks.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="callout blue"><b>How to read this list.</b> Three families, in practice. <b>Systems and research courses</b> (Stanford CS 329Z, CMU 11-768, Harvard CS 2680) assume a CS background and go down to training, serving and benchmarks. <b>Builder courses</b> (Berkeley's MOOC, UVA, MIT's studio, Stanford CS 146S) are project-driven and lighter on theory. <b>Business-school courses</b> (NYU Stern, and this one) start from the decision a manager has to make and work back to the mechanism. If you want to go deeper after Week 14, the systems courses are where to go; if you want more practice, the builder courses.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">University courses with public websites · 2025–2026</div>
+  <h2>Thirteen weeks is one path through the subject. Here are others.</h2>
+  <div class="crs">
+
+    <div class="card"><div class="meta">Stanford · CS 329Z · Fall 2026</div>
+      <h3>Engineering AI Agents</h3>
+      <div class="who">Diyi Yang, Michael Ryan, John Yang</div>
+      <p>The shift from single models to <em>compound AI systems</em>: students build RAG, tool use and the agent loop from scratch, then study how frameworks such as DSPy abstract them. Distinctive lectures: data for agentic systems (traces, flywheels, synthetic data), optimization (prompt optimization vs weights), LLM-as-judge and evaluation infrastructure, and proactive agents. Two applied homeworks and a quarter-long project; the first homework is a public evaluation harness.</p>
+      <div class="go"><a class="doc" href="https://cs329z.stanford.edu/index.html" target="_blank" rel="noopener">Course site ↗</a> &nbsp;·&nbsp; <a class="doc" href="https://github.com/cs329z/assignment1-harness" target="_blank" rel="noopener">HW1 harness repo ↗</a></div></div>
+
+    <div class="card"><div class="meta">Carnegie Mellon · 11-768 · Fall 2026</div>
+      <h3>AI Agents</h3>
+      <div class="who">Daniel Fried, Graham Neubig (Language Technologies Institute)</div>
+      <p>LLM-based agents that perceive, reason, plan and act over many steps. The arc is: build a harness, build the evals for it, then train an agentic model with reinforcement learning; the second half is a research project with a poster session. Covers coding, GUI and deep-research agents, training (SFT, RL, systems), safety and interaction. Neubig maintains OpenHands, so the coding-agent material is first-hand.</p>
+      <div class="go"><a class="doc" href="https://www.cmu-agents.com/" target="_blank" rel="noopener">Course site ↗</a></div></div>
+
+    <div class="card"><div class="meta">UC Berkeley · CS 294/194-196 · Fall 2025 (MOOC)</div>
+      <h3>Agentic AI</h3>
+      <div class="who">Dawn Song; Xinyun Chen (co-instructor); weekly guest lecturers</div>
+      <p>The third iteration of Berkeley RDI's open course (after <em>LLM Agents</em>, Fall 2024, and <em>Advanced LLM Agents</em>, Spring 2025). A lecture series by people who build the systems: OpenAI, NVIDIA, Sony AI and others. Free to follow online with recordings; the companion AgentX competition is open to the public. The best single place to hear the industry's own framing of the field, and the least structured as a course.</p>
+      <div class="go"><a class="doc" href="https://agenticai-learning.org/f25" target="_blank" rel="noopener">Fall 2025 ↗</a> &nbsp;·&nbsp; <a class="doc" href="https://llmagents-learning.org/f24" target="_blank" rel="noopener">Fall 2024 ↗</a> &nbsp;·&nbsp; <a class="doc" href="https://llmagents-learning.org/sp25" target="_blank" rel="noopener">Spring 2025 ↗</a></div></div>
+
+    <div class="card"><div class="meta">Harvard · CS 2680 · Fall 2026</div>
+      <h3>Modern AI Systems: Agents and System Optimizations</h3>
+      <div class="who">Juncheng Yang (MaDSys group)</div>
+      <p>Follows one agentic system from the agent loop down through the serving stack: students first use a modern coding agent (Claude Code), then design their own agent with provided API access, measure it, and optimize the systems underneath. Five assignments with a public leaderboard and a final project. Prerequisites are real (a graduate systems course, PyTorch); anyone may audit the materials.</p>
+      <div class="go"><a class="doc" href="https://course.agentic-system.org/" target="_blank" rel="noopener">Course site ↗</a></div></div>
+
+    <div class="card"><div class="meta">NYU Stern · Spring 2026 (second half)</div>
+      <h3>Foundations of AI Agents</h3>
+      <div class="who">Srikanth Jagabathula, Ilan Lobel</div>
+      <p>The closest cousin to this course: a business school, no formal prerequisites, hands-on from day one. Six sessions (building an agent; agent architecture; the power of agentic AI; enterprise agents and evaluation; deploying agents, with an industry panel; demo day). Students ship a working agent on an n8n backend with a front end, submit weekly one-page deliverables, and peer-review two demos. Public artifact is the syllabus.</p>
+      <div class="go"><a class="doc" href="https://pages.stern.nyu.edu/~ilobel/Foundations_of_AI_Agents.pdf" target="_blank" rel="noopener">Syllabus (PDF) ↗</a></div></div>
+
+    <div class="card"><div class="meta">MIT Media Lab · MAS.664 · Spring 2026</div>
+      <h3>AI Studio: AI Agents and Agentic Web</h3>
+      <div class="who">Ramesh Raskar</div>
+      <p>A studio course (cross-listed with Sloan and EECS) where teams build autonomous agents that plan, coordinate and execute workflows across distributed web systems, in a venture-style format with outside mentors. Light on mechanism, heavy on shipping and on the "agentic web" thesis. Earlier semesters ran as AI Venture Studio and AI for Impact.</p>
+      <div class="go"><a class="doc" href="https://aiforimpact.github.io/spring26.html" target="_blank" rel="noopener">Course site ↗</a></div></div>
+
+    <div class="card"><div class="meta">University of Virginia · CS 6501 · Spring 2026</div>
+      <h3>Workshop on Building AI Agents</h3>
+      <div class="who">Henry Kautz</div>
+      <p>A graduate workshop built around actually constructing agents, with an emphasis on small and domain-specific language models and open-weight systems. The same author publishes the interactive <a class="doc" href="https://www.cs.virginia.edu/~rmw7my/Resources/LogisticLens/logit-lens.html" target="_blank" rel="noopener">Transformer Logit Lens ↗</a> linked from our Week 9 page.</p>
+      <div class="go"><a class="doc" href="https://www.cs.virginia.edu/~rmw7my/Courses/AgenticAISpring2026/agenticAI.html" target="_blank" rel="noopener">Course site ↗</a></div></div>
+
+    <div class="card"><div class="meta">Carnegie Mellon · 24-880 · Spring 2026</div>
+      <h3>AI Agents for Engineers</h3>
+      <div class="who">Amir Barati Farimani (Mechanical Engineering)</div>
+      <p>LLMs and agents for engineering work: an applied course for graduate students and advanced undergraduates in engineering rather than computer science, which makes its scoping decisions closer to ours than the CS courses above.</p>
+      <div class="go"><a class="doc" href="https://cmuagents.github.io/" target="_blank" rel="noopener">Course site ↗</a></div></div>
+
+    <div class="card"><div class="meta">Stanford · CS 146S · Fall 2026 / Fall 2025</div>
+      <h3>The Modern Software Developer</h3>
+      <div class="who">Mihail Eric</div>
+      <p>Not an agents course in name, but the fullest public treatment of working <em>with</em> coding agents: defining intent, structuring work and coordinating tools so agents can contribute across a real codebase. Slides, readings and assignments are free. Pairs with our Week 2.</p>
+      <div class="go"><a class="doc" href="https://themodernsoftware.dev/" target="_blank" rel="noopener">Course site ↗</a></div></div>
+
+    <div class="card"><div class="meta">Stanford · CS 329T · Autumn</div>
+      <h3>Building and evaluating agentic AI applications</h3>
+      <div class="who">Project-based; 70% project</div>
+      <p>The course's own framing: a first prototype is easy, and refining it into something trustworthy is the work. Lectures on prompting and RAG, agent architectures, and evaluating and improving agent trustworthiness, with slides and labs posted as the term runs.</p>
+      <div class="go"><a class="doc" href="https://web.stanford.edu/class/cs329t/" target="_blank" rel="noopener">Course site ↗</a></div></div>
+
+  </div>
+  <p class="small" style="margin-top:16px"><b>Adjacent, not the same subject:</b> MIT 6.7980 <em>Topics in Multiagent Learning</em> (Fall 2026, Daskalakis and Farina) studies multi-agent systems through game theory and learning theory rather than LLM agents; useful background for Week 9, not a substitute. <a class="doc" href="https://www.mit.edu/~6.7980/" target="_blank" rel="noopener">Course site ↗</a></p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Open courseware this course already draws on</div>
+  <h2>Free, self-paced, no enrollment</h2>
+  <div style="overflow:auto"><table class="plain"><thead><tr><th>Resource</th><th>What it is</th><th>Where we use it</th></tr></thead><tbody>
+    <tr><td><a class="doc" href="https://huggingface.co/learn/agents-course/en/unit1/introduction" target="_blank" rel="noopener">Hugging Face Agents Course ↗</a></td><td>Units from tools and the agent loop through memory and evaluation; Apache-2.0.</td><td>Weeks 5 and 7</td></tr>
+    <tr><td><a class="doc" href="https://github.com/microsoft/ai-agents-for-beginners" target="_blank" rel="noopener">Microsoft · AI Agents for Beginners ↗</a></td><td>Lesson-by-lesson repo with code; MIT licence.</td><td>Weeks 5 and 11</td></tr>
+    <tr><td><a class="doc" href="https://academy.langchain.com/" target="_blank" rel="noopener">LangChain Academy ↗</a></td><td>Short courses on LangGraph, memory and no-code agents.</td><td>Weeks 4 and 7</td></tr>
+    <tr><td><a class="doc" href="https://www.deeplearning.ai/short-courses/functions-tools-agents-langchain/" target="_blank" rel="noopener">DeepLearning.AI short courses ↗</a></td><td>One- to two-hour builds on tools, RAG and evaluation.</td><td>Weeks 5 and 7</td></tr>
+    <tr><td><a class="doc" href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Anthropic · Building Effective Agents ↗</a></td><td>The essay most of these courses assign in week one, including ours.</td><td>Week 1</td></tr>
+  </tbody></table></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Where this course sits</div>
+  <h2>What we do differently, on purpose</h2>
+  <div class="grid3">
+    <div class="card"><h3>Business undergraduates</h3><p class="small">One prior programming course, not a systems sequence. Every assignment has a code path and a no-code path graded to the same rubric, and the course asks the manager's questions first: who owns control flow, what does a run cost, when is it trusted unattended.</p></div>
+    <div class="card"><h3>Local first</h3><p class="small">From Week 5 the agents run on a small model on your own laptop, so there is no API bill, no key to leak, and the unreliability of small models becomes the week's lesson instead of a surprise.</p></div>
+    <div class="card"><h3>Security and governance carry weight</h3><p class="small">Evaluation (Week 8), security (Week 10) and agentic commerce (Week 11) are full weeks, and the capstone is graded on an eval harness and a security review, not only on whether the demo runs.</p></div>
+  </div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="index.html"><span class="lab">← Course</span><b>Home</b></a>
+  <a href="path.html" class="next"><span class="lab">Next →</span><b>About PATH</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="assets/gsu-robinson-logo.png" alt="Georgia State University, J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="assets/path-logo.png" alt="PATH: Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Agentic AI courses elsewhere<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Course details are as published by each institution on October 17, 2026; terms and staff change.</div>
+</div></footer>
+
+<script>
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>
