@@ -66,6 +66,78 @@
   </a>
 </div></section>
 
+<section class="flowsec"><div class="wrap">
+  <div class="eyebrow">See it move · inside a coding agent</div>
+  <h2>The harness does more than the model</h2>
+  <p class="lede">When you type “fix the failing test” into Codex or Claude Code, the model never touches your files. A harness assembles the context, runs the tools, asks you before anything risky, and decides when to stop. Press Play and watch one repair from prompt to passing tests, then the same task with a bloated context.</p>
+  <div id="flow-w2"></div>
+  <p class="small tryit"><b>Try this:</b> count how many times the model is called in the first run. Then look at the system-prompt page: which of the nine layers did you just watch?</p>
+</div></section>
+<script src="../assets/flow.js"></script>
+<script>
+Flow.mount(document.getElementById('flow-w2'),{
+  w:760,h:340,title:'Inside a coding agent harness',
+  counters:[{key:'tokens',label:'tokens in context'},{key:'calls',label:'model calls'},{key:'tools',label:'tool runs'}],
+  nodes:[
+    {id:'dev',x:28,y:142,w:112,h:56,label:'Developer',sub:'“fix the failing test”',kind:'user'},
+    {id:'harness',x:214,y:142,w:140,h:56,label:'Harness',sub:'context · tools · policy',kind:'harness'},
+    {id:'model',x:214,y:36,w:140,h:56,label:'Model',sub:'proposes next action',kind:'model'},
+    {id:'repo',x:430,y:36,w:140,h:56,label:'Repository',sub:'files · AGENTS.md',kind:'store'},
+    {id:'shell',x:430,y:142,w:140,h:56,label:'Sandbox shell',sub:'pytest · read-only',kind:'tool'},
+    {id:'gate',x:430,y:250,w:140,h:56,label:'Approval',sub:'writes · network',kind:'gate'},
+    {id:'patch',x:620,y:250,w:120,h:56,label:'apply_patch',sub:'edits files',kind:'tool',badge:'⚠'}
+  ],
+  edges:[
+    {from:'dev',to:'harness',label:'prompt'},{from:'harness',to:'dev',curve:-70,label:'summary'},
+    {from:'harness',to:'model',both:true,label:'context ⇄ action'},{from:'harness',to:'repo',both:true},
+    {from:'harness',to:'shell',both:true},{from:'harness',to:'gate'},{from:'gate',to:'patch'},{from:'patch',to:'repo',d:'M680 250 L680 110 L570 80'}
+  ],
+  start:'fix',
+  scenarios:{
+    fix:{name:'One repair',steps:[
+      {move:['dev','harness'],packet:'“fix the failing test in billing”',say:'Your sentence is a few dozen tokens. The harness turns it into a prompt of thousands.',set:{tokens:40}},
+      {at:'harness',say:'<b>Context assembly.</b> System prompt, the repo’s AGENTS.md, a file tree, the tool list, and your request are concatenated into one context.',payload:'[system prompt: 4,100 tokens]\n[AGENTS.md: "run pytest -q before finishing"]\n[repo map: 212 files]\n[tools: read_file, run_shell, apply_patch]\n[user: fix the failing test in billing]',set:{tokens:6800}},
+      {move:['harness','model'],packet:'prompt (6.8k tokens)',set:{calls:1}},
+      {move:['model','harness'],packet:'read_file("billing/tax.py")',say:'The model’s first action is to read, not to write. The harness runs the read; the model only named the file.'},
+      {move:['harness','repo'],packet:'read',tone:'ok',set:{tools:1}},
+      {move:['repo','harness'],packet:'file contents (1.9k tokens)',tone:'ok',set:{tokens:1900}},
+      {move:['harness','model'],packet:'observation',set:{calls:1}},
+      {move:['model','harness'],packet:'run_shell("pytest -q billing")',say:'Running tests is a command. This harness auto-runs read-only commands in a sandbox and asks before anything else.'},
+      {move:['harness','shell'],packet:'pytest -q',tone:'ok',set:{tools:1}},
+      {move:['shell','harness'],packet:'1 failed: rounds 19.995 → 19.99',tone:'bad',say:'The failure message is the most valuable observation in the run. It tells the model exactly what to change.',set:{tokens:600}},
+      {move:['harness','model'],packet:'observation',set:{calls:1}},
+      {move:['model','harness'],packet:'apply_patch(tax.py, +round_half_up)',tone:'warn',say:'Now the model wants to <b>write</b>. Writes change the world, so the harness policy routes this through you.'},
+      {move:['harness','gate'],packet:'edit 1 file: tax.py (+3 −1)?',tone:'warn',say:'The run pauses with a diff. You are the gate.',choice:[{label:'Approve the patch',goto:'approved',tone:'ok'},{label:'Reject',goto:'rejected',tone:'bad'}]}
+    ]},
+    approved:{name:'…approved',hidden:true,steps:[
+      {move:['gate','patch'],packet:'approved',tone:'ok',set:{tools:1}},
+      {move:['patch','repo'],packet:'write tax.py',tone:'ok'},
+      {move:['harness','shell'],packet:'pytest -q (again)',tone:'ok',say:'AGENTS.md said to run the tests before finishing. The harness enforces that as part of the loop, not as a suggestion.',set:{tools:1}},
+      {move:['shell','harness'],packet:'12 passed',tone:'ok',set:{tokens:300}},
+      {move:['harness','model'],packet:'observation',set:{calls:1}},
+      {move:['model','harness'],packet:'final: summary of the change',tone:'ok'},
+      {move:['harness','dev'],packet:'“Fixed rounding in tax.py; 12 tests pass.”',tone:'ok',end:true,say:'Four model calls, five tool runs, one human decision. The model wrote three lines; the harness did everything else. Evidence standard from this page: you saw the state, the observation, the actions available, and the selection at each step.'}
+    ]},
+    rejected:{name:'…rejected',hidden:true,steps:[
+      {move:['gate','harness'],packet:'rejected: “use Decimal, not rounding”',tone:'warn',say:'Your rejection carries a reason. That reason becomes the next observation.',set:{tokens:40}},
+      {move:['harness','model'],packet:'observation',set:{calls:1}},
+      {move:['model','harness'],packet:'apply_patch(tax.py, Decimal)',tone:'warn',say:'The model proposes a different patch. It will come back to the gate again; nothing was written in between.'},
+      {move:['harness','gate'],packet:'edit 1 file: tax.py (+6 −2)?',tone:'warn',end:true,say:'Every write still stops here. Reviewing diffs is the job that does not go away, and the one thing a harness cannot do for you.'}
+    ]},
+    bloat:{name:'Context bloat',intro:'Same task, but the agent is allowed to read everything it wants. Press Play.',steps:[
+      {move:['dev','harness'],packet:'“fix the failing test in billing”',set:{tokens:40}},
+      {at:'harness',payload:'[system prompt + AGENTS.md + repo map]',set:{tokens:6800}},
+      {move:['harness','model'],packet:'prompt',set:{calls:1}},
+      {move:['model','harness'],packet:'read_file × 14 (“to understand the codebase”)',tone:'warn',say:'No file-count limit, so the model reads fourteen files that are not related to the bug.'},
+      {move:['harness','repo'],packet:'14 reads',set:{tools:14}},
+      {move:['repo','harness'],packet:'41,000 tokens of source',tone:'warn',set:{tokens:41000}},
+      {move:['harness','model'],packet:'prompt (49.8k tokens)',tone:'warn',say:'The failing test’s message is now buried under forty thousand tokens of unrelated code.',set:{calls:1}},
+      {move:['model','harness'],packet:'apply_patch(invoice.py …)',tone:'bad',say:'The model patches the wrong file: a plausible edit near a word that matched. Attention is a budget, and it was spent.'},
+      {move:['harness','gate'],packet:'edit invoice.py?',tone:'bad',end:true,mark:{model:'blocked'},say:'A good gate catches it here; a tired reviewer clicks Approve. The fix is upstream: cap what enters the context. That is Week 3.'}
+    ]}
+  }
+});
+</script>
 <section><div class="wrap">
   <div class="eyebrow">Start here</div>
   <h2>The path through today</h2>

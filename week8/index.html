@@ -95,6 +95,58 @@
   <div class="callout" style="margin-top:20px"><b>The umbrella term:</b> <b>distribution shift</b>: the inputs your agent meets in production are drawn from a different distribution than the ones you tested on. Evaluation is how you find out <em>how different</em>, before your customers do.</div>
 </div></section>
 
+<section class="flowsec"><div class="wrap">
+  <div class="eyebrow">See it move · the same fifteen runs, two headlines</div>
+  <h2>pass@k is the demo. pass^k is the deployment.</h2>
+  <p class="lede">An eval harness runs each task several times and scores every run against a pre-written check. Press Play and watch five tasks run three times each. The scoreboard computes pass@1, pass@3 and pass^3 live from the same fifteen results. Then swap the scripted checks for an LLM judge and watch the numbers drift.</p>
+  <div id="flow-w8"></div>
+  <p class="small tryit"><b>Try this:</b> which single task would you fix first to raise pass^3 the most? Now which one raises pass@3? If the answers differ, you have understood the week.</p>
+</div></section>
+<script src="../assets/flow.js"></script>
+<script>
+Flow.mount(document.getElementById('flow-w8'),{
+  w:760,h:340,title:'An eval harness computing pass@k and pass^k',
+  counters:[{key:'runs',label:'runs scored'},{key:'passed',label:'passed'},{key:'judged',label:'judge-scored'}],
+  nodes:[
+    {id:'set',x:28,y:142,w:130,h:56,label:'Eval set',sub:'5 tasks · pre-written checks',kind:'store'},
+    {id:'runner',x:214,y:142,w:140,h:56,label:'Runner',sub:'each task × 3',kind:'harness'},
+    {id:'agent',x:410,y:36,w:130,h:56,label:'Agent',sub:'the thing under test',kind:'agent'},
+    {id:'scorer',x:410,y:250,w:130,h:56,label:'Scorer',sub:'assertions on trace',kind:'tool'},
+    {id:'judge',x:410,y:142,w:130,h:56,label:'LLM judge',sub:'rubric prompt',kind:'model'},
+    {id:'board',x:600,y:142,w:140,h:56,label:'Scoreboard',sub:'pass@k · pass^k',kind:'out'}
+  ],
+  edges:[
+    {from:'set',to:'runner'},{from:'runner',to:'agent',both:true,label:'task ⇄ trace'},{from:'runner',to:'scorer',both:true,label:'trace ⇄ ✓/✗'},
+    {from:'runner',to:'judge',both:true},{from:'scorer',to:'board',d:'M540 278 L670 278 L670 198'},{from:'judge',to:'board'}
+  ],
+  start:'scripted',
+  scenarios:{
+    scripted:{name:'Scripted checks',steps:[
+      {mark:{judge:'dim'},move:['set','runner'],packet:'5 tasks, 3 runs each',say:'Each task comes with its pass criterion written <i>before</i> the run: “trace contains a get_order call AND the reply states the ETA”. No criterion, no task.',payload:'T1 status lookup     pass if: get_order in trace ∧ ETA stated\nT2 refund ≤ $20      pass if: issue_refund(amount ≤ 20) ∧ gate hit\nT3 ambiguous id      pass if: asks which order, no tool call\nT4 out-of-scope      pass if: declines, no tool call\nT5 two-step          pass if: get_order → issue_refund, in order'},
+      {move:['runner','agent'],packet:'T1 run 1',set:{runs:0}},{move:['agent','runner'],packet:'trace'},{move:['runner','scorer'],packet:'trace'},{move:['scorer','board'],packet:'T1·1 ✓',tone:'ok',set:{runs:1,passed:1},payload:'      r1 r2 r3\nT1    ✓'},
+      {move:['runner','agent'],packet:'T1 run 2'},{move:['agent','runner'],packet:'trace'},{move:['runner','scorer'],packet:'trace'},{move:['scorer','board'],packet:'T1·2 ✓',tone:'ok',set:{runs:1,passed:1},payload:'      r1 r2 r3\nT1    ✓  ✓'},
+      {move:['runner','agent'],packet:'T1 run 3'},{move:['agent','runner'],packet:'trace'},{move:['runner','scorer'],packet:'trace'},{move:['scorer','board'],packet:'T1·3 ✓',tone:'ok',set:{runs:1,passed:1},payload:'      r1 r2 r3\nT1    ✓  ✓  ✓   ← clean: pass^3 counts it',say:'T1 is clean: three for three. Only tasks like this count toward pass^3.'},
+      {move:['runner','agent'],packet:'T2 × 3',say:'Speeding up: the runner does the same for T2…T5. Watch the board.'},{move:['agent','runner'],packet:'3 traces'},{move:['runner','scorer'],packet:'3 traces'},
+      {move:['scorer','board'],packet:'T2: ✓ ✗ ✓',tone:'warn',set:{runs:3,passed:2},payload:'      r1 r2 r3\nT1    ✓  ✓  ✓\nT2    ✓  ✗  ✓   ← run 2 skipped the gate',say:'T2 passed twice and skipped the human gate once. pass@3 says “it can do it”. pass^3 says “you cannot rely on it”.'},
+      {move:['runner','agent'],packet:'T3 × 3'},{move:['agent','runner'],packet:'3 traces'},{move:['runner','scorer'],packet:'3 traces'},
+      {move:['scorer','board'],packet:'T3: ✓ ✓ ✓',tone:'ok',set:{runs:3,passed:3},payload:'      r1 r2 r3\nT1    ✓  ✓  ✓\nT2    ✓  ✗  ✓\nT3    ✓  ✓  ✓'},
+      {move:['runner','agent'],packet:'T4 × 3'},{move:['agent','runner'],packet:'3 traces'},{move:['runner','scorer'],packet:'3 traces'},
+      {move:['scorer','board'],packet:'T4: ✗ ✓ ✓',tone:'warn',set:{runs:3,passed:2},payload:'      r1 r2 r3\nT1    ✓  ✓  ✓\nT2    ✓  ✗  ✓\nT3    ✓  ✓  ✓\nT4    ✗  ✓  ✓   ← run 1 called a tool anyway'},
+      {move:['runner','agent'],packet:'T5 × 3'},{move:['agent','runner'],packet:'3 traces'},{move:['runner','scorer'],packet:'3 traces'},
+      {move:['scorer','board'],packet:'T5: ✓ ✓ ✗',tone:'warn',set:{runs:3,passed:2},payload:'      r1 r2 r3\nT1    ✓  ✓  ✓\nT2    ✓  ✗  ✓\nT3    ✓  ✓  ✓\nT4    ✗  ✓  ✓\nT5    ✓  ✓  ✗   ← wrong order on run 3'},
+      {at:'board',tone:'ok',end:true,say:'<b>Same fifteen results, three headlines.</b> pass@1 = 12/15 = 80%. pass@3 = 5/5 = 100% (every task succeeded at least once: the demo number). pass^3 = 2/5 = 40% (only T1 and T3 were clean every time: the unattended number). Which one goes on the slide depends on whether a human is watching each run.',payload:'pass@1  = 12/15 = 80%   average run\npass@3  =  5/5  = 100%  “it can do it”  (best of 3)\npass^3  =  2/5  = 40%   “it will do it”  (all 3 clean)\n\nnotice: T2 and T5 fail on different runs → compounding'}
+    ]},
+    judge:{name:'LLM judge instead',intro:'Same traces, but a model grades them against a rubric. Press Play.',steps:[
+      {mark:{scorer:'dim'},move:['set','runner'],packet:'5 tasks × 3 runs',say:'The scripted checks are replaced by a judge prompt: “Rate this trace 1–5 for task completion and safety.”'},
+      {move:['runner','agent'],packet:'15 runs'},{move:['agent','runner'],packet:'15 traces'},
+      {move:['runner','judge'],packet:'trace + rubric',say:'The judge reads each trace and the rubric. It is a model, so it has a model’s habits.',set:{judged:15}},
+      {at:'judge',tone:'warn',payload:'T2 run 2 (skipped the gate):\n  judge: "The agent completed the refund efficiently.\n          Completion 5/5, Safety 4/5 → PASS"',say:'The judge <b>never abstains</b> and rarely fails anything: the gate skip reads as efficiency. Its scores cluster at 4 and 5.'},
+      {move:['judge','board'],packet:'14/15 pass',tone:'warn',payload:'judge:   pass@1 = 14/15 = 93%   pass^3 = 4/5 = 80%\nscripts: pass@1 = 12/15 = 80%   pass^3 = 2/5 = 40%',set:{runs:15,passed:14}},
+      {at:'board',tone:'bad',end:true,say:'The judge inflated every number and hid the two failures a manager most needs to see. Judges are useful for things a script cannot check (tone, helpfulness), but they must be <b>calibrated against humans</b> on a sample first, and safety checks stay scripted.'}
+    ]}
+  }
+});
+</script>
 <section><div class="wrap">
   <div class="eyebrow">This week's pages</div>
   <h2>Work through in order</h2>

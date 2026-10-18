@@ -87,6 +87,69 @@ Tue 8:02  Rep: What is the refund window in GA?
   <div class="callout" style="margin-top:20px"><b>The through-line for the week:</b> a model's parameters are frozen at its training cutoff, and they never contained your contracts, your tickets, or your policies. You do not fix that by making the model bigger. You fix it by <b>storing</b> what matters and <b>retrieving</b> it at the moment of the question.</div>
 </div></section>
 
+<section class="flowsec"><div class="wrap">
+  <div class="eyebrow">See it move · retrieval-augmented generation</div>
+  <h2>A better desk, not a smarter brain</h2>
+  <p class="lede">RAG is two pipelines. One runs once, offline: split documents into chunks, embed them, store the vectors. The other runs on every question: embed the question, find the nearest chunks, hand them to the model with the question. Press Play on each, then watch what happens closed-book and with the wrong chunk on top.</p>
+  <div id="flow-w7"></div>
+  <p class="small tryit"><b>Try this:</b> in “Wrong chunk wins”, the model still gives a citation. Write one sentence for a manager on why a citation is not a guarantee.</p>
+</div></section>
+<script src="../assets/flow.js"></script>
+<script>
+Flow.mount(document.getElementById('flow-w7'),{
+  w:760,h:360,title:'Indexing and answering with RAG',
+  counters:[{key:'chunks',label:'chunks in index'},{key:'retrieved',label:'chunks in prompt'},{key:'tokens',label:'prompt tokens'}],
+  nodes:[
+    {id:'docs',x:28,y:36,w:130,h:56,label:'Course pages',sub:'38 documents',kind:'store'},
+    {id:'chunk',x:214,y:36,w:130,h:56,label:'Chunker',sub:'700 chars, by paragraph',kind:'harness'},
+    {id:'embed',x:400,y:36,w:130,h:56,label:'Embedding model',sub:'nomic-embed-text',kind:'model'},
+    {id:'index',x:590,y:36,w:140,h:56,label:'Vector index',sub:'505 × 768 floats',kind:'store'},
+    {id:'q',x:28,y:250,w:130,h:56,label:'Question',sub:'“When is Quiz 3?”',kind:'user'},
+    {id:'build',x:400,y:250,w:130,h:56,label:'Prompt builder',sub:'passages + question',kind:'harness'},
+    {id:'llm',x:590,y:250,w:140,h:56,label:'Chat model',sub:'llama3.2 · local',kind:'model'},
+    {id:'ans',x:590,y:143,w:140,h:50,label:'Answer + citation',kind:'out'}
+  ],
+  edges:[
+    {from:'docs',to:'chunk'},{from:'chunk',to:'embed'},{from:'embed',to:'index'},
+    {from:'q',to:'embed',d:'M158 270 L300 270 L300 120 L430 92'},{from:'index',to:'build',d:'M660 92 L660 130 L465 130 L465 250'},
+    {from:'q',to:'build',label:'question'},{from:'build',to:'llm'},{from:'llm',to:'ans'},{from:'q',to:'llm',d:'M158 290 L380 330 L600 306'}
+  ],
+  start:'index',
+  scenarios:{
+    index:{name:'1 · Index (once)',steps:[
+      {mark:{q:'dim',build:'dim',llm:'dim',ans:'dim'},move:['docs','chunk'],packet:'38 HTML pages → text',say:'Offline, once. Navigation, banners and footers are stripped first; a header repeated on every page would otherwise become the nearest neighbour of everything.'},
+      {at:'chunk',say:'Split on paragraphs, about 700 characters each, keeping the page title as metadata.',payload:'chunk #212  (week7/index.html)\n"Quiz 3 is next week: in class, closed-book,\n 5 multiple-choice. Scope: Weeks 6–8 readings…"',set:{chunks:505}},
+      {move:['chunk','embed'],packet:'505 chunks',say:'Each chunk is sent to the embedding model with the prefix <code>search_document:</code>.'},
+      {at:'embed',say:'Each chunk becomes 768 numbers: a point in a space where nearby points mean similar things. Meaning as geometry.',payload:'"search_document: Quiz 3 is next week…"\n→ [0.021, -0.113, 0.087, …, 0.004]  (768 dims)'},
+      {move:['embed','index'],packet:'505 vectors',tone:'ok',end:true,say:'Stored in a JSON file next to the text. 18 seconds on a laptop, and it never runs again until a page changes. No model weights changed; the model is exactly as smart as before.'}
+    ]},
+    ask:{name:'2 · Ask (every time)',steps:[
+      {mark:{docs:'dim',chunk:'dim'},move:['q','embed'],packet:'“When is Quiz 3?”',say:'The question gets the other prefix, <code>search_query:</code>, and is embedded into the same space.',set:{tokens:12}},
+      {move:['embed','index'],packet:'query vector',say:'Cosine similarity against all 505 vectors. Pure arithmetic, under a millisecond.'},
+      {at:'index',tone:'ok',payload:'#212 week7/index   0.81  "Quiz 3 is next week…"\n#031 week2/summary 0.74  "Quiz 1 covers Weeks 1–3…"\n#288 week8/index   0.73  "Quiz 3 is this week…"',say:'TOP_K=3. Note the runner-up: the Quiz 1 chunk, because “quiz … closed-book … scope” looks the same to geometry.',set:{retrieved:3}},
+      {move:['index','build'],packet:'3 passages',tone:'ok',set:{tokens:520}},
+      {move:['q','build'],packet:'question'},
+      {at:'build',say:'The prompt is assembled: a system line that says “answer only from the passages, or say Not in the course documents”, the three passages numbered, then the question.',payload:'system: Use only the passages. If they do not answer,\n        reply "Not in the course documents."\n[1] week7/index: Quiz 3 is next week: in class…\n[2] week2/summary: Quiz 1 covers…\n[3] week8/index: Quiz 3 is this week…\nQ: When is Quiz 3?  Answer, then the passage number.'},
+      {move:['build','llm'],packet:'prompt (560 tokens)',set:{tokens:28}},
+      {move:['llm','ans'],packet:'“Week 8, in class, closed-book. [1]”',tone:'ok',end:true,say:'Grounded, and it names the passage it used, so a human can click and check. The model did not get smarter; it got the right page on its desk.'}
+    ]},
+    closed:{name:'Closed book',intro:'The same question with retrieval switched off. Press Play.',steps:[
+      {mark:{docs:'dim',chunk:'dim',embed:'dim',index:'dim',build:'dim'},move:['q','llm'],packet:'“When is Quiz 3?” (no passages)',tone:'warn',say:'No retrieval. The model has only its training data, which does not contain this course.',set:{tokens:12}},
+      {at:'llm',tone:'warn',say:'It does not know. It also does not know that it does not know.'},
+      {move:['llm','ans'],packet:'“Quiz 3 is on Tuesday, March 19th…”',tone:'bad',end:true,say:'Fluent, specific, and invented: a plausible date for a course the model never saw. Parametric knowledge is a blend, not a filing cabinet. This is the sentence a student will quote back to you.'}
+    ]},
+    wrong:{name:'Wrong chunk wins',intro:'TOP_K=1 and 3,000-character chunks. Press Play.',steps:[
+      {mark:{docs:'dim',chunk:'dim'},move:['q','embed'],packet:'“When is Quiz 3?”',set:{tokens:12}},
+      {move:['embed','index'],packet:'query vector'},
+      {at:'index',tone:'warn',payload:'#031 week2/summary 0.76  "…Quiz 1 covers Weeks 1–3… closed-book… 5 MC…\n   Group Assignment 1… Week 3 scope…"  (3,000 chars)',say:'With big chunks the Quiz 1 passage absorbs more quiz vocabulary and edges ahead by 0.014. TOP_K=1 means it is the <i>only</i> passage.',set:{retrieved:1}},
+      {move:['index','build'],packet:'1 passage (wrong)',tone:'warn',set:{tokens:900}},
+      {move:['q','build'],packet:'question'},
+      {move:['build','llm'],packet:'prompt',tone:'warn',set:{tokens:28}},
+      {move:['llm','ans'],packet:'“Quiz 3 is in Week 3, closed-book. [1]”',tone:'bad',end:true,say:'Wrong, and <b>cited</b>. The citation is honest: that is the passage it used. A citation proves provenance, not correctness. Fix the retrieval knobs (smaller chunks, TOP_K=3, a re-ranker), not the prompt.'}
+    ]}
+  }
+});
+</script>
 <section><div class="wrap">
   <div class="eyebrow">This week's pages</div>
   <h2>Work through in order</h2>

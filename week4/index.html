@@ -85,6 +85,77 @@ Answer: the Atlanta building — by 126 m.  ✓</div>
   <div class="callout" style="margin-top:20px"><b>The trade:</b> every extra loop step is another model call: more latency, more tokens, more money. This week is about buying reliability with steps, and knowing when you're overpaying.</div>
 </div></section>
 
+<section class="flowsec"><div class="wrap">
+  <div class="eyebrow">See it move · the agent loop</div>
+  <h2>Observe, reason, act, and know when to stop</h2>
+  <p class="lede">The loop is four arrows and one check. Press Play to watch a travel-cost question answered in three iterations, then watch the same loop get stuck and be rescued by its max-iteration guard. The guard is a safety cap; the stop condition is the goal. They are not the same thing.</p>
+  <div id="flow-w4"></div>
+  <p class="small tryit"><b>Try this:</b> in “Stuck”, name the exact iteration where a human reading the trace would have noticed the loop. What observation repeated?</p>
+</div></section>
+<script src="../assets/flow.js"></script>
+<script>
+Flow.mount(document.getElementById('flow-w4'),{
+  w:760,h:340,title:'The agent loop with a stop condition and a guard',
+  counters:[{key:'iter',label:'iterations'},{key:'calls',label:'tool calls'},{key:'tokens',label:'tokens'}],
+  nodes:[
+    {id:'user',x:28,y:142,w:112,h:56,label:'Goal',sub:'“Boston, 3 nights, < $900?”',kind:'user'},
+    {id:'model',x:214,y:142,w:140,h:56,label:'Reason',sub:'model picks next action',kind:'model'},
+    {id:'check',x:214,y:36,w:140,h:56,label:'Stop condition',sub:'answer complete?',kind:'gate'},
+    {id:'guard',x:214,y:250,w:140,h:56,label:'Max-iteration guard',sub:'N = 5',kind:'gate',badge:'cap'},
+    {id:'flights',x:430,y:36,w:140,h:56,label:'search_flights()',kind:'tool'},
+    {id:'hotels',x:430,y:142,w:140,h:56,label:'search_hotels()',kind:'tool'},
+    {id:'calc',x:430,y:250,w:140,h:56,label:'calculator()',kind:'tool'},
+    {id:'ans',x:620,y:142,w:120,h:56,label:'Answer',kind:'out'}
+  ],
+  edges:[
+    {from:'user',to:'model'},{from:'model',to:'check',both:true,label:'done?'},{from:'model',to:'guard',both:true,label:'count'},
+    {from:'model',to:'flights',both:true},{from:'model',to:'hotels',both:true},{from:'model',to:'calc',both:true},
+    {from:'check',to:'ans',d:'M354 64 L480 64 L680 64 L680 142'},{from:'guard',to:'ans',d:'M354 278 L680 278 L680 198'}
+  ],
+  start:'good',
+  scenarios:{
+    good:{name:'Three iterations',steps:[
+      {move:['user','model'],packet:'goal + tools',say:'The goal and the tool list enter the loop. From here the <b>model</b> decides what happens next.',payload:'goal: can I do 3 nights in Boston (flight ATL→BOS + hotel) under $900?\ntools: search_flights, search_hotels, calculator\nstop:  a yes/no with the total\nguard: 5 iterations',set:{tokens:220}},
+      {at:'model',say:'Iteration 1. Reason: I need a flight price first.',payload:'thought: need flight price ATL→BOS\naction: search_flights(ATL, BOS, 3 nights)',set:{iter:1,tokens:60}},
+      {move:['model','flights'],packet:'search_flights(ATL→BOS)',set:{calls:1}},
+      {move:['flights','model'],packet:'$318 round trip',tone:'ok',say:'Observe: a number comes back. It is appended to the context; the model will see it in the next iteration.',set:{tokens:40}},
+      {move:['model','check'],packet:'done?',say:'Before acting again, the loop asks the stop condition: do we have a yes/no with a total? Not yet.'},
+      {move:['check','model'],packet:'no'},
+      {at:'model',say:'Iteration 2. Reason: now the hotel.',payload:'thought: have flight; need hotel × 3 nights\naction: search_hotels(Boston, 3)',set:{iter:1,tokens:60}},
+      {move:['model','hotels'],packet:'search_hotels(Boston, 3)',set:{calls:1}},
+      {move:['hotels','model'],packet:'$174/night',tone:'ok',set:{tokens:40}},
+      {move:['model','check'],packet:'done?'},{move:['check','model'],packet:'no'},
+      {at:'model',say:'Iteration 3. Reason: add it up. The model does not trust itself with arithmetic, so it calls the calculator.',payload:'thought: 318 + 3×174 = ?\naction: calculator("318 + 3*174")',set:{iter:1,tokens:60}},
+      {move:['model','calc'],packet:'318 + 3×174',set:{calls:1}},
+      {move:['calc','model'],packet:'840',tone:'ok',set:{tokens:20}},
+      {move:['model','check'],packet:'“Yes: $840, under $900.”',tone:'ok',say:'The stop condition is met: a yes/no with a total. The loop exits because the <b>goal</b> was reached, not because a counter ran out.'},
+      {move:['check','ans'],packet:'final answer',tone:'ok',end:true,say:'Three iterations, three tool calls, one answer. Note what the trace shows that the answer does not: which number came from where.'}
+    ]},
+    stuck:{name:'Stuck',intro:'Same loop, but the hotel tool returns an error the model does not understand. Press Play.',steps:[
+      {move:['user','model'],packet:'goal + tools',set:{tokens:220}},
+      {at:'model',payload:'action: search_flights(ATL, BOS, 3 nights)',set:{iter:1,tokens:60}},
+      {move:['model','flights'],packet:'search_flights',set:{calls:1}},{move:['flights','model'],packet:'$318',tone:'ok',set:{tokens:40}},
+      {move:['model','check'],packet:'done?'},{move:['check','model'],packet:'no'},
+      {at:'model',payload:'action: search_hotels(Boston, 3)',set:{iter:1,tokens:60}},
+      {move:['model','hotels'],packet:'search_hotels',set:{calls:1}},
+      {move:['hotels','model'],packet:'error: date format must be ISO',tone:'bad',say:'Observe: an error. A capable model fixes the date format. This one retries the identical call.',set:{tokens:40}},
+      {move:['model','guard'],packet:'iteration 2 of 5',say:'Every iteration also reports to the guard. Two of five.'},
+      {move:['guard','model'],packet:'continue'},
+      {at:'model',tone:'warn',payload:'action: search_hotels(Boston, 3)   ← identical',set:{iter:1,tokens:60}},
+      {move:['model','hotels'],packet:'search_hotels (same)',tone:'warn',set:{calls:1}},{move:['hotels','model'],packet:'error: date format must be ISO',tone:'bad',set:{tokens:40}},
+      {move:['model','guard'],packet:'iteration 3 of 5',tone:'warn',say:'Same action, same observation. Nothing in the context changed, so nothing in the next decision will.'},
+      {move:['guard','model'],packet:'continue'},
+      {at:'model',tone:'warn',payload:'action: search_hotels(Boston, 3)   ← identical',set:{iter:1,tokens:60}},
+      {move:['model','hotels'],packet:'search_hotels (same)',tone:'warn',set:{calls:1}},{move:['hotels','model'],packet:'error',tone:'bad',set:{tokens:40}},
+      {move:['model','guard'],packet:'iteration 4 of 5',tone:'warn'},{move:['guard','model'],packet:'continue'},
+      {at:'model',tone:'warn',payload:'action: search_hotels(Boston, 3)',set:{iter:1,tokens:60}},
+      {move:['model','hotels'],packet:'search_hotels (same)',tone:'bad',set:{calls:1}},{move:['hotels','model'],packet:'error',tone:'bad',set:{tokens:40}},
+      {move:['model','guard'],packet:'iteration 5 of 5',tone:'bad',say:'The <b>guard fires</b>. Without it this loop runs until the API bill or the user’s patience ends.',mark:{model:'blocked'}},
+      {move:['guard','ans'],packet:'stopped: max iterations',tone:'bad',end:true,say:'The run ends with a clear failure: “could not complete; hotel search kept erroring”. The guard did not solve the problem; it bounded the damage. Solving it means a better model, or a harness that detects a repeated observation and changes something.'}
+    ]}
+  }
+});
+</script>
 <section><div class="wrap">
   <div class="eyebrow">This week's pages</div>
   <h2>Work through in order</h2>

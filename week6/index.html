@@ -130,6 +130,68 @@
   <div class="callout" style="margin-top:20px"><b>And a third option people forget:</b> if both &ldquo;agents&rdquo; live inside <em>your own</em> application (two nodes in one LangGraph from <a href="../week4/langgraph.html">Week 4</a>), you need neither protocol. They are just edges in a graph you own. Reach for a protocol when you cross a boundary you do not control: another team's deployment, another vendor, another company.</div>
 </div></section>
 
+<section class="flowsec"><div class="wrap">
+  <div class="eyebrow">See it move · two handshakes</div>
+  <h2>MCP plugs in a tool. A2A delegates to a colleague.</h2>
+  <p class="lede">Both protocols are a few messages in a fixed order. Press Play on “MCP” to watch a host discover and call a tool it has never seen before, then on “A2A” to watch one agent hand a task to another and get an artifact back without ever seeing the other side’s tools. The third tab shows why the boundary matters.</p>
+  <div id="flow-w6"></div>
+  <p class="small tryit"><b>Try this:</b> in the MCP run, which message is the one the model actually sees? In the A2A run, list what crossed the boundary and what did not.</p>
+</div></section>
+<script src="../assets/flow.js"></script>
+<script>
+Flow.mount(document.getElementById('flow-w6'),{
+  w:760,h:340,title:'MCP and A2A handshakes',
+  counters:[{key:'msgs',label:'protocol messages'},{key:'tools',label:'tools visible to the model'},{key:'secrets',label:'credentials crossed'}],
+  nodes:[
+    {id:'model',x:28,y:142,w:120,h:56,label:'Model',sub:'inside the host',kind:'model'},
+    {id:'host',x:204,y:142,w:130,h:56,label:'Host app',sub:'MCP client',kind:'harness'},
+    {id:'server',x:400,y:36,w:140,h:56,label:'MCP server',sub:'calendar · 3 tools',kind:'tool'},
+    {id:'cal',x:610,y:36,w:120,h:56,label:'Calendar API',sub:'its credentials',kind:'store',badge:'🔑'},
+    {id:'card',x:400,y:142,w:140,h:56,label:'Agent Card',sub:'/.well-known/agent.json',kind:'doc'},
+    {id:'agentB',x:400,y:250,w:140,h:56,label:'Tutoring agent',sub:'another department',kind:'agent'},
+    {id:'btools',x:610,y:250,w:120,h:56,label:'Their tools',sub:'never exposed',kind:'store',badge:'🔒'}
+  ],
+  edges:[
+    {from:'model',to:'host',both:true,label:'tool list ⇄ call'},
+    {from:'host',to:'server',both:true,label:'JSON-RPC'},{from:'server',to:'cal',both:true},
+    {from:'host',to:'card',both:true,label:'GET'},{from:'host',to:'agentB',both:true,label:'task'},{from:'agentB',to:'btools',both:true}
+  ],
+  start:'mcp',
+  scenarios:{
+    mcp:{name:'MCP',intro:'The host connects to a calendar server it has never seen. Press Play.',steps:[
+      {mark:{card:'dim',agentB:'dim',btools:'dim'},move:['host','server'],packet:'initialize',say:'<b>1 · initialize.</b> The client introduces itself and asks what the server can do. The model is not involved yet.',payload:'→ {"method":"initialize",\n   "params":{"protocolVersion":"2025-06-18",\n             "clientInfo":{"name":"cis4394-host"}}}',set:{msgs:1}},
+      {move:['server','host'],packet:'capabilities',tone:'ok',payload:'← {"capabilities":{"tools":{},"resources":{}},\n   "serverInfo":{"name":"calendar-mcp"}}',set:{msgs:1}},
+      {move:['host','server'],packet:'tools/list',say:'<b>2 · discovery.</b> The client asks for the tool schemas. This is the M+N payoff: any client can ask any server the same question.',set:{msgs:1}},
+      {move:['server','host'],packet:'3 schemas',tone:'ok',payload:'← tools: [\n  {name:"free_slots", inputSchema:{person, range}},\n  {name:"book", inputSchema:{person, start, minutes}},\n  {name:"cancel", inputSchema:{event_id}} ]',set:{msgs:1,tools:3}},
+      {move:['host','model'],packet:'tool list (3)',say:'Only now does the model learn the tools exist. It sees names and schemas, not code, not credentials.'},
+      {move:['model','host'],packet:'call free_slots(Priya)',say:'The model emits a call, exactly as in Week 5. The host decides whether to forward it.'},
+      {move:['host','server'],packet:'tools/call free_slots',set:{msgs:1},payload:'→ {"method":"tools/call",\n   "params":{"name":"free_slots",\n             "arguments":{"person":"Priya","range":"next week"}}}'},
+      {move:['server','cal'],packet:'API call (server’s key)',tone:'ok',say:'The server holds the calendar credential. It never travels to the host or the model.',set:{secrets:0}},
+      {move:['cal','server'],packet:'slots',tone:'ok'},
+      {move:['server','host'],packet:'result',tone:'ok',set:{msgs:1},payload:'← {"content":[{"type":"text",\n     "text":"Tue 10:00, Wed 15:00"}]}'},
+      {move:['host','model'],packet:'observation',tone:'ok',end:true,say:'Six messages, three tools discovered, zero credentials crossed. The vertical plug: the host gained a capability without the model learning anything about how it works. Note that <code>book</code> and <code>cancel</code> are also visible now; the host’s policy decides which ones need a gate.'}
+    ]},
+    a2a:{name:'A2A',intro:'Your advising agent needs a tutoring slot from an agent another department runs. Press Play.',steps:[
+      {mark:{server:'dim',cal:'dim'},move:['host','card'],packet:'GET /.well-known/agent.json',say:'<b>1 · discovery.</b> Your agent fetches the other agent’s <b>Agent Card</b>: what it can do, how to talk to it, how to authenticate.',set:{msgs:1}},
+      {move:['card','host'],packet:'card',tone:'ok',payload:'{"name":"Tutoring Center Agent",\n "skills":[{"id":"book_tutoring","description":"Schedule a tutoring session"}],\n "url":"https://tutoring.gsu.edu/a2a",\n "auth":{"schemes":["bearer"]}}',set:{msgs:1}},
+      {move:['host','agentB'],packet:'task: tutoring for calc, this week',say:'<b>2 · delegate.</b> You send a <b>task</b>, in plain language plus structured fields. You are asking for an outcome, not calling a function.',set:{msgs:1},payload:'→ tasks/send {"message":{"role":"user","parts":[\n     {"text":"Book a calculus tutoring slot for student 9021 this week"}]}}'},
+      {move:['agentB','btools'],packet:'their own loop',tone:'ok',say:'The tutoring agent runs its own loop with its own tools and data. Which tools? You do not know, and that is the point.'},
+      {move:['btools','agentB'],packet:'…',tone:'ok'},
+      {move:['agentB','host'],packet:'state: input-required',tone:'warn',say:'<b>3 · a clarifying round trip.</b> A2A tasks have states. This one needs more information before it can finish.',set:{msgs:1},payload:'← {"status":{"state":"input-required"},\n   "message":"Online or in person?"}'},
+      {move:['host','agentB'],packet:'“in person”',set:{msgs:1}},
+      {move:['agentB','btools'],packet:'book',tone:'ok'},{move:['btools','agentB'],packet:'confirmed',tone:'ok'},
+      {move:['agentB','host'],packet:'artifact: confirmation',tone:'ok',end:true,set:{msgs:1},payload:'← {"status":{"state":"completed"},\n   "artifacts":[{"parts":[{"text":"Thu 2:00 pm, Library 204, tutor: J. Ortiz"}]}]}',say:'Seven messages. What crossed: a card, a task, a question, an answer, an artifact. What did not: their database, their tools, their credentials, their prompt. The horizontal handshake delegates an <i>outcome</i>.'}
+    ]},
+    boundary:{name:'Why the boundary',intro:'What happens when the boundary is drawn wrong. Press Play.',steps:[
+      {mark:{card:'dim',btools:'dim'},move:['host','server'],packet:'tools/list',say:'A well-meaning developer connects the host to a server that exposes <b>everything</b>: 40 tools, including delete_all_events.',set:{msgs:1}},
+      {move:['server','host'],packet:'40 schemas',tone:'warn',set:{msgs:1,tools:40}},
+      {move:['host','model'],packet:'tool list (40)',tone:'warn',say:'Forty schemas now sit in every prompt: thousands of tokens, and forty ways to be wrong. Tool choice accuracy drops as the list grows.'},
+      {move:['model','host'],packet:'call delete_all_events(Priya)',tone:'bad',say:'A confused model picks a destructive tool for a harmless request. The server will happily run it.'},
+      {at:'host',tone:'bad',end:true,mark:{server:'blocked'},say:'The fix is not a better prompt. It is the boundary: allow-list the servers, allow-list the tools, gate the acting ones, log at the protocol edge. Week 10 makes this concrete.'}
+    ]}
+  }
+});
+</script>
 <section><div class="wrap">
   <div class="eyebrow">This week's pages</div>
   <h2>Work through in order</h2>

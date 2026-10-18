@@ -86,6 +86,75 @@ The agent did the reading.</div>
   <div class="callout" style="margin-top:20px"><b>The uncomfortable trade:</b> every capability you remove to make the agent safer also makes it less useful. Security work in agentic systems is not “add protection”; it is deciding, on purpose, which capability to give up, and being able to explain that decision to a manager, an auditor, and a customer.</div>
 </div></section>
 
+<section class="flowsec"><div class="wrap">
+  <div class="eyebrow">See it move · three legs, remove one</div>
+  <h2>Why the fix is architecture, not a better prompt</h2>
+  <p class="lede">An agent that can read private data, read content it does not control, and send something out of the building has all three legs of the lethal trifecta. Press Play to see why that combination is unsafe by construction, then replay with each control applied. In every safe run the model is exactly the same; only the architecture changed.</p>
+  <div id="flow-w10"></div>
+  <p class="small tryit"><b>Try this:</b> for your capstone, write down which tool supplies each leg. If all three are present, choose the control you would ship first and say what it costs the user.</p>
+</div></section>
+<script src="../assets/flow.js"></script>
+<script>
+Flow.mount(document.getElementById('flow-w10'),{
+  w:760,h:340,title:'The lethal trifecta and the controls that break it',
+  counters:[{key:'legs',label:'legs present'},{key:'untrusted',label:'untrusted tokens in context'},{key:'out',label:'messages that left'}],
+  nodes:[
+    {id:'user',x:28,y:142,w:112,h:56,label:'Manager',sub:'“brief me on this vendor”',kind:'user'},
+    {id:'agent',x:214,y:142,w:140,h:56,label:'Agent',sub:'model + loop',kind:'model'},
+    {id:'web',x:430,y:36,w:140,h:56,label:'Vendor web page',sub:'content you do not control',kind:'ext',badge:'leg 2'},
+    {id:'crm',x:430,y:142,w:140,h:56,label:'CRM',sub:'private customer data',kind:'store',badge:'leg 1'},
+    {id:'mail',x:430,y:250,w:140,h:56,label:'send_email()',sub:'communicates out',kind:'tool',badge:'leg 3'},
+    {id:'ctl',x:620,y:250,w:120,h:56,label:'Control',sub:'allow-list · gate',kind:'gate'}
+  ],
+  edges:[
+    {from:'user',to:'agent',both:true},{from:'agent',to:'web',both:true,label:'fetch'},{from:'agent',to:'crm',both:true,label:'query'},
+    {from:'agent',to:'mail',label:'call'},{from:'mail',to:'ctl',both:true},{from:'ctl',to:'agent',d:'M680 250 L680 110 L354 150'}
+  ],
+  start:'all',
+  scenarios:{
+    all:{name:'All three legs',steps:[
+      {mark:{ctl:'dim'},move:['user','agent'],packet:'“brief me on this vendor”',say:'A routine request from a trusted user. Count the agent’s capabilities: it can read the CRM, fetch web pages, and send email. Three legs.',set:{legs:3}},
+      {move:['agent','web'],packet:'fetch page',say:'Leg 2. The page is written by someone else. Whatever text is on it enters the context <b>with the same standing as your instructions</b>, because the model has no channel that separates data from commands.'},
+      {move:['web','agent'],packet:'page text (untrusted)',tone:'warn',set:{untrusted:2400},say:'2,400 untrusted tokens now sit next to the system prompt. If any of them are phrased as instructions, the model may follow them. No prompt wording makes this reliably false.'},
+      {move:['agent','crm'],packet:'query',tone:'warn',say:'Leg 1. The agent can read private data because the briefing task legitimately needs some of it.'},
+      {move:['crm','agent'],packet:'customer records',tone:'warn'},
+      {move:['agent','mail'],packet:'send_email(…)',tone:'bad',say:'Leg 3. The agent can send to any address, and nothing between it and the mail server asks why.'},
+      {at:'mail',tone:'bad',end:true,mark:{mail:'blocked',web:'blocked',crm:'blocked'},say:'<b>Exposed by construction.</b> With all three legs, text on a web page can steer the model, and the model has both something private to move and a way to move it. You do not need to see an attack to know this system is unsafe; the shape is enough. Replay with a control.'}
+    ]},
+    nodata:{name:'Remove leg 1',intro:'Same task, but the agent’s CRM access is scoped to what the briefing needs. Press Play.',steps:[
+      {mark:{ctl:'dim'},move:['user','agent'],packet:'“brief me on this vendor”',set:{legs:2}},
+      {move:['agent','web'],packet:'fetch page'},{move:['web','agent'],packet:'page text (untrusted)',tone:'warn',set:{untrusted:2400}},
+      {move:['agent','crm'],packet:'query: vendor record only',tone:'ok',say:'The credential behind this tool is <b>read-only and scoped</b>: one vendor record, no customer table. Least privilege, decided when the tool was defined, not when the prompt was written.'},
+      {move:['crm','agent'],packet:'1 record',tone:'ok'},
+      {at:'agent',tone:'ok',end:true,mark:{crm:'ok'},say:'Even if the page steers the model, there is nothing sensitive in reach. Cost: the agent cannot answer customer questions in the same session. That is a product decision, made on purpose.'}
+    ]},
+    noexit:{name:'Remove leg 3',intro:'Same task, but outbound email is allow-listed to your own domain. Press Play.',steps:[
+      {move:['user','agent'],packet:'“brief me on this vendor”',set:{legs:3}},
+      {move:['agent','web'],packet:'fetch page'},{move:['web','agent'],packet:'page text (untrusted)',tone:'warn',set:{untrusted:2400}},
+      {move:['agent','crm'],packet:'query'},{move:['crm','agent'],packet:'records',tone:'warn'},
+      {move:['agent','mail'],packet:'send_email(to: external)',tone:'warn',say:'Suppose the model is steered into sending something outside. The call is well-formed; the model did nothing “wrong” by its own lights.'},
+      {move:['mail','ctl'],packet:'check recipient',say:'The tool wrapper checks the recipient against an <b>allow-list</b>: addresses at your own domain only. This is three lines of code, and it does not care what the model was thinking.'},
+      {move:['ctl','agent'],packet:'blocked: recipient not allowed',tone:'ok',set:{out:0}},
+      {at:'agent',tone:'ok',end:true,mark:{ctl:'ok',mail:'ok'},say:'Leg 3 is gone for anything outside the building. The agent can still email colleagues, which is most of what the task needs. The log now also shows the blocked attempt, which is how you find out the page was hostile.'}
+    ]},
+    gate:{name:'Gate leg 3',intro:'Same task, with a human gate on every outbound message. Press Play.',steps:[
+      {move:['user','agent'],packet:'“brief me on this vendor”',set:{legs:3}},
+      {move:['agent','web'],packet:'fetch page'},{move:['web','agent'],packet:'page text (untrusted)',tone:'warn',set:{untrusted:2400}},
+      {move:['agent','crm'],packet:'query'},{move:['crm','agent'],packet:'records',tone:'warn'},
+      {move:['agent','mail'],packet:'send_email(…)',tone:'warn'},
+      {move:['mail','ctl'],packet:'approve? to: … · 1 attachment',tone:'warn',say:'The gate shows the human what would leave: recipient, subject, attachment size. A recipient you do not recognise is the whole review.',choice:[{label:'Decline',goto:'declined',tone:'ok'},{label:'Approve without reading',goto:'rubber',tone:'bad'}]}
+    ]},
+    declined:{name:'…declined',hidden:true,steps:[
+      {move:['ctl','agent'],packet:'declined',tone:'ok',set:{out:0}},
+      {at:'agent',tone:'ok',end:true,mark:{ctl:'ok'},say:'Nothing left. The gate worked because the human looked. Gates are the right control for low-volume, high-stakes actions; at a thousand messages a day they stop being read, which is why the allow-list usually comes first.'}
+    ]},
+    rubber:{name:'…rubber-stamped',hidden:true,steps:[
+      {move:['ctl','mail'],packet:'approved',tone:'bad',set:{out:1}},
+      {at:'mail',tone:'bad',end:true,mark:{ctl:'blocked'},say:'A gate nobody reads is leg 3 with extra steps. Design the approval screen so the dangerous detail is impossible to miss, cap how many approvals a person sees per hour, and keep the deterministic allow-list underneath it.'}
+    ]}
+  }
+});
+</script>
 <section><div class="wrap">
   <div class="eyebrow">This week's pages</div>
   <h2>Work through in order</h2>

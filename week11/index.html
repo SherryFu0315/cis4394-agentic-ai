@@ -107,6 +107,78 @@ that somebody has to verify.</div>
   <div class="callout" style="margin-top:20px"><b>Read this week as one sentence:</b> agentic commerce is the moment the industry must write down, in a machine-checkable form, everything a human click used to imply.</div>
 </div></section>
 
+<section class="flowsec"><div class="wrap">
+  <div class="eyebrow">See it move · an agent that buys</div>
+  <h2>Where the money moves, and who can still say no</h2>
+  <p class="lede">An office-supplies agent with a budget. Press Play to watch a purchase flow through an intent mandate, a cart, a cap check and a payment credential, then watch the same agent misread a catalog listing. The question the week keeps asking: at each arrow, what can go wrong here, and who pays when it does?</p>
+  <div id="flow-w11"></div>
+  <p class="small tryit"><b>Try this:</b> in the second scenario the agent is never “wrong” in its own trace. Point to the single control that caught the error, and say what would have happened without it.</p>
+</div></section>
+<script src="../assets/flow.js"></script>
+<script>
+Flow.mount(document.getElementById('flow-w11'),{
+  w:760,h:360,title:'An agentic purchase with mandates, a cap and a gate',
+  counters:[{key:'spend',label:'authorized',fmt:'usd'},{key:'orders',label:'orders placed'},{key:'gates',label:'human decisions'}],
+  nodes:[
+    {id:'user',x:28,y:155,w:112,h:56,label:'Office manager',sub:'sets the mandate',kind:'user'},
+    {id:'agent',x:204,y:155,w:130,h:56,label:'Buying agent',sub:'model + loop',kind:'model'},
+    {id:'merchant',x:400,y:40,w:140,h:56,label:'Merchant',sub:'catalog · checkout',kind:'ext'},
+    {id:'cap',x:400,y:155,w:140,h:56,label:'Policy check',sub:'cap · idempotency key',kind:'gate'},
+    {id:'pay',x:600,y:155,w:130,h:56,label:'Payment credential',sub:'scoped, revocable',kind:'tool',badge:'$'},
+    {id:'ledger',x:600,y:270,w:130,h:56,label:'Ledger',sub:'what actually moved',kind:'store'},
+    {id:'human',x:400,y:270,w:140,h:56,label:'Approval',sub:'above the cap',kind:'gate'}
+  ],
+  edges:[
+    {from:'user',to:'agent',both:true},{from:'agent',to:'merchant',both:true,label:'search · cart'},{from:'agent',to:'cap',both:true,label:'cart mandate'},
+    {from:'cap',to:'pay'},{from:'pay',to:'ledger'},{from:'cap',to:'human',both:true},{from:'ledger',to:'agent',d:'M600 298 L334 298 L270 211'}
+  ],
+  start:'good',
+  scenarios:{
+    good:{name:'Routine order',steps:[
+      {move:['user','agent'],packet:'intent mandate',say:'<b>Intent mandate.</b> The human states what the agent may buy, how much, and until when. This is signed once and referenced by every later step.',payload:'intent: restock copy paper\nlimit:  ≤ 10 cases, ≤ $400 total\nvalid:  this month\nauto:   under $400 → run; over → ask me',set:{spend:400}},
+      {move:['agent','merchant'],packet:'search: copy paper, case',say:'The agent searches the catalog like any shopper.'},
+      {move:['merchant','agent'],packet:'listing: $29.90 / case',tone:'ok',payload:'SKU 4471  Copy paper, 92 bright\n  unit: case (10 reams)   price: $29.90'},
+      {at:'agent',say:'The agent builds a <b>cart mandate</b>: the exact items, quantities and total it intends to pay. Not a vibe; a document.',payload:'cart: 10 × SKU 4471 @ $29.90 = $299.00\nref:  intent #I-2201\nkey:  7f3a…  (idempotency: this cart, once)'},
+      {move:['agent','cap'],packet:'cart $299.00',say:'Policy check, in code: is the total under the cap? is this idempotency key new? does the SKU match the intent?'},
+      {at:'cap',tone:'ok',say:'$299 ≤ $400, key unseen, item matches. Auto-run.',payload:'cap:        299.00 ≤ 400.00   ✓\nidempotent: key 7f3a… new     ✓\nscope:      "copy paper" ∈ intent ✓'},
+      {move:['cap','pay'],packet:'authorize $299.00',tone:'ok',say:'The credential is <b>scoped</b>: this merchant, this amount, this month. If it leaks, the damage has a ceiling.'},
+      {move:['pay','ledger'],packet:'$299.00 captured',tone:'ok',set:{orders:1}},
+      {move:['ledger','agent'],packet:'receipt + trace id',tone:'ok',end:true,say:'Done, with a receipt the agent did not write: the ledger is the source of truth. The human saw nothing, which was the point of the mandate, and can audit everything, which was the point of the trace.'}
+    ]},
+    unit:{name:'Unit-of-measure error',intro:'The catalog listing is ambiguous. Press Play.',steps:[
+      {move:['user','agent'],packet:'intent mandate (≤ $400)',set:{spend:400}},
+      {move:['agent','merchant'],packet:'search: copy paper'},
+      {move:['merchant','agent'],packet:'listing: $29.90 “per unit”',tone:'warn',payload:'SKU 4471  Copy paper, 92 bright\n  unit: each   note: "sold in cases of 10"\n  price: $29.90',say:'The listing says “each” in one field and “cases of 10” in a note. A human squints; the model reads the structured field.'},
+      {at:'agent',tone:'warn',say:'The agent wants 10 cases, computes 10 × 10 units, and builds a cart for 100.',payload:'cart: 100 × SKU 4471 @ $29.90 = $2,990.00\nref:  intent #I-2201\nkey:  9c21…'},
+      {move:['agent','cap'],packet:'cart $2,990.00',tone:'warn'},
+      {at:'cap',tone:'bad',say:'<b>Cap exceeded.</b> $2,990 > $400. The policy check does not know about paper; it knows about numbers, and that is enough.',payload:'cap:        2990.00 ≤ 400.00   ✗  → route to approval\nidempotent: key 9c21… new      ✓\nscope:      copy paper ∈ intent ✓'},
+      {move:['cap','human'],packet:'approve $2,990?',tone:'warn',say:'The approval screen shows the total broken into unit × quantity, the budget before and after, and the reason. That design is the Week 11 exercise.',payload:'Agent wants to order 100 × copy paper @ $29.90\n   total  $2,990.00   (budget $400 → −$2,590)\n   reason restock; intent #I-2201\n   note   listing says “each”; cases of 10?',set:{gates:1},
+       choice:[{label:'Decline: wrong quantity',goto:'decline',tone:'ok'},{label:'Approve',goto:'approve',tone:'bad'}]}
+    ]},
+    decline:{name:'…declined',hidden:true,steps:[
+      {move:['human','cap'],packet:'declined: “10 cases, not 100 units”',tone:'ok',say:'The decline carries a reason, and the reason is an observation the agent can act on.'},
+      {move:['cap','agent'],packet:'observation',tone:'ok'},
+      {at:'agent',tone:'ok',payload:'cart: 10 × SKU 4471 @ $29.90 = $299.00\nkey:  a0e4…  (new key: new cart)',say:'The agent rebuilds the cart. New cart, new idempotency key: the old one can never be replayed.'},
+      {move:['agent','cap'],packet:'cart $299.00',tone:'ok'},{move:['cap','pay'],packet:'authorize $299.00',tone:'ok'},{move:['pay','ledger'],packet:'$299.00 captured',tone:'ok',set:{orders:1}},
+      {move:['ledger','agent'],packet:'receipt',tone:'ok',end:true,say:'Caught by a number, not by cleverness. Declining was cheap because it was designed to be a real option.'}
+    ]},
+    approve:{name:'…approved',hidden:true,steps:[
+      {move:['human','cap'],packet:'approved',tone:'bad',say:'A tired approver clicks through. The system did what it was told.'},
+      {move:['cap','pay'],packet:'authorize $2,990.00',tone:'bad'},
+      {move:['pay','ledger'],packet:'$2,990.00 captured',tone:'bad',set:{orders:1}},
+      {at:'ledger',tone:'bad',end:true,mark:{ledger:'blocked'},say:'Irreversible: the merchant ships 100 cases. Who pays? The approval log says a human did. Now work the incident review on the Practice page: timeline, root error, the control that would have caught it, and the first-hour rollback.'}
+    ]},
+    replay:{name:'Duplicate order',intro:'The network drops the receipt and the agent retries. Press Play.',steps:[
+      {move:['user','agent'],packet:'intent mandate (≤ $400)',set:{spend:400}},
+      {move:['agent','cap'],packet:'cart $299.00 · key 7f3a',tone:'ok'},{move:['cap','pay'],packet:'authorize',tone:'ok'},{move:['pay','ledger'],packet:'$299.00 captured',tone:'ok',set:{orders:1}},
+      {move:['ledger','agent'],packet:'(receipt lost in transit)',tone:'warn',say:'The charge happened; the confirmation never arrived. From the agent’s point of view, the order may not exist.'},
+      {at:'agent',tone:'warn',say:'The loop retries, as loops do.',payload:'retry: cart 10 × SKU 4471 = $299.00\nkey:   7f3a…  (same cart → same key)'},
+      {move:['agent','cap'],packet:'cart $299.00 · key 7f3a',tone:'warn'},
+      {at:'cap',tone:'ok',end:true,mark:{cap:'ok'},say:'<b>Idempotency key already seen</b>: the policy layer returns the original receipt instead of charging again. Without that key, “overnight it ordered twice” is exactly how this week’s incident begins.',payload:'idempotent: key 7f3a… SEEN → return receipt #R-5520\nledger:     1 charge, not 2'}
+    ]}
+  }
+});
+</script>
 <section><div class="wrap">
   <div class="eyebrow">This week's pages</div>
   <h2>Work through in order</h2>

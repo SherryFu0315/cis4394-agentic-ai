@@ -139,6 +139,83 @@ run 3 →   127,797,491</div>
 
 
 
+<section class="flowsec"><div class="wrap">
+  <div class="eyebrow">See it move · one tool call, end to end</div>
+  <h2>Where the model stops and your code begins</h2>
+  <p class="lede">Press Play and watch who does what. The model only writes text shaped like a call. The harness (your Python loop) validates it and runs the function. The human gate sits in front of the one action that cannot be undone. Switch scenarios to see an invalid call repaired, a gate decision, and a small model that cannot recover.</p>
+  <div id="flow-w5"></div>
+  <p class="small tryit"><b>Try this:</b> step with the → key. At the gate choose Reject, then replay and choose Approve. Which single line in a trace log would let an auditor tell the two runs apart a month later?</p>
+</div></section>
+<script src="../assets/flow.js"></script>
+<script>
+Flow.mount(document.getElementById('flow-w5'),{
+  w:760,h:340,title:'Anatomy of a tool call',
+  intro:'Press Play, or step through one event at a time. The panel shows what actually crosses each arrow.',
+  counters:[{key:'tokens',label:'tokens in context'},{key:'calls',label:'tool calls'},{key:'gates',label:'human decisions'}],
+  nodes:[
+    {id:'user',x:28,y:142,w:112,h:56,label:'Support rep',sub:'types a request',kind:'user'},
+    {id:'model',x:214,y:142,w:132,h:56,label:'Model',sub:'qwen2.5 · local',kind:'model'},
+    {id:'harness',x:414,y:142,w:132,h:56,label:'Harness',sub:'your Python loop',kind:'harness'},
+    {id:'order',x:604,y:36,w:132,h:56,label:'get_order()',sub:'read-only · orders DB',kind:'tool'},
+    {id:'gate',x:604,y:142,w:132,h:56,label:'Human gate',sub:'before any refund',kind:'gate'},
+    {id:'refund',x:604,y:250,w:132,h:56,label:'issue_refund()',sub:'irreversible · money',kind:'tool',badge:'⚠'}
+  ],
+  edges:[
+    {from:'user',to:'model',label:'prompt'},{from:'model',to:'user',curve:-70,label:'answer'},
+    {from:'model',to:'harness',label:'JSON'},{from:'harness',to:'model',curve:-70,label:'observation'},
+    {from:'harness',to:'order',both:true},{from:'harness',to:'gate'},{from:'gate',to:'refund'},{from:'refund',to:'harness',curve:50},{from:'gate',to:'harness',curve:60}
+  ],
+  start:'happy',
+  scenarios:{
+    happy:{name:'Valid call',steps:[
+      {move:['user','model'],packet:'“Where is ORD-1042?”',say:'The rep asks in plain language. The model has one extra thing in its context: the <b>schema</b> of each tool it may call.',payload:'get_order(order_id: str) -> dict\n  "Look up one order by id. Use when the customer\n   asks about status, delivery, or contents."\n  order_id: pattern ORD-\\d+',set:{tokens:180}},
+      {at:'model',say:'The model does not look anything up. It <b>emits text</b> shaped like a tool call and stops.',payload:'{"name": "get_order",\n "arguments": {"order_id": "ORD-1042"}}'},
+      {move:['model','harness'],packet:'tool call (JSON)',say:'Your code parses the JSON and checks it against the schema. Nothing has executed yet.',set:{calls:1}},
+      {at:'harness',tone:'ok',say:'Schema check passes: <code>order_id</code> is a string that matches <code>ORD-\\d+</code>. Only now does anything run.'},
+      {move:['harness','order'],packet:'get_order("ORD-1042")',tone:'ok',say:'The function queries the orders database. The model never touches the database; it never even sees the connection string.'},
+      {move:['order','harness'],packet:'{status: shipped, eta: Thu}',tone:'ok',say:'The result comes back to the harness as data.',payload:'{"order_id": "ORD-1042", "status": "shipped",\n "carrier": "UPS", "eta": "Thursday"}'},
+      {move:['harness','model'],packet:'observation',say:'The harness appends the result to the conversation as an <b>observation</b>. The model reads it and decides again: answer, or call another tool.',set:{tokens:140}},
+      {move:['model','user'],packet:'“Shipped, arriving Thursday.”',tone:'ok',end:true,say:'An answer grounded in the tool result. One loop, one call, no gate needed because nothing irreversible happened.',set:{tokens:40},mark:{order:'ok'}}
+    ]},
+    bad:{name:'Invalid call, repaired',steps:[
+      {move:['user','model'],packet:'“Refund order 1042, all of it.”',say:'Same rep, different request. This one touches money.',set:{tokens:190}},
+      {at:'model',tone:'warn',say:'The model emits a call that <i>looks</i> right and is wrong twice: the id is a bare number and the amount is a word.',payload:'{"name": "issue_refund",\n "arguments": {"order_id": 1042, "amount": "all"}}'},
+      {move:['model','harness'],packet:'tool call (JSON)',tone:'warn',set:{calls:1}},
+      {at:'harness',tone:'bad',say:'<b>Validation fails.</b> The schema says <code>order_id: str (ORD-\\d+)</code> and <code>amount: number ≤ order total</code>. The function is never called.',mark:{refund:'blocked'}},
+      {move:['harness','model'],packet:'ValidationError',tone:'bad',say:'The error goes <b>back to the model as an observation</b>, not up to the user as a crash. Errors are observations.',payload:'ValidationError:\n  order_id: expected string matching ORD-\\d+, got 1042\n  amount: expected number, got "all"',set:{tokens:120}},
+      {at:'model',say:'The model repairs its own call. (A 0.5B model often cannot; see the third scenario.)',payload:'{"name": "issue_refund",\n "arguments": {"order_id": "ORD-1042", "amount": 19.99}}'},
+      {move:['model','harness'],packet:'repaired call',set:{calls:1},mark:{refund:'off'}},
+      {at:'harness',tone:'ok',say:'Schema check passes. But <code>issue_refund</code> is marked <b>gate</b>: irreversible actions wait for a human.'},
+      {move:['harness','gate'],packet:'refund $19.99?',tone:'warn',say:'The run <b>pauses</b>. The pending call is stored as state; nothing has moved yet. You are the human.',set:{gates:1},
+       choice:[{label:'Approve the refund',goto:'approve',tone:'ok'},{label:'Reject it',goto:'reject',tone:'bad'}]}
+    ]},
+    approve:{name:'…approved',hidden:true,steps:[
+      {move:['gate','refund'],packet:'approved',tone:'ok',say:'Only after the approval does the money function run.'},
+      {move:['refund','harness'],packet:'refund_id R-7731',tone:'ok',payload:'{"refund_id": "R-7731", "amount": 19.99, "status": "issued"}'},
+      {move:['harness','model'],packet:'observation',set:{tokens:60}},
+      {move:['model','user'],packet:'“Refunded $19.99 to the card.”',tone:'ok',end:true,say:'Done. The trace now holds the schema error, the repair, and the approval, in order. That trace is the audit log.',mark:{refund:'ok'}}
+    ]},
+    reject:{name:'…rejected',hidden:true,steps:[
+      {move:['gate','harness'],packet:'rejected',tone:'warn',say:'A rejection is <b>also an observation</b>. The agent has to handle “no” gracefully.'},
+      {move:['harness','model'],packet:'observation: human declined',tone:'warn',payload:'{"gate": "issue_refund", "decision": "rejected",\n "by": "x.fu", "note": "verify return first"}',set:{tokens:60}},
+      {move:['model','user'],packet:'“I can’t refund this yet; a human will follow up.”',tone:'warn',end:true,say:'No money moved, the customer got a true answer, and the decision is on record. Declining has to be a real option, not an abandonment.',mark:{refund:'blocked'}}
+    ]},
+    stuck:{name:'Small model, stuck',steps:[
+      {move:['user','model'],packet:'“Refund order 1042, all of it.”',say:'Same request, but the model is a 0.5B parameter local model.',set:{tokens:190}},
+      {at:'model',tone:'warn',payload:'{"name": "issue_refund",\n "arguments": {"order_id": 1042, "amount": "all"}}',say:'First attempt: shape right, types wrong.'},
+      {move:['model','harness'],packet:'call #1',tone:'warn',set:{calls:1}},
+      {move:['harness','model'],packet:'ValidationError',tone:'bad',say:'Error back as an observation. A capable model repairs it here.',set:{tokens:120}},
+      {at:'model',tone:'warn',payload:'{"name": "issue_refund",\n "arguments": {"order_id": "1042", "amount": "19.99"}}',say:'Second attempt: it changed the quoting, not the types. Small models pattern-match the error message instead of understanding it.'},
+      {move:['model','harness'],packet:'call #2',tone:'warn',set:{calls:1}},
+      {move:['harness','model'],packet:'ValidationError',tone:'bad',set:{tokens:120}},
+      {at:'model',tone:'warn',payload:'{"name": "issue_refund",\n "arguments": {"order_id": "ORD-1042", "amount": "all"}}',say:'Third attempt: one field fixed, the other still wrong.'},
+      {move:['model','harness'],packet:'call #3',tone:'bad',set:{calls:1}},
+      {at:'harness',tone:'bad',end:true,mark:{harness:'blocked'},say:'<b>Max-iteration guard fires.</b> Three failed repairs, so the harness ends the run with a clear failure instead of looping forever. That cap is a safety net; it is not the stop condition (goal met). The customer got a clean “I could not do this”, and the trace shows exactly why.'}
+    ]}
+  }
+});
+</script>
+
 <section><div class="wrap">
   <div class="eyebrow">This week's pages</div>
   <h2>Work through in order</h2>

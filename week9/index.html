@@ -99,6 +99,79 @@
   </div>
 </div></section>
 
+<section class="flowsec"><div class="wrap">
+  <div class="eyebrow">See it move · a router and two specialists</div>
+  <h2>Two agents, two pictures of the same task</h2>
+  <p class="lede">This is the app from page 03: a rule-based router in front of an orders agent and a course-RAG agent, each with its own context window. Press Play to watch a clean hand-off, then the two ways a split system fails: a fact that lives in the wrong agent’s window, and a “yes” that reaches the wrong agent.</p>
+  <div id="flow-w9"></div>
+  <p class="small tryit"><b>Try this:</b> for each failure, decide whether the fix belongs in the router, in a shared state object, or in merging the two agents back into one. Name the trade-off you accept.</p>
+</div></section>
+<script src="../assets/flow.js"></script>
+<script>
+Flow.mount(document.getElementById('flow-w9'),{
+  w:760,h:360,title:'Router with two specialist agents',
+  counters:[{key:'turns',label:'user turns'},{key:'tokens',label:'tokens across agents'},{key:'ctx',label:'windows holding the fact'}],
+  nodes:[
+    {id:'user',x:28,y:155,w:112,h:56,label:'User',sub:'one chat box',kind:'user'},
+    {id:'router',x:204,y:155,w:130,h:56,label:'Router',sub:'regex: ORD-\\d+ → orders',kind:'harness'},
+    {id:'orders',x:400,y:40,w:140,h:56,label:'Orders agent',sub:'tools: get_order, refund',kind:'agent'},
+    {id:'octx',x:600,y:40,w:130,h:56,label:'Its window',sub:'orders history only',kind:'doc'},
+    {id:'rag',x:400,y:265,w:140,h:56,label:'Course-RAG agent',sub:'tool: search index',kind:'agent'},
+    {id:'rctx',x:600,y:265,w:130,h:56,label:'Its window',sub:'course history only',kind:'doc'},
+    {id:'gate',x:600,y:155,w:130,h:56,label:'Pending gate',sub:'refund awaits yes/no',kind:'gate'}
+  ],
+  edges:[
+    {from:'user',to:'router',both:true},{from:'router',to:'orders',both:true},{from:'router',to:'rag',both:true},
+    {from:'orders',to:'octx',both:true},{from:'rag',to:'rctx',both:true},{from:'orders',to:'gate',both:true}
+  ],
+  start:'clean',
+  scenarios:{
+    clean:{name:'Clean split',steps:[
+      {move:['user','router'],packet:'“Where is ORD-1042?”',say:'The router is three lines of regex. It sees an order id and sends the turn to the orders agent. No model involved in routing.',set:{turns:1}},
+      {move:['router','orders'],packet:'turn',tone:'ok'},
+      {move:['orders','octx'],packet:'append',say:'The orders agent appends the turn to <i>its own</i> context window and calls its tool.',set:{tokens:420,ctx:1}},
+      {move:['octx','orders'],packet:'context',tone:'ok'},
+      {move:['orders','router'],packet:'“Shipped, arriving Thursday.”',tone:'ok'},
+      {move:['router','user'],packet:'answer',tone:'ok'},
+      {move:['user','router'],packet:'“What does Week 7 cover?”',set:{turns:1}},
+      {move:['router','rag'],packet:'turn',tone:'ok',say:'No order id, course keywords present: the RAG agent gets this one. Its window is small and relevant, which is exactly what you bought by splitting.'},
+      {move:['rag','rctx'],packet:'append',set:{tokens:610}},
+      {move:['rctx','rag'],packet:'context',tone:'ok'},
+      {move:['rag','router'],packet:'“Memory, RAG and knowledge… [2]”',tone:'ok'},
+      {move:['router','user'],packet:'answer',tone:'ok',end:true,say:'Two questions, two clean windows, no cross-talk. Context isolation working as designed: each agent holds one job and nothing else.'}
+    ]},
+    frag:{name:'Context fragmentation',intro:'The user refers back to something another agent heard. Press Play.',steps:[
+      {move:['user','router'],packet:'“Where is ORD-1042?”',set:{turns:1}},{move:['router','orders'],packet:'turn'},{move:['orders','octx'],packet:'append',set:{tokens:420,ctx:1}},{move:['octx','orders'],packet:'context'},{move:['orders','router'],packet:'“Shipped Thursday.”',tone:'ok'},{move:['router','user'],packet:'answer',tone:'ok'},
+      {move:['user','router'],packet:'“Is that before the Week 8 quiz?”',tone:'warn',say:'“That” means the delivery. The words “Week 8 quiz” match the course rule, so the router sends it to the RAG agent.',set:{turns:1}},
+      {move:['router','rag'],packet:'turn',tone:'warn'},
+      {move:['rag','rctx'],packet:'append',tone:'warn',say:'The RAG agent’s window has never heard of ORD-1042 or Thursday. The fact exists in the system, in the <i>other</i> window.',set:{tokens:380}},
+      {move:['rctx','rag'],packet:'context (no delivery date)',tone:'bad'},
+      {move:['rag','router'],packet:'“Quiz 3 is in Week 8. Before what?”',tone:'bad'},
+      {move:['router','user'],packet:'answer',tone:'bad',end:true,mark:{rctx:'blocked'},say:'Two agents, two pictures of one conversation. Neither is wrong; the system is. Fixes: a shared state object both read (costs coherence rules), passing a summary across (costs tokens and loses detail), or one agent with both tools (costs the clean windows). Pick, and say why.'}
+    ]},
+    yes:{name:'The wrong “yes”',intro:'A refund is pending when the user says yes. Press Play.',steps:[
+      {move:['user','router'],packet:'“Refund ORD-1042.”',set:{turns:1}},{move:['router','orders'],packet:'turn'},
+      {move:['orders','octx'],packet:'append',set:{tokens:400,ctx:1}},{move:['octx','orders'],packet:'context'},
+      {move:['orders','gate'],packet:'pending: refund $19.99',tone:'warn',say:'The orders agent asks for approval and stores the pending call as state. Nothing has moved.'},
+      {move:['orders','router'],packet:'“Refund $19.99? (yes/no)”',tone:'warn'},{move:['router','user'],packet:'question',tone:'warn'},
+      {move:['user','router'],packet:'“yes”',tone:'warn',say:'A one-word turn. No order id, no course keyword. A naive router has no rule for it.',set:{turns:1},choice:[{label:'Naive router: route by keywords',goto:'yesbad',tone:'bad'},{label:'Sticky router: stay with the pending agent',goto:'yesgood',tone:'ok'}]}
+    ]},
+    yesbad:{name:'…naive',hidden:true,steps:[
+      {move:['router','rag'],packet:'“yes” → default agent',tone:'bad',say:'Falls through to the default. The RAG agent receives “yes” with no context for it.'},
+      {move:['rag','rctx'],packet:'append',tone:'bad',set:{tokens:120}},{move:['rctx','rag'],packet:'context'},
+      {move:['rag','router'],packet:'“Yes to what? Ask me about the course.”',tone:'bad'},{move:['router','user'],packet:'answer',tone:'bad'},
+      {at:'gate',tone:'bad',end:true,mark:{gate:'blocked'},say:'The refund is still pending in the orders agent, now silently. Thirty minutes later the user types “yes” again in frustration and it executes. Coordination failures look like nothing happened, until something does.'}
+    ]},
+    yesgood:{name:'…sticky',hidden:true,steps:[
+      {at:'router',tone:'ok',say:'The router checks one more thing before its regexes: does any agent have a pending gate? If so, the turn goes there, whatever it says.',payload:'def route(text, state):\n    if state.get("pending"): return "orders"\n    if ORD.search(text):     return "orders"\n    return "rag"'},
+      {move:['router','orders'],packet:'“yes”',tone:'ok'},
+      {move:['orders','gate'],packet:'resolve: approved',tone:'ok',set:{tokens:60}},
+      {move:['gate','orders'],packet:'refund issued',tone:'ok'},
+      {move:['orders','router'],packet:'“Refunded $19.99.”',tone:'ok'},{move:['router','user'],packet:'answer',tone:'ok',end:true,say:'Three lines of code, and the gate is safe. The lesson is not “routers are bad”; it is that a split system needs its coordination state written down somewhere every part can read.'}
+    ]}
+  }
+});
+</script>
 <section><div class="wrap">
   <div class="eyebrow">This week's pages</div>
   <h2>Work through in order</h2>

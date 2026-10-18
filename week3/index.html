@@ -101,6 +101,65 @@ output: {"total_usd": 1284.50}</div>
   </tbody></table></div>
 </div></section>
 
+<section class="flowsec"><div class="wrap">
+  <div class="eyebrow">See it move · the context window as a budget</div>
+  <h2>What falls out when you stuff the window</h2>
+  <p class="lede">Everything the model knows about your task has to fit in one window. Press Play and watch the pieces arrive: system prompt, examples, retrieved documents, chat history, the new question. When the window is full, the oldest turns are evicted, and the answer quietly changes.</p>
+  <div id="flow-w3"></div>
+  <p class="small tryit"><b>Try this:</b> in “Overflow”, note which piece carried the fact the answer needed. Then in “Curated”, say in one sentence what the summary step traded away to keep it.</p>
+</div></section>
+<script src="../assets/flow.js"></script>
+<script>
+Flow.mount(document.getElementById('flow-w3'),{
+  w:760,h:360,title:'Packing a context window',
+  counters:[{key:'used',label:'tokens in window'},{key:'cap',label:'window size'},{key:'evicted',label:'tokens evicted'}],
+  nodes:[
+    {id:'sys',x:28,y:22,w:150,h:50,label:'System prompt',sub:'1,200 tokens',kind:'doc'},
+    {id:'ex',x:28,y:88,w:150,h:50,label:'Few-shot examples',sub:'900 tokens',kind:'doc'},
+    {id:'docs',x:28,y:154,w:150,h:50,label:'Retrieved policy',sub:'2,600 tokens',kind:'store'},
+    {id:'hist',x:28,y:220,w:150,h:50,label:'Chat history',sub:'3,100 tokens · 9 turns',kind:'doc'},
+    {id:'q',x:28,y:286,w:150,h:50,label:'New question',sub:'“…the order I mentioned?”',kind:'user'},
+    {id:'win',x:280,y:120,w:180,h:120,label:'Context window',sub:'8,000 tokens',kind:'harness'},
+    {id:'model',x:540,y:120,w:120,h:56,label:'Model',sub:'attends over all of it',kind:'model'},
+    {id:'ans',x:540,y:230,w:120,h:56,label:'Answer',kind:'out'}
+  ],
+  edges:[
+    {from:'sys',to:'win'},{from:'ex',to:'win'},{from:'docs',to:'win'},{from:'hist',to:'win'},{from:'q',to:'win'},
+    {from:'win',to:'model'},{from:'model',to:'ans'}
+  ],
+  start:'fits',
+  scenarios:{
+    fits:{name:'Fits',intro:'A short conversation: everything fits. Press Play.',steps:[
+      {set:{cap:8000},move:['sys','win'],packet:'1,200',say:'The system prompt goes in first and stays in every turn. It is the rent you pay before any work happens.',set:{used:1200}},
+      {move:['ex','win'],packet:'900',say:'Two worked examples: they buy format reliability with tokens.',set:{used:900}},
+      {move:['docs','win'],packet:'1,100',say:'Two relevant policy chunks, retrieved for this question.',set:{used:1100}},
+      {move:['hist','win'],packet:'1,400 · 4 turns',say:'A short history: the customer gave the order number three turns ago.',set:{used:1400}},
+      {move:['q','win'],packet:'60',say:'The new question refers back: “the order I mentioned”.',set:{used:60}},
+      {move:['win','model'],packet:'4,660 / 8,000',tone:'ok',say:'The whole conversation is in view. The model can attend to turn 3, where ORD-1042 was named.'},
+      {move:['model','ans'],packet:'“ORD-1042 shipped Tuesday.”',tone:'ok',end:true,say:'Correct, because the fact was inside the window.'}
+    ]},
+    overflow:{name:'Overflow',intro:'The same system, after a long chat with big retrieved documents. Press Play.',steps:[
+      {set:{cap:8000},move:['sys','win'],packet:'1,200',set:{used:1200}},
+      {move:['ex','win'],packet:'900',set:{used:900}},
+      {move:['docs','win'],packet:'2,600',tone:'warn',say:'Five chunks this time, because the retriever was set to TOP_K=5. Only one is relevant.',set:{used:2600}},
+      {move:['hist','win'],packet:'3,100 · 9 turns',tone:'warn',say:'Nine turns of history. Total so far: 7,800. The question still has to fit.',set:{used:3100}},
+      {move:['q','win'],packet:'60',tone:'bad',say:'7,860 tokens. Over the limit once the answer budget is reserved, so the harness <b>evicts the oldest turns</b>. Turn 3 was the one with the order number.',set:{used:60}},
+      {at:'win',tone:'bad',mark:{hist:'blocked'},say:'Eviction is silent. Nothing tells the user that the model can no longer see what they said twenty minutes ago.',payload:'dropped: turns 1–3 (1,180 tokens)\nkept:    turns 4–9\nwindow:  6,680 / 8,000',set:{used:-1180,evicted:1180}},
+      {move:['win','model'],packet:'6,680 / 8,000',tone:'warn'},
+      {move:['model','ans'],packet:'“Which order do you mean?”',tone:'bad',end:true,say:'The model is not being dumb; it is being asked about text it cannot see. This is <b>context rot</b>: quality degrades as the window fills, and the failure looks like forgetfulness.'}
+    ]},
+    curated:{name:'Curated',intro:'Same long chat, but the harness manages the budget. Press Play.',steps:[
+      {set:{cap:8000},move:['sys','win'],packet:'1,200',set:{used:1200}},
+      {move:['ex','win'],packet:'300',tone:'ok',say:'One example instead of two. The model is strong enough; the second example was not earning its tokens.',set:{used:300}},
+      {move:['docs','win'],packet:'1,100',tone:'ok',say:'TOP_K=2 and a re-ranker: the two chunks that matter, not five that might.',set:{used:1100}},
+      {move:['hist','win'],packet:'450 · summary + last 3 turns',tone:'ok',say:'Old turns are <b>summarized</b>, and the summary keeps the facts: “customer asked about ORD-1042”. The chit-chat is gone; the order number is not.',payload:'summary: customer asked about ORD-1042,\n         wants ETA; tone frustrated\nkept verbatim: turns 7–9',set:{used:450}},
+      {move:['q','win'],packet:'60',set:{used:60}},
+      {move:['win','model'],packet:'3,110 / 8,000',tone:'ok',say:'Less than half the window used, and every token in it is load-bearing.'},
+      {move:['model','ans'],packet:'“ORD-1042 shipped Tuesday.”',tone:'ok',end:true,say:'Correct again, with room to spare for a long answer. Context engineering is deciding what <i>not</i> to include.'}
+    ]}
+  }
+});
+</script>
 <section><div class="wrap">
   <div class="eyebrow">This week</div>
   <h2>Work through the four parts</h2>
