@@ -72,6 +72,7 @@
   <p class="lede">When you type “fix the failing test” into Codex or Claude Code, the model never touches your files. A harness assembles the context, runs the tools, asks you before anything risky, and decides when to stop. Press Play and watch one repair from prompt to passing tests, then the same task with a bloated context.</p>
   <div id="flow-w2"></div>
   <p class="small tryit"><b>Try this:</b> count how many times the model is called in the first run. Then look at the system-prompt page: which of the nine layers did you just watch?</p>
+  <p class="more">Go further (new, October 2026): <a class="doc" href="https://arxiv.org/abs/2610.14224" target="_blank" rel="noopener">Harness², Recursive Agent Harnessing for an Open World ↗</a> from Google Research is the strongest recent evidence for this page’s claim. It improves an agent by editing its harness while the model weights stay fixed: a Propose–Probe–Compose step tries harness edits on the task without ground-truth checks and keeps the ones that help, and a second level turns those edits into lessons for future tasks. The gains it reports (up to 11.5 points on WorkBuddy-Bench) are the authors’ own numbers. <a class="doc" href="https://github.com/google-research/harness2" target="_blank" rel="noopener">Code on GitHub (Apache-2.0) ↗</a>; the local demo runs without credentials, model-backed runs need a Google Cloud project.</p>
 </div></section>
 <script src="../assets/flow.js"></script>
 <script>
