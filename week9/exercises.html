@@ -97,7 +97,8 @@
   <div class="eyebrow">Exercise B</div>
   <h2>Assign the blame</h2>
   <div class="grouptask"><span class="gk">👥 Group task · Groups of three · ~15 minutes</span>
-    <p>Below is a trace from a fictional three-agent <b>quarterly-reporting</b> system. Read it carefully, then answer three things. <b>(1)</b> Which agent malfunctioned? <b>(2)</b> Which <b>MAST category</b> is the <em>root</em> failure (specification &amp; system design, inter-agent misalignment, or task verification &amp; termination), and which category is a secondary contributor? <b>(3)</b> Name the <b>one log line</b> you wish this system had recorded that would have made the failure obvious in seconds.</p>
+    <p>Below is a trace from a fictional three-agent <b>quarterly-reporting</b> system. Read it carefully, then answer three things.</p>
+<ul class="pts"><li><b>(1)</b> Which agent malfunctioned?</li><li><b>(2)</b> Which <b>MAST category</b> is the <em>root</em> failure (specification &amp; system design, inter-agent misalignment, or task verification &amp; termination), and which category is a secondary contributor?</li><li><b>(3)</b> Name the <b>one log line</b> you wish this system had recorded that would have made the failure obvious in seconds.</li></ul>
     <p class="prod"><b>Produce:</b> your category call with the exact line of the trace that proves it, plus your one missing log, written in the form "for every X, record Y."</p>
   </div>
   <p class="small" style="margin-top:6px"><b>Fictional teaching case.</b> User request: <em>"Summarize Q3 revenue by region for the board deck. Use the finalized figures only; the preliminary numbers in the shared drive are not approved for external use."</em></p>
@@ -188,7 +189,10 @@
       <p class="small" style="margin-top:12px"><span class="kicker">Inside the model · see what a layer “thinks”</span><br />
       <a class="doc" href="https://www.cs.virginia.edu/~rmw7my/Resources/LogisticLens/logit-lens.html" target="_blank" rel="noopener">Transformer Logit Lens (UVA, interactive) ↗</a>: click a token and watch its meaning settle layer by layer (“bank” starts financial, turns into “riverbank” once “river” and “fish” are attended to); toggle bidirectional vs causal attention. A hand-built simulation, by its own note, not a live model.<br />
       <a class="doc" href="https://nnsight.net/tutorials/tutorials/probing/logit_lens/" target="_blank" rel="noopener">nnsight · Logit Lens tutorial ↗</a>: the real technique on GPT-2 in a Colab notebook: decode each layer's hidden state through the final norm and <code>lm_head</code>, and read the top prediction per layer. Follows nostalgebraist's original “Interpreting GPT: the logit lens.”</p>
-      <div class="callout blue" style="margin-top:14px;margin-bottom:0"><b>📌 Reminder:</b> Capstone Milestone I is due this week on iCollege (<a href="index.html#milestone">what it is</a>): at least one agent that runs end to end, with a real tool, a stop condition, a trace and a README; no second agent without a written justification. <b>Group Assignment 3</b> is in progress, due Week 11.</div>
+      <div class="callout blue" style="margin-top:14px;margin-bottom:0">
+<div class="ptxt" style="margin-top:14px;margin-bottom:0"><b>📌 Reminder:</b></div>
+<ul class="pts"><li>Capstone Milestone I is due this week on iCollege (<a href="index.html#milestone">what it is</a>): at least one agent that runs end to end, with a real tool, a stop condition, a trace and a README; no second agent without a written justification.</li><li><b>Group Assignment 3</b> is in progress, due Week 11.</li></ul>
+</div>
     </div>
   </div>
 </div></section>
@@ -203,12 +207,13 @@
 </div></section>
 
 <section><div class="wrap">
-  <div class="callout" style="margin-top:22px"><b>Next week:</b> Security, Trust &amp; Governance, covering the lethal trifecta, prompt injection as an architecture problem, and the two documents every AI professional should know (NIST AI RMF, EU AI Act). <b>Quiz 4 is next week</b>: in class, closed-book, 5 multiple-choice. Scope: the Week 9 readings above + the Week 10 readings below. Sample questions: <a class="doc" href="#quiz">above on this page ↑</a>. <b>Capstone Milestone II releases next week.</b><br /><br />
-<b>Week 10 readings:</b><br />
-· <a class="doc" href="https://www.linkedin.com/learning/navigating-the-eu-ai-act" target="_blank" rel="noopener">Ingold &amp; Hickok — Navigating the EU AI Act (LinkedIn Learning) ↗</a>, free with your GSU login via the <a class="doc" href="https://technology.gsu.edu/technology-services/technology-professional-training/linkedin-learning/" target="_blank" rel="noopener">GSU portal ↗</a><br />
-· <a class="doc" href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener">NIST AI Risk Management Framework (free) ↗</a><br />
-· <a class="doc" href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/" target="_blank" rel="noopener">Willison — The lethal trifecta (free) ↗</a> and the <a class="doc" href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/" target="_blank" rel="noopener">OWASP Agentic Top 10 (free) ↗</a><br />
-Full list on the Week 10 site.</div>
+  <div class="callout" style="margin-top:22px">
+<div class="ptxt" style="margin-top:22px"><b>Next week:</b> Security, Trust &amp; Governance, covering the lethal trifecta, prompt injection as an architecture problem, and the two documents every AI professional should know (NIST AI RMF, EU AI Act).</div>
+<div class="ptxt"><b>Quiz 4 is next week</b>: in class, closed-book, 5 multiple-choice. Scope: the Week 9 readings above + the Week 10 readings below. Sample questions: <a class="doc" href="#quiz">above on this page ↑</a>. <b>Capstone Milestone II releases next week.</b></div>
+<div class="ptxt"><b>Week 10 readings:</b></div>
+<ul class="pts"><li><a class="doc" href="https://www.linkedin.com/learning/navigating-the-eu-ai-act" target="_blank" rel="noopener">Ingold &amp; Hickok — Navigating the EU AI Act (LinkedIn Learning) ↗</a>, free with your GSU login via the <a class="doc" href="https://technology.gsu.edu/technology-services/technology-professional-training/linkedin-learning/" target="_blank" rel="noopener">GSU portal ↗</a></li><li><a class="doc" href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener">NIST AI Risk Management Framework (free) ↗</a></li><li><a class="doc" href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/" target="_blank" rel="noopener">Willison — The lethal trifecta (free) ↗</a> and the <a class="doc" href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/" target="_blank" rel="noopener">OWASP Agentic Top 10 (free) ↗</a></li></ul>
+<div class="ptxt">Full list on the Week 10 site.</div>
+</div>
 </div></section>
 
 <div class="wrap pager">

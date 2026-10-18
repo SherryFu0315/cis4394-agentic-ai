@@ -83,11 +83,11 @@
   <div class="grid2">
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Closed book: parametric knowledge</span>
       <p class="small" style="margin-top:8px">Everything the model "knows" on its own is compressed into its weights during training. Three consequences follow, and none of them are fixable by prompting harder:</p>
-      <p class="small"><b>It is frozen.</b> Whatever changed after the training cutoff is invisible. <b>It never saw your data.</b> Your contracts, tickets, and policies were not in the training set, and you would not want them to be. <b>It has no sources.</b> Parametric knowledge is a blend, not a filing cabinet, so the model cannot tell you which document a claim came from, and when it is unsure, fluent guessing looks exactly like knowing.</p>
+      <ul class="pts small"><li><b>It is frozen.</b> Whatever changed after the training cutoff is invisible.</li><li><b>It never saw your data.</b> Your contracts, tickets, and policies were not in the training set, and you would not want them to be.</li><li><b>It has no sources.</b> Parametric knowledge is a blend, not a filing cabinet, so the model cannot tell you which document a claim came from, and when it is unsure, fluent guessing looks exactly like knowing.</li></ul>
     </div>
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Open book: retrieval-augmented</span>
       <p class="small" style="margin-top:8px">Lewis et al. (2020) paired a generator with a retriever over an external corpus, so the knowledge lives in documents you control rather than in frozen parameters (<a class="doc" href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">arXiv:2005.11401 ↗</a>). Dense passage retrieval (matching questions to passages by learned embeddings rather than keywords) is the retrieval half of that design (Karpukhin et al., 2020, <a class="doc" href="https://arxiv.org/abs/2004.04906" target="_blank" rel="noopener">arXiv:2004.04906 ↗</a>).</p>
-      <p class="small"><b>Fresh:</b> update a document, and the next answer changes. <b>Private:</b> the corpus stays yours. <b>Attributable:</b> the answer can name the chunk it used, so a human can check it.</p>
+      <ul class="pts small"><li><b>Fresh:</b> update a document, and the next answer changes.</li><li><b>Private:</b> the corpus stays yours.</li><li><b>Attributable:</b> the answer can name the chunk it used, so a human can check it.</li></ul>
     </div>
   </div>
 </div></section>
@@ -186,7 +186,7 @@
       <ol class="steps" style="margin-top:14px">
         <li><b>Answer only from the context.</b> Explicitly forbid outside knowledge. Without this line, the model happily blends what it retrieved with what it half-remembers from training, and you cannot tell which sentence came from where.</li>
         <li><b>Cite the source of each claim.</b> Require the chunk ID or document section next to the statement it supports. A citation is what lets a human check a wrong answer in ten seconds.</li>
-        <li>Say "I don't know" when the context is thin. Give the model an approved way to fail, and back it with a rule in your code: if the best similarity score is below a threshold, do not even call the generator. Escalate to a person instead.</li>
+        <li><b>Say "I don't know" when the context is thin.</b> Give the model an approved way to fail, and back it with a rule in your code: if the best similarity score is below a threshold, do not even call the generator. Escalate to a person instead.</li>
       </ol>
       <p class="small" style="margin-top:12px">Then verify: a groundedness check compares each claim in the answer against the retrieved text, and a low-confidence result routes to a human gate, the same gate you placed on irreversible actions in Week 4, now placed on <em>assertions</em>.</p>
     </div>

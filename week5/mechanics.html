@@ -72,7 +72,7 @@
       <ol class="steps" style="margin-top:14px">
         <li><b>The model proposes.</b> Its entire contribution is a JSON object: which function, which arguments. That is text, produced by the same next-token machinery as everything else it writes.</li>
         <li><b>Your harness disposes.</b> Your code parses that request, checks it against the schema, decides whether it is permitted, and calls the real function. The model has no execution privileges of any kind.</li>
-        <li>The result comes back as an observation. The return value is appended to the conversation as a tool message, and the model reads it before deciding again. That is the Week 4 loop, closed.</li>
+        <li><b>The result comes back as an observation.</b> The return value is appended to the conversation as a tool message, and the model reads it before deciding again. That is the Week 4 loop, closed.</li>
       </ol>
     </div>
     <div class="card"><span class="kicker">The request / execute / respond flow</span>
@@ -123,7 +123,10 @@
       <div class="statepanel" id="simState"><span class="kicker">Agent state</span></div>
     </div>
   </div>
-  <div class="callout">Three things to notice on your way through. <b>(1)</b> The line marked <em>EMITS</em> is only text. Nothing has executed at that moment, which is exactly why a gate can still stop it. <b>(2)</b> The failed <code>fx_rate</code> call did not raise an exception into your users' faces; the validation error was handed <em>back to the model</em> as an observation, and the model repaired its own call. <b>(3)</b> Read the whole trace as the Week 2 evidence standard: <em>state before → observation → available actions → selected action → result → state after</em>. Every tool call produces that record for free.</div>
+  <div class="callout">
+<div class="ptxt">Three things to notice on your way through.</div>
+<ul class="pts"><li><b>(1)</b> The line marked <em>EMITS</em> is only text. Nothing has executed at that moment, which is exactly why a gate can still stop it.</li><li><b>(2)</b> The failed <code>fx_rate</code> call did not raise an exception into your users' faces; the validation error was handed <em>back to the model</em> as an observation, and the model repaired its own call.</li><li><b>(3)</b> Read the whole trace as the Week 2 evidence standard: <em>state before → observation → available actions → selected action → result → state after</em>. Every tool call produces that record for free.</li></ul>
+</div>
   <p class="small" style="margin-top:14px">The <code>fx_rate</code> value of 1.08 above is an illustrative fixed rate returned by a stub tool written for teaching, not a live or historical quote. The euro subtotal (4,817 × 293 × 1.18 = 1,665,429.58) is exact.</p>
 </div></section>
 

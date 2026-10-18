@@ -30,7 +30,7 @@ a{color:inherit}
 .nav a{text-decoration:none;color:var(--muted);font-size:var(--fs-s);font-weight:500}
 .nav a:hover{color:var(--blue)}
 .nav a.here{color:var(--blue);font-weight:700}
-.nav a .k{font-family:var(--serif);font-style:italic;opacity:.6;margin-right:3px}
+.nav a .k{font-family:var(--serif);font-style:normal;opacity:.6;margin-right:3px}
 .progress{height:3px;background:var(--line);position:sticky;top:56px;z-index:19}
 .progress span{display:block;height:100%;background:var(--blue);width:0}
 
@@ -77,7 +77,7 @@ code{font-family:var(--mono);font-size:.9em;background:var(--blue-soft);padding:
 .navcards{display:grid;gap:14px;counter-reset:pg}
 .navcard{display:grid;grid-template-columns:86px 1fr auto;gap:22px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px 28px;text-decoration:none;transition:border-color .15s, transform .15s}
 .navcard:hover{border-color:var(--blue);transform:translateX(4px)}
-.navcard .num{font-family:var(--serif);font-style:italic;font-size:var(--fs-xxl);color:var(--line2)}
+.navcard .num{font-family:var(--serif);font-style:normal;font-size:var(--fs-xxl);color:var(--line2)}
 .navcard:hover .num{color:var(--blue)}
 .navcard b{font-size:var(--fs-l);display:block;margin-bottom:4px}
 .navcard .small{max-width:640px}
@@ -88,7 +88,7 @@ code{font-family:var(--mono);font-size:.9em;background:var(--blue-soft);padding:
 /* agenda */
 .agenda{counter-reset:step;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .agenda .card{position:relative;padding-top:56px}
-.agenda .card::before{counter-increment:step;content:counter(step,decimal-leading-zero);position:absolute;top:18px;left:22px;font-family:var(--serif);font-style:italic;font-size:var(--fs-xl);color:var(--blue)}
+.agenda .card::before{counter-increment:step;content:counter(step,decimal-leading-zero);position:absolute;top:18px;left:22px;font-family:var(--serif);font-style:normal;font-size:var(--fs-xl);color:var(--blue)}
 
 /* architecture explorer */
 .arch-shell{display:grid;grid-template-columns:330px 1fr;gap:18px}
@@ -96,7 +96,7 @@ code{font-family:var(--mono);font-size:.9em;background:var(--blue-soft);padding:
 .arch-btn{width:100%;text-align:left;border:1px solid var(--line);background:var(--panel);padding:13px 16px;border-radius:10px;cursor:pointer;font:inherit;font-size:var(--fs-s);font-weight:500;transition:border-color .15s}
 .arch-btn:hover{border-color:var(--blue)}
 .arch-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
-.arch-btn .n{font-family:var(--serif);font-style:italic;margin-right:9px;opacity:.55}
+.arch-btn .n{font-family:var(--serif);font-style:normal;margin-right:9px;opacity:.55}
 .arch-view{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:28px;min-height:340px}
 .arch-view h3{font-family:var(--serif);font-size:var(--fs-xxl);margin:0 0 10px;font-weight:600}
 
@@ -309,7 +309,7 @@ a.doc:hover{text-decoration:underline}
 .weekcards{display:grid;gap:16px}
 .weekcard{display:grid;grid-template-columns:120px 1fr auto;gap:24px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:26px 30px;text-decoration:none;transition:border-color .15s,transform .15s}
 .weekcard:hover{border-color:var(--blue);transform:translateX(4px)}
-.weekcard .wk{font-family:var(--serif);font-style:italic;font-size:var(--fs-xxl);color:var(--blue)}
+.weekcard .wk{font-family:var(--serif);font-style:normal;font-size:var(--fs-xxl);color:var(--blue)}
 .weekcard b{font-size:var(--fs-l);display:block;margin-bottom:4px}
 .weekcard.soon{opacity:.55;pointer-events:none}
 .weekcard.soon .wk{color:var(--line2)}
@@ -340,3 +340,8 @@ a.doc:hover{text-decoration:underline}
 .instructor .avatar{width:104px;height:104px;border-radius:50%;object-fit:cover;flex:none;border:1px solid var(--line);background:var(--panel)}
 .instructor h3{margin-top:4px}
 @media(max-width:600px){.instructor{flex-direction:column}}
+.pts{margin:8px 0 10px;padding-left:22px}
+.pts li{margin:5px 0}
+.pts li::marker{color:var(--muted)}
+.callout .pts{margin-bottom:0}
+.ptxt+.ptxt,.pts+.ptxt{margin-top:8px}

@@ -78,7 +78,9 @@ table.plain td,table.plain th{font-size:var(--fs-s)}
 </div></header>
 
 <section><div class="wrap">
-  <div class="callout blue" style="margin-top:0"><b>📦 Download the starter code:</b> <a class="doc" href="../materials/CIS4394_Week5_Ollama_Starter.zip">CIS4394_Week5_Ollama_Starter.zip ↓</a>: five short Python scripts, a <code>requirements.txt</code>, and a README. Or view the files one by one in <a class="doc" href="../materials/week5_ollama_starter/README.txt">the materials folder</a>.<br /><b>📄 In-class lab sheet (pairs):</b> <a class="doc" href="../materials/CIS4394_Week5_Student_Lab.pdf">CIS4394_Week5_Student_Lab.pdf ↓</a>: Mac and Windows commands side by side, with the observation tables to fill in.</div>
+  <div class="callout blue" style="margin-top:0">
+<ul class="pts" style="margin-top:0"><li><b>📦 Download the starter code:</b> <a class="doc" href="../materials/CIS4394_Week5_Ollama_Starter.zip">CIS4394_Week5_Ollama_Starter.zip ↓</a>: five short Python scripts, a <code>requirements.txt</code>, and a README. Or view the files one by one in <a class="doc" href="../materials/week5_ollama_starter/README.txt">the materials folder</a>.</li><li><b>📄 In-class lab sheet (pairs):</b> <a class="doc" href="../materials/CIS4394_Week5_Student_Lab.pdf">CIS4394_Week5_Student_Lab.pdf ↓</a>: Mac and Windows commands side by side, with the observation tables to fill in.</li></ul>
+</div>
 </div></section>
 
 <section><div class="wrap">
@@ -103,7 +105,7 @@ table.plain td,table.plain th{font-size:var(--fs-s)}
   <ol class="steps">
     <li><b>Make sure Ollama is running.</b> Open the Ollama app (or run <code>ollama serve</code> in a terminal).</li>
     <li><b>Unzip the starter code</b> and open a terminal in that folder.</li>
-    <li>Create a virtual environment and install the three packages (<code>ollama</code>, <code>langgraph</code>, <code>langchain-ollama</code>). Tested on Python 3.11.
+    <li><b>Create a virtual environment and install the three packages</b> (<code>ollama</code>, <code>langgraph</code>, <code>langchain-ollama</code>). Tested on Python 3.11.
       <div class="os" style="margin-top:10px">
         <div class="term2" style="margin:0"><span class="p"># Mac / Linux</span>
 python3 -m venv venv
@@ -267,7 +269,8 @@ The result of 4817 * 293 is 1411381.</div>
 <section><div class="wrap">
   <div class="eyebrow">Group task</div>
   <div class="grouptask"><span class="gk">👥 Group task · Groups of 3–4 · ~25 minutes</span>
-    <p><b>Pool your models.</b> Each person runs <code>python 4_tool_design_ladder.py &lt;your-model&gt; 3</code> on their own laptop. The group will likely have <code>qwen2.5:0.5b</code> plus a few different models. Combine the results into one table: model, download size, and the A / B / C numbers. Then answer together: <b>(1)</b> Which model would you build your final project on, and what evidence from the table supports it? <b>(2)</b> For the weakest model in your group, name one tool-design change that would raise its score, in the spirit of setup C.</p>
+    <p><b>Pool your models.</b> Each person runs <code>python 4_tool_design_ladder.py &lt;your-model&gt; 3</code> on their own laptop. The group will likely have <code>qwen2.5:0.5b</code> plus a few different models. Combine the results into one table: model, download size, and the A / B / C numbers. Then answer together:</p>
+<ul class="pts"><li><b>(1)</b> Which model would you build your final project on, and what evidence from the table supports it?</li><li><b>(2)</b> For the weakest model in your group, name one tool-design change that would raise its score, in the spirit of setup C.</li></ul>
     <p class="prod"><b>Produce:</b> the pooled table, plus three sentences: your model choice with its evidence, and one design change for the weakest model.</p>
   </div>
   <div class="card">
@@ -357,7 +360,8 @@ g.add_edge(<span class="cs">"tools"</span>, <span class="cs">"model"</span>)    
     <div>
       <div class="term2" style="margin-top:0"><span class="p">$</span> python 3_agent_langgraph.py</div>
       <div class="card" style="margin-top:12px"><span class="kicker">When to use which</span>
-        <p class="small" style="margin-top:8px"><b>Plain loop (script 1)</b> is best for seeing and debugging exactly what happens. <b>LangGraph (script 3)</b> earns its place as the agent grows: several tools, a human-approval step, memory, and a trace you can replay. Both call the same local model through the same Ollama server.</p>
+        <ul class="pts small" style="margin-top:8px"><li><b>Plain loop (script 1)</b> is best for seeing and debugging exactly what happens.</li><li><b>LangGraph (script 3)</b> earns its place as the agent grows: several tools, a human-approval step, memory, and a trace you can replay.</li></ul>
+<p class="small">Both call the same local model through the same Ollama server.</p>
       </div>
     </div>
   </div>

@@ -192,11 +192,11 @@
   <div class="grid2" style="align-items:start">
     <div class="card"><span class="kicker">Shared state</span>
       <p class="small" style="margin-top:8px">Both agents read and write the same object: a plan, a draft, a scratchpad, a LangGraph state dict. Nothing is "sent"; changes are simply visible.</p>
-      <p class="small"><b>Buys:</b> no information is lost in translation; agents cannot hold contradictory pictures of a shared field.<br /><b>Costs:</b> the classic concurrency problems arrive with it: two agents editing the same field, last-write-wins, and an ever-growing shared blob that every agent must now read (which is the context problem you were trying to escape).</p>
+      <ul class="pts small"><li><b>Buys:</b> no information is lost in translation; agents cannot hold contradictory pictures of a shared field.</li><li><b>Costs:</b> the classic concurrency problems arrive with it: two agents editing the same field, last-write-wins, and an ever-growing shared blob that every agent must now read (which is the context problem you were trying to escape).</li></ul>
     </div>
     <div class="card"><span class="kicker">Messages / hand-offs</span>
       <p class="small" style="margin-top:8px">Agent A finishes and passes a payload to agent B. B's context contains only what A chose to send.</p>
-      <p class="small"><b>Buys:</b> clean, small contexts and clear boundaries. Each agent's window holds one job.<br /><b>Costs:</b> whatever A did not put in the payload is <em>gone</em>. B re-derives it, guesses it, or silently works from a different assumption. This is <b>context fragmentation</b>, and it is the single most common cause of confidently contradictory multi-agent output.</p>
+      <ul class="pts small"><li><b>Buys:</b> clean, small contexts and clear boundaries. Each agent's window holds one job.</li><li><b>Costs:</b> whatever A did not put in the payload is <em>gone</em>. B re-derives it, guesses it, or silently works from a different assumption. This is <b>context fragmentation</b>, and it is the single most common cause of confidently contradictory multi-agent output.</li></ul>
     </div>
   </div>
   <div class="callout blue" style="margin-top:20px">Context isolation is a feature, not an accident. In Week 3 you measured what happens when one window carries too much: retrieval degrades, earlier instructions decay, and the model starts answering the wrong question: <a href="../week3/context.html">context rot</a>. Giving a subagent a clean window for one narrow job is a direct fix for that. The trade is exact and worth memorizing: isolation cures context rot and causes context fragmentation. Each hand-off design picks a point on that line.</div>

@@ -62,7 +62,8 @@
   <div class="eyebrow">Exercise A</div>
   <h2>Annotate the trace</h2>
   <div class="grouptask"><span class="gk">👥 Group task · Pairs · ~10 minutes</span>
-    <p>Below is the full trace of a <b>travel-cost agent</b> answering: <em>“Can I do 3 nights in Boston (flight from Atlanta plus hotel) for under $900?”</em> Mark up a copy (or a screenshot): <b>(1)</b> circle every point where the loop made a <em>decision</em>; <b>(2)</b> underline the observation that <em>changed</em> the plan; <b>(3)</b> find one <em>wasted</em> step; <b>(4)</b> verdict: is this plan-then-execute or interleaved, and how can you tell from the trace alone?</p>
+    <p>Below is the full trace of a <b>travel-cost agent</b> answering: <em>“Can I do 3 nights in Boston (flight from Atlanta plus hotel) for under $900?”</em> Mark up a copy (or a screenshot):</p>
+<ul class="pts"><li><b>(1)</b> circle every point where the loop made a <em>decision</em>;</li><li><b>(2)</b> underline the observation that <em>changed</em> the plan;</li><li><b>(3)</b> find one <em>wasted</em> step;</li><li><b>(4)</b> verdict: is this plan-then-execute or interleaved, and how can you tell from the trace alone?</li></ul>
     <p class="prod"><b>Produce:</b> your annotated trace + a one-sentence verdict with evidence.</p>
   </div>
   <div class="tracebox"><span class="th">Thought 1:</span> Budget question. Plan: find flight price, find hotel price ×3, add, compare to 900.
@@ -114,7 +115,7 @@
         <text class="lbl" x="140" y="212">state: { task, plan, past_steps, results, critique, steps }</text>
       </svg>
       </div>
-      <p style="margin-top:12px"><b>Fixed edges:</b> START→planner, planner→executor, executor→reflector. <b>Conditional edge:</b> reflector: routes back to executor (critique says “not done”, steps &lt; N) or to END (done, or the <b>max-iteration guard</b> fires at N). <b>The ReAct collapse:</b> ReAct merges <em>planner + executor</em> into one looping “model” node that re-decides the next step every turn; you trade the reviewable up-front plan for adaptivity. <b>Common miss:</b> teams forget <code>steps</code> in the state: a stop condition that isn't <em>stored</em> anywhere can't be checked.</p>
+      <ul class="pts" style="margin-top:12px"><li><b>Fixed edges:</b> START→planner, planner→executor, executor→reflector.</li><li><b>Conditional edge:</b> reflector: routes back to executor (critique says “not done”, steps &lt; N) or to END (done, or the <b>max-iteration guard</b> fires at N).</li><li><b>The ReAct collapse:</b> ReAct merges <em>planner + executor</em> into one looping “model” node that re-decides the next step every turn; you trade the reviewable up-front plan for adaptivity.</li><li><b>Common miss:</b> teams forget <code>steps</code> in the state: a stop condition that isn't <em>stored</em> anywhere can't be checked.</li></ul>
     </div>
   </div>
 </div></section>
@@ -175,10 +176,12 @@
       <div class="callout blue" style="margin-top:14px;margin-bottom:0"><b>📌 Reminder:</b> Group Assignment 1 is due this week (<a href="../week2/summary.html#ga1">details</a>), and the final-project proposal is on iCollege.</div>
     </div>
   </div>
-  <div class="callout" style="margin-top:22px"><b>Next week:</b> Tool Use &amp; Function Calling: the “Act” arrow in this week’s loop becomes a real tool call: schemas, error handling, human gates, and tools in LangGraph. Group Assignment 2 releases.<br /><br />
-  <b>Week 5 readings:</b><br />
-  · <a class="doc" href="https://www.linkedin.com/learning/build-ai-agents-and-chatbots-with-langgraph" target="_blank" rel="noopener">Ponnambalam — Build AI Agents and Chatbots with LangGraph (LinkedIn Learning) ↗</a>, free with your GSU login via the <a class="doc" href="https://technology.gsu.edu/technology-services/technology-professional-training/linkedin-learning/" target="_blank" rel="noopener">GSU portal ↗</a><br /><br />
-  <b>📝 Quiz 2 next week</b>: in class, closed-book, same format as Quiz 1 (5 multiple-choice). Scope: the Week 4 readings above, the Week 5 reading, and the Week 5 local tool-calling lab. Sample questions: <a class="doc" href="#quiz">right below ↓</a>.</div>
+  <div class="callout" style="margin-top:22px">
+<div class="ptxt" style="margin-top:22px"><b>Next week:</b> Tool Use &amp; Function Calling: the “Act” arrow in this week’s loop becomes a real tool call: schemas, error handling, human gates, and tools in LangGraph. Group Assignment 2 releases.</div>
+<div class="ptxt"><b>Week 5 readings:</b></div>
+<ul class="pts"><li><a class="doc" href="https://www.linkedin.com/learning/build-ai-agents-and-chatbots-with-langgraph" target="_blank" rel="noopener">Ponnambalam — Build AI Agents and Chatbots with LangGraph (LinkedIn Learning) ↗</a>, free with your GSU login via the <a class="doc" href="https://technology.gsu.edu/technology-services/technology-professional-training/linkedin-learning/" target="_blank" rel="noopener">GSU portal ↗</a></li></ul>
+<div class="ptxt"><b>📝 Quiz 2 next week</b>: in class, closed-book, same format as Quiz 1 (5 multiple-choice). Scope: the Week 4 readings above, the Week 5 reading, and the Week 5 local tool-calling lab. Sample questions: <a class="doc" href="#quiz">right below ↓</a>.</div>
+</div>
 </div></section>
 
 <section id="quiz"><div class="wrap">

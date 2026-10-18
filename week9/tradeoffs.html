@@ -103,8 +103,8 @@
       <p class="small" style="margin-top:8px">Three questions to put to any team proposing a multi-agent architecture, in order:</p>
       <ol class="steps" style="margin-top:10px">
         <li><b>What does the single-agent baseline score?</b> If there is no baseline, there is no claim. You cannot know a team helped without the number it beat.</li>
-        <li>What is the per-run cost of each design, at expected volume? Not the demo cost, the monthly cost at the volume you plan to run.</li>
-        <li>What breaks that we would not have been able to debug before? If the answer is "we would read the trace", ask which trace: per-agent, per-hand-off, or the aggregate that hides both.</li>
+        <li><b>What is the per-run cost of each design, at expected volume?</b> Not the demo cost, the monthly cost at the volume you plan to run.</li>
+        <li><b>What breaks that we would not have been able to debug before?</b> If the answer is "we would read the trace", ask which trace: per-agent, per-hand-off, or the aggregate that hides both.</li>
       </ol>
       <p class="small" style="margin-top:10px">Latency deserves a footnote: parallel workers can genuinely finish a breadth-first task faster in wall-clock time, even while burning more tokens. Speed and cost move in opposite directions here, so be explicit about which one you are buying.</p>
     </div>

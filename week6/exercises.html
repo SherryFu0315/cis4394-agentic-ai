@@ -64,16 +64,20 @@
   <h2>Design the integration</h2>
   <p class="lede">A campus-services agent is being built for the Robinson advising office. It must reach three things, and each one is a different kind of boundary.</p>
   <div class="grouptask"><span class="gk">👥 Group task · Groups of 3 · ~20 minutes</span>
-    <p>Your agent must work with: <b>(1)</b> the <b>student-records database</b> (owned by the registrar, holds grades and holds); <b>(2)</b> the <b>room-booking API</b> (owned by facilities, can reserve and cancel real rooms); <b>(3)</b> the <b>tutoring-center agent</b>: an existing agent, built and run by a different department, that already knows how to find and book tutoring slots.</p>
+    <p>Your agent must work with:</p>
+<ul class="pts"><li><b>(1)</b> the <b>student-records database</b> (owned by the registrar, holds grades and holds);</li><li><b>(2)</b> the <b>room-booking API</b> (owned by facilities, can reserve and cancel real rooms);</li><li><b>(3)</b> the <b>tutoring-center agent</b>: an existing agent, built and run by a different department, that already knows how to find and book tutoring slots.</li></ul>
     <p style="margin-top:8px">For each of the three, decide: <b>MCP server</b>, <b>A2A</b>, or just an edge in your own graph, and say why in one sentence. Then draw a single dashed line around everything <em>inside</em> your trust boundary, and mark every tool that gets a <b>human gate</b>.</p>
     <p class="prod"><b>Produce:</b> one labeled diagram (host, clients, servers, peers, the trust boundary, the gates) + <b>one named risk per integration</b>, each with the control you would put on it.</p>
   </div>
   <div class="card" style="margin-top:16px">
     <button class="revealbtn">Debrief: answer key</button>
     <div class="revealbox">
-      <p>1 · Student-records database → MCP server. A database has no judgment to borrow; you want data. Build one server the registrar owns and every campus agent can reuse. That is the M+N payoff in a single decision. Design it as <em>narrow tools</em>, not raw SQL: <code>lookup_student(id)</code>, <code>list_holds(id)</code>. <b>Risk:</b> over-broad credentials and student data flooding the context window. <b>Control:</b> read-only role scoped to the two queries, return only the fields needed, and log every call at the protocol boundary. Reads generally do not need a gate, but they do need a reason, and that reason should be in the log.</p>
-      <p style="margin-top:10px">2 · Room-booking API → MCP server, with a gate. Also a system, so also a server, but this one <em>acts on the world</em>, and a reservation is not free to undo. <b>Risk:</b> the agent books, cancels, or double-books real rooms; a mistake is visible to real people. <b>Control:</b> constrain the tool (only advising-office rooms, only during business hours, date range capped), gate the confirming call behind a human approval that shows room, time, and who it displaces, and prefer a reversible hold over a hard booking where the API allows it.</p>
-      <p style="margin-top:10px"><b>3 · Tutoring-center agent → A2A</b> (with an honest alternative). Another department owns the agent, the data, and the rules; you want an outcome, not their internals; and the interaction may need a clarifying round trip. That is delegation. <b>Risk:</b> you cannot audit their side (you get an outcome and a claim, not a trace), and an <code>input-required</code> task can sit waiting forever. <b>Control:</b> allow-list the counterparty rather than accepting any card, log the Agent Card version and the full message trace on <em>your</em> side, set a timeout and a fallback path, and treat everything they return as untrusted text. <b>The honest alternative:</b> if it turns out that &ldquo;agent&rdquo; is really a thin wrapper over a booking API, the right answer is an MCP server, not A2A, and if the tutoring team is willing to merge into your codebase, a graph edge beats both.</p>
+      <p>1 · Student-records database → MCP server. A database has no judgment to borrow; you want data. Build one server the registrar owns and every campus agent can reuse. That is the M+N payoff in a single decision. Design it as <em>narrow tools</em>, not raw SQL: <code>lookup_student(id)</code>, <code>list_holds(id)</code>.</p>
+<ul class="pts"><li><b>Risk:</b> over-broad credentials and student data flooding the context window.</li><li><b>Control:</b> read-only role scoped to the two queries, return only the fields needed, and log every call at the protocol boundary. Reads generally do not need a gate, but they do need a reason, and that reason should be in the log.</li></ul>
+      <p style="margin-top:10px">2 · Room-booking API → MCP server, with a gate. Also a system, so also a server, but this one <em>acts on the world</em>, and a reservation is not free to undo.</p>
+<ul class="pts"><li><b>Risk:</b> the agent books, cancels, or double-books real rooms; a mistake is visible to real people.</li><li><b>Control:</b> constrain the tool (only advising-office rooms, only during business hours, date range capped), gate the confirming call behind a human approval that shows room, time, and who it displaces, and prefer a reversible hold over a hard booking where the API allows it.</li></ul>
+      <p style="margin-top:10px"><b>3 · Tutoring-center agent → A2A</b> (with an honest alternative). Another department owns the agent, the data, and the rules; you want an outcome, not their internals; and the interaction may need a clarifying round trip. That is delegation.</p>
+<ul class="pts"><li><b>Risk:</b> you cannot audit their side (you get an outcome and a claim, not a trace), and an <code>input-required</code> task can sit waiting forever.</li><li><b>Control:</b> allow-list the counterparty rather than accepting any card, log the Agent Card version and the full message trace on <em>your</em> side, set a timeout and a fallback path, and treat everything they return as untrusted text.</li><li><b>The honest alternative:</b> if it turns out that &ldquo;agent&rdquo; is really a thin wrapper over a booking API, the right answer is an MCP server, not A2A, and if the tutoring team is willing to merge into your codebase, a graph edge beats both.</li></ul>
       <p style="margin-top:10px"><b>The trust boundary.</b> Your dashed line should enclose the host, its clients, and the servers <em>your institution runs</em>. The tutoring agent sits outside it. The subtle part most groups miss: an MCP server you install but did not write is <em>inside</em> the line even though you do not control it, which is precisely why installing one requires the same review as any production dependency.</p>
       <p style="margin-top:10px"><b>Common mistakes:</b> calling the room-booking API &ldquo;A2A&rdquo; because it is another department's system (it is a system, not an agent); drawing the boundary around the whole diagram (then it is not a boundary); and putting a gate on the read tools, which trains people to approve everything and quietly destroys the gate that matters.</p>
     </div>
@@ -180,7 +184,10 @@
     <div>
       <div class="card"><span class="kicker">🎯 This week's addition</span>
         <p class="small" style="margin-top:8px">Add a short <b>interface</b> paragraph. You do not have to build an MCP server for the capstone, but write your tool interface down as if someone else would implement it: tool name, parameters and types, what comes back, what errors are possible, and which of the three tiers it lands in. Two benefits, one of them selfish: it is the artifact that makes your system explainable in a demo, and it is the difference between a project that can grow and one that must be rewritten.</p></div>
-      <div class="callout blue" style="margin-top:14px"><b>Also this week:</b> <b>Group Assignment 2</b> is in progress and <b>due in Week 8</b>; do not let the proposal deadline hide it. <b>No quiz this week.</b> <a href="../week2/radar.html">Agent Radar</a> presenter slots for the coming weeks are still open.</div>
+      <div class="callout blue" style="margin-top:14px">
+<div class="ptxt" style="margin-top:14px"><b>Also this week:</b></div>
+<ul class="pts"><li><b>Group Assignment 2</b> is in progress and <b>due in Week 8</b>; do not let the proposal deadline hide it.</li><li><b>No quiz this week.</b></li><li><a href="../week2/radar.html">Agent Radar</a> presenter slots for the coming weeks are still open.</li></ul>
+</div>
     </div>
   </div>
 </div></section>
@@ -207,11 +214,12 @@
       <div class="callout blue" style="margin-top:14px;margin-bottom:0"><b>📌 Reminder:</b> the <b>final-project proposal is due this week</b> (<a href="#proposal">checklist above</a>) and Group Assignment 2 is due in Week 8. No quiz this week.</div>
     </div>
   </div>
-  <div class="callout" style="margin-top:22px"><b>Next week:</b> Memory, RAG &amp; Knowledge: how agents remember across sessions, and how retrieval gets the right facts into the context window you learned to budget in Week 3. Group Assignment 2 is due in Week 8.<br /><br />
-<b>Week 7 readings:</b><br />
-· <a class="doc" href="https://www.deeplearning.ai/short-courses/retrieval-augmented-generation-rag/" target="_blank" rel="noopener">DeepLearning.AI — Retrieval Augmented Generation (RAG) short course (free) ↗</a><br />
-· <a class="doc" href="https://huggingface.co/learn/agents-course" target="_blank" rel="noopener">Hugging Face Agents Course — the memory &amp; agentic-RAG unit (free) ↗</a><br />
-Full list on the Week 7 site.</div>
+  <div class="callout" style="margin-top:22px">
+<div class="ptxt" style="margin-top:22px"><b>Next week:</b> Memory, RAG &amp; Knowledge: how agents remember across sessions, and how retrieval gets the right facts into the context window you learned to budget in Week 3. Group Assignment 2 is due in Week 8.</div>
+<div class="ptxt"><b>Week 7 readings:</b></div>
+<ul class="pts"><li><a class="doc" href="https://www.deeplearning.ai/short-courses/retrieval-augmented-generation-rag/" target="_blank" rel="noopener">DeepLearning.AI — Retrieval Augmented Generation (RAG) short course (free) ↗</a></li><li><a class="doc" href="https://huggingface.co/learn/agents-course" target="_blank" rel="noopener">Hugging Face Agents Course — the memory &amp; agentic-RAG unit (free) ↗</a></li></ul>
+<div class="ptxt">Full list on the Week 7 site.</div>
+</div>
 </div></section>
 
 <div class="wrap pager">

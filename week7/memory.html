@@ -129,7 +129,8 @@
         <li><b>Is it expensive to recompute?</b> Something learned from six tool calls is worth saving; something one cheap lookup returns is not.</li>
         <li><b>Is it allowed?</b> Do you have a basis to retain it, and can you delete it on request? If not, the answer to "should we store this" is no, regardless of how useful it is.</li>
       </ol>
-      <p class="small" style="margin-top:12px">Who writes it matters too. <b>Explicit</b> writes ("remember that…") are auditable and rare. <b>Automatic</b> writes (where the agent decides at the end of a run what to save) scale better and are exactly where wrong facts get canonized. Keep a source and timestamp on every memory so a bad one can be traced and revoked.</p>
+      <p class="small" style="margin-top:12px">Who writes it matters too.</p>
+<ul class="pts small"><li><b>Explicit</b> writes ("remember that…") are auditable and rare.</li><li><b>Automatic</b> writes (where the agent decides at the end of a run what to save) scale better and are exactly where wrong facts get canonized. Keep a source and timestamp on every memory so a bad one can be traced and revoked.</li></ul>
     </div>
     <div class="card"><span class="kicker">Read policy</span><h3 style="margin-top:6px">When do you retrieve?</h3>
       <p class="small">The naive design loads the whole memory store into every prompt. That works for a demo with nine memories and collapses at nine thousand. You have re-created the context problem with a bigger bill. Real read policies are selective:</p>

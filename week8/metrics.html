@@ -218,7 +218,7 @@
   <h3 style="margin-top:30px;font-size:var(--fs-xl)">Mitigations: validate the evaluator like you validate the agent</h3>
   <ol class="steps">
     <li><b>Swap positions and average.</b> Run every pairwise comparison in both orders. If the verdict flips, the judge is reading position, not quality; record that as a disagreement rather than a score.</li>
-    <li>Write an explicit rubric with anchors, and give a reference answer. “Rate helpfulness 1–5” invites vibes. “2 = answers the question but omits the policy citation” is checkable, and it is what makes two runs of the judge agree with each other.</li>
+    <li><b>Write an explicit rubric with anchors, and give a reference answer.</b> “Rate helpfulness 1–5” invites vibes. “2 = answers the question but omits the policy citation” is checkable, and it is what makes two runs of the judge agree with each other.</li>
     <li><b>Prefer pairwise comparison over absolute scores</b> when you can. “Which of these two is better?” is a far more stable judgment than “score this 1–10,” for models and humans alike.</li>
     <li><b>Calibrate against humans: non-negotiable.</b> Hand-label a sample (say 50 items), run the judge on the same sample, and report the agreement rate. If the judge agrees with your humans 60% of the time, its scores are decoration. Recheck the agreement whenever the rubric, the judge model, or the task changes.</li>
     <li><b>Use rules wherever a rule exists.</b> Every check you can express deterministically is one fewer place for bias to enter, and it is cheaper besides.</li>

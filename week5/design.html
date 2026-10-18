@@ -126,9 +126,9 @@
   <div class="callout" style="margin-top:22px">Why this is the week's most transferable idea. Almost every agent incident you will read about is one of these three missing: a tool that was too powerful, an argument that was not bounded, or an irreversible action with no gate in front of it. You cannot prompt your way out of any of them, and you do not have to, because all three are ordinary software decisions you make while writing a function signature.</p>
   <p style="margin:10px 0 0">Three questions to ask of every tool in your capstone, and the ones <b>Group Assignment 2 grades</b>:</p>
   <ol class="steps" style="margin-top:10px">
-    <li>What is the worst call an attacker could make with this schema? If the answer is bad, the tool is too broad: split it or narrow it.</li>
-    <li>Which limits live in the schema rather than in the prompt? Anything that matters (money, recipients, tables, file paths) belongs in the schema.</li>
-    <li>Is anything irreversible bundled with something harmless? If so, separate them so the gate lands only where it must.</li>
+    <li><b>What is the worst call an attacker could make with this schema?</b> If the answer is bad, the tool is too broad: split it or narrow it.</li>
+    <li><b>Which limits live in the schema rather than in the prompt?</b> Anything that matters (money, recipients, tables, file paths) belongs in the schema.</li>
+    <li><b>Is anything irreversible bundled with something harmless?</b> If so, separate them so the gate lands only where it must.</li>
   </ol>
   <p class="small" style="margin-top:12px">You will meet all three again in <a href="../week10/index.html">Week 10</a>, where the same decisions are called least privilege, input validation and separation of duties, the vocabulary auditors use. </p></div>
 </div></section>
@@ -343,7 +343,8 @@
       <div style="position:relative;padding-top:56.25%;margin-top:12px;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube-nocookie.com/embed/cjCYcTPryw8" title="IBM Technology: Build AI Function Calling with LangChain and Advanced AI Models" style="position:absolute;inset:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
     </div>
     <div class="card"><span class="kicker">Watch for one thing</span>
-      <p class="small" style="margin-top:8px">Every time a tool is defined on screen, pause and ask the two questions from this page: <b>(1)</b> what does the description tell the model about <em>when</em> to use it, and does it say anything about when <em>not</em> to? <b>(2)</b> what happens if the arguments are wrong: is there a validation error the model can read, or does something throw?</p>
+      <p class="small" style="margin-top:8px">Every time a tool is defined on screen, pause and ask the two questions from this page:</p>
+<ul class="pts small"><li><b>(1)</b> what does the description tell the model about <em>when</em> to use it, and does it say anything about when <em>not</em> to?</li><li><b>(2)</b> what happens if the arguments are wrong: is there a validation error the model can read, or does something throw?</li></ul>
       <p class="small">Demo code almost always skips both. That is fine for a demo and disqualifying for a system that touches customers, and noticing the gap is exactly the judgement this course is training.</p>
     </div>
   </div>
