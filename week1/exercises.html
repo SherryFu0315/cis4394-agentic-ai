@@ -184,7 +184,7 @@ const IV=[
 const iv=document.getElementById('ivList');
 IV.forEach((x,i)=>{
   const d=document.createElement('div');d.className='card';d.style.marginBottom='14px';
-  d.innerHTML=`<h3 style="font-family:var(--serif);font-weight:600">Q${i+1}. ${x.q}</h3><button class="revealbtn">What a strong answer covers</button><div class="revealbox">${x.a}</div>`;
+  d.innerHTML=`<h3>Q${i+1}. ${x.q}</h3><button class="revealbtn">What a strong answer covers</button><div class="revealbox">${x.a}</div>`;
   iv.appendChild(d);
 });
 document.querySelectorAll('.revealbtn').forEach(b=>{const orig=b.textContent;b.addEventListener('click',()=>{const box=b.nextElementSibling;box.classList.toggle('open');b.textContent=box.classList.contains('open')?'Hide':orig})});

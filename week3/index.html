@@ -24,7 +24,7 @@
 .ba{border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
 .ba .tag2{padding:10px 18px;font-size:var(--fs-xs);font-weight:700;letter-spacing:.12em;text-transform:uppercase}
 .ba.bad2 .tag2{background:var(--red-soft);color:var(--red)}
-.ba.good2 .tag2{background:var(--good);color:#2e6b3f}
+.ba.good2 .tag2{background:var(--good);color:var(--ok-ink)}
 .ba .codebox{margin:0;border-radius:0}
 .ba .meter{padding:14px 18px;font-size:var(--fs-s)}
 .meterbar{height:10px;border-radius:999px;background:var(--paper);border:1px solid var(--line);overflow:hidden;margin-top:6px}
@@ -50,7 +50,7 @@
 </div></div>
 <div class="progress"><span id="progressBar"></span></div>
 
-<header class="hero"><div class="wrap">
+<header class="pagehead"><div class="wrap">
   <div class="eyebrow">Week 3 · Foundations</div>
   <h1>Prompting &amp; <em>Context Engineering</em>.</h1>
   <p class="lede">How to make a probabilistic model behave like a reliable business tool. Last week you drove a coding agent and saw its harness. This week we zoom into one layer (the instruction layer) because it is the highest-leverage, lowest-cost skill in the entire stack.</p>
@@ -82,7 +82,7 @@ If no total is present, use null.
 EXAMPLE
 input: "…amount due USD 1,284.50…"
 output: {"total_usd": 1284.50}</div>
-      <div class="meter">Same model: now every answer is a clean, parseable record.<div class="meterbar"><i style="width:100%;background:#2e6b3f"></i></div><span class="small">~100% usable · identical shape every run</span></div>
+      <div class="meter">Same model: now every answer is a clean, parseable record.<div class="meterbar"><i style="width:100%;background:var(--ok-ink)"></i></div><span class="small">~100% usable · identical shape every run</span></div>
     </div>
   </div>
   <div class="bigq" style="margin-top:28px">The gap between ~70% and ~98% reliability is the gap between a tool people trust and a tool people turn off. Prompting is free and instant; it’s where an MIS professional adds value without an ML PhD.</div>

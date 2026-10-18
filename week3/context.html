@@ -142,7 +142,7 @@ function update(){
   document.getElementById('bfill').style.width=pct+'%';
   bar.classList.toggle('over',used>CAP);
   document.getElementById('btext').textContent=`${total} content + ${ANSWER} answer room = ${used} / ${CAP} tokens`;
-  document.getElementById('pkv').innerHTML=used>CAP?'<b style="color:var(--red)">Over budget — the call will truncate or fail. Trim something.</b>':(total===0?'':'<b style="color:#2e6b3f">Fits ✓</b> — now check whether it fits <em>well</em>.');
+  document.getElementById('pkv').innerHTML=used>CAP?'<b style="color:var(--red)">Over budget — the call will truncate or fail. Trim something.</b>':(total===0?'':'<b style="color:var(--ok-ink)">Fits ✓</b> — now check whether it fits <em>well</em>.');
 }
 ITEMS.forEach((x,i)=>document.getElementById('ps'+i).addEventListener('change',update));
 update();

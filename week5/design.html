@@ -30,11 +30,11 @@
 .sp.on{background:#0039a6;color:#fff;box-shadow:none}
 .sp.on .cn,.sp.on .cs,.sp.on .cm{color:#fff}
 .spnote{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;font-size:var(--fs-s);min-height:150px}
-.spnote h4{margin:0 0 8px;font-size:var(--fs-m)}
+.spnote h4{margin:0 0 8px;}
 .chip{display:inline-block;padding:3px 10px;border-radius:999px;font-size:var(--fs-xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-.chip.auto{background:var(--good);color:#2f6b41;border:1px solid var(--good-line)}
-.chip.constrain{background:var(--warn);color:#7a5f14;border:1px solid var(--warn-line)}
-.chip.gate{background:var(--bad);color:#9d2231;border:1px solid var(--bad-line)}
+.chip.auto{background:var(--good);color:var(--ok-ink);border:1px solid var(--good-line)}
+.chip.constrain{background:var(--warn);color:var(--warn-ink);border:1px solid var(--warn-line)}
+.chip.gate{background:var(--bad);color:var(--bad-ink);border:1px solid var(--bad-line)}
 .ladder{counter-reset:l;list-style:none;padding:0;margin:18px 0 0}
 .ladder li{counter-increment:l;position:relative;padding:0 0 16px 54px;font-size:var(--fs-m)}
 .ladder li::before{content:counter(l);position:absolute;left:0;top:-2px;width:34px;height:34px;border-radius:9px;background:var(--red-soft);color:var(--red);font-weight:700;font-size:var(--fs-s);display:flex;align-items:center;justify-content:center}

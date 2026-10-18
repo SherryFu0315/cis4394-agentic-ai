@@ -122,7 +122,7 @@ approval and must be logged in the ticket.
   <div class="optrow">
     <div class="optcard" style="border-top-color:var(--blue)"><b>Option 1 · Fix at ingestion</b><p class="small">When v7 is indexed, delete or archive every chunk of v6 so a superseded document is not in the searchable corpus at all.</p></div>
     <div class="optcard" style="border-top-color:var(--red)"><b>Option 2 · Fix at retrieval</b><p class="small">Keep both versions, but filter on <code>status = current</code> before ranking, and, when two chunks describe the same rule, prefer the later <code>effective_date</code>.</p></div>
-    <div class="optcard" style="border-top-color:#8a6d1d"><b>Option 3 · Fix at generation</b><p class="small">Tell the model in the prompt: "If two sources conflict, use the one with the most recent effective date, and state that date in your answer."</p></div>
+    <div class="optcard" style="border-top-color:var(--warn-ink)"><b>Option 3 · Fix at generation</b><p class="small">Tell the model in the prompt: "If two sources conflict, use the one with the most recent effective date, and state that date in your answer."</p></div>
   </div>
   <div style="margin-top:20px">
     <div class="bigq"><span class="qlabel">Discussion question</span>Which option is the primary fix, and what is wrong with treating either of the other two as the primary fix?</div>
