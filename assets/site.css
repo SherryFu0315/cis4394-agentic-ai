@@ -145,7 +145,7 @@ button.ghost:hover{border-color:var(--blue);color:var(--blue)}
 .compare table,table.plain{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top;font-size:var(--fs-s)}
 th{font-size:var(--fs-xs);color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:var(--paper)}
-td code{font-size:var(--fs-xs)}
+td code{font-size:inherit}
 
 /* three-way quiz */
 .q3{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:12px}
