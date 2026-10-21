@@ -134,25 +134,40 @@ dir     <span class="cm"># same four files</span></div></div>
 
 <section><div class="wrap">
   <div class="eyebrow">Step 5 · on your phone</div>
-  <h2>Two ways to open it on a phone, and what each one costs</h2>
+  <h2>Two ways to open it on a phone, step by step</h2>
+  <p class="lede">Both start from an app you already ran. Method A reaches phones on your own Wi-Fi only. Method B gives you a public link that any phone on any network can open. Each one adds a question about who can now reach your refund tool.</p>
   <div class="grid2" style="align-items:start">
-    <div class="card"><span class="kicker">Same Wi-Fi · LAN</span>
-      <div class="oscmd" style="grid-template-columns:1fr"><div><div class="lab">Mac</div><div class="codebox" style="margin:0">LAN=1 python3 8_app_rag.py
-<span class="cm"># the app prints the address to use:</span>
-<span class="cm"># On a phone on the same Wi-Fi, open:  http://10.0.0.76:7860</span></div></div>
-      <div><div class="lab">Windows (PowerShell)</div><div class="codebox" style="margin:0">$env:LAN="1"; python 8_app_rag.py
-<span class="cm"># same printed line: On a phone on the same Wi-Fi, open: http://…:7860</span></div></div></div>
-      <p class="small" style="margin-top:10px">Open the printed address on the phone; that is the address to give anyone on your Wi-Fi. If your copy of the scripts is older and does not print it, find your laptop’s address yourself (Mac <code>ipconfig getifaddr en0</code>, Windows <code>ipconfig</code> and the IPv4 line) and open <code>http://&lt;that address&gt;:7860</code>. Reachable only by devices on your network. Campus Wi-Fi usually blocks device-to-device traffic, so this works at home and often not in class.</p>
+    <div class="card"><span class="kicker">Method A · same Wi-Fi (home, a café, your phone’s hotspot)</span>
+      <ol class="steps" style="margin-top:12px">
+        <li><b>Start the app with LAN switched on.</b> Any of the three apps works; the router is the one to show.
+          <div class="oscmd" style="grid-template-columns:1fr;margin-top:8px"><div><div class="lab">Mac</div><div class="codebox" style="margin:0">LAN=1 python3 8_app_router.py</div></div>
+          <div><div class="lab">Windows (PowerShell)</div><div class="codebox" style="margin:0">$env:LAN="1"; python 8_app_router.py</div></div></div></li>
+        <li><b>Read the address the app prints.</b> It is the first line in the terminal:
+          <div class="term2" style="margin:8px 0 0"><span class="p">On a phone on the same Wi-Fi, open:  </span><span class="ask">http://10.0.0.76:7862</span><span class="p">   (this laptop: http://127.0.0.1:7862)</span>
+<span class="p">* Running on local URL:  http://0.0.0.0:7862</span></div>
+          <p class="small" style="margin-top:8px">The printed address is the one to give anyone on your network. Ignore the <code>0.0.0.0</code> line that follows; it means “listening on every interface”, not an address to open.</p></li>
+        <li><b>On the phone, join the same Wi-Fi and type the address into the browser.</b> Keep the <code>http://</code> and the <code>:7862</code>; there is no https here.</li>
+        <li><b>If the page does not load, the network is blocking it.</b> Campus and office Wi-Fi usually stop device-to-device traffic, so this works at home and often not in class. Two ways around it: put both the laptop and the phone on the phone’s hotspot and run step 1 again, or use Method B.</li>
+        <li><b>Stop with Ctrl+C when you are done.</b> The address stops working the moment the script ends.</li>
+      </ol>
+      <p class="small" style="margin-top:10px">Older copies of the scripts do not print the address. Find it yourself: Mac <code>ipconfig getifaddr en0</code>; Windows <code>ipconfig</code>, then the IPv4 Address line. The phone opens <code>http://&lt;that address&gt;:7862</code>.</p>
     </div>
-    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Anywhere · public share link</span>
-      <div class="oscmd" style="grid-template-columns:1fr"><div><div class="lab">Mac</div><div class="codebox" style="margin:0">SHARE=1 python3 8_app_rag.py</div></div>
-      <div><div class="lab">Windows (PowerShell)</div><div class="codebox" style="margin:0">$env:SHARE="1"; python 8_app_rag.py</div></div></div>
-      <div class="term2" style="margin:10px 0 0"><span class="p">* Running on local URL:  http://127.0.0.1:7860</span>
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Method B · a public link (any phone, any network)</span>
+      <ol class="steps" style="margin-top:12px">
+        <li><b>Start the app with SHARE switched on.</b> Your laptop needs internet. The first time, Gradio downloads a small tunnel helper, which takes a few seconds.
+          <div class="oscmd" style="grid-template-columns:1fr;margin-top:8px"><div><div class="lab">Mac</div><div class="codebox" style="margin:0">SHARE=1 python3 8_app_router.py</div></div>
+          <div><div class="lab">Windows (PowerShell)</div><div class="codebox" style="margin:0">$env:SHARE="1"; python 8_app_router.py</div></div></div></li>
+        <li><b>Wait for the public URL.</b> It appears after the local one, usually within twenty seconds:
+          <div class="term2" style="margin:8px 0 0"><span class="p">* Running on local URL:  http://127.0.0.1:7862</span>
 <span class="p">* Running on public URL: </span><span class="ask">https://7d2bb52d20e07ee6b1.gradio.live</span>
-<span class="p">This share link is temporary and will last for up to 1 week …</span></div>
-      <p class="small" style="margin-top:10px">Gradio opens a tunnel from its servers to your laptop and gives you a URL. Any phone, any network. Anyone with the URL, too. The link dies when you stop the script.</p>
+<span class="p">This share link is temporary and will last for up to 1 week …</span></div></li>
+        <li><b>Share that URL.</b> Gradio’s servers forward every request to your laptop, so the model still runs on your machine, which must stay on and awake. Any phone, any network, no Wi-Fi in common needed.</li>
+        <li><b>Know what you just did.</b> Anyone holding the link can talk to your agent, including typing <em>yes</em> to a pending refund. For a class demo that is the lesson, and Week 10 starts here. Do not leave it running unattended.</li>
+        <li><b>Stop with Ctrl+C.</b> The public link dies with the process.</li>
+      </ol>
     </div>
   </div>
+  <div class="callout" style="margin-top:16px"><b>If it has to stay online.</b> Neither method is hosting: both end when your laptop sleeps. GitHub Pages cannot host this app at all, because Pages serves static files and this is a Python server plus a model. Keeping it up means a server somewhere: Hugging Face Spaces (Gradio and Docker Spaces now need a paid plan), Google Cloud Run (a free tier, more setup), or a small cloud machine. The moment it is a server, Week 10’s questions arrive with it: who can reach the refund tool, what gets logged, who approves. For Milestone demos, the public link from Method B is enough.</div>
 </div></section>
 
 <section><div class="wrap">
