@@ -138,10 +138,11 @@ dir     <span class="cm"># same four files</span></div></div>
   <div class="grid2" style="align-items:start">
     <div class="card"><span class="kicker">Same Wi-Fi · LAN</span>
       <div class="oscmd" style="grid-template-columns:1fr"><div><div class="lab">Mac</div><div class="codebox" style="margin:0">LAN=1 python3 8_app_rag.py
-ipconfig getifaddr en0        <span class="cm"># your laptop's address, e.g. 10.0.0.76</span></div></div>
+<span class="cm"># the app prints the address to use:</span>
+<span class="cm"># On a phone on the same Wi-Fi, open:  http://10.0.0.76:7860</span></div></div>
       <div><div class="lab">Windows (PowerShell)</div><div class="codebox" style="margin:0">$env:LAN="1"; python 8_app_rag.py
-ipconfig                      <span class="cm"># look for IPv4 Address</span></div></div></div>
-      <p class="small" style="margin-top:10px">On the phone, open <code>http://&lt;that address&gt;:7860</code>. Reachable only by devices on your network. Campus Wi-Fi usually blocks device-to-device traffic, so this works at home and often not in class.</p>
+<span class="cm"># same printed line: On a phone on the same Wi-Fi, open: http://…:7860</span></div></div></div>
+      <p class="small" style="margin-top:10px">Open the printed address on the phone; that is the address to give anyone on your Wi-Fi. If your copy of the scripts is older and does not print it, find your laptop’s address yourself (Mac <code>ipconfig getifaddr en0</code>, Windows <code>ipconfig</code> and the IPv4 line) and open <code>http://&lt;that address&gt;:7860</code>. Reachable only by devices on your network. Campus Wi-Fi usually blocks device-to-device traffic, so this works at home and often not in class.</p>
     </div>
     <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Anywhere · public share link</span>
       <div class="oscmd" style="grid-template-columns:1fr"><div><div class="lab">Mac</div><div class="codebox" style="margin:0">SHARE=1 python3 8_app_rag.py</div></div>
