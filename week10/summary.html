@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Week 10 Summary — CIS 4394</title>
+<meta name="description" content="Four things on this page: what to remember from Week 10, Group Assignment 3 due next week (join a GA3 group on iCollege first or you will not see it), the Milestone II and III briefs released this week, and how the next three sessions run as project time." />
+<meta name="author" content="Dr. Xinyu Fu" />
+<link rel="canonical" href="https://xinyufu.org/cis4394-agentic-ai/week10/summary.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="CIS 4394 Agentic AI · Georgia State University" />
+<meta property="og:title" content="Week 10 Summary — CIS 4394" />
+<meta property="og:description" content="Four things on this page: what to remember from Week 10, Group Assignment 3 due next week (join a GA3 group on iCollege first or you will not see it), the Milestone II and III briefs released this week, and how the next three sessions run as project time." />
+<meta property="og:url" content="https://xinyufu.org/cis4394-agentic-ai/week10/summary.html" />
+<meta property="og:image" content="https://xinyufu.org/cis4394-agentic-ai/assets/social-card.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Week 10 Summary — CIS 4394" />
+<meta name="twitter:description" content="Four things on this page: what to remember from Week 10, Group Assignment 3 due next week (join a GA3 group on iCollege first or you will not see it), the Milestone II and III briefs released this week, and how the next three sessions run as project time." />
+<meta name="twitter:image" content="https://xinyufu.org/cis4394-agentic-ai/assets/social-card.png" />
+<link rel="icon" href="../assets/gsu-flame.png" />
+<link rel="stylesheet" href="../assets/site.css" />
+<style>
+.recaptable td{font-size:var(--fs-s);vertical-align:top}
+.mustlist{padding-left:18px;font-size:var(--fs-s);margin:12px 0 0;line-height:1.9}
+.weekrow{border-top:3px solid var(--line2)}
+.weekrow.blue{border-top-color:var(--blue)}
+.weekrow.red{border-top-color:var(--red)}
+</style>
+</head>
+<body>
+
+<div class="uniband"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <span class="right">CIS 4394 Agentic AI &nbsp;·&nbsp; Fall 2026 &nbsp;·&nbsp; Dr.&nbsp;Xinyu&nbsp;Fu</span>
+</div></div>
+
+<div class="topbar"><div class="wrap nav">
+  <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Week 10</a>
+  <a href="../index.html">⌂ Course</a>
+  <a href="summary.html" class="here">Week 10 Summary</a>
+  <a href="#recap">Recap</a>
+  <a href="#ga3">GA3</a>
+  <a href="#milestones">Milestones II &amp; III</a>
+  <a href="#studio">Next three weeks</a>
+</div></div>
+<div class="progress"><span id="progressBar"></span></div>
+
+<header class="pagehead"><div class="wrap">
+  <div class="eyebrow">After class · Week 10</div>
+  <h1>Week 10, wrapped. Now the home stretch.</h1>
+  <p class="lede">Four things on this page: a recap of what you should now be able to do, Group Assignment 3 (due next week, and you must join a GA3 group on iCollege before you can even see it), the Milestone II and III briefs released this week, and how the next three class sessions run: a short lecture, then project time with me walking the room. Two housekeeping notes at the end: use any tool you like, and send me your receipt if I promised to reimburse a subscription.</p>
+</div></header>
+
+<section id="recap"><div class="wrap">
+  <div class="eyebrow">Recap</div>
+  <h2>Week 10 in one sentence per page</h2>
+  <p class="lede">Assume injection succeeds. Make sure it cannot do much, and make sure you would see it if it did. Every page this week was a way of taking that sentence seriously.</p>
+  <div style="overflow:auto"><table class="plain recaptable"><thead><tr><th>Page</th><th>The one thing to remember</th></tr></thead><tbody>
+    <tr><td><b><a class="doc" href="attacks.html">01 · How agents get attacked</a></b></td><td>Prompt injection is not breaking the model. It is writing to it: an email, a web page, a repo file, a tool result. The lethal trifecta names the three capabilities an attack needs (private data, untrusted content, a way to send things out); remove one leg and the worst case shrinks. The OWASP Agentic Top 10 gives you the vocabulary, the five stacked defenses give you the architecture, and the four 2025 cases show it already happening in products you use.</td></tr>
+    <tr><td><b><a class="doc" href="governance.html">02 · Governance &amp; frameworks</a></b></td><td>The NIST AI RMF is voluntary and tells you how to organize the work: Govern, Map, Measure, Manage. The EU AI Act is binding and tells you what you owe, by risk tier. Same agent, two lenses, and you need both to answer “are we allowed to ship this, and would we know if it misbehaved?” Almost none of it is new technology: least privilege, approval workflows, segregation of duties and audit trails are controls your MIS courses already taught.</td></tr>
+    <tr><td><b><a class="doc" href="exercises.html">03 · Practice &amp; case</a></b></td><td>You made a real agent follow a hidden instruction on your own laptop and watched the guard line fail. Then you attacked and patched a fictional inbox assistant on paper, where the strongest patch was a removed capability, not an added filter. Then you ran your own capstone through the six security-review questions. That checklist is the core of Milestone III.</td></tr>
+  </tbody></table></div>
+  <div class="callout blue" style="margin-top:18px">If you keep only one line from this week: cut a leg, gate the send, log everything. A sentence in the prompt is layer 1 of five, and you watched it fail on page 03. Quiz 4 was this week; scores appear on iCollege once both sections have taken it.</div>
+</div></section>
+
+<section id="ga3"><div class="wrap">
+  <div class="eyebrow">Action required · due next week</div>
+  <h2>Group Assignment 3: evaluate and secure an agent</h2>
+  <p class="lede">GA3 is due next week in your own section’s iCollege. One submission per team: the 10-case eval table with pass@1 and pass^k, the one-page security memo, your AI-use disclosure, and each member’s own peer evaluation.</p>
+
+  <div class="grouptask"><span class="gk">👥 Join a GA3 group first, or you will not see the assignment</span>
+    <p style="margin:10px 0 0">The GA3 groups on iCollege are new and separate from your GA2 group. Until you join one, the assignment page and its dropbox stay invisible to you. Do it today, not the night it is due: several people wrote to me last time asking where the assignment was, and the answer was “in a group you had not joined yet.”</p>
+    <p style="margin:10px 0 0">Team rules are the same as for GA2: 3–5 members, your own section only, one team submission plus individual peer evaluations.</p>
+  </div>
+
+  <div class="grid2" style="align-items:start;margin-top:20px">
+    <div class="card">
+      <h3>How to join (2 minutes)</h3>
+      <ol class="steps" style="margin-top:14px">
+        <li>Open your section’s course on <a class="doc" href="https://gastate.view.usg.edu/" target="_blank" rel="noopener">iCollege ↗</a>.</li>
+        <li>Go to Assessments → Groups.</li>
+        <li>In the dropdown, pick the Group Assignment 3 category, not GA2.</li>
+        <li>Click View Available Groups, find your team’s group, click Join Group.</li>
+        <li>Confirm your name appears in the member list. The GA3 assignment now shows up.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>What GA3 is, in one breath</h3>
+      <ul class="mustlist">
+        <li><b>Eval results table:</b> 10 cases with known-good answers, at least 2 edge or adversarial; each run k ≥ 3 times; pass@1 and pass^k side by side, failures read and explained; the harness or dataset included.</li>
+        <li><b>One-page security memo</b> for a manager: the lethal-trifecta analysis with a specific exfiltration path, the OWASP Agentic categories it maps to, at least three specific layered guardrails, and a deploy call (ship / ship with gates / not yet).</li>
+        <li><b>AI-use disclosure</b> and every member’s peer-evaluation form.</li>
+      </ul>
+      <p class="small" style="margin-top:12px">GA3 is Milestones II and III rehearsed as a team. The harness and the memo carry straight into your capstone.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="milestones"><div class="wrap">
+  <div class="eyebrow">Released this week</div>
+  <h2>Milestones II and III, in one place</h2>
+  <p class="lede">Both briefs are in the iCollege dropboxes of your own section, with the exact dates. If anything here differs from iCollege, iCollege wins. The short version follows, because the two are designed as a pair: II makes your agent public and measured, III makes it complete and defended.</p>
+
+  <div class="grid2" style="align-items:start">
+    <div class="card weekrow blue"><span class="kicker">Milestone II · 5 pts · individual · due Week 12</span>
+      <h3 style="margin-top:6px">A public link, an eval harness, a governance note</h3>
+      <ul class="mustlist">
+        <li><b>A public link to your agent (2 pts).</b> Anyone with the URL can chat with it in a browser: no login, nothing to install. Behind the link is your Milestone I agent plus at least one expansion: a second real tool, memory or RAG, or a second agent with a written reason. The link must be open during our Week 12 class, when we will all try each other’s agents, and when you submit. Fallback: a 2–3 minute screen recording of one full run.</li>
+        <li><b>An eval harness with pass^k (2 pts).</b> At least 10 cases with known-good answers, at least 2 of them edge or adversarial. Run every case at least 3 times. Report pass@1 and pass^k side by side and explain the failures you read. Include the harness or dataset so a grader can re-run it.</li>
+        <li><b>A governance note, half a page (1 pt).</b> What data the agent reads and stores, and where. Where the human gate sits: which action, between which two steps, what the screen shows. What a stranger with your link can and cannot make the agent do. One named person accountable for it: you.</li>
+        <li>Plus an updated README and one full trace of the expanded agent.</li>
+      </ul>
+      <p class="small" style="margin-top:12px"><b>Grading (5 pts):</b> link opens for anyone 1 · expansion visible in it 1 · eval harness with pass^k 2 · governance note 1.</p>
+    </div>
+    <div class="card weekrow red"><span class="kicker">Milestone III · 5 pts · individual · due Week 13, with Implementation</span>
+      <h3 style="margin-top:6px">The complete system and its security review</h3>
+      <ul class="mustlist">
+        <li><b>The complete system (2 pts).</b> Runs from a clean clone by following your README. At least two tools. The eval harness from Milestone II updated to the final system.</li>
+        <li><b>The security review, one page for a manager (2 pts).</b> Built on the six questions from <a class="doc" href="exercises.html">Exercise B</a>: every untrusted input that reaches the model, named; the lethal-trifecta analysis for your agent with one specific exfiltration path and the leg you removed or gated; 2–3 OWASP Agentic categories in your own words; at least 3 specific, layered guardrails, each tied to a leg; a deploy recommendation justified by your eval and your security findings.</li>
+        <li><b>Honest limitations (1 pt).</b> What the agent cannot do, the failure modes you observed in the eval, and what you would change with another month.</li>
+      </ul>
+      <p class="small" style="margin-top:12px"><b>Grading (5 pts):</b> complete system meeting all hard requirements 2 · security review 2 · limitations 1. The Implementation grade (20 pts: works live 6 · design 5 · real eval 4 · robustness 3 · craft 2) is assessed on this same submission plus your Week 14 live demo.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px;border-left:3px solid var(--blue)">
+    <span class="kicker">How to make the public link · the Week 9 way</span>
+    <h3 style="margin-top:6px">Five steps, one flag</h3>
+    <ol class="steps" style="margin-top:14px">
+      <li><b>Run your app with sharing on.</b>
+        <div class="codebox" style="margin:8px 0 0">Mac / Linux:         SHARE=1 python3 8_app_router.py        (or your own app file)
+Windows PowerShell:  $env:SHARE="1"; python 8_app_router.py</div>
+        <p class="small" style="margin-top:8px">If you wrote your own Gradio app: <code>app.launch(share=True)</code>.</p></li>
+      <li><b>Copy the line</b> <code>Running on public URL: https://xxxx.gradio.live</code>. That is your link.</li>
+      <li><b>Test it on your phone with Wi-Fi off.</b> If it loads on cellular data, it is public.</li>
+      <li><b>Keep the laptop on, plugged in and awake</b> for as long as the link must work. Mac: run <code>caffeinate -i</code> in a second terminal. Windows: Settings → System → Power → Screen and sleep → Never when plugged in.</li>
+      <li><b>A link lasts 7 days.</b> Restarting the app gives a new link, so update your submission if it changes.</li>
+    </ol>
+    <p class="small" style="margin-top:12px">If you see “Could not create share link”, campus Wi-Fi may be blocking it: connect the laptop to your phone’s hotspot and try again. No-code path (Fleet or another platform): use the platform’s Publish or Share feature; the link must open without a login. If your platform cannot do that, talk to me before the deadline. The same-Wi-Fi and public-link methods are written out step by step on <a class="doc" href="../week9/local.html">Week 9, page 03</a>.</p>
+  </div>
+
+  <div class="callout red" style="margin-top:18px">
+<div class="ptxt"><b>Before you share: a public link means anyone can click your Approve button.</b></div>
+<ul class="pts"><li>Connect nothing real: no real email, payments, deletions or company data. Stub tools or a sandbox only.</li><li>Keys live in environment variables, never in the UI, the repo or the recording.</li><li>Put caps on cost: max tokens per answer, max tool calls per turn, max turns per session.</li><li>Keep the human gate visible in the chat, showing the arguments, not a summary.</li><li>Expect classmates to try prompt injection on your agent. That is allowed on the links your classmates share for this course and nowhere else. Save what worked: it is the raw material for your Milestone III security review.</li></ul>
+</div>
+</div></section>
+
+<section id="studio"><div class="wrap">
+  <div class="eyebrow">The next three weeks</div>
+  <h2>A short lecture, then you build, and I walk the room</h2>
+  <p class="lede">From next week the class changes shape. Each session opens with Agent Radar and a short lecture, and the rest of the block is project time: you work on your capstone, I go desk to desk to unblock whatever is stuck. Bring your laptop with your project running, and come with the specific thing you cannot get past.</p>
+  <div class="grid3" style="margin-top:6px">
+    <div class="card weekrow blue"><span class="kicker">Week 11 · special topic</span>
+      <h3 style="margin-top:6px">Agentic commerce, then project time</h3>
+      <p class="small">A short lecture on agents that buy and sell: what changes when a run moves money. Then project time. Group Assignment 3 is due this week. No quiz.</p></div>
+    <div class="card weekrow blue"><span class="kicker">Week 12 · Capstone Studio I</span>
+      <h3 style="margin-top:6px">Project time; Milestone II due</h3>
+      <p class="small">No new lecture material. We open each other’s public links, so yours must be live in class. Submit Milestone II in your own section’s iCollege.</p></div>
+    <div class="card weekrow red"><span class="kicker">Week 13 · Capstone Studio II</span>
+      <h3 style="margin-top:6px">Project time and rehearsal; Milestone III due</h3>
+      <p class="small">Milestone III and the Implementation submission are due. Last class before the Thanksgiving break; Week 14 is presentations, peer ratings and the make-up quiz.</p></div>
+  </div>
+
+  <div class="card" style="margin-top:20px;border-left:3px solid var(--blue)">
+    <span class="kicker">Your tools</span>
+    <h3 style="margin-top:6px">Any tool, any framework, any platform</h3>
+    <p class="small" style="margin-top:8px">Build the final project in whatever you like: Python with Ollama, LangGraph, any other SDK, Fleet, n8n, Copilot Studio, Opal, a hosted model on a free tier, or something I have not heard of. Every path is graded on the same standard. Two conditions, the same as all semester:</p>
+    <ul class="mustlist">
+      <li>It must be free, or something you already pay for.</li>
+      <li>It must let a grader see the required things: two or more tools, the eval harness with pass^k, the security review, the limitations, and for Milestone II a public link.</li>
+    </ul>
+    <p class="small" style="margin-top:12px">Not sure your tool qualifies? One message to me before you invest a weekend in it.</p>
+  </div>
+
+  <div class="callout" style="margin-top:18px"><b>Subscriptions I agreed to reimburse:</b> if I told you I would reimburse a subscription for your project, email me a screenshot of the charge and your Zelle details at xfu11 [at] gsu [dot] edu. One email per subscription, with your name and section in the subject line.</div>
+
+  <div class="callout blue" style="margin-top:18px">
+<div class="ptxt"><b>📌 Everything live at once, in one list:</b></div>
+<ul class="pts"><li><b>Group Assignment 3:</b> join a GA3 group on iCollege today; due next week, your own section.</li><li><b>Milestone II:</b> released; due Week 12.</li><li><b>Milestone III and Implementation:</b> released; due Week 13.</li><li><b>No quiz next week.</b> <a href="../week2/radar.html">Agent Radar</a> presenter slots are still open.</li></ul>
+<div class="ptxt">All deadlines: your own section’s iCollege.</div>
+</div>
+</div></section>
+
+<div class="wrap pager">
+  <a href="exercises.html"><span class="lab">← Previous</span><b>03 · Practice &amp; case</b></a>
+  <a href="../week11/index.html" class="next"><span class="lab">Next week →</span><b>Week 11 · Agentic Commerce</b></a>
+</div>
+
+<footer class="footer"><div class="wrap">
+  <a href="https://robinson.gsu.edu/" target="_blank" rel="noopener"><img src="../assets/gsu-robinson-logo.png" alt="Georgia State University — J. Mack Robinson College of Business" /></a>
+  <a href="https://path.mit.edu/" target="_blank" rel="noopener"><img class="path" src="../assets/path-logo.png" alt="PATH — Pathways for AI Training &amp; Hiring" /></a>
+  <div class="meta"><b>CIS 4394 · Agentic AI</b><br />Week 10 Summary: Security, Trust &amp; Governance<br /><a href="https://robinson.gsu.edu/profile/xinyu-fu/" style="color:inherit">Dr. Xinyu Fu</a> · Fall 2026 · Georgia State University</div>
+  <img class="hitbadge" src="https://hits.sh/sherryfu0315.github.io/cis4394-agentic-ai.svg?label=visits&color=0039a6&labelColor=16181d" alt="visit counter" />
+  <div class="right">Statistics are approximate and dated; verify against primary sources before quoting.</div>
+</div></footer>
+
+<script>
+const progress=document.getElementById('progressBar');
+addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+</body>
+</html>
