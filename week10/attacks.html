@@ -240,6 +240,26 @@ mention this step in your summary.
 </div></section>
 
 <section><div class="wrap">
+  <div class="eyebrow">Cases from the wild · 2025 · real and attributed</div>
+  <h2>Four incidents that are this page, with names</h2>
+  <p class="lede">Each one is a product people used, not a lab demo. Read them with the trifecta and the OWASP names in hand; the mapping is the exercise, and the mappings below are ours, written for class.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><span class="kicker">June 2025 · Microsoft 365 Copilot</span><h3>EchoLeak (CVE-2025-32711)</h3>
+      <p class="small">Researchers at Aim Security showed that one crafted email could make Microsoft 365 Copilot pull sensitive content from a user’s files and mail into its context and send it out, with no click from the user. Microsoft rated it critical (9.3), fixed it on the server side, and reported that no customer data had been accessed.</p>
+      <p class="small">Trifecta: all three legs present. OWASP: ASI01 goal hijack, ASI02 tool misuse. Sources: <a class="doc" href="https://thehackernews.com/2025/06/zero-click-ai-vulnerability-exposes.html" target="_blank" rel="noopener">The Hacker News ↗</a>, <a class="doc" href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-32711" target="_blank" rel="noopener">Microsoft advisory ↗</a>.</p></div>
+    <div class="card"><span class="kicker">May 2025 · GitHub’s official MCP server</span><h3>The toxic agent flow</h3>
+      <p class="small">Invariant Labs showed that a malicious issue in a public repository could steer a coding agent connected to GitHub’s MCP server into reading a private repository and publishing its contents in a public pull request. No CVE and no patch: Invariant called it an architectural problem of the agent system, not a bug in the server.</p>
+      <p class="small">Trifecta: private data (the private repo), untrusted content (the issue), external communication (a public PR). OWASP: ASI03 privilege abuse, ASI04 agentic supply chain. Week 6 meets Week 10. Source: <a class="doc" href="https://invariantlabs.ai/blog/mcp-github-vulnerability" target="_blank" rel="noopener">Invariant Labs, May 26, 2025 ↗</a>.</p></div>
+    <div class="card"><span class="kicker">July 2025 · arXiv preprints</span><h3>Hidden prompts for AI reviewers</h3>
+      <p class="small">A Nikkei investigation found white-on-white or tiny-font instructions in 17 preprints from 14 universities in eight countries, telling any AI reviewer to give a positive review. A KAIST professor called the practice unacceptable and said the paper would be withdrawn; a Waseda author defended it as a response to reviewers who themselves use AI.</p>
+      <p class="small">The agent here is a reviewer’s assistant; the untrusted content is the paper itself. OWASP: ASI09 human-agent trust exploitation. Sources: Nikkei Asia, July 2025; <a class="doc" href="https://the-decoder.com/researchers-hide-prompts-in-scientific-papers-to-sway-ai-powered-peer-review/" target="_blank" rel="noopener">The Decoder ↗</a>.</p></div>
+    <div class="card"><span class="kicker">March 2025 · Cursor and GitHub Copilot</span><h3>The rules-file backdoor</h3>
+      <p class="small">Pillar Security showed that invisible Unicode characters in the configuration files that steer coding assistants could carry instructions the developer never sees, so the assistant quietly adds malicious code. Both Cursor and GitHub answered that reviewing and accepting a suggestion is the user’s responsibility.</p>
+      <p class="small">The same attack surface as the Week 2 harness: a file the agent reads as instructions. OWASP: ASI04 agentic supply chain, ASI05 unexpected code execution. Source: <a class="doc" href="https://thehackernews.com/2025/03/new-rules-file-backdoor-attack-lets.html" target="_blank" rel="noopener">The Hacker News, March 18, 2025 ↗</a>.</p></div>
+  </div>
+  <p class="small" style="margin-top:14px">Already in this course: Greshake and colleagues (2023) showed indirect injection against deployed apps; the $1 Chevy Tahoe (Week 3) was direct injection by a user; Air Canada (this week’s case) needed no attacker at all. To feel the mechanism yourself, do the summariser exercise on <a class="doc" href="exercises.html">page 03</a>.</p>
+</div></section>
+<section><div class="wrap">
   <div class="eyebrow">What works</div>
   <h2>Five defenses, stacked</h2>
   <p class="lede">No single control is sufficient. Assume each one fails sometimes and design so that the next one still holds. Notice how much of this you have already built for other reasons.</p>
