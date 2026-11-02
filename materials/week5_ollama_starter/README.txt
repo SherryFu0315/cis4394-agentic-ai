@@ -68,6 +68,17 @@ WEEK 9 ADD-ON (your agents as chat apps)
   On your phone:  LAN=1 (same Wi-Fi, open http://<laptop-ip>:port)  or  SHARE=1 (public link; anyone with it can use your agent)
   Full instructions: https://xinyufu.org/cis4394-agentic-ai/week9/local.html
 
+MILESTONE II HELPER (Fleet agent -> public link)
+  Fleet shares agents only with LangSmith accounts, never with "anyone with the link". Every Fleet agent does
+  have a REST endpoint, so 11_fleet_bridge.py is a 40-line Gradio page that forwards messages to it with
+  your key. Classmates open the gradio.live link; the agent, its tools and its traces stay in Fleet.
+    In Fleet: Advanced settings -> Developer -> View code snippets  (copy api_url + agent_id)
+    smith.langchain.com -> Settings -> API keys -> Personal Access Token (must be the agent owner's)
+    export FLEET_API_URL=https://....us.langgraph.app FLEET_AGENT_ID=... LANGSMITH_API_KEY=lsv2_pt_...
+    python 11_fleet_bridge.py            # test at http://localhost:7862
+    SHARE=1 python 11_fleet_bridge.py    # public link for 7 days; stop the script after class
+  Every visitor spends YOUR Fleet allowance (7 LSUs/month free), so keep MAX_TURNS and connect nothing real.
+
 WEEK 11 ADD-ON (a purchasing agent that shops a real web store, with every step traced)
   Download CIS4394_Week11_Commerce_Addon.zip and unzip it INTO this folder, so that
   10_shop_agent.py and the shop/ folder sit next to 1_agent_raw.py.

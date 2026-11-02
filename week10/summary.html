@@ -137,7 +137,33 @@ Windows PowerShell:  $env:SHARE="1"; python 8_app_router.py</div>
       <li><b>Keep the laptop on, plugged in and awake</b> for as long as the link must work. Mac: run <code>caffeinate -i</code> in a second terminal. Windows: Settings → System → Power → Screen and sleep → Never when plugged in.</li>
       <li><b>A link lasts 7 days.</b> Restarting the app gives a new link, so update your submission if it changes.</li>
     </ol>
-    <p class="small" style="margin-top:12px">If you see “Could not create share link”, campus Wi-Fi may be blocking it: connect the laptop to your phone’s hotspot and try again. No-code path (Fleet or another platform): use the platform’s Publish or Share feature; the link must open without a login. If your platform cannot do that, talk to me before the deadline. The same-Wi-Fi and public-link methods are written out step by step on <a class="doc" href="../week9/local.html">Week 9, page 03</a>.</p>
+    <p class="small" style="margin-top:12px">If you see “Could not create share link”, campus Wi-Fi may be blocking it: connect the laptop to your phone’s hotspot and try again. No-code path on another platform: use its Publish or Share feature; the link must open without a login. Built it in Fleet? Fleet has no public-link option, so use the bridge in the next box. If your platform can do neither, talk to me before the deadline. The same-Wi-Fi and public-link methods are written out step by step on <a class="doc" href="../week9/local.html">Week 9, page 03</a>.</p>
+  </div>
+
+  <div class="card" style="margin-top:20px;border-left:3px solid var(--blue)">
+    <span class="kicker">Built your agent in Fleet? · how to get the public link anyway · added Nov 2</span>
+    <h3 style="margin-top:6px">Fleet has no public link, so put a small page in front of it</h3>
+    <p class="small" style="margin-top:10px">Fleet’s Sharing drawer offers Private, Workspace (marked Upgrade on the free plan) and Specific people, and all three require a LangSmith login. But every Fleet agent has an API endpoint. <a class="doc" href="../materials/week5_ollama_starter/11_fleet_bridge.py" download>11_fleet_bridge.py</a> is a 40-line Gradio page that runs on your laptop, forwards each message to that endpoint with your key, and is shared the Week 9 way. Classmates see the page; your agent, its tools, its memory and its traces stay in Fleet. I tested it on Nov 2 with one of my own Fleet agents: two turns, memory kept across them, link opened from outside campus.</p>
+    <ol class="steps" style="margin-top:14px">
+      <li><b>Get three values from Fleet.</b> Open the agent and click the gear at the top right (Configure agent). Expand Advanced settings; under Developer click View code snippets. Copy the API URL (it looks like <code>https://….us.langgraph.app</code>) and the Agent ID. Then go to Settings → API keys and create a Personal Access Token from the same account that owns the agent. A key from any other account gets a 404.</li>
+      <li><b>Test it on your laptop first.</b> Save the file next to your Week 9 scripts (Gradio is already installed there; otherwise <code>pip install gradio</code>). Run it with the three values on the same line, so nothing is written to disk:
+        <div class="codebox" style="margin:8px 0 0">Mac / Linux:
+FLEET_API_URL=https://….us.langgraph.app FLEET_AGENT_ID=… LANGSMITH_API_KEY=lsv2_pt_… python3 11_fleet_bridge.py
+
+Windows PowerShell:
+$env:FLEET_API_URL="https://….us.langgraph.app"; $env:FLEET_AGENT_ID="…"; $env:LANGSMITH_API_KEY="lsv2_pt_…"; python 11_fleet_bridge.py</div>
+        <p class="small" style="margin-top:8px">Open <code>http://localhost:7862</code> and send a message. A reply has to come back; the page opening is not the test. Ask it something a second time to see that it remembers the first turn.</p></li>
+      <li><b>Make it public.</b> Stop the script with Ctrl-C and run the same line again with <code>SHARE=1</code> in front (PowerShell: <code>$env:SHARE="1";</code> before it). Copy the line <code>Running on public URL: https://xxxx.gradio.live</code>. Test it on your phone with Wi-Fi off. Steps 4 and 5 above apply: laptop awake, link lasts 7 days.</li>
+      <li><b>Before you share.</b> The key lives only in the terminal line you typed: never in the file, the repo, a screenshot or the recording. Make the public copy of your agent with nothing real connected; keep a private copy with real connections if you need one. The Milestone II expansion must be visible in the public copy, and the eval harness and the trace must be run against this same copy. Leave the script’s 20-message cap per visitor on, and stop the script when class is over.</li>
+    </ol>
+    <p class="small" style="margin-top:12px"><b>What it costs: nothing in money.</b> Fleet’s free plan gives each organization 5 to 7 LSUs a month (one LSU is one dollar of model work). A short turn on the Fast model costs about 5 to 7 cents, so one month’s allowance is roughly 80 to 140 turns, enough for a class session if your agent answers briefly. When it is used up Fleet pauses new runs until next month; it does not bill you. The Usage page in Fleet’s left rail shows spend per agent and lets you set a weekly limit per user: set one before class, and keep the model on Fast. The gradio.live link needs no account of any kind.</p>
+    <table class="recaptable" style="margin-top:12px"><thead><tr><th>If you see</th><th>Check</th></tr></thead><tbody>
+      <tr><td>HTTP 401</td><td>The key: it must be a Personal Access Token from the account that owns the agent.</td></tr>
+      <tr><td>HTTP 404</td><td>The API URL and Agent ID, copied exactly from View code snippets; or the key is not the owner’s.</td></tr>
+      <tr><td>Could not create share link</td><td>Campus Wi-Fi is blocking it: connect the laptop to your phone’s hotspot and rerun.</td></tr>
+      <tr><td>Fleet paused new runs</td><td>The month’s allowance is gone (Usage page). Wait for the reset, or talk to me before the deadline.</td></tr>
+      <tr><td>Page loads, no reply</td><td>Read the error in the terminal; check the message cap notice in the chat; check Usage and the agent’s traces in LangSmith.</td></tr>
+    </tbody></table>
   </div>
 
   <div class="callout red" style="margin-top:18px">
