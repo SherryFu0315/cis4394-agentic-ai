@@ -67,3 +67,21 @@ WEEK 9 ADD-ON (your agents as chat apps)
                              python 8_app_router.py    -> http://localhost:7862   (one window, two agents)
   On your phone:  LAN=1 (same Wi-Fi, open http://<laptop-ip>:port)  or  SHARE=1 (public link; anyone with it can use your agent)
   Full instructions: https://xinyufu.org/cis4394-agentic-ai/week9/local.html
+
+WEEK 11 ADD-ON (a purchasing agent that shops a real web store, with every step traced)
+  Download CIS4394_Week11_Commerce_Addon.zip and unzip it INTO this folder, so that
+  10_shop_agent.py and the shop/ folder sit next to 1_agent_raw.py.
+  One extra package:         python -m pip install -U "langsmith>=0.14.9"
+  Tracing (the point of the lab): create a free LangSmith API key at smith.langchain.com, create an
+  Observability agent named shop-agent, then set these in the SAME terminal you run the script from:
+    Mac/Linux:   export LANGSMITH_TRACING=true LANGSMITH_API_KEY=lsv2_... LANGSMITH_AGENT_ID=shop-agent LANGSMITH_AGENT_ENVIRONMENT=local
+    PowerShell:  $env:LANGSMITH_TRACING="true"; $env:LANGSMITH_API_KEY="lsv2_..."; $env:LANGSMITH_AGENT_ID="shop-agent"; $env:LANGSMITH_AGENT_ENVIRONMENT="local"
+    (older, project-based workspace: LANGSMITH_PROJECT=cis4394-week11 instead of the two AGENT lines; never set both)
+  Without the variables the script still runs and prints the trace in the terminal.
+  Then:                      python 10_shop_agent.py pods            (scenarios: pods  hub  paper  bundle  all;  add  --runs 3)
+                             FLAKY=1 python 10_shop_agent.py pods    (the merchant times out AFTER recording the order)
+                             BUDGET=30 python 10_shop_agent.py pods  (the spend cap blocks; watch the retries)
+                             MODEL=qwen2.5:0.5b python 10_shop_agent.py pods
+  The store:  https://xinyufu.org/cis4394-agentic-ai/shop/   (nothing is for sale; one listing carries a planted instruction)
+  Offline copy: python -m http.server 8800 --directory shop   then   SHOP_URL=http://localhost:8800 python 10_shop_agent.py pods
+  Full instructions: https://xinyufu.org/cis4394-agentic-ai/week11/local.html

@@ -47,7 +47,16 @@
 .rung .t{font-weight:650;font-size:var(--fs-m)}
 .rung .t span{display:block;font-size:var(--fs-xs);color:var(--muted);font-weight:400;margin-top:3px}
 .rung p{margin:0;font-size:var(--fs-s)}
-@media(max-width:880px){.flowwrap{grid-template-columns:1fr}.rung{grid-template-columns:1fr;gap:6px}}
+.videocard{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.videocard .frame{position:relative;padding-top:56.25%;background:#101319}
+.videocard iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.videocard .cap{padding:14px 18px;font-size:var(--fs-s)}
+.videocard .cap b{display:block;font-size:var(--fs-s);margin-bottom:2px}
+.tl{list-style:none;margin:10px 0 0;padding:0}
+.tl li{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:8px 0;border-top:1px solid var(--line);font-size:var(--fs-s)}
+.tl li:first-child{border-top:0}
+.tl .d{font-family:var(--mono);font-size:var(--fs-xs);color:var(--muted);padding-top:2px}
+@media(max-width:880px){.flowwrap{grid-template-columns:1fr}.rung{grid-template-columns:1fr;gap:6px}.tl li{grid-template-columns:1fr;gap:2px}}
 </style>
 </head>
 <body>
@@ -63,7 +72,8 @@
   <a href="../index.html">⌂ Course</a>
   <a href="commerce.html" class="here"><span class="k">01</span>Agents That Buy</a>
   <a href="deploy.html"><span class="k">02</span>Shipping an Agent</a>
-  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+  <a href="local.html"><span class="k">03</span>Trace It</a>
+  <a href="exercises.html"><span class="k">04</span>Practice &amp; Case</a>
 </div></div>
 <div class="progress"><span id="progressBar"></span></div>
 
@@ -126,9 +136,9 @@
 
 <section><div class="wrap">
   <div class="eyebrow">Emerging standards · read this carefully</div>
-  <h2>Two young protocols, both from 2025</h2>
-  <p class="lede">In September 2025 two overlapping proposals appeared for making agent-initiated payments work: AP2, announced by Google with a set of payments and technology partners, and ACP, published by Stripe and OpenAI. They are early, they are still changing, and they solve related but different problems. Treat what follows as a snapshot, not a settled answer.</p>
-  <div class="grid2" style="align-items:start">
+  <h2>Three young protocols, 2025 to 2026</h2>
+  <p class="lede">In September 2025 two overlapping proposals appeared for making agent-initiated payments work: AP2, announced by Google with a set of payments and technology partners, and ACP, published by Stripe and OpenAI. In January 2026 Google added UCP, co-developed with Shopify, Etsy, Wayfair, Target and Walmart, which covers the whole shopping conversation rather than the payment alone. All three are early, all three are still changing, and they solve related but different problems. Treat what follows as a snapshot (checked November 2, 2026), not a settled answer.</p>
+  <div class="grid3" style="align-items:start">
     <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">AP2: Agent Payments Protocol</span>
       <h3 style="margin-top:8px">Making the authorization provable</h3>
       <p class="small">Google's announcement frames AP2 as an open protocol for payments initiated by agents, built around mandates: signed, verifiable records of what the human authorized (the intent, the cart, and the payment), expressed as W3C Verifiable Credentials. The point is that a merchant or an issuer downstream can <em>check</em> the permission slip rather than take the agent's word for it, and that the record survives afterward as evidence of consent. It is positioned to sit alongside agent-to-agent and tool protocols rather than replace them (Google, 2025).</p>
@@ -139,18 +149,124 @@
       <p class="small">Stripe and OpenAI published ACP as an open standard for agent-initiated checkout: a documented way for an agent to hand a merchant a cart, have the merchant confirm price and availability, and complete payment, with a Shared Payment Token arrangement so the merchant continues to be the merchant of record and keeps its own relationship with the customer, rather than the agent platform taking it over. The specification is published openly (Apache-2.0 on the spec repository) so that merchants and agent builders can implement against the same shapes (OpenAI &amp; Stripe, 2025).</p>
       <p class="small" style="margin-top:10px"><a class="doc" href="https://stripe.com/blog/developing-an-open-standard-for-agentic-commerce" target="_blank" rel="noopener">Primary source — the Stripe announcement ↗</a> · <a class="doc" href="https://www.agenticcommerce.dev/" target="_blank" rel="noopener">agenticcommerce.dev ↗</a> · <a class="doc" href="https://github.com/agentic-commerce-protocol/agentic-commerce-protocol" target="_blank" rel="noopener">spec repo ↗</a></p>
     </div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">UCP: Universal Commerce Protocol</span>
+      <h3 style="margin-top:8px">Making the whole shopping conversation portable</h3>
+      <p class="small">Announced by Google at NRF on January 11, 2026 and co-developed with Shopify, Etsy, Wayfair, Target and Walmart, UCP is an open standard for how an agent and a merchant talk from discovery through checkout, identity linking, order status and payment-token exchange. Its messages travel over REST, MCP or A2A, it is designed to work alongside AP2 for the payment leg, and its first home is checkout inside Google’s AI Mode and the Gemini app, paid with Google Pay. Endorsements at launch included Visa, Mastercard, American Express, Stripe and Adyen (Google, 2026).</p>
+      <p class="small" style="margin-top:10px"><a class="doc" href="https://blog.google/products/ads-commerce/agentic-commerce-ai-tools-protocol-retailers-platforms/" target="_blank" rel="noopener">Primary source — Google’s announcement, Jan 11, 2026 ↗</a> · <a class="doc" href="https://developers.googleblog.com/under-the-hood-universal-commerce-protocol-ucp/" target="_blank" rel="noopener">under the hood (Google for Developers) ↗</a> · <a class="doc" href="https://ucp.dev/" target="_blank" rel="noopener">ucp.dev ↗</a> · <a class="doc" href="https://github.com/Universal-Commerce-Protocol/ucp" target="_blank" rel="noopener">spec repo ↗</a></p>
+    </div>
   </div>
   <div class="cmpwrap">
   <table class="cmp">
-    <tr><th></th><th>AP2 (Google + partners, 2025)</th><th>ACP (Stripe + OpenAI, 2025)</th></tr>
-    <tr><td>Centre of gravity</td><td>Payment authorization: proving a human permitted this spend.</td><td>The checkout transaction: a common way for an agent and a merchant to complete a sale.</td></tr>
-    <tr><td>How consent is carried</td><td>Mandates as verifiable credentials (intent → cart → payment), signed and checkable after the fact.</td><td>The buyer's confirmed cart plus a shared payment token scoped to that purchase.</td></tr>
-    <tr><td>Who most needs to care</td><td>Issuers, networks, wallets, and anyone who must answer “was this authorized?”</td><td>Merchants and agent platforms wiring up a working buy button inside a conversation.</td></tr>
-    <tr><td>Openness</td><td>Published openly by Google with partner input; check the current specification before building.</td><td>Specification published on an open repository under Apache-2.0; check the repo for the current version.</td></tr>
-    <tr><td>Maturity (as of this course)</td><td colspan="2"><b>Both are early.</b> Both were announced in 2025, both are still being revised, and they overlap in places and complement each other in others. Nothing here says one has won, and any page that tells you which one won is guessing.</td></tr>
+    <tr><th></th><th>AP2 (Google + partners, Sept 2025)</th><th>ACP (Stripe + OpenAI, Sept 2025)</th><th>UCP (Google + retailers, Jan 2026)</th></tr>
+    <tr><td>Centre of gravity</td><td>Payment authorization: proving a human permitted this spend.</td><td>The checkout transaction: a common way for an agent and a merchant to complete a sale.</td><td>The shopping session end to end: discovery, cart, checkout, order status and identity linking, with the payment leg delegated to AP2 or a network token.</td></tr>
+    <tr><td>How consent is carried</td><td>Mandates as verifiable credentials (intent → cart → payment), signed and checkable after the fact.</td><td>The buyer's confirmed cart plus a shared payment token scoped to that purchase.</td><td>The merchant confirms each step of the checkout; payment arrives as a token the merchant's processor accepts, or as an AP2 mandate.</td></tr>
+    <tr><td>Who most needs to care</td><td>Issuers, networks, wallets, and anyone who must answer “was this authorized?”</td><td>Merchants and agent platforms wiring up a working buy button inside a conversation.</td><td>Retailers and platforms that want to be found and bought from inside AI assistants, starting with Google's.</td></tr>
+    <tr><td>Openness</td><td>Published openly by Google with partner input; check the current specification before building.</td><td>Specification published on an open repository under Apache-2.0; check the repo for the current version.</td><td>Open specification at ucp.dev with an Apache-2.0 repository; co-developed by five retailers and endorsed by payment networks and processors at launch.</td></tr>
+    <tr><td>Maturity (as of this course)</td><td colspan="3"><b>All three are early.</b> They were announced between September 2025 and January 2026, all are still being revised, and they overlap in places and complement each other in others (UCP names AP2 as one of its payment options). Nothing here says one has won, and any page that tells you which one won is guessing.</td></tr>
   </table>
   </div>
-  <div class="callout red" style="margin-top:20px">How to talk about this in an interview (or a memo). Say what each protocol tries to make checkable, say that both are new and moving, and say what you would do about it: build the <em>capability</em> (an explicit record of authorization, a scoped payment credential, a receipt that links back to both) behind an interface you can re-point. Betting your architecture on one 2025 standard is how you inherit a migration. Never quote adoption figures you have not read in the primary source this week; in a fast-moving standards race those numbers go stale faster than anything else on the page.</div>
+  <div class="callout red" style="margin-top:20px">How to talk about this in an interview (or a memo). Say what each protocol tries to make checkable, say that both are new and moving, and say what you would do about it: build the <em>capability</em> (an explicit record of authorization, a scoped payment credential, a receipt that links back to both) behind an interface you can re-point. Betting your architecture on one 2025 or 2026 standard is how you inherit a migration. Never quote adoption figures you have not read in the primary source this week; in a fast-moving standards race those numbers go stale faster than anything else on the page.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="eyebrow">Special topic · checked November 2, 2026</div>
+  <h2>How does the agent pay, and will the store let it in?</h2>
+  <p class="lede">Meta’s Muse, released on September 8, 2026, is the first mass-market assistant whose job description includes buying things. Follow one Muse purchase from the request to the receipt and you meet every question on this page in order: whose card is this, who approved the spend, and whether the store wanted the agent there at all. Keep one more question running underneath: one day you may manage a company’s website. Will you let agents operate on it?</p>
+
+  <h3>One Muse purchase, step by step</h3>
+  <ol class="steps">
+    <li><b>You ask, in the Muse app or in WhatsApp.</b> Muse runs on its own virtual machine with its own browser, so it can open retail sites, compare, and prepare a checkout while you do something else (Meta, 2026).</li>
+    <li><b>It stops before it spends.</b> Meta’s announcement says Muse comes back for approval before it sends an email or makes a purchase. CNBC describes the moment: Muse preps the checkout and shows an approval card with the order details for you to confirm (CNBC, Oct 3, 2026). That card is the amber node in the flow above, shipped as a consumer product.</li>
+    <li><b>It pays with a card you never typed.</b> Checkout runs through Link, Stripe’s wallet. In Meta’s words, “Link’s wallet for agents generates a one-time-use card so your real card details stay hidden.” Muse cannot see the card numbers stored in your Stripe account (PCWorld), and Meta says it is the first agent covered by Link’s purchase protections. Shop Pay and PayPal were announced as further ways to pay.</li>
+    <li><b>The store decides whether to serve it.</b> Walmart, Gap, Sephora, Expedia, Wayfair and Best Buy were named as partners in October 2026. Amazon blocked Muse, saying it violates Amazon’s terms of service and alleging that it stores customer credentials and scrapes account data (CNBC, Oct 3, 2026).</li>
+  </ol>
+  <p class="small">A code inspection reported by ppc.land on September 9, 2026 found three checkout paths inside the Muse client: a browser mode that types card details into whatever form the merchant presents, a Shopify mode over APIs (assessed, with a hedge, as Shop Pay over the Universal Commerce Protocol), and the Stripe Link path. Three paths, three different answers to “whose card, and who can check the approval?”</p>
+  <p class="small">Sources: <a class="doc" href="https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/" target="_blank" rel="noopener">Meta newsroom, Sept 8, 2026 ↗</a> · <a class="doc" href="https://www.cnbc.com/2026/10/03/meta-muse-shopping-ai-agent.html" target="_blank" rel="noopener">CNBC, Oct 3, 2026 ↗</a> · <a class="doc" href="https://www.pcworld.com/article/3243549/metas-muse-ai-assistant-was-born-to-shop.html" target="_blank" rel="noopener">PCWorld, Sept 25, 2026 ↗</a> · <a class="doc" href="https://ppc.land/meta-puts-an-ai-agent-that-buys-things-inside-whatsapp-us-only/" target="_blank" rel="noopener">ppc.land, Sept 9, 2026 ↗</a></p>
+
+  <h3 style="margin-top:34px">Four ways an agent can pay</h3>
+  <p>Strip away the brand names and there are four designs. They differ in one thing: how far the credential has moved from “your card, in the agent’s hands” toward “a token for this one purchase that a third party can check.”</p>
+  <div class="grid2" style="align-items:start">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">1 · The agent uses your card</span>
+      <p class="small" style="margin-top:8px">A browser agent in form-filling mode (Muse’s browser path, Comet in the Amazon case) shops inside your logged-in account or types the card you stored. To the store it looks like you. Nothing scopes the credential to this purchase, and a planted instruction on the page (Week 10) is now spending your card. Every incident story on page 04 starts here.</p></div>
+    <div class="card" style="border-top:3px solid #d99a1b"><span class="kicker">2 · A wallet the agent never sees</span>
+      <p class="small" style="margin-top:8px">Link by Stripe, PayPal, Shop Pay. The wallet holds the real card and issues a single-use number for the one order the human approved; the agent passes the token along without ever seeing a card. Purchase protection and the approval record sit with the wallet, which is why Meta chose this as Muse’s default path.</p></div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">3 · Network tokens built for agents</span>
+      <p class="small" style="margin-top:8px">Visa Intelligent Commerce and Mastercard Agent Pay (both announced in April 2025) extend the tokenization that already powers mobile wallets: a tokenized credential issued to a specific agent, with limits the cardholder set, so the issuer and the network know an agent is paying and can check the limits at authorization time rather than after the dispute.</p></div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">4 · Protocol-level checkout</span>
+      <p class="small" style="margin-top:8px">ACP’s Shared Payment Token (a credential scoped to one agent-initiated purchase, with the merchant staying merchant of record), AP2’s signed mandates (intent, cart, payment), UCP’s checkout with payment-token exchange. The approval travels with the transaction in a form the merchant, the processor and the issuer can each verify.</p></div>
+  </div>
+  <div class="callout blue" style="margin-top:16px"><b>The pattern:</b> each step down the list moves the human gate out of the agent and into a party that keeps records and absorbs disputes (a wallet, a network, a protocol). Where the gate sits decides who eats a charge nobody meant to make. It is the flow diagram’s rule, push irreversibility below the gate, applied to the credential itself.</div>
+  <p class="small">Sources: <a class="doc" href="https://newsroom.mastercard.com/news/press/2025/april/mastercard-unveils-agent-pay-pioneering-agentic-payments-technology-to-power-commerce-in-the-age-of-ai" target="_blank" rel="noopener">Mastercard Agent Pay announcement, Apr 2025 ↗</a> · <a class="doc" href="https://developer.visa.com/capabilities/visa-intelligent-commerce" target="_blank" rel="noopener">Visa Intelligent Commerce, developer page ↗</a> · <a class="doc" href="https://docs.stripe.com/agentic-commerce" target="_blank" rel="noopener">Stripe, agentic commerce documentation ↗</a></p>
+
+  <h3 style="margin-top:34px">How does the store know it is talking to an agent?</h3>
+  <p>Amazon’s complaint against Perplexity turned on one word: disguise. A browser agent that presents itself as Chrome gives the merchant no way to treat it differently, so the merchant’s only options are to serve it as a human or to block everything that looks automated. Two 2025 mechanisms try to give the store a third option.</p>
+  <ul class="pts">
+    <li><b>Web Bot Auth (Cloudflare, May 2025):</b> the agent signs each HTTP request with a key the site can verify (HTTP Message Signatures, RFC 9421); OpenAI signs Operator’s requests this way. In August 2025 Cloudflare added a “signed agents” class so a site owner can allow identified agents while still blocking anonymous bots; the first cohort was ChatGPT agent, Goose, Browserbase and Anchor Browser.</li>
+    <li><b>Trusted Agent Protocol (Visa with Cloudflare, October 2025):</b> Web Bot Auth plus commerce. The signed request carries the agent’s identity, a session identifier bound to the exact page, and, with the consumer’s consent, payment or loyalty identifiers, so a merchant can determine the identity and intent of agent traffic. Mastercard said it would build Web Bot Auth into Agent Pay and American Express into its own program; Adyen, Checkout.com, Shopify and Worldpay are among the partners who gave feedback.</li>
+    <li><b>Pay per crawl (Cloudflare, July 2025), the other side of the same coin:</b> a site can answer an identified bot with HTTP 402 Payment Required and a price. Identity makes it possible to charge an agent as well as to welcome it.</li>
+  </ul>
+  <p class="small">Sources: Cloudflare blog posts on <a class="doc" href="https://blog.cloudflare.com/web-bot-auth/" target="_blank" rel="noopener">Web Bot Auth ↗</a>, <a class="doc" href="https://blog.cloudflare.com/signed-agents/" target="_blank" rel="noopener">signed agents ↗</a> and <a class="doc" href="https://blog.cloudflare.com/introducing-pay-per-crawl/" target="_blank" rel="noopener">pay per crawl ↗</a> · <a class="doc" href="https://www.cloudflare.com/press/press-releases/2025/cloudflare-collaborates-with-leading-payments-companies-to-secure-and-enable-agentic-commerce/" target="_blank" rel="noopener">Cloudflare press release, Oct 2025 ↗</a> · <a class="doc" href="https://github.com/visa/trusted-agent-protocol" target="_blank" rel="noopener">Visa Trusted Agent Protocol on GitHub ↗</a></p>
+
+  <h3 style="margin-top:34px">Two postures a store can take</h3>
+  <div class="grid2" style="align-items:start">
+    <div class="card" style="border-top:3px solid var(--red)"><span class="kicker">Block, and litigate: Amazon v. Perplexity</span>
+      <ul class="tl">
+        <li><span class="d">Nov 4, 2025</span><span>Amazon sues Perplexity in federal court in California, days after a cease-and-desist accusing it of “disguising Comet as a Google Chrome browser” and refusing to identify its agents in the Amazon store. Amazon’s own agents, Rufus and Buy For Me, keep running; its CEO says Amazon expects “over time to partner with third-party agents.”</span></li>
+        <li><span class="d">Mar 10, 2026</span><span>Judge Maxine Chesney grants a preliminary injunction: Comet may not reach password-protected parts of Amazon on shoppers’ behalf. She found Amazon likely to succeed on its Computer Fraud and Abuse Act claims.</span></li>
+        <li><span class="d">Aug 4, 2026</span><span>A Ninth Circuit panel vacates the injunction. Judge Milan Smith: “An injunction would impair consumer choice and needlessly limit development of a nascent technology,” and it is the user, not Perplexity, who accesses Amazon’s computers. The case itself continues.</span></li>
+        <li><span class="d">Oct 2026</span><span>Amazon blocks Muse, citing its terms of service (CNBC).</span></li>
+      </ul>
+      <p class="small" style="margin-top:10px">Sources: <a class="doc" href="https://www.paymentsdive.com/news/amazon-sues-perplexity-ai-shopping-agents/804923/" target="_blank" rel="noopener">Payments Dive ↗</a> · <a class="doc" href="https://www.geekwire.com/2026/03/10/judge-blocks-perplexitys-ai-bot-from-shopping-on-amazon-in-early-test-of-agentic-commerce/" target="_blank" rel="noopener">GeekWire ↗</a> · <a class="doc" href="https://www.mediapost.com/publications/article/417007/appeals-court-sides-against-amazon-lifts-perplexi.html" target="_blank" rel="noopener">MediaPost ↗</a> · <a class="doc" href="https://engadget.com/2230471/perplexity-has-successfully-overturned-amazon-injunction-on-its-ai-shopping-bot" target="_blank" rel="noopener">Engadget ↗</a></p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)"><span class="kicker">Join a platform, on a protocol</span>
+      <ul class="tl">
+        <li><span class="d">Sept 29, 2025</span><span>Instant Checkout in ChatGPT opens with US Etsy sellers, with “over a million Shopify merchants” announced as coming, on ACP. The merchant stays merchant of record and decides whether to accept each transaction (Stripe).</span></li>
+        <li><span class="d">Jan 11, 2026</span><span>Google announces UCP at NRF with Shopify, Etsy, Wayfair, Target and Walmart as co-developers: checkout inside AI Mode and the Gemini app, paid with Google Pay.</span></li>
+        <li><span class="d">Oct 2026</span><span>Walmart, Gap, Sephora, Expedia, Wayfair and Best Buy are named as Muse partners.</span></li>
+        <li><span class="d">The trade</span><span>What the retailer gets: the agent’s traffic arrives identified, the approval and the payment credential are checkable, and it keeps the customer record. What it gives up: the agent platform now sits between it and the shopper, and ranks it.</span></li>
+      </ul>
+      <p class="small" style="margin-top:10px">Sources: <a class="doc" href="https://stripe.com/blog/developing-an-open-standard-for-agentic-commerce" target="_blank" rel="noopener">Stripe, Sept 29, 2025 ↗</a> · <a class="doc" href="https://blog.google/products/ads-commerce/agentic-commerce-ai-tools-protocol-retailers-platforms/" target="_blank" rel="noopener">Google, Jan 11, 2026 ↗</a> · <a class="doc" href="https://www.cnbc.com/2026/10/03/meta-muse-shopping-ai-agent.html" target="_blank" rel="noopener">CNBC, Oct 3, 2026 ↗</a></p>
+    </div>
+  </div>
+
+  <div class="grouptask" style="margin-top:30px"><span class="gk">👥 Group task · Small groups · ~20 minutes · you run the website</span>
+    <p>Two years from now you manage the e-commerce site of a mid-size retailer (pick one: a regional grocer, a furniture brand, a university bookstore, a B2B parts distributor). Shopping agents are a growing share of your traffic and they do not identify themselves. Choose a posture and defend it:</p>
+    <ul class="pts">
+      <li><b>Block:</b> bot management, terms of service, legal letters. You keep the relationship; you also turn away every shopper who delegated.</li>
+      <li><b>Allow and identify:</b> accept signed agents (Web Bot Auth, Trusted Agent Protocol) with their own rate limits, their own terms and their own checkout path.</li>
+      <li><b>Join a platform:</b> list through ACP, UCP or a Muse-style partnership. The platform brings identified agents and checkable payments, and takes a seat between you and the customer.</li>
+      <li><b>Build your own agent:</b> Amazon’s route (Rufus, Buy For Me). Expensive, and your agent will only ever shop at you.</li>
+    </ul>
+    <p style="margin-top:10px">Whatever you choose, write the list of things you would require before an agent may place an order on your site, and the three numbers you would watch in the first month.</p>
+    <p class="prod"><b>Produce:</b> the posture, the requirements list, the three metrics, and one sentence on who pays when an agent-placed order goes wrong.</p>
+    <button class="revealbtn">What a strong answer looks like</button>
+    <div class="revealbox">Strong groups notice that the posture is a business question and the requirements list is not: it looks the same for every posture. Identity of the agent (a signature you can verify, not a user-agent string). Identity of the human behind it, in a form you can hold up later (a mandate, or the wallet’s approval record). A payment credential scoped to this order, so a dispute lands on a token and not on a stored card. Rate limits and a kill switch per agent. Logging good enough to reconstruct the Week 2 evidence line for any order. Clear terms on returns and fraud liability for agent-placed orders, agreed before the first one. The three metrics most groups pick: agent-placed orders as a share of revenue, their return and chargeback rate against human orders, and conversion for agent traffic versus human traffic (which tells you whether blocking would have cost you anything). The liability sentence separates the groups who read page 02: on a stored-card path the merchant and the cardholder argue; on a tokenized path the wallet or network that issued the token holds the record, and usually the first loss.</div>
+  </div>
+
+  <h3 style="margin-top:34px">Open questions, for a thesis or a first job</h3>
+  <p>None of this is settled, which makes it a good place to do original work. Each question below has at least one published starting point.</p>
+  <div class="grid2" style="align-items:start">
+    <div class="card"><span class="kicker">Markets and strategy</span>
+      <ul class="pts small" style="margin-top:10px">
+        <li><b>Walled gardens or an open web of agents?</b> Rothschild and colleagues (2025) argue that the architecture of agent-to-business communication will decide who captures the margin. Which retailers gain from joining a platform, and which lose the customer relationship?</li>
+        <li><b>Does ranking fairness survive agents?</b> In Microsoft Research’s Magentic Marketplace simulation (Bansal et al., 2025) frontier models approached optimal welfare only under ideal search, degraded sharply with scale, and showed a first-proposal bias that gave response speed a 10 to 30 times advantage over quality. What does that do to sponsored listings, to late sellers, to price competition?</li>
+        <li><b>Do agents pay more or less than people?</b> Price discrimination against (or by) agents, negotiation between buyer and seller agents, and the sandboxed “virtual agent economies” Tomašev and colleagues (2025) propose for studying it safely.</li>
+      </ul></div>
+    <div class="card"><span class="kicker">Security, trust and measurement</span>
+      <ul class="pts small" style="margin-top:10px">
+        <li><b>How do the protocols fail?</b> A 2026 systematization of agentic-commerce security and a protocol-level attack study of ACP- and UCP-style flows (Louck, 2026) catalogue manipulation of carts, tokens and merchant responses. Which controls on this page stop which attack?</li>
+        <li><b>Approval fatigue:</b> Muse shows an approval card for every purchase. After how many cards does a person stop reading? What should the card show so that a wrong quantity is caught in under fifteen seconds (Exercise A on page 04)?</li>
+        <li><b>How good are shopping agents, really?</b> WebShop (Yao et al., 2022), τ-bench (Yao et al., 2024), DeepShop (2025) and UserArena (2026) score task success; Bazaar (2026) scores pricing. A benchmark that scores money lost on wrong purchases, not tasks failed, is a gap worth filling.</li>
+      </ul></div>
+  </div>
+  <p class="small">Papers: <a class="doc" href="https://arxiv.org/abs/2505.15799" target="_blank" rel="noopener">The Agentic Economy ↗</a> · <a class="doc" href="https://arxiv.org/abs/2510.25779" target="_blank" rel="noopener">Magentic Marketplace ↗</a> · <a class="doc" href="https://arxiv.org/abs/2509.10147" target="_blank" rel="noopener">Virtual Agent Economies ↗</a> · <a class="doc" href="https://arxiv.org/abs/2604.15367" target="_blank" rel="noopener">SoK: Security of Autonomous LLM Agents in Agentic Commerce ↗</a> · <a class="doc" href="https://arxiv.org/abs/2607.21824" target="_blank" rel="noopener">Protocol-Level Attacks on Agentic Commerce Platforms ↗</a> · <a class="doc" href="https://arxiv.org/abs/2207.01206" target="_blank" rel="noopener">WebShop ↗</a> · <a class="doc" href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noopener">τ-bench ↗</a> · <a class="doc" href="https://arxiv.org/abs/2506.02839" target="_blank" rel="noopener">DeepShop ↗</a> · <a class="doc" href="https://arxiv.org/abs/2610.30932" target="_blank" rel="noopener">UserArena ↗</a> · <a class="doc" href="https://arxiv.org/abs/2608.00102" target="_blank" rel="noopener">Bazaar ↗</a></p>
+
+  <h3 style="margin-top:34px">Watch</h3>
+  <div class="grid2">
+    <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/cA4r5Voxx0M" title="Becoming agent ready with the Agentic Commerce Protocol (ACP)" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>Stripe Developers: becoming agent-ready with ACP (5 min)</b>November 2025. What a merchant implements to sell inside an agent, in Stripe’s own words.</div></div>
+    <div class="videocard"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/C6qcZdtIv54" title="Buy it in ChatGPT: Instant Checkout and the Agentic Commerce Protocol" allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="cap"><b>OpenAI: Buy it in ChatGPT (30 seconds)</b>September 2025, the launch clip. Count the taps between “find” and “paid”, and find the approval.</div></div>
+  </div>
+  <p class="small" style="margin-top:10px">Longer, optional: <a class="doc" href="https://www.youtube.com/watch?v=UH_d_78do2I" target="_blank" rel="noopener">Stripe Developers, The future of agentic payments (15 min, March 2026) ↗</a> · <a class="doc" href="https://www.youtube.com/watch?v=QbkVrCU8PLM" target="_blank" rel="noopener">Shopify Engineering, UCP and agentic commerce (40 min, May 2026) ↗</a>.</p>
 </div></section>
 
 <section><div class="wrap">

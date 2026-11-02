@@ -2,3 +2,4 @@ ollama>=0.6
 langgraph>=1.0
 langchain-ollama>=1.0
 gradio
+langsmith>=0.14.9

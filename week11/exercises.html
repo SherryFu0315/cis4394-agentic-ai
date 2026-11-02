@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>03 · Practice &amp; Case — CIS 4394 Week 11</title>
+<title>04 · Practice &amp; Case — CIS 4394 Week 11</title>
 <meta name="description" content="Two activities and a case, all built on the same move: decide in advance what an agent may do with money, and be able to prove afterward what it did. Every…" />
 <meta name="author" content="Dr. Xinyu Fu" />
 <link rel="canonical" href="https://xinyufu.org/cis4394-agentic-ai/week11/exercises.html" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="CIS 4394 Agentic AI · Georgia State University" />
-<meta property="og:title" content="03 · Practice &amp; Case — CIS 4394 Week 11" />
+<meta property="og:title" content="04 · Practice &amp; Case — CIS 4394 Week 11" />
 <meta property="og:description" content="Two activities and a case, all built on the same move: decide in advance what an agent may do with money, and be able to prove afterward what it did. Every…" />
 <meta property="og:url" content="https://xinyufu.org/cis4394-agentic-ai/week11/exercises.html" />
 <meta property="og:image" content="https://xinyufu.org/cis4394-agentic-ai/assets/social-card.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="03 · Practice &amp; Case — CIS 4394 Week 11" />
+<meta name="twitter:title" content="04 · Practice &amp; Case — CIS 4394 Week 11" />
 <meta name="twitter:description" content="Two activities and a case, all built on the same move: decide in advance what an agent may do with money, and be able to prove afterward what it did. Every…" />
 <meta name="twitter:image" content="https://xinyufu.org/cis4394-agentic-ai/assets/social-card.png" />
 <link rel="icon" href="../assets/gsu-flame.png" />
@@ -47,12 +47,13 @@
   <a href="../index.html">⌂ Course</a>
   <a href="commerce.html"><span class="k">01</span>Agents That Buy</a>
   <a href="deploy.html"><span class="k">02</span>Shipping an Agent</a>
-  <a href="exercises.html" class="here"><span class="k">03</span>Practice &amp; Case</a>
+  <a href="local.html"><span class="k">03</span>Trace It</a>
+  <a href="exercises.html" class="here"><span class="k">04</span>Practice &amp; Case</a>
 </div></div>
 <div class="progress"><span id="progressBar"></span></div>
 
 <header class="pagehead"><div class="wrap">
-  <div class="eyebrow">03 · Practice</div>
+  <div class="eyebrow">04 · Practice</div>
   <h1>Design the gate. Then work the <em>incident</em>.</h1>
   <p class="lede">Two activities and a case, all built on the same move: decide in advance what an agent may do with money, and be able to prove afterward what it did. Every reveal on this page is an answer key; try yours first.</p>
 </div></header>
@@ -207,7 +208,7 @@
 </div></section>
 
 <div class="wrap pager">
-  <a href="deploy.html"><span class="lab">← Previous</span><b>02 · Shipping an agent</b></a>
+  <a href="local.html"><span class="lab">← Previous</span><b>03 · Trace it</b></a>
   <a href="../index.html" class="next"><span class="lab">Done →</span><b>Back to the course</b></a>
 </div>
 
@@ -225,8 +226,8 @@ const IV=[
   a:'Strong answers separate generality from reliability. The benchmarks built for this — OSWorld (Xie et al., 2024) on real desktop tasks and WebArena (Zhou et al., 2023) on long-horizon web tasks — reported success rates far below human performance at publication, and the reason is structural rather than temporary: long tasks compound errors, screens give no schema to validate against, and an agent that misreads a page fails silently instead of raising an exception. Say the numbers are dated and that you would check the current ones before quoting. Then land the implication, which is what the interviewer is actually asking for: match autonomy to reliability times reversibility. Ship computer use on short, bounded, reversible, reviewed tasks; keep money behind typed APIs and a human gate.'},
  {q:'2 · Walk me through the cost model for a multi-step agent. What are the first two levers you pull?',
   a:'The equation: cost per completed task is roughly tokens per step times price per token times steps per run times attempts per completed task. The two things that catch people out are that context is re-sent every step, so tokens grow faster than steps, and that the denominator is completed tasks rather than runs, so the failure rate is part of the cost. First lever: cap the steps, because it bounds the worst case rather than shaving the average. Second: right-size the model per step, keeping the expensive model for the one genuinely hard decision. Then caching and fewer tool round-trips. A strong answer ends with measurement rather than arithmetic — instrument a real run, read the number off the meter, and compare it to the fully-loaded manual baseline, because the comparison is never against zero.'},
- {q:'3 · AP2 and ACP both appeared in 2025. What does each one try to make checkable, and how should that shape what you build now?',
-  a:'AP2, announced by Google with payments partners, centres on authorization: mandates expressed as verifiable credentials that record what the human permitted — intent, cart, payment — so downstream parties can check the permission rather than trust the agent. ACP, from Stripe and OpenAI, centres on the checkout transaction: a common shape for an agent to present a cart to a merchant and complete payment, with a shared payment token that keeps the merchant as merchant of record. They overlap and they are both young. The part that separates a strong answer: refuse to declare a winner, and say what you would do about the uncertainty — build the capabilities (an explicit authorization record, a credential scoped to one cart, a receipt linked to both) behind an interface you can re-point when the standards settle. Anyone quoting adoption numbers in a fast-moving standards race is quoting something already stale.'},
+ {q:'3 · AP2 and ACP appeared in 2025, UCP in January 2026. What does each one try to make checkable, and how should that shape what you build now?',
+  a:'AP2, announced by Google with payments partners, centres on authorization: mandates expressed as verifiable credentials that record what the human permitted — intent, cart, payment — so downstream parties can check the permission rather than trust the agent. ACP, from Stripe and OpenAI, centres on the checkout transaction: a common shape for an agent to present a cart to a merchant and complete payment, with a shared payment token that keeps the merchant as merchant of record. UCP, from Google with Shopify, Etsy, Wayfair, Target and Walmart, centres on the shopping session as a whole: discovery, checkout, order status and identity linking, with the payment leg delegated to AP2 or a network token. All three overlap and all three are young. The part that separates a strong answer: refuse to declare a winner, and say what you would do about the uncertainty — build the capabilities (an explicit authorization record, a credential scoped to one cart, a receipt linked to both) behind an interface you can re-point when the standards settle. Anyone quoting adoption numbers in a fast-moving standards race is quoting something already stale.'},
  {q:'4 · An agent buys the wrong thing. Who is accountable, and what has to be in the log for that question to have an answer?',
   a:'Start by splitting the question, because interviewers are testing whether you conflate them: identity (whose agent was this?) is not authorization (was this purchase within what the customer permitted?). Accountability in practice follows what can be evidenced, so name the record: the authorization in force at the time and its limits, the payment credential and its scope, the raw content the agent read (verbatim, because that is what proves an injected instruction existed), the full step-by-step trace with selected actions and arguments, the retry history and idempotency keys, and the merchant confirmations reconciled against the approved cart. Then the operational answer: one named human owns the policy and the limits. Add retention and tamper-evidence and you are ahead of most candidates — a log that expires before the dispute window, or one the service can silently rewrite, is not the control you thought you had.'},
  {q:'5 · Design the human gate for an agent with a monthly budget. Where does it sit, and what does the approval screen show?',

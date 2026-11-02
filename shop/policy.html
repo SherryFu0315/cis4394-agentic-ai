@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shipping &amp; returns · Peachtree Office Supply</title>
+<meta name="robots" content="noindex,nofollow"><meta name="description" content="Shipping, returns and payment terms of the teaching storefront.">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#1f2a24;background:#f6f8f6;line-height:1.5}
+a{color:#1b5e20}.top{background:#1b5e20;color:#fff;padding:14px 0}.top .in{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.in{max-width:1040px;margin:0 auto;padding:0 18px}.brand{font-size:22px;font-weight:700;color:#fff;text-decoration:none;letter-spacing:.2px}
+.top nav a{color:#e8f5e9;text-decoration:none;margin-left:18px;font-size:15px}
+.notice{background:#fff8e1;border-bottom:1px solid #f0e2a8;padding:8px 0;font-size:14px;color:#5d4a00}
+h1{font-size:28px;margin:26px 0 6px}h2{font-size:20px;margin:26px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;margin:18px 0 30px}
+.card{background:#fff;border:1px solid #dfe6e1;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.card .name{font-weight:700;font-size:16px;text-decoration:none;color:#1f2a24}.card .name:hover{text-decoration:underline}
+.price{font-size:20px;font-weight:700}.unit{font-size:13px;color:#5b6b61}.meta{font-size:13px;color:#5b6b61}
+.badge{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:#e8f5e9;color:#1b5e20}
+.badge.out{background:#fdecea;color:#b3261e}.badge.sp{background:#fff3cd;color:#7a5b00}.badge.low{background:#fff3cd;color:#7a5b00}
+.stars{color:#c77d00;font-size:14px}
+.btn{display:inline-block;background:#1b5e20;color:#fff;border:0;border-radius:8px;padding:10px 16px;font-size:15px;cursor:pointer;text-decoration:none}
+.btn.sec{background:#fff;color:#1b5e20;border:1px solid #1b5e20}
+.detail{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;margin:18px 0 30px}
+.panel{background:#fff;border:1px solid #dfe6e1;border-radius:10px;padding:18px}
+table{border-collapse:collapse;width:100%;font-size:15px}td,th{text-align:left;padding:7px 6px;border-bottom:1px solid #e6ece8;vertical-align:top}th{width:38%;color:#5b6b61;font-weight:600}
+.crumbs{font-size:13px;color:#5b6b61;margin-top:16px}.crumbs a{color:#5b6b61}
+.note{background:#f1f8f2;border-left:4px solid #1b5e20;padding:10px 12px;border-radius:6px;font-size:14px;margin:10px 0}
+.note.warn{background:#fff8e1;border-left-color:#c77d00}
+footer{border-top:1px solid #dfe6e1;margin-top:30px;padding:18px 0 30px;font-size:13px;color:#5b6b61}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f2a24;color:#fff;padding:12px 16px;border-radius:10px;font-size:14px;display:none;max-width:90vw}
+@media(max-width:760px){.detail{grid-template-columns:1fr}}
+</style></head><body>
+<div class="top"><div class="in"><a class="brand" href="index.html">Peachtree Office Supply</a>
+<nav><a href="index.html">Catalog</a><a href="policy.html">Shipping &amp; returns</a><a href="products.json">Catalog feed (JSON)</a></nav></div></div>
+<div class="notice"><div class="in">Teaching storefront for CIS 4394 Agentic AI (Georgia State University). Prices are fictional and nothing here is for sale.</div></div>
+<div class="in">
+<h1>Shipping, returns and payment</h1>
+<div class="panel">
+<h2>Shipping</h2>
+<p>Orders of $50.00 or more ship free. Below that, a flat $6.95 is added at checkout. Delivery estimates are shown on each listing; backordered items ship when restocked.</p>
+<h2>Returns</h2>
+<ul><li>Unopened items may be returned within 30 days for a full refund.</li>
+<li>Food and beverage items, including espresso pods, cannot be returned once opened.</li>
+<li>Freight items (for example the standing desk converter) cannot be returned once assembled.</li>
+<li>Bundles are returned as a whole; individual bundle components cannot be returned separately.</li></ul>
+<h2>Payment</h2>
+<p>This storefront is a teaching fixture. There is no real checkout. In the CIS 4394 lab the agent's own <code>place_order</code> tool plays the merchant: it checks the spend cap, asks a human to approve, and records a simulated order. In a production system this step would be a checkout call under a standard such as ACP, AP2 or UCP.</p>
+<h2>For automated shoppers</h2>
+<p>A machine-readable copy of the catalog is published at <a href="products.json">products.json</a>. Listing pages are plain HTML. The store does not require a login.</p>
+</div>
+</div>
+<footer><div class="in">Peachtree Office Supply is a fixture built for the CIS 4394 Agentic AI course at Georgia State University (Dr. Xinyu Fu). It exists so that students can point a shopping agent at a real web page and read the trace afterwards. Prices, stock and reviews are invented. One listing contains an instruction aimed at AI shopping assistants, planted deliberately for the exercise. Course page: <a href="https://xinyufu.org/cis4394-agentic-ai/week11/local.html">xinyufu.org/cis4394-agentic-ai/week11/local.html</a></div></footer>
+<div class="toast" id="toast"></div>
+<script>function buy(){var t=document.getElementById('toast');t.textContent='Checkout is simulated: in the course lab, the agent\'s place_order tool plays the merchant. No money moves.';t.style.display='block';setTimeout(function(){t.style.display='none'},4200)}</script>
+</body></html>

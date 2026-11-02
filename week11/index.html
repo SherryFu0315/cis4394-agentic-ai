@@ -38,7 +38,8 @@
   <a href="../index.html">⌂ Course</a>
   <a href="commerce.html"><span class="k">01</span>Agents That Buy</a>
   <a href="deploy.html"><span class="k">02</span>Shipping an Agent</a>
-  <a href="exercises.html"><span class="k">03</span>Practice &amp; Case</a>
+  <a href="local.html"><span class="k">03</span>Trace It</a>
+  <a href="exercises.html"><span class="k">04</span>Practice &amp; Case</a>
 </div></div>
 <div class="progress"><span id="progressBar"></span></div>
 
@@ -51,7 +52,7 @@
 <section><div class="wrap">
   <div class="callout blue">
 <div class="ptxt"><b>📌 This week's logistics:</b></div>
-<ul class="pts"><li><b>Format this week:</b> a short lecture on agentic commerce, then project time in class; I go desk to desk to unblock. Bring your laptop with your capstone running.</li><li>Group Assignment 3 is due this week, on your own section's iCollege page (team submission plus peer evaluation).</li><li>Capstone Milestone II is due next week: Weeks 12 and 13 are Capstone Studios: build time in your own section, no new lecture material.</li><li><b>No quiz this week.</b></li><li><b>Two make-up quizzes</b> are offered: one in Week 13 and one in Week 14. You may take both; the better of the two replaces your lowest score from Quizzes 1–4.</li></ul>
+<ul class="pts"><li><b>Format this week:</b> a short lecture on agentic commerce, a hands-on trace lab (page 03), then project time in class; I go desk to desk to unblock. Bring your laptop with your capstone running.</li><li><b>Before class, five minutes at home:</b> create a free LangSmith API key, create an Observability agent named <code>shop-agent</code>, and install <code>langsmith</code>. The steps and the add-on download are at the top of <a class="doc" href="local.html">03 · Trace it</a>.</li><li>Group Assignment 3 is due this week, on your own section's iCollege page (team submission plus peer evaluation).</li><li>Capstone Milestone II is due next week: Weeks 12 and 13 are Capstone Studios: build time in your own section, no new lecture material.</li><li><b>No quiz this week.</b></li><li><b>Two make-up quizzes</b> are offered: one in Week 13 and one in Week 14. You may take both; the better of the two replaces your lowest score from Quizzes 1–4.</li></ul>
 </div>
 </div></section>
 
@@ -185,7 +186,7 @@ Flow.mount(document.getElementById('flow-w11'),{
   <div class="navcards">
     <a class="navcard" href="commerce.html">
       <span class="num">01</span>
-      <span><b>Agents that buy</b><span class="small">Irreversibility, liability and identity · the merchant's problem · the emerging payment protocols (AP2, ACP), honestly described as early and competing · a clickable purchase flow · caps, allow-lists, mandates and receipts.</span></span>
+      <span><b>Agents that buy</b><span class="small">Irreversibility, liability and identity · the merchant's problem · the emerging protocols (AP2, ACP, UCP), honestly described as early and competing · a clickable purchase flow · how Meta’s Muse pays and whether stores let agents in · caps, allow-lists, mandates and receipts.</span></span>
       <span class="go">→</span>
     </a>
     <a class="navcard" href="deploy.html">
@@ -193,8 +194,13 @@ Flow.mount(document.getElementById('flow-w11'),{
       <span><b>Shipping an agent</b><span class="small">Computer-use agents and the humbling benchmarks (WebArena, OSWorld) · what changes from notebook to production: cost per run, latency, retries and idempotency, monitoring, rollback, on-call · the manager's four questions.</span></span>
       <span class="go">→</span>
     </a>
-    <a class="navcard" href="exercises.html">
+    <a class="navcard" href="local.html">
       <span class="num">03</span>
+      <span><b>Trace it</b><span class="small">Hands-on lab · a purchasing agent on your laptop shops a teaching web store and decides whether to buy · every step recorded in LangSmith · read the run tree, tool calls, tokens and feedback · filters and dashboards for log analysis · five lines to trace your capstone.</span></span>
+      <span class="go">→</span>
+    </a>
+    <a class="navcard" href="exercises.html">
+      <span class="num">04</span>
       <span><b>Practice &amp; case</b><span class="small">Design the gate for a $500/month restocking agent · run a 2 a.m. failure drill from the trace · the distributor case · interview check · readings · what to bring to studio.</span></span>
       <span class="go">→</span>
     </a>
