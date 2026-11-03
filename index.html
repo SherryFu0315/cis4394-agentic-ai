@@ -82,7 +82,6 @@
   <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Agentic AI</a>
   <a href="#weeks">Weeks</a>
   <a href="#news">News</a>
-  <a href="#materials">Materials</a>
   <a href="path.html">PATH</a>
   <a href="careers.html">Careers</a>
   <a href="#about">About</a>
@@ -106,8 +105,8 @@
   <h2>Announcements</h2>
   <div class="card" style="border-left:5px solid var(--blue);margin-bottom:16px">
     <span class="kicker">🧭 New page · posted Nov 2, 2026</span>
-    <h3 style="margin-top:6px">Careers: which jobs use what you learned this semester</h3>
-    <p class="small" style="margin-top:10px">I added a <a class="doc" href="careers.html">Careers</a> tab that matches the skills from this course to the jobs that use them, using public data from <a class="doc" href="https://openai.com/index/modeling-ai-jobs-transition/" target="_blank" rel="noopener">OpenAI ↗</a>, <a class="doc" href="https://www.bls.gov/opub/ted/2026/artificial-intelligence-information-technology-and-employment-2024-34.htm" target="_blank" rel="noopener">BLS ↗</a> and <a class="doc" href="https://lightcast.io/blog/tracking-the-agentic-ai-explosion-in-jobs" target="_blank" rel="noopener">Lightcast ↗</a>. Look up the job you want in the table, and read the résumé tips before you apply anywhere.</p>
+    <h3 style="margin-top:6px">Careers: from course knowledge to skills to your career</h3>
+    <p class="small" style="margin-top:10px">I added a <a class="doc" href="careers.html">Careers</a> tab that matches the skills from this course to the jobs that use them, using public data from <a class="doc" href="https://openai.com/index/modeling-ai-jobs-transition/" target="_blank" rel="noopener">OpenAI ↗</a>, <a class="doc" href="https://www.bls.gov/opub/ted/2026/artificial-intelligence-information-technology-and-employment-2024-34.htm" target="_blank" rel="noopener">BLS ↗</a> and <a class="doc" href="https://lightcast.io/blog/tracking-the-agentic-ai-explosion-in-jobs" target="_blank" rel="noopener">Lightcast ↗</a>. See which skills you built in this course and the careers they can open up for you.</p>
   </div>
   <div class="card" style="border-left:5px solid var(--blue);margin-bottom:16px">
     <span class="kicker">🔗 Milestone II · posted Nov 2, 2026</span>
@@ -261,10 +260,18 @@
 <section id="materials"><div class="wrap">
   <div class="eyebrow">Downloads</div>
   <h2>Class materials</h2>
-  <div class="grid2">
-    <div class="card"><h3>Week 1 · lecture deck</h3><p class="small">Introduction to Agentic AI + What Enterprises Actually Use (PowerPoint, ~66 slides, with speaker notes and references).</p><a class="doc" href="materials/CIS4394_Week1_Intro_Agentic_AI.pptx" download>Download .pptx ↓</a></div>
-    <div class="card"><h3>Week 2 · class bundle</h3><p class="small">Lesson deck, step-by-step lab guide, starter kit (résumé, preferences, six-job dataset with a prompt-injection test, Python baseline), and pre-class prep.</p><a class="doc" href="materials/CIS4394_Week2_Class_Bundle.zip" download>Download .zip ↓</a></div>
-    <div class="card"><h3>Week 5 · Ollama starter code</h3><p class="small">Four short Python scripts for a tool-calling agent on a local model: the raw agent loop, a pass^k runner, the same agent in LangGraph, and the tool-design experiment. No API key needed.</p><a class="doc" href="materials/CIS4394_Week5_Ollama_Starter.zip" download>Download .zip ↓</a></div>
+  <p class="small">Everything you can download from this site, in the order we used it. Code add-ons go in the same <code>week5_ollama_starter</code> folder.</p>
+  <div class="grid3" style="margin-top:14px">
+    <div class="card"><h3>Week 1 · lecture deck</h3><p class="small">Introduction to Agentic AI and what enterprises actually use. PowerPoint, about 66 slides, with speaker notes and references.</p><p class="small" style="margin-top:10px"><a class="doc" href="materials/CIS4394_Week1_Intro_Agentic_AI.pptx" download>Download .pptx ↓</a></p></div>
+    <div class="card"><h3>Week 2 · class bundle</h3><p class="small">Lesson deck, step-by-step lab guide, starter kit (résumé, preferences, a six-job dataset with a prompt-injection test, Python baseline) and pre-class prep.</p><p class="small" style="margin-top:10px"><a class="doc" href="materials/CIS4394_Week2_Class_Bundle.zip" download>Download .zip ↓</a></p></div>
+    <div class="card"><h3>Week 5 · Ollama starter code</h3><p class="small">Five short Python scripts for a tool-calling agent on a local model: the raw agent loop, a pass^k runner, the same agent in LangGraph, the tool-design experiment and a demo order agent. Includes a README and run files for Mac and Windows. No API key needed.</p><p class="small" style="margin-top:10px"><a class="doc" href="materials/CIS4394_Week5_Ollama_Starter.zip" download>Download .zip ↓</a> &nbsp;·&nbsp; <a class="doc" href="week5/local.html">Lab page →</a></p></div>
+    <div class="card"><h3>Week 5 · lab sheet</h3><p class="small">The in-class sheet for pairs: Mac and Windows commands side by side, with the observation tables to fill in.</p><p class="small" style="margin-top:10px"><a class="doc" href="materials/CIS4394_Week5_Student_Lab.pdf" download>Download .pdf ↓</a></p></div>
+    <div class="card"><h3>Week 7 · RAG add-on</h3><p class="small">One script, the corpus builder, and the text of this course website as the corpus. Unzip it into your Week 5 folder. Nothing new to install.</p><p class="small" style="margin-top:10px"><a class="doc" href="materials/CIS4394_Week7_RAG_Addon.zip" download>Download .zip ↓</a> &nbsp;·&nbsp; <a class="doc" href="week7/local.html">Lab page →</a></p></div>
+    <div class="card"><h3>Week 9 · app add-on</h3><p class="small">Three short scripts that turn your Week 7 course agent and your Week 5 order agent into chat apps you can open on a phone, plus a router that sends each message to the right one. They import your earlier scripts, so they go in the same folder.</p><p class="small" style="margin-top:10px"><a class="doc" href="materials/CIS4394_Week9_App_Addon.zip" download>Download .zip ↓</a> &nbsp;·&nbsp; <a class="doc" href="week9/local.html">Lab page →</a></p></div>
+    <div class="card"><h3>Week 10 · injection lab</h3><p class="small">A script that summarizes a web page with your local model, a page of your own to hide instructions in, and a README. Point it only at pages you own.</p><p class="small" style="margin-top:10px"><a class="doc" href="materials/CIS4394_Week10_Injection_Lab.zip" download>Download .zip ↓</a> &nbsp;·&nbsp; <a class="doc" href="week10/exercises.html">Exercise page →</a></p></div>
+    <div class="card"><h3>Week 11 · commerce add-on</h3><p class="small">The purchasing agent for the Trace It lab, a short README, and an offline copy of the teaching web store.</p><p class="small" style="margin-top:10px"><a class="doc" href="materials/CIS4394_Week11_Commerce_Addon.zip" download>Download .zip ↓</a> &nbsp;·&nbsp; <a class="doc" href="week11/local.html">Lab page →</a> &nbsp;·&nbsp; <a class="doc" href="shop/index.html">The store →</a></p></div>
+    <div class="card"><h3>Milestone II · Fleet bridge</h3><p class="small">A small Gradio page that gives an agent built in LangSmith Fleet a public link anyone can open. Setup steps and troubleshooting are in the Week 10 summary.</p><p class="small" style="margin-top:10px"><a class="doc" href="materials/week5_ollama_starter/11_fleet_bridge.py" download>Download .py ↓</a> &nbsp;·&nbsp; <a class="doc" href="week10/summary.html">How to use it →</a></p></div>
+    <div class="card"><h3>Careers · skills-to-jobs table</h3><p class="small">37 occupations with O*NET codes, mapped to the six skill groups of this course, with OpenAI’s classification and BLS pay, openings and entry requirements.</p><p class="small" style="margin-top:10px"><a class="doc" href="materials/cis4394_skills_to_occupations.csv" download>Download .csv ↓</a> &nbsp;·&nbsp; <a class="doc" href="careers.html">Careers page →</a></p></div>
   </div>
 </div></section>
 

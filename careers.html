@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Careers: where this semester’s skills go · CIS 4394</title>
+<title>Knowledge, skills and careers · CIS 4394</title>
 <meta name="description" content="What job is this course for? The skills from CIS 4394 lined up against OpenAI’s classification of 921 occupations, GDPval, ChatGPT work-activity data, the GPTs-are-GPTs exposure scores, BLS projections and job postings." />
 <meta name="author" content="Dr. Xinyu Fu" />
 <link rel="canonical" href="https://xinyufu.org/cis4394-agentic-ai/careers.html" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="CIS 4394 Agentic AI · Georgia State University" />
-<meta property="og:title" content="Careers: where this semester’s skills go · CIS 4394" />
+<meta property="og:title" content="From course knowledge to skills to your career · CIS 4394" />
 <meta property="og:description" content="Which occupations use what CIS 4394 teaches, built from OpenAI’s occupation data, GDPval, ChatGPT work-activity data, BLS projections and job postings." />
 <meta property="og:url" content="https://xinyufu.org/cis4394-agentic-ai/careers.html" />
 <meta property="og:image" content="https://xinyufu.org/cis4394-agentic-ai/assets/social-card.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Careers: where this semester’s skills go · CIS 4394" />
+<meta name="twitter:title" content="From course knowledge to skills to your career · CIS 4394" />
 <meta name="twitter:description" content="Which occupations use what CIS 4394 teaches, built from OpenAI’s occupation data, GDPval, ChatGPT work-activity data, BLS projections and job postings." />
 <meta name="twitter:image" content="https://xinyufu.org/cis4394-agentic-ai/assets/social-card.png" />
 <link rel="icon" href="assets/gsu-flame.png" />
@@ -31,18 +31,67 @@
 .barlist .trk.grey{background:#ecebe6} .barlist .trk.grey i{background:var(--line2)}
 .barlist .pct{text-align:right;font-weight:650;font-variant-numeric:tabular-nums}
 .barlist .pct small{display:block;font-weight:400;color:var(--muted);font-size:var(--fs-xs)}
-.occtable{width:100%;border-collapse:collapse;margin-top:12px}
-.occtable th{text-align:left;font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:8px 10px;border-bottom:2px solid var(--line2);white-space:nowrap}
-.occtable td{font-size:var(--fs-s);padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.occtable{width:100%;border-collapse:collapse;margin-top:4px}
+.occtable th{text-align:left;font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:8px 8px;border-bottom:2px solid var(--line2);vertical-align:bottom;line-height:1.3}
+.occtable td:first-child{min-width:220px}
+.occtable th.num{text-align:right}
 .occtable td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-.occtable tr.grp td{background:var(--blue-soft);font-weight:700;color:var(--blue);font-size:var(--fs-s);padding:10px}
+.occtable td{font-size:var(--fs-s);padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.occtable tbody tr[data-code]{cursor:pointer}
+.occtable tbody tr[data-code]:hover td{background:var(--panel)}
+.occtable tr.focus td{background:var(--blue-soft)}
+.occtable tr.auto td{color:var(--muted)}
+.occtable tr.grp td{background:var(--blue-soft);font-weight:700;color:var(--ink);font-size:var(--fs-s);padding:10px;cursor:default}
 .occtable tr.grp td span{display:block;font-weight:400;color:var(--muted);font-size:var(--fs-xs);margin-top:2px}
 .occtable .code{color:var(--muted);font-size:var(--fs-xs);display:block}
-.arch{display:inline-block;font-size:var(--fs-xs);font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
-.arch.grow{background:var(--blue-soft);color:var(--blue)}
-.arch.reorg{background:#f1efe8;color:#5a5340}
-.arch.risk{background:var(--red-soft);color:var(--red)}
-.arch.less{background:#ecebe6;color:var(--muted)}
+.arch{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+:root{--mk-grow:#2f62c9;--mk-reorg:#b07800;--mk-risk:var(--red)}
+.groupkey{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 22px;margin-top:16px}
+.groupkey div{font-size:var(--fs-s);border-top:2px solid var(--line2);padding-top:8px}
+.groupkey b{display:block}
+.groupkey span{color:var(--muted);font-size:var(--fs-xs)}
+.wmatrix{width:100%;border-collapse:collapse}
+.wmatrix th,.wmatrix td{border-bottom:1px solid var(--line);padding:10px 8px;vertical-align:top;text-align:left}
+.wmatrix thead th{font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-bottom:2px solid var(--line2);white-space:nowrap}
+.wmatrix tbody th{font-size:var(--fs-s);font-weight:700;white-space:nowrap;text-transform:none;letter-spacing:normal;color:var(--ink)}
+.wmatrix tbody th a{color:var(--ink);text-decoration:none}
+.wmatrix tbody th span{display:block;font-weight:400;color:var(--muted);font-size:var(--fs-xs);white-space:normal;max-width:150px;text-transform:none;letter-spacing:normal}
+.wmatrix .dotcell{text-align:center;width:58px;padding-left:4px;padding-right:4px}
+.wmatrix thead th.dotcell{letter-spacing:.02em}
+.wdot{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--blue);margin-top:5px}
+.plist{list-style:none;margin:0;padding:0;font-size:var(--fs-s);line-height:1.5}
+.plist li{margin:0 0 3px}
+.plist a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:3px}
+.plist span{color:var(--muted)}
+.wmatrix tbody tr:hover{background:var(--panel)}
+.seejobs,.fchip{font:inherit;font-size:var(--fs-xs);font-weight:600;border:1px solid var(--line2);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer;white-space:nowrap}
+.seejobs:hover,.fchip:hover{border-color:var(--blue);color:var(--blue)}
+.fchip[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.sw{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;border-top:4px solid var(--line2)}
+.sw.s,.sw.o{border-top-color:var(--blue)} .sw.t{border-top-color:var(--red)}
+.sw h3{margin-bottom:8px}
+.swsub{color:var(--muted);margin:12px 0 4px}
+.chiplist{list-style:none;padding:0;margin:4px 0 0}
+.chiplist li{padding:6px 0;border-top:1px solid var(--line);font-size:var(--fs-s)}
+.chiplist li:first-child{border-top:0}
+.chiplist li span{color:var(--muted);margin-left:8px}
+.jobchip{font:inherit;font-weight:600;color:var(--blue);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:rgba(0,57,166,.45)}
+.jobchip.inline{font-weight:inherit}
+.legendgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;margin-top:16px}
+.legendgrid div{font-size:var(--fs-s);padding-left:26px;position:relative}
+.legendgrid svg{position:absolute;left:0;top:3px}
+.colkey{margin-top:12px;columns:2;column-gap:28px}
+.colkey li{break-inside:avoid}
+.filterrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:22px 0 12px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.gradtoggle{font-size:var(--fs-s);margin-left:auto;display:flex;align-items:center;gap:6px;cursor:pointer}
+.chartcard{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 6px 4px}
+#quad svg{display:block;font-family:var(--sans)}
+.qtip{position:absolute;z-index:5;width:250px;background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:12px 14px;font-size:var(--fs-xs);pointer-events:none}
+.qtip b{display:block;font-size:var(--fs-s)}
+.qtip .tarch{display:block;color:var(--muted);margin:2px 0 8px}
+.qtip dl{display:grid;grid-template-columns:auto auto;gap:3px 12px;margin:0}
+.qtip dt{color:var(--muted)} .qtip dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
 .sectors{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
 .sector{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
 .sector b{display:block;font-size:var(--fs-s);margin-bottom:6px}
@@ -52,7 +101,7 @@
 .srcs li{margin-bottom:6px}
 /* inline source links read as links, not as bold (site rule: no bold inside running text) */
 p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:rgba(0,57,166,.45)}
-@media(max-width:880px){.sectors{grid-template-columns:1fr}.barlist li{grid-template-columns:minmax(0,1fr) 56px}.barlist .trk{display:none}}
+@media(max-width:880px){.sectors,.swot,.legendgrid,.groupkey{grid-template-columns:1fr}.colkey{columns:1}.gradtoggle{margin-left:0}.barlist li{grid-template-columns:minmax(0,1fr) 56px}.barlist .trk{display:none}}
 </style>
 </head>
 <body>
@@ -66,7 +115,6 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
 <div class="topbar"><div class="wrap nav">
   <a class="brand" href="index.html"><span class="dot"></span>CIS 4394 · Agentic AI</a>
   <a href="index.html#weeks">Weeks</a>
-  <a href="index.html#materials">Materials</a>
   <a href="path.html">PATH</a>
   <a href="careers.html" class="here">Careers</a>
   <a href="index.html#about">About</a>
@@ -76,13 +124,20 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
 
 <header class="pagehead"><div class="wrap">
   <div class="eyebrow">Where the skills go</div>
-  <h1>Which jobs use <em>what you learned this semester</em></h1>
+  <h1>From course knowledge to skills to <em>your career</em></h1>
   <p class="lede">What job is this course for? Here is my answer, using the data available in November 2026. I lined up what you learned this semester against six public sources.</p>
   <ul class="pts lede" style="margin-top:12px">
     <li><b>Three from OpenAI:</b> <a class="doc" href="https://openai.com/index/modeling-ai-jobs-transition/" target="_blank" rel="noopener">a classification of 921 occupations ↗</a>, <a class="doc" href="https://openai.com/index/gdpval/" target="_blank" rel="noopener">a benchmark built from real work in 44 occupations ↗</a>, and <a class="doc" href="https://openai.com/signals/data-download/" target="_blank" rel="noopener">statistics on what people ask ChatGPT to do at work ↗</a>.</li>
     <li><b>Three from elsewhere:</b> <a class="doc" href="https://arxiv.org/abs/2303.10130" target="_blank" rel="noopener">a 2023 study of which tasks AI can speed up ↗</a>, <a class="doc" href="https://www.bls.gov/opub/ted/2026/artificial-intelligence-information-technology-and-employment-2024-34.htm" target="_blank" rel="noopener">the BLS ten-year projections ↗</a>, and <a class="doc" href="https://lightcast.io/blog/tracking-the-agentic-ai-explosion-in-jobs" target="_blank" rel="noopener">a count of job postings by Lightcast ↗</a>.</li>
   </ul>
 </div></header>
+
+<section id="ask" hidden data-repo="SherryFu0315/cis4394-agentic-ai" data-repo-id="R_kgDOUHUveQ" data-category="" data-category-id=""><div class="wrap">
+  <div class="eyebrow">Ask me</div>
+  <h2>What else do you want to know?</h2>
+  <p class="lede">Ask anything about jobs, skills or AI and work. Everyone can see the questions, and you can upvote the ones you want answered too. If there is data that can answer it, I will run the analysis and add the result to this page.</p>
+  <div class="giscus" style="margin-top:18px"></div>
+</div></section>
 
 <section><div class="wrap">
   <div class="eyebrow">In one screen</div>
@@ -96,8 +151,102 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
   </div>
 </div></section>
 
+
+<section id="weeks-skills"><div class="wrap">
+  <div class="eyebrow">Part 1 · What you learned</div>
+  <h2>Which skills each week built</h2>
+  <p class="lede">The page names come from this course. Each one practised one or more skills from the course skills inventory, and every skill belongs to one of six groups. A dot means that week built at least one skill in that group. Press <i>Jobs →</i> on any week to see the jobs that use what it taught.</p>
+  <div class="groupkey">
+    <div><b>1 · Build the agent</b><span>agent loop, LangGraph, tool and function schemas, retrieval (RAG), agent memory, MCP and A2A, multi-agent orchestration</span></div><div><b>2 · Evaluate it</b><span>evaluation harness, pass^k reliability, benchmark literacy, trace analysis, LLM-as-judge critique, verification first</span></div><div><b>3 · Secure and govern it</b><span>guardrails, threat modeling, deployment risk assessment, governance (EU AI Act, NIST), accountability</span></div><div><b>4 · Decide whether to build it</b><span>agent or workflow, cost of error, build, buy or wait, use-case selection, model choice and cost</span></div><div><b>5 · Work with it every day</b><span>prompt engineering, context engineering, agentic coding tools, human-AI collaboration, technical writing</span></div><div><b>6 · Automate the old workflow</b><span>tool errors, retries and approval gates, deployment and per-run cost</span></div>
+  </div>
+  <div style="overflow:auto;margin-top:18px"><table class="wmatrix">
+    <thead><tr><th scope="col">Week</th><th scope="col">Pages and the skills each one practised</th><th scope="col" class="dotcell">Build</th><th scope="col" class="dotcell">Evaluate</th><th scope="col" class="dotcell">Secure</th><th scope="col" class="dotcell">Decide</th><th scope="col" class="dotcell">Daily use</th><th scope="col" class="dotcell">Automate</th><th scope="col" class="dotcell" aria-label="Show jobs"></th></tr></thead>
+    <tbody><tr data-clusters="4,5"><th scope="row"><a href="week1/index.html">Week 1</a><span>Introduction to Agentic AI</span></th><td><ul class="plist"><li><a href="week1/llm-to-agent.html">LLM → Agent</a><span> · human-AI collaboration</span></li><li><a href="week1/agent-vs-workflow.html">Agent vs Workflow</a><span> · agent or workflow</span></li><li><a href="week1/enterprise.html">Enterprise 2026</a><span> · use-case selection, cost of error</span></li><li><a href="week1/exercises.html">Exercises &amp; Setup</a><span> · agent or workflow, cost of error</span></li></ul></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Decide"></span></td><td class="dotcell"><span class="wdot" title="Daily use"></span></td><td class="dotcell"></td><td class="dotcell"><button type="button" class="seejobs" data-clusters="4,5" aria-label="Show jobs for week 1">Jobs →</button></td></tr><tr data-clusters="2,4,5"><th scope="row"><a href="week2/index.html">Week 2</a><span>Unpacking Coding Agents</span></th><td><ul class="plist"><li><a href="week2/codex.html">Unpack Codex</a><span> · agentic coding tools, model choice and cost</span></li><li><a href="week2/claude-code.html">Claude Code</a><span> · agentic coding tools</span></li><li><a href="week2/build.html">Build</a><span> · agentic coding tools, verification first</span></li><li><a href="week2/evaluate.html">Evaluate</a><span> · verification first, benchmark literacy</span></li></ul></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Evaluate"></span></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Decide"></span></td><td class="dotcell"><span class="wdot" title="Daily use"></span></td><td class="dotcell"></td><td class="dotcell"><button type="button" class="seejobs" data-clusters="2,4,5" aria-label="Show jobs for week 2">Jobs →</button></td></tr><tr data-clusters="5"><th scope="row"><a href="week3/index.html">Week 3</a><span>Prompting &amp; Context Engineering</span></th><td><ul class="plist"><li><a href="week3/anatomy.html">Prompt Anatomy</a><span> · prompt engineering</span></li><li><a href="week3/techniques.html">Techniques</a><span> · prompt engineering</span></li><li><a href="week3/context.html">Context Engineering</a><span> · context engineering</span></li><li><a href="week3/exercises.html">Practice &amp; Cases</a><span> · prompt engineering, context engineering</span></li></ul></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Daily use"></span></td><td class="dotcell"></td><td class="dotcell"><button type="button" class="seejobs" data-clusters="5" aria-label="Show jobs for week 3">Jobs →</button></td></tr><tr data-clusters="1,2"><th scope="row"><a href="week4/index.html">Week 4</a><span>Reasoning, Planning &amp; the Agent Loop</span></th><td><ul class="plist"><li><a href="week4/loop.html">The Agent Loop</a><span> · agent loop, trace analysis</span></li><li><a href="week4/patterns.html">Reasoning Patterns</a><span> · agent loop</span></li><li><a href="week4/langgraph.html">LangGraph</a><span> · LangGraph</span></li><li><a href="week4/exercises.html">Practice &amp; Case</a><span> · agent loop, LangGraph</span></li></ul></td><td class="dotcell"><span class="wdot" title="Build"></span></td><td class="dotcell"><span class="wdot" title="Evaluate"></span></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"><button type="button" class="seejobs" data-clusters="1,2" aria-label="Show jobs for week 4">Jobs →</button></td></tr><tr data-clusters="1,4,6"><th scope="row"><a href="week5/index.html">Week 5</a><span>Tool Use &amp; Function Calling</span></th><td><ul class="plist"><li><a href="week5/mechanics.html">Function Calling</a><span> · tool and function schemas</span></li><li><a href="week5/design.html">Schemas, Errors &amp; Gates</a><span> · tool and function schemas, tool errors, retries and approval gates</span></li><li><a href="week5/local.html">Build It Locally</a><span> · LangGraph, tool and function schemas</span></li><li><a href="week5/exercises.html">Practice &amp; Case</a><span> · tool and function schemas, cost of error</span></li></ul></td><td class="dotcell"><span class="wdot" title="Build"></span></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Decide"></span></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Automate"></span></td><td class="dotcell"><button type="button" class="seejobs" data-clusters="1,4,6" aria-label="Show jobs for week 5">Jobs →</button></td></tr><tr data-clusters="1"><th scope="row"><a href="week6/index.html">Week 6</a><span>MCP &amp; A2A</span></th><td><ul class="plist"><li><a href="week6/mcp.html">MCP</a><span> · MCP and A2A</span></li><li><a href="week6/a2a.html">A2A</a><span> · MCP and A2A</span></li><li><a href="week6/exercises.html">Practice &amp; Case</a><span> · MCP and A2A</span></li></ul></td><td class="dotcell"><span class="wdot" title="Build"></span></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"><button type="button" class="seejobs" data-clusters="1" aria-label="Show jobs for week 6">Jobs →</button></td></tr><tr data-clusters="1,5"><th scope="row"><a href="week7/index.html">Week 7</a><span>Memory, RAG &amp; Knowledge</span></th><td><ul class="plist"><li><a href="week7/memory.html">Agent Memory</a><span> · agent memory, context engineering</span></li><li><a href="week7/rag.html">RAG</a><span> · retrieval (RAG)</span></li><li><a href="week7/local.html">Build It Locally</a><span> · retrieval (RAG)</span></li><li><a href="week7/exercises.html">Practice &amp; Case</a><span> · retrieval (RAG), agent memory</span></li></ul></td><td class="dotcell"><span class="wdot" title="Build"></span></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Daily use"></span></td><td class="dotcell"></td><td class="dotcell"><button type="button" class="seejobs" data-clusters="1,5" aria-label="Show jobs for week 7">Jobs →</button></td></tr><tr data-clusters="2,5"><th scope="row"><a href="week8/index.html">Week 8</a><span>Evaluation &amp; Reliability</span></th><td><ul class="plist"><li><a href="week8/why.html">Why Demos Lie</a><span> · benchmark literacy, LLM-as-judge critique</span></li><li><a href="week8/metrics.html">pass@k, pass^k &amp; Benchmarks</a><span> · evaluation harness, pass^k reliability, benchmark literacy</span></li><li><a href="week8/exercises.html">Practice &amp; Case</a><span> · evaluation harness, pass^k reliability, technical writing</span></li></ul></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Evaluate"></span></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Daily use"></span></td><td class="dotcell"></td><td class="dotcell"><button type="button" class="seejobs" data-clusters="2,5" aria-label="Show jobs for week 8">Jobs →</button></td></tr><tr data-clusters="1,4"><th scope="row"><a href="week9/index.html">Week 9</a><span>Multi-Agent Systems</span></th><td><ul class="plist"><li><a href="week9/patterns.html">Patterns</a><span> · multi-agent orchestration</span></li><li><a href="week9/tradeoffs.html">The Honest Case</a><span> · multi-agent orchestration, agent or workflow</span></li><li><a href="week9/local.html">Build It Locally</a><span> · LangGraph, multi-agent orchestration</span></li><li><a href="week9/exercises.html">Practice &amp; Case</a><span> · multi-agent orchestration</span></li></ul></td><td class="dotcell"><span class="wdot" title="Build"></span></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Decide"></span></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"><button type="button" class="seejobs" data-clusters="1,4" aria-label="Show jobs for week 9">Jobs →</button></td></tr><tr data-clusters="3,6"><th scope="row"><a href="week10/index.html">Week 10</a><span>Security, Trust &amp; Governance</span></th><td><ul class="plist"><li><a href="week10/attacks.html">How Agents Get Attacked</a><span> · threat modeling, guardrails</span></li><li><a href="week10/governance.html">Governance &amp; Frameworks</a><span> · governance (EU AI Act, NIST), accountability, deployment risk assessment</span></li><li><a href="week10/exercises.html">Practice &amp; Case</a><span> · deployment risk assessment, guardrails, tool errors, retries and approval gates</span></li></ul></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Secure"></span></td><td class="dotcell"></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Automate"></span></td><td class="dotcell"><button type="button" class="seejobs" data-clusters="3,6" aria-label="Show jobs for week 10">Jobs →</button></td></tr><tr data-clusters="2,4,6"><th scope="row"><a href="week11/index.html">Week 11</a><span>Agentic Commerce</span></th><td><ul class="plist"><li><a href="week11/commerce.html">Agents That Buy</a><span> · build, buy or wait, use-case selection</span></li><li><a href="week11/deploy.html">Shipping an Agent</a><span> · deployment and per-run cost, model choice and cost</span></li><li><a href="week11/local.html">Trace It</a><span> · trace analysis, evaluation harness</span></li><li><a href="week11/exercises.html">Practice &amp; Case</a><span> · build, buy or wait</span></li></ul></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Evaluate"></span></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Decide"></span></td><td class="dotcell"></td><td class="dotcell"><span class="wdot" title="Automate"></span></td><td class="dotcell"><button type="button" class="seejobs" data-clusters="2,4,6" aria-label="Show jobs for week 11">Jobs →</button></td></tr></tbody>
+  </table></div>
+  <p class="small" style="margin-top:12px">The capstone pulls all six groups together: you build an agent, test it, secure it, and argue for whether it should exist.</p>
+</div></section>
+
+<section id="swot"><div class="wrap">
+  <div class="eyebrow">Part 2 · Where an MIS degree leads now</div>
+  <h2>A SWOT for an MIS graduate in 2026</h2>
+  <p class="lede">Here is how I would size up the market if I were graduating with an MIS degree and this course behind me. Strengths and weaknesses are about you. Opportunities and threats come from the data further down. Click any job to find it on the chart.</p>
+  <div class="swot">
+    <div class="sw s"><h3>Strengths · what this course gave you</h3><ul class="pts small">
+      <li>You can build a working agent with tools, memory and LangGraph (Weeks 4 to 7, 9).</li>
+      <li>You can show whether it works, with pass^k, traces and a blind comparison (Weeks 8 and 11).</li>
+      <li>You can say what could go wrong and put an approval step in front of it (Week 10).</li>
+      <li>You can argue whether a task needs an agent at all, and what each run costs (Weeks 1 and 11).</li>
+    </ul></div>
+    <div class="sw w"><h3>Weaknesses · what this course did not cover</h3><ul class="pts small">
+      <li>Training models and the math behind them. PATH’s <a class="doc" href="path.html">Deep Learning course</a> covers that.</li>
+      <li>Running software at scale: cloud infrastructure, monitoring and on-call. You shipped a demo, not a production service.</li>
+      <li>Credentials some jobs screen for, such as a CPA or a security certification.</li>
+      <li>Years of experience. Manager roles on this page ask for five or more.</li>
+    </ul></div>
+    <div class="sw o"><h3>Opportunities · growing jobs that hire new graduates</h3>
+      <p class="small swsub">The usual MIS targets, all still growing</p><ul class="chiplist">
+      <li><button type="button" class="jobchip" data-code="15-1211.00">Computer systems analysts</button><span>highest elasticity in OpenAI’s table</span></li>
+      <li><button type="button" class="jobchip" data-code="15-2051.00">Data scientists</button><span>+33.5% by 2034</span></li>
+      <li><button type="button" class="jobchip" data-code="15-2051.01">Business intelligence analysts</button><span>reported with data scientists</span></li>
+      <li><button type="button" class="jobchip" data-code="15-1252.00">Software developers</button><span>+267,700 jobs by 2034</span></li>
+      <li><button type="button" class="jobchip" data-code="13-1082.00">Project management specialists</button><span>68,100 openings a year</span></li>
+      </ul>
+      <p class="small swsub">Less obvious choices where this course gives you a head start</p><ul class="chiplist">
+      <li><button type="button" class="jobchip" data-code="15-1253.00">Software QA analysts and testers</button><span>closest job to AI evaluation (Week 8)</span></li>
+      <li><button type="button" class="jobchip" data-code="15-2031.00">Operations research analysts</button><span>+21.5% by 2034</span></li>
+      <li><button type="button" class="jobchip" data-code="13-1081.00">Logisticians</button><span>+18.3% to 2032, purchasing agents (Week 11)</span></li>
+      <li><button type="button" class="jobchip" data-code="41-9031.00">Sales engineers</button><span>$108,530 median, solutions work at AI vendors</span></li>
+      <li><button type="button" class="jobchip" data-code="13-2061.00">Financial examiners</button><span>+19.5% to 2032, governance and audit (Week 10)</span></li>
+      </ul></div>
+    <div class="sw t"><h3>Threats · entry jobs under pressure</h3><ul class="chiplist">
+      <li><button type="button" class="jobchip" data-code="15-1232.00">Computer user support specialists</button><span>help desk: higher risk, elasticity 0.56</span></li>
+      <li><button type="button" class="jobchip" data-code="15-1244.00">Network and systems administrators</button><span>higher risk, +2.5% to 2032</span></li>
+      <li><button type="button" class="jobchip" data-code="15-1251.00">Computer programmers</button><span>−11.2% to 2032</span></li>
+      <li><button type="button" class="jobchip" data-code="15-1299.09">IT project managers</button><span>OpenAI rates it higher risk</span></li>
+      <li><button type="button" class="jobchip" data-code="43-4051.00">Customer service representatives</button><span>−153,700 jobs by 2034</span></li>
+      </ul>
+      <p class="small" style="margin-top:10px">One job sits in both columns. OpenAI rates <button type="button" class="jobchip inline" data-code="15-1212.00">information security analysts</button> as higher risk, and BLS projects them to grow 28.5%. <a class="doc" href="#infosec">The box in the evidence section</a> explains why.</p></div>
+  </div>
+</div></section>
+
+<section id="jobs"><div class="wrap">
+  <div class="eyebrow">Part 3 · The jobs, mapped</div>
+  <h2>37 jobs, six skill groups, four paths</h2>
+  <p class="lede">The chart is the 2×2. Further right, AI can do more of the job’s tasks. Higher up, demand grows more when the work gets cheaper. Top right is where AI and hiring grow together. Bottom right is where the work gets automated faster than demand grows. Point at a job for its numbers, or filter by skill group.</p>
+  <p class="small">Can you apply to all of these? Not right away. Groups 1 to 5 are jobs that use what you learned, and the column “Start after graduation” shows which ones hire people straight out of a bachelor’s. Group 6 is different. Those jobs are here because agents take over their task lists, and the people who build those agents work in groups 1 to 5.</p>
+  
+  <div class="legendgrid">
+    <div><svg width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="var(--mk-grow)"/></svg><b>Grows with AI.</b> AI makes each worker more productive and the service cheaper, and demand rises enough that the occupation keeps hiring.</div>
+    <div><svg width="16" height="16" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="2" fill="var(--mk-reorg)"/></svg><b>Reorganizes.</b> AI takes over parts of the job, but a person still has to sign off, be present or keep the relationship. The job changes shape more than it shrinks.</div>
+    <div><svg width="16" height="16" aria-hidden="true"><path d="M8 2 L14.5 14 L1.5 14 Z" fill="var(--mk-risk)"/></svg><b>Higher automation risk.</b> Much of the work is standardized information handling that AI can do, nothing requires a person, and demand will not grow enough to absorb the gain.</div>
+    <div><svg width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="5" fill="none" stroke="var(--muted)" stroke-width="2"/></svg><b>Less immediate change.</b> The fourth group in OpenAI’s framework: mostly physical, hands-on work. None of the jobs below are in it.</div>
+  </div>
+  <ul class="pts small colkey">
+    <li><b>Start after graduation:</b> BLS’s typical entry education and the related work experience it lists for the occupation.</li>
+    <li><b>Median pay and openings a year:</b> BLS, 2022 pay and the average yearly openings projected for 2022 to 2032, which include people leaving the job.</li>
+    <li><b>Growth:</b> BLS projected change to 2034, or to 2032 where marked with an asterisk.</li>
+    <li><b>Elasticity:</b> from OpenAI’s table. Above 1, a cheaper service brings in more than enough new demand to keep hiring.</li>
+    <li><b>AI exposure:</b> the 2023 GPTs-are-GPTs score, roughly the share of the job’s tasks a GPT-style tool could do in half the time.</li>
+    <li><b>†</b> BLS reports this job inside a broader group, so pay and openings are for the whole group.</li>
+  </ul>
+
+  <div class="filterrow" role="group" aria-label="Filter jobs">
+    <button type="button" class="fchip all" data-c="all" aria-pressed="true">All groups</button><button type="button" class="fchip" data-c="1" aria-pressed="false">1 · Build the agent</button><button type="button" class="fchip" data-c="2" aria-pressed="false">2 · Evaluate it</button><button type="button" class="fchip" data-c="3" aria-pressed="false">3 · Secure and govern it</button><button type="button" class="fchip" data-c="4" aria-pressed="false">4 · Decide whether to build it</button><button type="button" class="fchip" data-c="5" aria-pressed="false">5 · Work with it every day</button><button type="button" class="fchip" data-c="6" aria-pressed="false">6 · Automate the old workflow</button>
+    <label class="gradtoggle"><input type="checkbox" id="onlyNew" /> Only jobs that hire new graduates</label>
+  </div>
+  <div class="chartcard"><div id="quad" role="img" aria-label="Scatter chart of 37 occupations by AI exposure and demand elasticity. The same data is in the table below."></div><div id="qtip" class="qtip" hidden></div></div>
+  <div style="overflow:auto;margin-top:18px"><table class="occtable" id="occtable">
+    <thead><tr><th>Occupation</th><th>Path</th><th>Start after graduation</th><th class="num">Median pay</th><th class="num">Openings a year</th><th class="num">Growth</th><th class="num">Elasticity</th><th class="num">AI exposure</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+  <p class="small" id="tablecount" style="margin-top:10px"></p>
+  <p class="small" style="margin-top:6px"><a class="doc" href="materials/cis4394_skills_to_occupations.csv" download>Download the full table with O*NET codes as a spreadsheet ↓</a></p>
+</div></section>
+<script id="jobsdata" type="application/json">{"clusters": [{"id": 1, "name": "Build the agent", "skills": ["A3", "A4", "A5", "A7", "A8", "A9", "A10"]}, {"id": 2, "name": "Evaluate it", "skills": ["A11", "B1", "B2", "B3", "B4", "D4"]}, {"id": 3, "name": "Secure and govern it", "skills": ["A12", "B5", "B6", "C4", "C5"]}, {"id": 4, "name": "Decide whether to build it", "skills": ["C1", "C2", "C3", "C6", "A14"]}, {"id": 5, "name": "Work with it every day", "skills": ["A1", "A2", "A13", "C7", "D1"]}, {"id": 6, "name": "Automate the old workflow", "skills": ["A6", "A15"]}], "jobs": [{"code": "15-1252.00", "name": "Software developers", "cluster": 1, "arch": "grow", "emp": 1654440, "el": 1.13, "beta": 0.45, "growth": 15.8, "star": false, "wage": 127260, "openings": 136300, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": "one of the most common occupations on agentic AI postings"}, {"code": "15-1211.00", "name": "Computer systems analysts", "cluster": 1, "arch": "grow", "emp": 248900, "el": 1.15, "beta": 0.47, "growth": 9.6, "star": true, "wage": 102240, "openings": 37600, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": "a common MIS job, with the highest elasticity in the table"}, {"code": "15-1221.00", "name": "Computer and information research scientists", "cluster": 1, "arch": "grow", "emp": 38480, "el": 1.12, "beta": 0.5, "growth": 19.7, "star": false, "wage": 136620, "openings": 3400, "entry": "masters", "entryLabel": "Usually a master’s", "edu": "Master's degree", "exp": "None", "broad": null, "note": ""}, {"code": "15-1254.00", "name": "Web developers", "cluster": 1, "arch": "grow", "emp": 78860, "el": 1.08, "beta": 0.63, "growth": 17.0, "star": true, "wage": 78580, "openings": 8300, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": ""}, {"code": "15-1242.00", "name": "Database administrators", "cluster": 1, "arch": "grow", "emp": 73180, "el": 1.08, "beta": 0.6, "growth": 7.0, "star": true, "wage": 99890, "openings": 5700, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": ""}, {"code": "15-1251.00", "name": "Computer programmers", "cluster": 1, "arch": "grow", "emp": 109870, "el": 1.01, "beta": 0.68, "growth": -11.2, "star": true, "wage": 97800, "openings": 6700, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": "the one coding job BLS expects to shrink"}, {"code": "15-2051.00", "name": "Data scientists", "cluster": 2, "arch": "grow", "emp": 77813, "el": 1.12, "beta": 0.59, "growth": 33.5, "star": false, "wage": 103500, "openings": 17700, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": "the fastest growth BLS projects for any computer job"}, {"code": "15-2051.01", "name": "Business intelligence analysts", "cluster": 2, "arch": "grow", "emp": 77813, "el": 0.95, "beta": 0.58, "growth": 33.5, "star": false, "wage": 103500, "openings": 17700, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": "Data scientists (BLS reports one line for both)", "note": ""}, {"code": "15-1253.00", "name": "Software QA analysts and testers", "cluster": 2, "arch": "grow", "emp": 199800, "el": 1.09, "beta": 0.61, "growth": 20.3, "star": true, "wage": 99620, "openings": 17500, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": "the closest standard occupation to AI evaluation work"}, {"code": "15-2031.00", "name": "Operations research analysts", "cluster": 2, "arch": "grow", "emp": 107760, "el": 1.02, "beta": 0.63, "growth": 21.5, "star": false, "wage": 85720, "openings": 9800, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": ""}, {"code": "15-2041.00", "name": "Statisticians", "cluster": 2, "arch": "grow", "emp": 14900, "el": 1.01, "beta": 0.71, "growth": 31.6, "star": true, "wage": 98920, "openings": 3300, "entry": "masters", "entryLabel": "Usually a master’s", "edu": "Master's degree", "exp": "None", "broad": null, "note": ""}, {"code": "13-2099.01", "name": "Financial quantitative analysts", "cluster": 2, "arch": "reorg", "emp": 63725, "el": 0.63, "beta": 0.66, "growth": 6.1, "star": true, "wage": 73810, "openings": 9900, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": "Financial specialists, all other", "note": ""}, {"code": "15-1212.00", "name": "Information security analysts", "cluster": 3, "arch": "risk", "emp": 179430, "el": 0.68, "beta": 0.54, "growth": 28.5, "star": false, "wage": 112000, "openings": 16800, "entry": "few", "entryLabel": "After 1–4 years in a related job", "edu": "Bachelor's degree", "exp": "Less than 5 years", "broad": null, "note": "OpenAI and BLS disagree on this one; see the box below"}, {"code": "15-1299.05", "name": "Information security engineers", "cluster": 3, "arch": "risk", "emp": 48820, "el": 0.68, "beta": 0.62, "growth": 9.7, "star": true, "wage": 98740, "openings": 33500, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": "Computer occupations, all other", "note": ""}, {"code": "15-1299.04", "name": "Penetration testers", "cluster": 3, "arch": "risk", "emp": 48820, "el": 0.68, "beta": 0.59, "growth": 9.7, "star": true, "wage": 98740, "openings": 33500, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": "Computer occupations, all other", "note": ""}, {"code": "13-1041.00", "name": "Compliance officers", "cluster": 3, "arch": "reorg", "emp": 56824, "el": 0.45, "beta": 0.61, "growth": 4.6, "star": true, "wage": 71690, "openings": 31000, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": ""}, {"code": "11-9199.02", "name": "Compliance managers", "cluster": 3, "arch": "reorg", "emp": 105163, "el": 0.52, "beta": 0.54, "growth": 3.3, "star": true, "wage": 128620, "openings": 94400, "entry": "few", "entryLabel": "After 1–4 years in a related job", "edu": "Bachelor's degree", "exp": "Less than 5 years", "broad": "Managers, all other", "note": ""}, {"code": "13-2061.00", "name": "Financial examiners", "cluster": 3, "arch": "reorg", "emp": 62830, "el": 0.45, "beta": 0.58, "growth": 19.5, "star": true, "wage": 82210, "openings": 6300, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": ""}, {"code": "13-1082.00", "name": "Project management specialists", "cluster": 4, "arch": "grow", "emp": 1006160, "el": 0.91, "beta": 0.4, "growth": 6.2, "star": true, "wage": 95370, "openings": 68100, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": ""}, {"code": "13-1111.00", "name": "Management analysts", "cluster": 4, "arch": "grow", "emp": 893900, "el": 0.96, "beta": 0.5, "growth": 9.7, "star": true, "wage": 95290, "openings": 92900, "entry": "few", "entryLabel": "After 1–4 years in a related job", "edu": "Bachelor's degree", "exp": "Less than 5 years", "broad": null, "note": "consulting"}, {"code": "11-3021.00", "name": "Computer and information systems managers", "cluster": 4, "arch": "grow", "emp": 645970, "el": 1.01, "beta": 0.56, "growth": 15.4, "star": true, "wage": 164070, "openings": 46900, "entry": "senior", "entryLabel": "After 5+ years in a related job", "edu": "Bachelor's degree", "exp": "5 years or more", "broad": null, "note": ""}, {"code": "13-1161.00", "name": "Market research and marketing specialists", "cluster": 4, "arch": "grow", "emp": 430570, "el": 1.03, "beta": 0.58, "growth": 13.4, "star": true, "wage": 68230, "openings": 94600, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": ""}, {"code": "13-2051.00", "name": "Financial and investment analysts", "cluster": 4, "arch": "grow", "emp": 340580, "el": 1.01, "beta": 0.5, "growth": 7.6, "star": true, "wage": 95080, "openings": 23000, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": ""}, {"code": "15-1299.09", "name": "IT project managers", "cluster": 4, "arch": "risk", "emp": 48820, "el": 0.68, "beta": 0.45, "growth": 9.7, "star": true, "wage": 98740, "openings": 33500, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": "Computer occupations, all other", "note": ""}, {"code": "11-1021.00", "name": "General and operations managers", "cluster": 4, "arch": "risk", "emp": 3584420, "el": 0.51, "beta": 0.38, "growth": 4.2, "star": true, "wage": 98100, "openings": 296300, "entry": "senior", "entryLabel": "After 5+ years in a related job", "edu": "Bachelor's degree", "exp": "5 years or more", "broad": null, "note": "the largest occupation in the higher-risk group"}, {"code": "13-2011.00", "name": "Accountants and auditors", "cluster": 5, "arch": "reorg", "emp": 1448290, "el": 0.55, "beta": 0.52, "growth": 4.4, "star": true, "wage": 78000, "openings": 126500, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": ""}, {"code": "13-1071.00", "name": "Human resources specialists", "cluster": 5, "arch": "reorg", "emp": 917460, "el": 0.59, "beta": 0.59, "growth": 5.9, "star": true, "wage": 64240, "openings": 78700, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": ""}, {"code": "13-1151.00", "name": "Training and development specialists", "cluster": 5, "arch": "grow", "emp": 436610, "el": 1.01, "beta": 0.59, "growth": 6.3, "star": true, "wage": 63080, "openings": 35400, "entry": "few", "entryLabel": "After 1–4 years in a related job", "edu": "Bachelor's degree", "exp": "Less than 5 years", "broad": null, "note": ""}, {"code": "13-1081.00", "name": "Logisticians", "cluster": 5, "arch": "grow", "emp": 78547, "el": 1.03, "beta": 0.45, "growth": 18.3, "star": true, "wage": 77520, "openings": 21800, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": ""}, {"code": "41-9031.00", "name": "Sales engineers", "cluster": 5, "arch": "grow", "emp": 56690, "el": 0.98, "beta": 0.53, "growth": 5.5, "star": false, "wage": 108530, "openings": 5900, "entry": "new", "entryLabel": "Yes, with a bachelor’s", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": "includes solutions engineers at AI companies"}, {"code": "27-3042.00", "name": "Technical writers", "cluster": 5, "arch": "grow", "emp": 55530, "el": 1.02, "beta": 0.63, "growth": 6.9, "star": true, "wage": 79960, "openings": 4800, "entry": "few", "entryLabel": "After 1–4 years in a related job", "edu": "Bachelor's degree", "exp": "Less than 5 years", "broad": null, "note": ""}, {"code": "43-4051.00", "name": "Customer service representatives", "cluster": 6, "arch": "risk", "emp": 2725930, "el": 0.68, "beta": 0.7, "growth": -5.5, "star": false, "wage": 37780, "openings": 373400, "entry": "auto", "entryLabel": "High school diploma", "edu": "High school diploma or equivalent", "exp": "None", "broad": null, "note": "70% of tasks exposed"}, {"code": "15-1232.00", "name": "Computer user support specialists", "cluster": 6, "arch": "risk", "emp": 697210, "el": 0.56, "beta": 0.67, "growth": 5.0, "star": true, "wage": 57890, "openings": 53200, "entry": "auto", "entryLabel": "Some college, no degree", "edu": "Some college, no degree", "exp": "None", "broad": null, "note": "help desk"}, {"code": "15-1244.00", "name": "Network and systems administrators", "cluster": 6, "arch": "risk", "emp": 318570, "el": 0.56, "beta": 0.51, "growth": 2.5, "star": true, "wage": 90520, "openings": 19800, "entry": "auto", "entryLabel": "Bachelor's degree", "edu": "Bachelor's degree", "exp": "None", "broad": null, "note": ""}, {"code": "13-1031.00", "name": "Claims adjusters and examiners", "cluster": 6, "arch": "risk", "emp": 305020, "el": 0.58, "beta": 0.49, "growth": -5.1, "star": false, "wage": 72230, "openings": 20600, "entry": "auto", "entryLabel": "High school diploma", "edu": "High school diploma or equivalent", "exp": "None", "broad": null, "note": ""}, {"code": "43-5071.00", "name": "Shipping, receiving and inventory clerks", "cluster": 6, "arch": "risk", "emp": 857630, "el": 0.35, "beta": 0.36, "growth": -8.4, "star": true, "wage": 37760, "openings": 76100, "entry": "auto", "entryLabel": "High school diploma", "edu": "High school diploma or equivalent", "exp": "None", "broad": null, "note": "a GDPval occupation"}, {"code": "43-9061.00", "name": "Office clerks, general", "cluster": 6, "arch": "risk", "emp": 2510550, "el": 0.41, "beta": 0.5, "growth": -6.6, "star": true, "wage": 38040, "openings": 290100, "entry": "auto", "entryLabel": "High school diploma", "edu": "High school diploma or equivalent", "exp": "None", "broad": null, "note": ""}]}</script>
+
+
 <section><div class="wrap">
-  <div class="eyebrow">Evidence 1 · OpenAI Signals</div>
+  <div class="eyebrow">Where the numbers come from · 1 · OpenAI Signals</div>
   <h2>What people use ChatGPT for at work</h2>
   <p class="lede">Every month OpenAI sorts a sample of a million consumer ChatGPT messages and publishes the results by country in <a class="doc" href="https://openai.com/signals/data-download/" target="_blank" rel="noopener">OpenAI Signals ↗</a>. One table puts work-related messages into <a class="doc" href="https://www.onetonline.org/" target="_blank" rel="noopener">O*NET ↗</a> work activities, the categories the Department of Labor uses to describe jobs. Here are the top twelve for the United States, July to September 2026. Under each one I noted where it came up in this course.</p>
   <div class="card">
@@ -126,7 +275,7 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
 </div></section>
 
 <section><div class="wrap">
-  <div class="eyebrow">Evidence 2 · OpenAI AI Jobs Transition Framework</div>
+  <div class="eyebrow">Where the numbers come from · 2 · OpenAI AI Jobs Transition Framework</div>
   <h2>Four paths for 921 occupations</h2>
   <p class="lede">OpenAI published <a class="doc" href="https://openai.com/index/modeling-ai-jobs-transition/" target="_blank" rel="noopener">this framework ↗</a> on April 25, 2026, with a <a class="doc" href="https://cdn.openai.com/pdf/the-ai-jobs-transition-framework_report.pdf" target="_blank" rel="noopener">full report ↗</a> and a downloadable occupation table. Most studies of AI and jobs ask one question, whether AI can do the tasks in a job. This one asks two more. Does a person still need to deliver the work or take responsibility for it? And if AI makes the service cheaper, will people buy enough more of it to keep the workers busy? Each occupation lands in one of four groups based on the answers. OpenAI is careful to say the groups are not forecasts of job loss. They show where change is likely to appear first.</p>
   <div class="card">
@@ -140,14 +289,14 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
     <p class="small" style="margin-top:14px">The number that separates the groups is demand elasticity. Above 1 means that when a service gets 10% cheaper, people buy more than 10% more of it. The occupation can then add workers even as each worker gets more done. The highest value in OpenAI’s table, 1.15, belongs to computer systems analysts and computer network architects. Software developers are at 1.13 and data scientists at 1.12. Customer service representatives are at 0.68, and general office clerks at 0.41.</p>
     <p class="small" style="margin-top:10px">One caution before you read further. <a class="doc" href="https://openai.com/index/modeling-ai-jobs-transition/" target="_blank" rel="noopener">OpenAI’s write-up ↗</a> names software developers and financial analysts as examples of jobs that will reorganize. Its downloadable table puts both in the grow-with-AI group. I used the table everywhere on this page.</p>
   </div>
-  <div class="callout blue">
+  <div class="callout blue" id="infosec">
     <p style="margin:0"><b>Two official sources, two different answers.</b> OpenAI’s table puts information security analysts in the higher-automation-risk group. <a class="doc" href="https://www.bls.gov/opub/ted/2026/artificial-intelligence-information-technology-and-employment-2024-34.htm" target="_blank" rel="noopener">BLS projects ↗</a> the same occupation to grow 28.5% by 2034, one of the fastest rates among computer jobs. They are measuring different things. OpenAI asks how much of today’s task list a model could do. BLS asks how many people employers plan to hire. My reading is that the routine part of security work is exposed, and the judgment about what an agent is allowed to touch is what employers are hiring for. That judgment is Week 10.</p>
-    <p style="margin:10px 0 0">Customer service shows the same gap from the other side. About 70% of a representative’s tasks are exposed, and BLS projects 153,700 fewer of these jobs by 2034. The people who build and supervise the agents that take over that work are counted in other occupations, mostly the ones in the table further down.</p>
+    <p style="margin:10px 0 0">Customer service shows the same gap from the other side. About 70% of a representative’s tasks are exposed, and BLS projects 153,700 fewer of these jobs by 2034. The people who build and supervise the agents that take over that work are counted in other occupations, mostly the ones in groups 1 to 5 above.</p>
   </div>
 </div></section>
 
 <section><div class="wrap">
-  <div class="eyebrow">Evidence 3 · GDPval</div>
+  <div class="eyebrow">Where the numbers come from · 3 · GDPval</div>
   <h2>44 occupations whose real work is now a benchmark</h2>
   <p class="lede">For <a class="doc" href="https://openai.com/index/gdpval/" target="_blank" rel="noopener">GDPval ↗</a>, OpenAI picked the nine sectors that contribute most to U.S. GDP. In each one it took the five best-paid occupations that are mostly done on a computer. Professionals from those jobs, with 14 years of experience on average, wrote 1,320 tasks from their own work. Each task comes with reference files and a finished product, such as a spreadsheet, a legal brief or a care plan. Other experts then compare a model’s product with the human one without knowing which is which, and score it as a win, a tie or a loss. The 220 public tasks are <a class="doc" href="https://huggingface.co/datasets/openai/gdpval" target="_blank" rel="noopener">on Hugging Face ↗</a>. I bolded the occupations this course connects to most directly.</p>
   <div class="sectors">
@@ -168,66 +317,7 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
 </div></section>
 
 <section><div class="wrap">
-  <div class="eyebrow">The map</div>
-  <h2>Six things you can now do, and the jobs that use each</h2>
-  <p class="lede">The skill codes come from the course skills inventory, where A is building, B evaluating, C managing and D professional skills. Archetype and elasticity come from OpenAI’s table. Exposure is the score from the 2023 <a class="doc" href="https://arxiv.org/abs/2303.10130" target="_blank" rel="noopener">GPTs-are-GPTs study ↗</a>. Roughly, it is the share of a job’s tasks where a GPT-style tool could cut the time in half, with partly exposed tasks counted at half weight. Growth is from BLS. Where its <a class="doc" href="https://www.bls.gov/opub/ted/2026/artificial-intelligence-information-technology-and-employment-2024-34.htm" target="_blank" rel="noopener">July 2026 release ↗</a> named the occupation I used the 2024 to 2034 figure. Otherwise I used the <a class="doc" href="https://www.bls.gov/emp/" target="_blank" rel="noopener">2022 to 2032 projections ↗</a> and marked it with an asterisk. Employment counts are for 2024. The full table with O*NET codes is <a class="doc" href="materials/cis4394_skills_to_occupations.csv" download>downloadable as a spreadsheet ↓</a>.</p>
-  <div style="overflow:auto"><table class="occtable">
-    <thead><tr><th>Occupation</th><th>Framework archetype</th><th>Employment</th><th>Elasticity</th><th>Exposure β</th><th>BLS growth</th></tr></thead>
-    <tbody>
-      <tr class="grp"><td colspan="6">1 · Build the agent<span>A3 agent loop · A4 LangGraph · A5 tool and function schemas · A9 MCP · A10 multi-agent orchestration</span></td></tr>
-      <tr><td>Software developers<span class="code">15-1252.00 · one of the most common occupations on agentic AI postings</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">1,654,440</td><td class="num">1.13</td><td class="num">0.45</td><td class="num">+15.8%</td></tr>
-      <tr><td>Computer systems analysts<span class="code">15-1211.00 · a common MIS job, with the highest elasticity in the table</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">248,900</td><td class="num">1.15</td><td class="num">0.47</td><td class="num">+9.6%*</td></tr>
-      <tr><td>Computer and information research scientists<span class="code">15-1221.00</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">38,480</td><td class="num">1.12</td><td class="num">0.50</td><td class="num">+19.7%</td></tr>
-      <tr><td>Software QA analysts and testers<span class="code">15-1253.00 · the closest standard occupation to AI evaluation work</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">199,800</td><td class="num">1.09</td><td class="num">0.61</td><td class="num">+20.3%*</td></tr>
-      <tr><td>Web developers<span class="code">15-1254.00</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">78,860</td><td class="num">1.08</td><td class="num">0.63</td><td class="num">+17.0%*</td></tr>
-      <tr><td>Computer programmers<span class="code">15-1251.00 · the one coding title BLS expects to shrink</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">109,870</td><td class="num">1.01</td><td class="num">0.68</td><td class="num">−11.2%*</td></tr>
-
-      <tr class="grp"><td colspan="6">2 · Evaluate it<span>A11 evaluation harness · B1 pass^k over pass@1 · B2 benchmark literacy · B3 trace analysis · B4 LLM-as-judge critique</span></td></tr>
-      <tr><td>Data scientists<span class="code">15-2051.00 · the fastest growth BLS projects for any computer job</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">77,813</td><td class="num">1.12</td><td class="num">0.59</td><td class="num">+33.5%</td></tr>
-      <tr><td>Business intelligence analysts<span class="code">15-2051.01</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">77,813</td><td class="num">0.95</td><td class="num">0.58</td><td class="num">+33.5%</td></tr>
-      <tr><td>Operations research analysts<span class="code">15-2031.00</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">107,760</td><td class="num">1.02</td><td class="num">0.63</td><td class="num">+21.5%</td></tr>
-      <tr><td>Statisticians<span class="code">15-2041.00</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">14,900</td><td class="num">1.01</td><td class="num">0.71</td><td class="num">+31.6%*</td></tr>
-      <tr><td>Financial quantitative analysts<span class="code">13-2099.01</span></td><td><span class="arch reorg">Reorganizes</span></td><td class="num">63,725</td><td class="num">0.63</td><td class="num">0.66</td><td class="num">+6.1%*</td></tr>
-
-      <tr class="grp"><td colspan="6">3 · Secure and govern it<span>A12 guardrails · B5 threat modeling (lethal trifecta, OWASP Agentic Top 10) · B6 deployment risk · C4 EU AI Act and NIST AI RMF · C5 accountability</span></td></tr>
-      <tr><td>Information security analysts<span class="code">15-1212.00 · see the callout above</span></td><td><span class="arch risk">Higher automation risk</span></td><td class="num">179,430</td><td class="num">0.68</td><td class="num">0.54</td><td class="num">+28.5%</td></tr>
-      <tr><td>Information security engineers<span class="code">15-1299.05</span></td><td><span class="arch risk">Higher automation risk</span></td><td class="num">48,820</td><td class="num">0.68</td><td class="num">0.62</td><td class="num">+9.7%*</td></tr>
-      <tr><td>Penetration testers<span class="code">15-1299.04</span></td><td><span class="arch risk">Higher automation risk</span></td><td class="num">48,820</td><td class="num">0.68</td><td class="num">0.59</td><td class="num">+9.7%*</td></tr>
-      <tr><td>Compliance officers<span class="code">13-1041.00 · human necessity: regulatory accountability</span></td><td><span class="arch reorg">Reorganizes</span></td><td class="num">56,824</td><td class="num">0.45</td><td class="num">0.61</td><td class="num">+4.6%*</td></tr>
-      <tr><td>Compliance managers<span class="code">11-9199.02</span></td><td><span class="arch reorg">Reorganizes</span></td><td class="num">105,163</td><td class="num">0.52</td><td class="num">0.54</td><td class="num">+3.3%*</td></tr>
-      <tr><td>Financial examiners<span class="code">13-2061.00</span></td><td><span class="arch reorg">Reorganizes</span></td><td class="num">62,830</td><td class="num">0.45</td><td class="num">0.58</td><td class="num">+19.5%*</td></tr>
-
-      <tr class="grp"><td colspan="6">4 · Decide whether to build it<span>C1 agent vs workflow · C2 cost of error and value per run · C3 build, buy or wait · C6 use-case selection · A14 model and cost choice</span></td></tr>
-      <tr><td>Project management specialists<span class="code">13-1082.00 · human necessity: relational</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">1,006,160</td><td class="num">0.91</td><td class="num">0.40</td><td class="num">+6.2%*</td></tr>
-      <tr><td>Management analysts<span class="code">13-1111.00 · consulting</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">893,900</td><td class="num">0.96</td><td class="num">0.50</td><td class="num">+9.7%*</td></tr>
-      <tr><td>Computer and information systems managers<span class="code">11-3021.00</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">645,970</td><td class="num">1.01</td><td class="num">0.56</td><td class="num">+15.4%*</td></tr>
-      <tr><td>Market research analysts and marketing specialists<span class="code">13-1161.00</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">430,570</td><td class="num">1.03</td><td class="num">0.58</td><td class="num">+13.4%*</td></tr>
-      <tr><td>Financial and investment analysts<span class="code">13-2051.00</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">340,580</td><td class="num">1.01</td><td class="num">0.50</td><td class="num">+7.6%*</td></tr>
-      <tr><td>Information technology project managers<span class="code">15-1299.09</span></td><td><span class="arch risk">Higher automation risk</span></td><td class="num">48,820</td><td class="num">0.68</td><td class="num">0.45</td><td class="num">+9.7%*</td></tr>
-      <tr><td>General and operations managers<span class="code">11-1021.00 · the largest occupation in the risk group</span></td><td><span class="arch risk">Higher automation risk</span></td><td class="num">3,584,420</td><td class="num">0.51</td><td class="num">0.38</td><td class="num">+4.2%*</td></tr>
-
-      <tr class="grp"><td colspan="6">5 · Work with it every day<span>A1 prompt engineering · A2 context engineering · A13 agentic coding tools · D1 design docs and honest limitations</span></td></tr>
-      <tr><td>Accountants and auditors<span class="code">13-2011.00 · human necessity: regulatory accountability</span></td><td><span class="arch reorg">Reorganizes</span></td><td class="num">1,448,290</td><td class="num">0.55</td><td class="num">0.52</td><td class="num">+4.4%*</td></tr>
-      <tr><td>Human resources specialists<span class="code">13-1071.00</span></td><td><span class="arch reorg">Reorganizes</span></td><td class="num">917,460</td><td class="num">0.59</td><td class="num">0.59</td><td class="num">+5.9%*</td></tr>
-      <tr><td>Training and development specialists<span class="code">13-1151.00</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">436,610</td><td class="num">1.01</td><td class="num">0.59</td><td class="num">+6.3%*</td></tr>
-      <tr><td>Logisticians<span class="code">13-1081.00</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">78,547</td><td class="num">1.03</td><td class="num">0.45</td><td class="num">+18.3%*</td></tr>
-      <tr><td>Sales engineers<span class="code">41-9031.00 · includes solutions engineers at AI companies</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">56,690</td><td class="num">0.98</td><td class="num">0.53</td><td class="num">+5.5%</td></tr>
-      <tr><td>Technical writers<span class="code">27-3042.00</span></td><td><span class="arch grow">Grows with AI</span></td><td class="num">55,530</td><td class="num">1.02</td><td class="num">0.63</td><td class="num">+6.9%*</td></tr>
-
-      <tr class="grp"><td colspan="6">6 · Build the automation that replaces the old workflow<span>A6 error handling, retries and human-approval gates · A15 deployment and per-run cost · the Week 11 purchasing agent. These jobs are here because agents take over their task lists. The people who build those agents work in the jobs above.</span></td></tr>
-      <tr><td>Customer service representatives<span class="code">43-4051.00 · 70% of tasks exposed; −153,700 jobs projected</span></td><td><span class="arch risk">Higher automation risk</span></td><td class="num">2,725,930</td><td class="num">0.68</td><td class="num">0.70</td><td class="num">−5.5%</td></tr>
-      <tr><td>Computer user support specialists<span class="code">15-1232.00 · help desk</span></td><td><span class="arch risk">Higher automation risk</span></td><td class="num">697,210</td><td class="num">0.56</td><td class="num">0.67</td><td class="num">+5.0%*</td></tr>
-      <tr><td>Network and computer systems administrators<span class="code">15-1244.00</span></td><td><span class="arch risk">Higher automation risk</span></td><td class="num">318,570</td><td class="num">0.56</td><td class="num">0.51</td><td class="num">+2.5%*</td></tr>
-      <tr><td>Claims adjusters, examiners and investigators<span class="code">13-1031.00</span></td><td><span class="arch risk">Higher automation risk</span></td><td class="num">305,020</td><td class="num">0.58</td><td class="num">0.49</td><td class="num">−5.1%</td></tr>
-      <tr><td>Shipping, receiving and inventory clerks<span class="code">43-5071.00 · a GDPval occupation</span></td><td><span class="arch risk">Higher automation risk</span></td><td class="num">857,630</td><td class="num">0.35</td><td class="num">0.36</td><td class="num">−8.4%*</td></tr>
-      <tr><td>Office clerks, general<span class="code">43-9061.00</span></td><td><span class="arch risk">Higher automation risk</span></td><td class="num">2,510,550</td><td class="num">0.41</td><td class="num">0.50</td><td class="num">−6.6%*</td></tr>
-    </tbody>
-  </table></div>
-  <p class="small" style="margin-top:12px">Two things stand out. In clusters 1 and 2, every occupation but one is in the grow-with-AI group, and most have an elasticity of 1 or higher. These jobs tend to add people when the tools get better. Cluster 6 looks the opposite: large occupations, heavily exposed, with low elasticity. Your capstone automates work like this. The approval step you added in Week 10 is what keeps a person involved.</p>
-</div></section>
-
-<section><div class="wrap">
-  <div class="eyebrow">Evidence 4 · job postings</div>
+  <div class="eyebrow">Where the numbers come from · 4 · Job postings</div>
   <h2>What employers are posting</h2>
   <div class="grid2" style="align-items:start">
     <div class="card"><h3>Old job titles, new skills</h3><p class="small"><a class="doc" href="https://lightcast.io/blog/tracking-the-agentic-ai-explosion-in-jobs" target="_blank" rel="noopener">Lightcast ↗</a> counted more than 86,000 job postings in 2025 that asked for agentic AI skills, up more than 280% in a year. The median advertised salary was $153,000. For AI postings in general it was $141,000, and for IT $125,000.</p><p class="small" style="margin-top:8px">Fortune 1000 companies posted about 30% of these jobs, although they post only 12% of jobs overall. Amazon, Microsoft, KPMG and Accenture are among the top ten employers. Six of the ten occupations that ask most often are technical, including AI engineers and software developers. The authors point out that a search by job title would barely find this work, because companies are adding it to jobs that already exist.</p></div>
@@ -283,6 +373,106 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
 <script>
 const progress=document.getElementById('progressBar');
 addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;progress.style.width=Math.max(0,Math.min(100,pct))+'%'});
+</script>
+<script>
+(function(){
+const D=JSON.parse(document.getElementById('jobsdata').textContent);
+const jobs=D.jobs, CL={}; D.clusters.forEach(c=>CL[c.id]=c);
+const SKN={A1:'prompt engineering',A2:'context engineering',A3:'agent loop',A4:'LangGraph',A5:'tool and function schemas',A6:'tool errors, retries and approval gates',A7:'retrieval (RAG)',A8:'agent memory',A9:'MCP and A2A',A10:'multi-agent orchestration',A11:'evaluation harness',A12:'guardrails',A13:'agentic coding tools',A14:'model choice and cost',A15:'deployment and per-run cost',B1:'pass^k reliability',B2:'benchmark literacy',B3:'trace analysis',B4:'LLM-as-judge critique',B5:'threat modeling',B6:'deployment risk assessment',C1:'agent or workflow',C2:'cost of error',C3:'build, buy or wait',C4:'governance',C5:'accountability',C6:'use-case selection',C7:'human-AI collaboration',D1:'technical writing',D4:'verification first'};
+const ARCH={grow:'Grows with AI',reorg:'Reorganizes',risk:'Higher automation risk',less:'Less immediate change'};
+const ARCHS={grow:'Grows',reorg:'Reorganizes',risk:'Higher risk',less:'Less change'};
+const COL={grow:'var(--mk-grow)',reorg:'var(--mk-reorg)',risk:'var(--mk-risk)'};
+const state={clusters:new Set(),onlyNew:false,focus:null};
+const fmt$=v=>'$'+v.toLocaleString('en-US'), fmtN=v=>v.toLocaleString('en-US');
+const fmtG=j=>(j.growth>0?'+':j.growth<0?'−':'')+Math.abs(j.growth).toFixed(1)+'%'+(j.star?'*':'');
+const active=j=>(state.clusters.size===0||state.clusters.has(j.cluster))&&(!state.onlyNew||j.entry==='new');
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs,parent){const n=document.createElementNS(NS,tag);for(const k in attrs)n.setAttribute(k,attrs[k]);if(parent)parent.appendChild(n);return n;}
+function shape(g,arch,x,y,r,fill,stroke,sw){
+  if(arch==='reorg') return el('rect',{x:x-r*.88,y:y-r*.88,width:r*1.76,height:r*1.76,rx:2,fill,stroke,'stroke-width':sw},g);
+  if(arch==='risk'){const h=r*1.15;return el('path',{d:`M${x} ${y-h} L${x+h*1.08} ${y+h*.75} L${x-h*1.08} ${y+h*.75} Z`,fill,stroke,'stroke-width':sw,'stroke-linejoin':'round'},g);}
+  return el('circle',{cx:x,cy:y,r,fill,stroke,'stroke-width':sw},g);
+}
+const LABELS=['Software developers','Data scientists','Customer service representatives','General and operations managers','Information security analysts','Computer systems analysts'];
+let pts=[];
+function draw(){
+  const box=document.getElementById('quad'); const W=box.clientWidth; const H=W<600?400:470;
+  const m={l:W<600?50:58,r:14,t:34,b:58}; const X0=.3,X1=.85,Y0=.22,Y1=1.25;
+  const sx=v=>m.l+(v-X0)/(X1-X0)*(W-m.l-m.r), sy=v=>H-m.b-(v-Y0)/(Y1-Y0)*(H-m.t-m.b);
+  box.innerHTML=''; const svg=el('svg',{width:W,height:H,viewBox:`0 0 ${W} ${H}`},box);
+  const grid=el('g',{},svg);
+  for(let v=.3;v<=.851;v+=.1){const x=sx(v);el('line',{x1:x,x2:x,y1:m.t,y2:H-m.b,stroke:'var(--line)','stroke-width':1},grid);const t=el('text',{x,y:H-m.b+18,'text-anchor':'middle','font-size':12,fill:'var(--muted)'},grid);t.textContent=v.toFixed(1);}
+  for(let v=.4;v<=1.201;v+=.2){const y=sy(v);el('line',{x1:m.l,x2:W-m.r,y1:y,y2:y,stroke:'var(--line)','stroke-width':1},grid);const t=el('text',{x:m.l-8,y:y+4,'text-anchor':'end','font-size':12,fill:'var(--muted)'},grid);t.textContent=v.toFixed(1);}
+  // quadrant dividers
+  el('line',{x1:sx(.55),x2:sx(.55),y1:m.t,y2:H-m.b,stroke:'var(--line2)','stroke-width':1.5},grid);
+  el('line',{x1:m.l,x2:W-m.r,y1:sy(1),y2:sy(1),stroke:'var(--line2)','stroke-width':1.5},grid);
+  const nar=W<600; const Q=nar?['Less AI · grows','More AI · grows','Less AI · lags','More AI · lags']:['AI does less · demand grows','AI does more · demand grows','AI does less · demand lags','AI does more · demand lags'];
+  const q=[[m.l+6,m.t-12,'start',Q[0]],[W-m.r-4,m.t-12,'end',Q[1]],[m.l+6,H-m.b-8,'start',Q[2]],[W-m.r-4,H-m.b-8,'end',Q[3]]];
+  q.forEach(([x,y,a,s])=>{const t=el('text',{x,y,'text-anchor':a,'font-size':13,'font-weight':600,fill:'var(--ink)'},grid);t.textContent=s;});
+  const xt=el('text',{x:(m.l+W-m.r)/2,y:H-12,'text-anchor':'middle','font-size':13,fill:'var(--muted)'},grid);xt.textContent=nar?'AI exposure →':'AI exposure: share of tasks a GPT-style tool could speed up →';
+  const yt=el('text',{x:0,y:0,'text-anchor':'middle','font-size':13,fill:'var(--muted)',transform:`translate(16 ${(m.t+H-m.b)/2}) rotate(-90)`},grid);yt.textContent='Demand elasticity ↑';
+  const maxE=Math.max(...jobs.map(j=>j.emp));
+  const order=[...jobs].sort((a,b)=>b.emp-a.emp); pts=[];
+  const gp=el('g',{},svg);
+  order.forEach(j=>{const x=sx(j.beta),y=sy(j.el),r=4+11*Math.sqrt(j.emp/maxE),on=active(j);
+    shape(gp,j.arch,x,y,r,on?COL[j.arch]:'var(--line2)','#fff',2).setAttribute('opacity',on?(state.focus&&state.focus!==j.code?.35:.92):.45);
+    pts.push({j,x,y,r,on});});
+  if(state.focus){const p=pts.find(p=>p.j.code===state.focus); if(p) el('circle',{cx:p.x,cy:p.y,r:p.r+6,fill:'none',stroke:'var(--ink)','stroke-width':2},gp);}
+  if(W>=640){const gl=el('g',{},svg); const boxes=[];
+    // keep quadrant captions clear
+    boxes.push({x:m.l,y:m.t-26,w:240,h:18},{x:W-m.r-240,y:m.t-26,w:240,h:18},{x:m.l,y:H-m.b-22,w:220,h:18},{x:W-m.r-220,y:H-m.b-22,w:220,h:18});
+    const hit=(b)=>boxes.some(o=>b.x<o.x+o.w&&b.x+b.w>o.x&&b.y<o.y+o.h&&b.y+b.h>o.y)||pts.some(p=>p.on&&b.x<p.x+p.r&&b.x+b.w>p.x-p.r&&b.y<p.y+p.r&&b.y+b.h>p.y-p.r&&!b.own(p));
+    pts.filter(p=>p.on&&LABELS.includes(p.j.name)).sort((a,b)=>a.y-b.y).forEach(p=>{
+      const tw=p.j.name.length*6.9, th=16, g=p.r+5;
+      const cands=[[p.x+g,p.y-th/2,'start'],[p.x-g-tw,p.y-th/2,'end'],[p.x-tw/2,p.y-p.r-th-3,'middle'],[p.x-tw/2,p.y+p.r+3,'middle'],[p.x+g,p.y-th-6,'start'],[p.x+g,p.y+6,'start'],[p.x-g-tw,p.y-th-6,'end'],[p.x-g-tw,p.y+6,'end']];
+      for(const [bx,by,anc] of cands){const b={x:bx,y:by,w:tw,h:th,own:q=>q===p};
+        if(bx<m.l||bx+tw>W-m.r||by<m.t||by+th>H-m.b) continue; if(hit(b)) continue;
+        boxes.push(b); const tx=anc==='start'?bx:anc==='end'?bx+tw:bx+tw/2;
+        const t=el('text',{x:tx,y:by+12,'text-anchor':anc,'font-size':13,fill:'var(--ink)'},gl); t.textContent=p.j.name; break;}
+    });}
+  svg.addEventListener('mousemove',ev=>{const b=svg.getBoundingClientRect();hover(ev.clientX-b.left,ev.clientY-b.top);});
+  svg.addEventListener('mouseleave',()=>{if(!state.focus)hideTip();});
+  svg.addEventListener('click',ev=>{const b=svg.getBoundingClientRect();const p=nearest(ev.clientX-b.left,ev.clientY-b.top);if(p){state.focus=p.j.code;draw();renderTable();showTip(p);}else if(state.focus){state.focus=null;hideTip();draw();renderTable();}});
+  if(state.focus){const p=pts.find(p=>p.j.code===state.focus);if(p)showTip(p);}
+}
+function nearest(x,y){let best=null,bd=30;pts.forEach(p=>{if(!p.on)return;const d=Math.hypot(p.x-x,p.y-y)-p.r;if(d<bd){bd=d;best=p;}});return best;}
+function hover(x,y){const p=nearest(x,y);if(p)showTip(p);else if(!state.focus)hideTip();}
+const tip=document.getElementById('qtip');
+function showTip(p){const j=p.j;tip.innerHTML=`<b>${j.name}</b><span class="tarch">${ARCH[j.arch]} · group ${j.cluster}, ${CL[j.cluster].name.toLowerCase()}</span>
+ <dl><dt>Start after graduation</dt><dd>${j.entryLabel}</dd><dt>Median pay</dt><dd>${fmt$(j.wage)}${j.broad?' †':''}</dd><dt>Openings a year</dt><dd>${fmtN(j.openings)}${j.broad?' †':''}</dd>
+ <dt>Growth</dt><dd>${fmtG(j)}</dd><dt>Elasticity</dt><dd>${j.el.toFixed(2)}</dd><dt>AI exposure</dt><dd>${j.beta.toFixed(2)}</dd><dt>Employed, 2024</dt><dd>${fmtN(j.emp)}</dd></dl>`;
+  tip.hidden=false; const card=tip.parentElement, cw=card.clientWidth; const tw=tip.offsetWidth, th=tip.offsetHeight;
+  let left=p.x+p.r+14; if(left+tw>cw-8) left=p.x-p.r-14-tw; if(left<8) left=8; let top=p.y-th/2; if(top<8) top=8;
+  tip.style.left=left+'px'; tip.style.top=top+'px';}
+function hideTip(){tip.hidden=true;}
+function renderTable(){
+  const tb=document.querySelector('#occtable tbody'); let h='', n=0;
+  D.clusters.forEach(c=>{const rows=jobs.filter(j=>j.cluster===c.id&&active(j)); if(!rows.length) return;
+    const sub=c.id===6?'These jobs are here because agents take over their task lists. The people who build those agents work in groups 1 to 5.':c.skills.map(s=>SKN[s]).join(' · ');
+    h+=`<tr class="grp"><td colspan="8">${c.id} · ${c.name}<span>${sub}</span></td></tr>`;
+    rows.forEach(j=>{n++; const sh=j.arch==='reorg'?'<rect x="2" y="2" width="10" height="10" rx="2" fill="var(--mk-reorg)"/>':j.arch==='risk'?'<path d="M7 1.5 L12.8 12 L1.2 12 Z" fill="var(--mk-risk)"/>':'<circle cx="7" cy="7" r="5" fill="var(--mk-grow)"/>';
+      h+=`<tr data-code="${j.code}" class="${j.cluster===6?'auto':''}${state.focus===j.code?' focus':''}"><td>${j.name}<span class="code">${j.code}${j.note?' · '+j.note:''}</span></td>
+      <td><span class="arch"><svg width="14" height="14" aria-hidden="true">${sh}</svg>${ARCHS[j.arch]}</span></td><td>${j.entryLabel}</td>
+      <td class="num">${fmt$(j.wage)}${j.broad?' †':''}</td><td class="num">${fmtN(j.openings)}${j.broad?' †':''}</td><td class="num">${fmtG(j)}</td><td class="num">${j.el.toFixed(2)}</td><td class="num">${j.beta.toFixed(2)}</td></tr>`;});});
+  tb.innerHTML=h; document.getElementById('tablecount').textContent=`Showing ${n} of ${jobs.length} jobs.`;
+  tb.querySelectorAll('tr[data-code]').forEach(tr=>tr.addEventListener('click',()=>{state.focus=tr.dataset.code;draw();renderTable();document.getElementById('quad').scrollIntoView({behavior:'smooth',block:'center'});}));
+}
+function syncChips(){document.querySelectorAll('.fchip').forEach(b=>{const c=b.dataset.c;b.setAttribute('aria-pressed',c==='all'?String(state.clusters.size===0):String(state.clusters.has(+c)));});document.getElementById('onlyNew').checked=state.onlyNew;}
+function update(){syncChips();draw();renderTable();}
+document.querySelectorAll('.fchip').forEach(b=>b.addEventListener('click',()=>{const c=b.dataset.c;state.focus=null;hideTip();
+  if(c==='all') state.clusters.clear(); else {const n=+c; state.clusters.has(n)?state.clusters.delete(n):state.clusters.add(n);} update();}));
+document.getElementById('onlyNew').addEventListener('change',e=>{state.onlyNew=e.target.checked;state.focus=null;hideTip();update();});
+document.querySelectorAll('.seejobs').forEach(b=>b.addEventListener('click',()=>{state.clusters=new Set(b.dataset.clusters.split(',').map(Number));state.onlyNew=false;state.focus=null;hideTip();update();document.getElementById('jobs').scrollIntoView({behavior:'smooth'});}));
+document.querySelectorAll('.jobchip').forEach(b=>b.addEventListener('click',()=>{state.clusters.clear();state.onlyNew=false;state.focus=b.dataset.code;update();document.getElementById('quad').scrollIntoView({behavior:'smooth',block:'center'});}));
+let rt; addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(draw,120);});
+update();
+})();
+</script>
+<script>
+(function(){const a=document.getElementById('ask'); if(!a||!a.dataset.categoryId) return; a.hidden=false;
+const g=document.createElement('script'); g.src='https://giscus.app/client.js'; g.async=true; g.crossOrigin='anonymous';
+const o={repo:a.dataset.repo,repoId:a.dataset.repoId,category:a.dataset.category,categoryId:a.dataset.categoryId,mapping:'specific',term:'Careers page: what else do you want to know?',strict:'1',reactionsEnabled:'1',emitMetadata:'0',inputPosition:'top',theme:'light',lang:'en',loading:'lazy'};
+for(const k in o) g.setAttribute('data-'+k.replace(/[A-Z]/g,m=>'-'+m.toLowerCase()),o[k]); a.querySelector('.giscus').appendChild(g);})();
 </script>
 </body>
 </html>
