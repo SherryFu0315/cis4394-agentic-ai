@@ -91,6 +91,7 @@ details.method .pts{margin-top:10px}
 .sw.s,.sw.o{border-top-color:var(--blue)} .sw.t{border-top-color:var(--red)}
 .sw h3{margin-bottom:8px}
 .swsub{color:var(--muted);margin:12px 0 4px}
+.swnote{color:var(--muted);margin:12px 0 0}
 .chiplist{list-style:none;padding:0;margin:4px 0 0}
 .chiplist li{padding:6px 0;border-top:1px solid var(--line);font-size:var(--fs-s)}
 .chiplist li:first-child{border-top:0}
@@ -218,12 +219,13 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
       </ul>
       <p class="small swsub">Less obvious choices where this course gives you a head start</p><ul class="chiplist">
       <li><button type="button" class="jobchip" data-code="15-1253.00">Software QA analysts and testers</button><span>closest job to AI evaluation (Week 8)</span></li>
-      <li><button type="button" class="jobchip" data-code="13-1081.02">Logistics analysts</button><span>+18.3% to 2032, purchasing agents (Week 11) · found by the check</span></li>
-      <li><button type="button" class="jobchip" data-code="15-1255.00">Web and digital interface designers</button><span>+15.2% to 2032 · found by the check</span></li>
-      <li><button type="button" class="jobchip" data-code="17-2112.02">Validation engineers</button><span>testing and validation (Week 8) · found by the check</span></li>
+      <li><button type="button" class="jobchip" data-code="13-1081.02">Logistics analysts</button><span>+18.3% to 2032, purchasing agents (Week 11)</span></li>
+      <li><button type="button" class="jobchip" data-code="15-1255.00">Web and digital interface designers</button><span>+15.2% to 2032</span></li>
+      <li><button type="button" class="jobchip" data-code="17-2112.02">Validation engineers</button><span>testing and validation (Week 8)</span></li>
       <li><button type="button" class="jobchip" data-code="15-2031.00">Operations research analysts</button><span>+21.5% by 2034</span></li>
       <li><button type="button" class="jobchip" data-code="41-9031.00">Sales engineers</button><span>$108,530 median, solutions work at AI vendors</span></li>
-      </ul></div>
+      </ul>
+      <p class="small swnote">The comparison of job task descriptions with course skills in <a class="doc" href="#check">Part 4</a> added logistics analysts, web and digital interface designers and validation engineers, which I had missed on my first list.</p></div>
     <div class="sw t"><h3>Threats · entry jobs under pressure</h3><ul class="chiplist">
       <li><button type="button" class="jobchip" data-code="15-1232.00">Computer user support specialists</button><span>help desk: higher risk, elasticity 0.56</span></li>
       <li><button type="button" class="jobchip" data-code="15-1244.00">Network and systems administrators</button><span>higher risk, +2.5% to 2032</span></li>
@@ -239,7 +241,7 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
   <div class="eyebrow">Part 3 · The jobs, mapped</div>
   <h2>40 jobs, five skill groups, four paths</h2>
   <p class="lede">The chart is the 2×2. Further right, AI can do more of the job’s tasks. Higher up, demand grows more when the work gets cheaper. Top right is where AI and hiring grow together. Bottom right is where the work gets automated faster than demand grows. Point at a job for its numbers, or filter by skill group.</p>
-  <p class="small">Can you apply to all of these? Not right away. Groups 1 to 4 are jobs that use what you learned, and the column “Start after graduation” shows which ones hire people straight out of a bachelor’s. Group 5 is different. Those jobs are here because agents take over their task lists, and the people who build those agents work in groups 1 to 4. Jobs marked <span class="badge found">Found by the check</span> were added after the test in Part 4, and <span class="badge weak">Weak fit</span> marks the one job the test did not support well.</p>
+  <p class="small">Can you apply to all of these? Not right away. Groups 1 to 4 are jobs that use what you learned, and the column “Start after graduation” shows which ones hire people straight out of a bachelor’s. Group 5 is different. Those jobs are here because agents take over their task lists, and the people who build those agents work in groups 1 to 4. Jobs marked <span class="badge found">Added after the test</span> were missing from my first list and turned up in the test in Part 4, and <span class="badge weak">Weak fit</span> marks the one job the test did not support well.</p>
   
   <div class="legendgrid">
     <div><svg width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="var(--mk-grow)"/></svg><b>Grows with AI.</b> AI makes each worker more productive and the service cheaper, and demand rises enough that the occupation keeps hiring.</div>
@@ -509,7 +511,7 @@ function draw(){
 function nearest(x,y){let best=null,bd=30;pts.forEach(p=>{if(!p.on)return;const d=Math.hypot(p.x-x,p.y-y)-p.r;if(d<bd){bd=d;best=p;}});return best;}
 function hover(x,y){const p=nearest(x,y);if(p)showTip(p);else if(!state.focus)hideTip();}
 const tip=document.getElementById('qtip');
-function showTip(p){const j=p.j;tip.innerHTML=`<b>${j.name}</b><span class="tarch">${ARCH[j.arch]} · group ${j.cluster}, ${CL[j.cluster].name.toLowerCase()}${j.found?' · found by the check':''}${j.weak?' · weak fit':''}</span>
+function showTip(p){const j=p.j;tip.innerHTML=`<b>${j.name}</b><span class="tarch">${ARCH[j.arch]} · group ${j.cluster}, ${CL[j.cluster].name.toLowerCase()}${j.found?' · added after the test':''}${j.weak?' · weak fit':''}</span>
  <dl><dt>Start after graduation</dt><dd>${j.entryLabel}</dd><dt>Median pay</dt><dd>${fmt$(j.wage)}${j.broad?' †':''}</dd><dt>Openings a year</dt><dd>${fmtN(j.openings)}${j.broad?' †':''}</dd>
  <dt>Growth</dt><dd>${fmtG(j)}</dd><dt>Elasticity</dt><dd>${j.el.toFixed(2)}</dd><dt>AI exposure</dt><dd>${j.beta.toFixed(2)}</dd><dt>Employed, 2024</dt><dd>${fmtN(j.emp)}</dd></dl>`;
   tip.hidden=false; const card=tip.parentElement, cw=card.clientWidth; const tw=tip.offsetWidth, th=tip.offsetHeight;
@@ -522,7 +524,7 @@ function renderTable(){
     const sub=c.id===5?'These jobs are here because agents take over their task lists. The people who build those agents work in groups 1 to 4.':c.skills.map(s=>SKN[s]).join(' · ');
     h+=`<tr class="grp"><td colspan="8">${c.id} · ${c.name}<span>${sub}</span></td></tr>`;
     rows.forEach(j=>{n++; const sh=j.arch==='reorg'?'<rect x="2" y="2" width="10" height="10" rx="2" fill="var(--mk-reorg)"/>':j.arch==='risk'?'<path d="M7 1.5 L12.8 12 L1.2 12 Z" fill="var(--mk-risk)"/>':'<circle cx="7" cy="7" r="5" fill="var(--mk-grow)"/>';
-      h+=`<tr data-code="${j.code}" class="${j.cluster===5?'auto':''}${state.focus===j.code?' focus':''}"><td>${j.name}${j.found?' <span class="badge found">Found by the check</span>':''}${j.weak?' <span class="badge weak">Weak fit</span>':''}<span class="code">${j.code}${j.note?' · '+j.note:''}</span></td>
+      h+=`<tr data-code="${j.code}" class="${j.cluster===5?'auto':''}${state.focus===j.code?' focus':''}"><td>${j.name}${j.found?' <span class="badge found">Added after the test</span>':''}${j.weak?' <span class="badge weak">Weak fit</span>':''}<span class="code">${j.code}${j.note?' · '+j.note:''}</span></td>
       <td><span class="arch"><svg width="14" height="14" aria-hidden="true">${sh}</svg>${ARCHS[j.arch]}</span></td><td>${j.entryLabel}</td>
       <td class="num">${fmt$(j.wage)}${j.broad?' †':''}</td><td class="num">${fmtN(j.openings)}${j.broad?' †':''}</td><td class="num">${fmtG(j)}</td><td class="num">${j.el.toFixed(2)}</td><td class="num">${j.beta.toFixed(2)}</td></tr>`;});});
   tb.innerHTML=h; document.getElementById('tablecount').textContent=`Showing ${n} of ${jobs.length} jobs.`;
