@@ -134,13 +134,6 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
   </ul>
 </div></header>
 
-<section id="ask" hidden data-repo="SherryFu0315/cis4394-agentic-ai" data-repo-id="R_kgDOUHUveQ" data-category="Announcements" data-category-id="DIC_kwDOUHUvec4DKQV-"><div class="wrap">
-  <div class="eyebrow">Ask me</div>
-  <h2>What else do you want to know?</h2>
-  <p class="lede">Ask anything about jobs, skills or AI and work. You sign in with GitHub to post, and everyone can see the questions. Give a thumbs-up to the ones you also want answered. If there is data that can answer a question, I will run the analysis and add the result to this page.</p>
-  <div class="giscus" style="margin-top:18px"></div>
-</div></section>
-
 <section><div class="wrap">
   <div class="eyebrow">In one screen</div>
   <h2>Five numbers worth remembering</h2>
@@ -359,6 +352,13 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
   </ol>
 </div></section>
 
+<section id="ask" hidden data-repo="SherryFu0315/cis4394-agentic-ai" data-repo-id="R_kgDOUHUveQ" data-category="Announcements" data-category-id="DIC_kwDOUHUvec4DKQV-"><div class="wrap">
+  <div class="eyebrow">Ask me</div>
+  <h2>What else do you want to know?</h2>
+  <p class="lede">Ask anything about jobs, skills or AI and work. You sign in with GitHub to post, and everyone can see the questions. Give a thumbs-up to the ones you also want answered. If there is data that can answer a question, I will run the analysis and add the result to this page.</p>
+  <div class="giscus" style="margin-top:18px"></div>
+</div></section>
+
 <div class="wrap pager">
   <a href="path.html"><span class="lab">← Back</span><b>About PATH</b></a>
   <a href="index.html#weeks" class="next"><span class="lab">Next →</span><b>Back to the weeks</b></a>
@@ -473,7 +473,7 @@ update();
 <script>
 (function(){const a=document.getElementById('ask'); if(!a||!a.dataset.categoryId) return; a.hidden=false;
 const g=document.createElement('script'); g.src='https://giscus.app/client.js'; g.async=true; g.crossOrigin='anonymous';
-const o={repo:a.dataset.repo,repoId:a.dataset.repoId,category:a.dataset.category,categoryId:a.dataset.categoryId,mapping:'specific',term:'Careers page: what else do you want to know?',strict:'1',reactionsEnabled:'1',emitMetadata:'0',inputPosition:'top',theme:'light',lang:'en',loading:'lazy'};
+const o={repo:a.dataset.repo,repoId:a.dataset.repoId,category:a.dataset.category,categoryId:a.dataset.categoryId,mapping:'specific',term:'Careers page: what else do you want to know?',strict:'1',reactionsEnabled:'0',emitMetadata:'0',inputPosition:'top',theme:'light',lang:'en',loading:'lazy'};
 for(const k in o) g.setAttribute('data-'+k.replace(/[A-Z]/g,m=>'-'+m.toLowerCase()),o[k]); a.querySelector('.giscus').appendChild(g);})();
 </script>
 </body>
