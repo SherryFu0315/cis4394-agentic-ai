@@ -32,7 +32,10 @@
 .checkband .card{background:var(--panel)}
 table.recap{width:100%;border-collapse:collapse}
 table.recap th,table.recap td{font-size:var(--fs-s);padding:7px 6px;border-bottom:1px solid var(--line);text-align:left;background:none}
-table.recap .num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+table.recap .num{text-align:right;font-variant-numeric:tabular-nums}
+table.recap td.num{white-space:nowrap}
+table.recap th{white-space:normal;line-height:1.3;vertical-align:bottom}
+#check .grid2>*{min-width:0}
 details.method{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 18px}
 details.method summary{cursor:pointer;font-weight:650;font-size:var(--fs-m)}
 details.method .pts{margin-top:10px}
@@ -151,10 +154,10 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
   <div class="tldr">
     <div class="kicker">TL;DR</div>
     <ul class="pts">
-      <li><b>The skills point to growing jobs.</b> Of the 34 jobs that use what you learned, 25 are in the group OpenAI expects to grow with AI, and 25 hire straight out of a bachelor’s.</li>
-      <li><b>Good first jobs for an MIS graduate:</b> computer systems analyst, data scientist or BI analyst, software developer, software QA tester and project management specialist. Less obvious ones: logistics analyst, web and digital interface designer and validation engineer.</li>
+      <li><b>Your skills point to growing jobs.</b> I matched the skills you built in this course to 34 jobs that use them. 25 of those jobs are in the group OpenAI expects to grow with AI, and 25 hire straight out of a bachelor’s.</li>
+      <li><b>Good first jobs for an MIS graduate:</b> computer systems analyst, data scientist or BI analyst, software developer, software QA tester and project management specialist. (Not the “programming is dead” story you may have heard. BLS projects 267,700 more software developer jobs by 2034. The narrower job of computer programmer is the one shrinking. The reason is <a class="doc" href="#elasticity">demand elasticity</a>: when AI makes software cheaper, people want more of it.) Less obvious ones: logistics analyst, web and digital interface designer and validation engineer.</li>
       <li><b>Under pressure:</b> help desk, network and systems administration, computer programming and customer service.</li>
-      <li><b>The map is checked.</b> Against the official O*NET task lists, the jobs I picked rank around the 91st percentile for their skills among 330 knowledge-work jobs, and the check added six jobs I had missed (<a class="doc" href="#check">Part 4</a>).</li>
+      <li><b>Methodology:</b> I tested how I matched skills to jobs against the official O*NET task lists. The jobs I picked rank around the 91st percentile for their skill group among 330 knowledge-work jobs, and the test added six jobs I had missed (<a class="doc" href="#check">Part 4</a>).</li>
       <li><b>Questions?</b> Ask at the <a class="doc" href="#ask">bottom of the page</a>. If data can answer it, I will add the analysis here.</li>
     </ul>
   </div>
@@ -269,9 +272,9 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
 
 
 <section id="check" class="checkband"><div class="wrap">
-  <div class="eyebrow">Part 4 · Checking the map</div>
-  <h2>Does this map hold up? I tested it against O*NET</h2>
-  <p class="lede">I matched skill groups to jobs by hand, so I checked the result against an independent source: the official task lists the Department of Labor keeps for 923 occupations in <a class="doc" href="https://www.onetonline.org/" target="_blank" rel="noopener">O*NET ↗</a>. A text-similarity model compared what each skill group covers, using the course pages and the skills inventory, with the tasks each job actually involves. Where the check disagreed with me, I changed the map.</p>
+  <div class="eyebrow">Part 4 · Methodology</div>
+  <h2>How I matched skills to jobs, and how I tested it</h2>
+  <p class="lede">I matched skill groups to jobs by hand, so I checked the result against an independent source: the official task lists the Department of Labor keeps for 923 occupations in <a class="doc" href="https://www.onetonline.org/" target="_blank" rel="noopener">O*NET ↗</a>. A text-similarity model compared what each skill group covers, using the course pages and the skills inventory, with the tasks each job actually involves. Where the test disagreed with me, I changed the matching.</p>
   <div class="bigstatgrid" style="margin-top:18px">
     <div class="bigstat" style="cursor:default"><div class="num">91st</div><div class="what">percentile: the median rank of each job on its own skill group, among 330 knowledge-work occupations. Chance would be the 50th.</div></div>
     <div class="bigstat" style="cursor:default"><div class="num">68%</div><div class="what">of jobs score highest on the skill group I put them in. Random assignment gets 26% (p &lt; .001).</div></div>
@@ -285,7 +288,7 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
       <li><b>Added six jobs:</b> web and digital interface designers, database architects, clinical data managers, validation engineers, security management specialists and logistics analysts.</li>
     </ul></div>
     <div class="card"><h3>Before and after</h3>
-      <table class="recap"><thead><tr><th></th><th class="num">First map</th><th class="num">Revised map</th></tr></thead><tbody>
+      <table class="recap"><thead><tr><th></th><th class="num">First version</th><th class="num">Revised version</th></tr></thead><tbody>
         <tr><td>Jobs whose best-matching group is the one assigned</td><td class="num">45%</td><td class="num">68%</td></tr>
         <tr><td>Chance level</td><td class="num">20%</td><td class="num">26%</td></tr>
         <tr><td>Median percentile among knowledge-work jobs</td><td class="num">90th</td><td class="num">91st</td></tr>
@@ -347,7 +350,7 @@ p a.doc,li a.doc,.what a.doc,.small a.doc,h3 a.doc{font-weight:inherit;text-deco
       <li><div class="lab">Jobs at higher automation risk<span>91 occupations · standardized information work, no human-necessity flag</span></div><div class="trk red"><i style="width:37%"></i></div><div class="pct">26.9M<small>18%</small></div></li>
       <li><div class="lab">Jobs that grow with AI<span>151 occupations · demand elasticity near or above 1</span></div><div class="trk"><i style="width:25%"></i></div><div class="pct">18.0M<small>12%</small></div></li>
     </ul>
-    <p class="small" style="margin-top:14px">The number that separates the groups is demand elasticity. Above 1 means that when a service gets 10% cheaper, people buy more than 10% more of it. The occupation can then add workers even as each worker gets more done. The highest value in OpenAI’s table, 1.15, belongs to computer systems analysts and computer network architects. Software developers are at 1.13 and data scientists at 1.12. Customer service representatives are at 0.68, and general office clerks at 0.41.</p>
+    <p class="small" id="elasticity" style="margin-top:14px;scroll-margin-top:80px">The number that separates the groups is demand elasticity. Above 1 means that when a service gets 10% cheaper, people buy more than 10% more of it. The occupation can then add workers even as each worker gets more done. The highest value in OpenAI’s table, 1.15, belongs to computer systems analysts and computer network architects. Software developers are at 1.13 and data scientists at 1.12. Customer service representatives are at 0.68, and general office clerks at 0.41.</p>
     <p class="small" style="margin-top:10px">One caution before you read further. <a class="doc" href="https://openai.com/index/modeling-ai-jobs-transition/" target="_blank" rel="noopener">OpenAI’s write-up ↗</a> names software developers and financial analysts as examples of jobs that will reorganize. Its downloadable table puts both in the grow-with-AI group. I used the table everywhere on this page.</p>
   </div>
   <div class="callout blue" id="infosec">
