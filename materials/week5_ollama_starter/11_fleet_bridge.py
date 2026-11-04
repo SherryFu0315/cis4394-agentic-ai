@@ -7,7 +7,7 @@ endpoint. This file is a small Gradio chat page that forwards each message to th
 endpoint with YOUR key, so classmates only ever see the page.
 
     1. In Fleet open your agent -> Advanced settings -> Developer -> View code snippets.
-       Copy the api_url (https://....us.langgraph.app) and the agent_id.
+       Copy the api_url (https://....us.langgraph.app) and the agent_id from that one panel.
     2. Create a Personal Access Token: smith.langchain.com -> Settings -> API keys
        (a PAT tied to the agent's owner; any other key gets 404).
     3. In the terminal you will run from (never in the file, never in the repo):
@@ -16,6 +16,10 @@ endpoint with YOUR key, so classmates only ever see the page.
     4.           python 11_fleet_bridge.py            # http://localhost:7862 (test it first)
        SHARE=1   python 11_fleet_bridge.py            # public *.gradio.live link, valid 7 days
        LAN=1     python 11_fleet_bridge.py            # same Wi-Fi only
+
+On start the script asks Fleet whether that agent_id exists at that api_url. If it does
+not, it prints the agents your key can see there, with their IDs, and stops: the two
+values must come from the same View code snippets panel.
 
 Each browser session gets its own Fleet thread, so the agent keeps the conversation
 and every run still lands in your LangSmith traces. Anyone with the link spends YOUR
@@ -41,21 +45,54 @@ HEADERS = {"Content-Type": "application/json",
            "X-Api-Key": API_KEY,
            "X-Auth-Scheme": "langsmith-api-key"}
 
-def fleet(path, body):
-    """POST json to the agent's endpoint and return the parsed reply."""
-    req = urllib.request.Request(API_URL + path, data=json.dumps(body).encode(), headers=HEADERS, method="POST")
+def fleet(path, body=None):
+    """Call the agent's endpoint and return the parsed reply: POST when there is a body, GET otherwise."""
+    data = None if body is None else json.dumps(body).encode()
+    req = urllib.request.Request(API_URL + path, data=data, headers=HEADERS, method="GET" if body is None else "POST")
     with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
         return json.loads(r.read().decode() or "{}")
 
+def check_agent():
+    """Before any visitor arrives: does AGENT_ID exist at API_URL? (The docs' own first test: GET /assistants/<id>.)"""
+    try:
+        agent = fleet(f"/assistants/{AGENT_ID}")
+        print(f"Fleet agent found: {agent.get('name') or AGENT_ID}", flush=True)
+        return
+    except urllib.error.HTTPError as e:
+        if e.code == 401:
+            raise SystemExit("Fleet rejected the key (HTTP 401). Use a Personal Access Token from the account that owns the agent.")
+        if e.code not in (404, 422):
+            print(f"Could not verify the agent (HTTP {e.code}); starting anyway.", flush=True)
+            return
+    except Exception as e:                                    # offline, DNS, timeout: let the chat page show the error
+        print(f"Could not verify the agent ({type(e).__name__}: {e}); starting anyway.", flush=True)
+        return
+    try:                                                      # 404 or 422: not an agent at this URL. List the ones that are.
+        found = [a for a in fleet("/assistants/search", {"limit": 100}) if isinstance(a, dict)]
+    except Exception:
+        found = []
+    agents = [a for a in found if a.get("graph_id") == "deep_agent"] or found
+    lines = [f"   {a.get('name') or '(unnamed)'}\n      FLEET_AGENT_ID={a.get('assistant_id')}" for a in agents]
+    raise SystemExit(
+        f"FLEET_AGENT_ID={AGENT_ID} is not an agent at {API_URL}.\n"
+        + (f"Agents this key can see at that URL ({len(lines)}):\n" + "\n".join(lines) if lines
+           else "This key sees no agents at that URL.")
+        + "\nCopy the API URL and the Agent ID together, from View code snippets of the one agent you want to share,"
+          " and use a Personal Access Token from the account that owns it.")
+
 def text_of(content):
-    """Fleet messages carry either a string or a list of content blocks."""
+    """Fleet messages carry either a string or a list of content blocks; keep every block that has text."""
     if isinstance(content, str):
         return content
     if isinstance(content, list):
-        return "\n".join(b.get("text", "") for b in content if isinstance(b, dict) and b.get("type", "text") == "text")
+        parts = [b if isinstance(b, str) else b.get("text") for b in content if isinstance(b, (str, dict))]
+        return "\n".join(p for p in parts if isinstance(p, str) and p)
     return str(content)
 
 def last_ai_message(result):
+    if isinstance(result, dict) and result.get("__interrupt__"):
+        return ("The agent stopped to ask for approval of a tool call, which this page cannot show. "
+                "For the public copy, set that tool to run without approval, or use a stub.")
     msgs = result.get("messages", []) if isinstance(result, dict) else []
     for m in reversed(msgs):
         if isinstance(m, dict) and (m.get("type") in ("ai", "assistant") or m.get("role") == "assistant"):
@@ -79,10 +116,13 @@ def respond(message, history, state):
         detail = e.read().decode(errors="replace")[:300]
         hint = {401: "key rejected: is it a PAT from the agent owner's account?",
                 404: "404: wrong agent_id, wrong api_url, or a key that is not the owner's",
+                422: "422: this agent_id is not an agent at this api_url. Restart the script: it lists the agents it can see there.",
                 429: "rate or spend limit reached in Fleet"}.get(e.code, "")
         return f"Fleet returned HTTP {e.code}. {hint}\n\n`{detail}`", state
     except Exception as e:                                    # network, timeout, bad JSON
         return f"Could not reach the agent: {type(e).__name__}: {e}", state
+
+check_agent()
 
 TITLE = os.environ.get("TITLE", "My Fleet agent")
 with gr.Blocks(title=TITLE) as app:
