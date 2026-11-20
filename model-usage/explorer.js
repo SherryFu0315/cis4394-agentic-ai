@@ -34,6 +34,28 @@
     if (code === 'T1') return 'Tor network (T1)';
     try { return new Intl.DisplayNames(['en'], { type: 'region' }).of(code) || code; } catch (_) { return code; }
   }
+  const DEVELOPER_NAMES = {
+    openai: 'OpenAI', anthropic: 'Anthropic', tencent: 'Tencent', deepseek: 'DeepSeek',
+    google: 'Google', microsoft: 'Microsoft', amazon: 'Amazon', nvidia: 'NVIDIA',
+    'x-ai': 'xAI', 'z-ai': 'Z.ai', qwen: 'Qwen', minimax: 'MiniMax', mistralai: 'Mistral AI',
+    moonshotai: 'Moonshot AI', xiaomi: 'Xiaomi', cohere: 'Cohere', perplexity: 'Perplexity',
+    meta: 'Meta', 'meta-llama': 'Meta Llama', alibaba: 'Alibaba', bytedance: 'ByteDance',
+    'bytedance-seed': 'ByteDance Seed', baidu: 'Baidu', stepfun: 'StepFun', typesafe: 'TypeSafe'
+  };
+  /** OpenRouter author namespaces, not inference hosts or inferred parent companies.
+   * Remap existing observations only; no unreported country cells are created. */
+  function groupByDeveloper(data) {
+    const models = [], indices = new Map();
+    const modelIndices = data.models.map(model => {
+      const id = model.id.split('/')[0];
+      if (!indices.has(id)) {
+        indices.set(id, models.length);
+        models.push({ id, name: DEVELOPER_NAMES[id] || id, provider: id, modelCount: 0 });
+      }
+      const index = indices.get(id); models[index].modelCount += 1; return index;
+    });
+    return { ...data, models, rows: data.rows.map(row => [modelIndices[row[0]], row[1], row[2], row[3]]) };
+  }
   /** Returns observed model rows, a full-group denominator, and top-N coverage. Never expands missing cells. */
   function rankModels(data, country = ALL_COUNTRIES, metric = 'tokens', limit = 100) {
     const mi = metricIndex(metric), values = new Map();
@@ -110,7 +132,13 @@
       if (status) status.textContent = 'The local snapshot is unavailable. Please reload this page.';
       return;
     }
-    const state = { country: ALL_COUNTRIES, metric: 'tokens', page: 1, modelId: data.models.some(m => m.id === DEFAULT_MODEL_ID) ? DEFAULT_MODEL_ID : data.models[0]?.id };
+    const state = { country: ALL_COUNTRIES, metric: 'tokens', grouping: 'model', page: 1, modelId: data.models.some(m => m.id === DEFAULT_MODEL_ID) ? DEFAULT_MODEL_ID : data.models[0]?.id };
+    const developerData = groupByDeveloper(data);
+    state.developerId = state.modelId?.split('/')[0];
+    const isDeveloper = () => state.grouping === 'developer';
+    const activeData = () => isDeveloper() ? developerData : data;
+    const selectedId = () => isDeveloper() ? state.developerId : state.modelId;
+    const entityName = () => isDeveloper() ? 'developer' : 'model';
     const el = id => doc.getElementById(id);
     const node = (tag, className, text) => { const n = doc.createElement(tag); if (className) n.className = className; if (text !== undefined) n.textContent = text; return n; };
     const titleMetric = () => state.metric === 'tokens' ? 'Tokens' : 'Requests';
@@ -122,7 +150,8 @@
       track.append(fill); track.setAttribute('aria-hidden', 'true'); return track;
     }
     function setModel(id, fromRanking = false) {
-      state.modelId = id; el('model-select').value = id;
+      if (isDeveloper()) state.developerId = id; else state.modelId = id;
+      el('model-select').value = id;
       doc.querySelectorAll('.model-button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.modelId === id)));
       renderBreakdown();
       if (fromRanking && doc.defaultView && doc.defaultView.matchMedia('(max-width: 800px)').matches) {
@@ -130,13 +159,29 @@
         el('breakdown-title').focus({ preventScroll: true });
       }
     }
+    function renderGrouping() {
+      const entity = entityName();
+      el('ranking-eyebrow').textContent = isDeveloper() ? 'Developer ranking' : 'Model ranking';
+      el('entity-column').textContent = isDeveloper() ? 'Rank / model developer' : 'Rank / exact model version';
+      el('follow-entity').textContent = 'Follow a ' + entity;
+      el('entity-select-label').textContent = 'Choose a ' + entity + ', or select one in the ranking';
+      el('entity-id-label').textContent = isDeveloper() ? 'Included model namespace' : 'Exact model ID';
+      el('breakdown-scope').textContent = 'All country groups for this ' + entity + '. The ranking’s country filter does not limit this breakdown.';
+      el('missing-entity').textContent = isDeveloper() ? 'developer' : 'model';
+      el('ranking-caption').textContent = 'Bars use a linear scale relative to the leading ' + entity + ' in this selection, unchanged across pages. Share uses all reported usage in the selected country group, including entries outside the top 100.';
+      const select = el('model-select'); select.replaceChildren();
+      activeData().models.slice().sort((a, b) => compareID(a.name, b.name) || compareID(a.id, b.id)).forEach(model => {
+        const option = node('option', '', model.name + ' · ' + model.id + (isDeveloper() ? '/*' : '')); option.value = model.id; select.append(option);
+      });
+      select.value = selectedId();
+    }
     function renderRanking() {
-      const ranking = rankModels(data, state.country, state.metric, 100), page = paginate(ranking.rows, state.page, PAGE_SIZE);
+      const ranking = rankModels(activeData(), state.country, state.metric, 100), page = paginate(ranking.rows, state.page, PAGE_SIZE);
       state.page = page.page;
-      el('ranking-title').textContent = ranking.shownCount < 100 ? 'Top ' + ranking.shownCount + ' reported models' : 'Top 100 models';
+      el('ranking-title').textContent = 'Top ' + ranking.shownCount + (ranking.shownCount < 100 ? ' reported ' : ' ') + entityName() + 's';
       el('ranking-unit').textContent = titleMetric(); el('value-column').textContent = titleMetric();
-      el('ranking-context').textContent = groupName() + ' · ' + dateLabel(data.date_utc) + ' UTC · ' + formatNumber(ranking.modelCount) + ' observed model versions';
-      el('ranking-denominator').textContent = formatNumber(ranking.denominator) + ' ' + measure() + ' across all ' + ranking.modelCount + ' disclosed models';
+      el('ranking-context').textContent = groupName() + ' · ' + dateLabel(data.date_utc) + ' UTC · ' + formatNumber(ranking.modelCount) + (isDeveloper() ? ' observed developers' : ' observed model versions');
+      el('ranking-denominator').textContent = formatNumber(ranking.denominator) + ' ' + measure() + ' across all ' + ranking.modelCount + ' disclosed ' + entityName() + 's';
       el('ranking-coverage').textContent = 'Top ' + ranking.shownCount + ' account for ' + formatShare(ranking.topShare) + ' of this reported total.';
       doc.querySelectorAll('.page-description').forEach(n => { n.textContent = page.start + '–' + page.end + ' of ' + page.total + ' · Page ' + page.page + '/' + page.pages; });
       doc.querySelectorAll('.page-prev').forEach(n => { n.disabled = page.page <= 1; });
@@ -145,11 +190,11 @@
       const maximum = ranking.rows[0]?.value || 0;
       page.items.forEach(row => {
         const li = node('li', 'ranking-row'), button = node('button', 'model-button'), line = node('span', 'model-line');
-        button.type = 'button'; button.dataset.modelId = row.id; button.setAttribute('aria-pressed', String(row.id === state.modelId));
+        button.type = 'button'; button.dataset.modelId = row.id; button.setAttribute('aria-pressed', String(row.id === selectedId()));
         button.setAttribute('aria-label', 'Rank ' + row.rank + ': ' + row.name + ', ' + row.id + ', ' + formatNumber(row.value) + ' ' + measure() + ', ' + formatShare(row.share) + ' of this group. Show global country breakdown.');
         button.title = row.id + '\n' + formatNumber(row.value) + ' ' + measure();
         line.append(node('span', 'rank-number', String(row.rank)));
-        const label = node('span', 'model-label'); label.append(node('span', 'model-name', row.name), node('span', 'model-canonical', row.id));
+        const label = node('span', 'model-label'); label.append(node('span', 'model-name', row.name), node('span', 'model-canonical', row.id + (isDeveloper() ? '/*' : '')));
         const value = node('span', 'model-value', formatCompact(row.value)); value.title = formatNumber(row.value) + ' ' + measure();
         line.append(label, value, node('span', 'model-share', formatShare(row.share))); button.append(line, bar(row.value, maximum));
         button.addEventListener('click', () => setModel(row.id, true)); li.append(button); list.append(li);
@@ -157,9 +202,9 @@
       el('ranking-empty').hidden = ranking.rows.length !== 0;
     }
     function renderBreakdown() {
-      const model = data.models.find(m => m.id === state.modelId), result = countryBreakdown(data, state.modelId, state.metric);
-      el('selected-model-name').textContent = model?.name || state.modelId; el('selected-model-id').textContent = state.modelId;
-      const selected = observation(data, state.modelId, state.country, state.metric), callout = el('selection-observation');
+      const id = selectedId(), model = activeData().models.find(m => m.id === id), result = countryBreakdown(activeData(), id, state.metric);
+      el('selected-model-name').textContent = model?.name || id; el('selected-model-id').textContent = id + (isDeveloper() ? '/* · ' + model.modelCount + ' model IDs in this snapshot' : '');
+      const selected = observation(activeData(), id, state.country, state.metric), callout = el('selection-observation');
       callout.classList.toggle('is-missing', selected === null); callout.replaceChildren(node('span', '', groupName() + ' · ranking selection'), node('strong', '', selected === null ? 'Not separately reported' : formatNumber(selected) + ' ' + measure()));
       el('breakdown-total-label').textContent = 'All groups · ' + measure(); el('breakdown-total').textContent = formatCompact(result.total); el('breakdown-total').title = formatNumber(result.total);
       el('breakdown-caption').textContent = result.rows.length + ' reported groups. Share denominator: ' + formatNumber(result.total) + ' ' + measure() + '. ' + (result.total === 0 ? 'Shares are N/A because the reported total is zero.' : 'Bars are linear, relative to the largest group.');
@@ -190,10 +235,13 @@
       el('stat-requests').textContent = formatCompact(requests); el('stat-requests').title = formatNumber(requests) + ' requests';
       el('snapshot-date').textContent = dateLabel(data.date_utc) + ' · UTC day';
       buildCountryOptions(data).forEach(c => { const option = node('option', '', c.name + (c.code.length === 2 && c.name !== c.code ? ' (' + c.code + ')' : '')); option.value = c.code; el('country-select').append(option); });
-      data.models.slice().sort((a, b) => compareID(a.name, b.name) || compareID(a.id, b.id)).forEach(model => { const option = node('option', '', model.name + ' · ' + model.id); option.value = model.id; el('model-select').append(option); });
-      el('model-select').value = state.modelId;
+      renderGrouping();
       el('country-select').addEventListener('change', event => { state.country = event.target.value; state.page = 1; renderRanking(); renderBreakdown(); });
       el('model-select').addEventListener('change', event => setModel(event.target.value));
+      doc.querySelectorAll('input[name=grouping]').forEach(input => input.addEventListener('change', event => {
+        if (!event.target.checked) return; state.grouping = event.target.value; state.page = 1;
+        renderGrouping(); renderRanking(); renderBreakdown();
+      }));
       doc.querySelectorAll('input[name=metric]').forEach(input => input.addEventListener('change', event => {
         if (!event.target.checked) return; state.metric = event.target.value; state.page = 1;
         el('metric-help').textContent = state.metric === 'tokens' ? 'Tokens include input and output.' : 'Requests are API calls, not unique users.';
@@ -212,5 +260,5 @@
       if (typeof console !== 'undefined') console.error(error);
     }
   }
-  return { DEFAULT_MODEL_ID, ALL_COUNTRIES, PAGE_SIZE, rankModels, paginate, countryBreakdown, observation, buildCountryOptions, recentTrend, formatNumber, formatCompact, formatShare, init };
+  return { DEFAULT_MODEL_ID, ALL_COUNTRIES, PAGE_SIZE, groupByDeveloper, rankModels, paginate, countryBreakdown, observation, buildCountryOptions, recentTrend, formatNumber, formatCompact, formatShare, init };
 });

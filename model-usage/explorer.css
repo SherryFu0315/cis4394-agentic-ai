@@ -10,3 +10,7 @@
 .chart-caption,.missing-note,.scope-note,.select-label,.selection-observation,.denominator-note span,.country-control p,.metric-control p,.country-share,.pagination,.pagination button,.ranking-columns,.model-share,.country-line,.stat-label{font-size:14px}
 .model-name,.model-value{font-size:14px}.model-canonical{font-size:12px}.country-code,.trend-day time,.id-details,.id-details code{font-size:13px}.page-description{font-size:13px}.course-meta{font-size:13px}
 @media(max-width:580px){.ranking-columns{font-size:12px}.model-share{font-size:13px}.pagination button{font-size:13px}.page-description{font-size:12px}.course-meta{font-size:12px}.model-canonical{font-size:12px}}
+.platform-scope{font-size:16px;line-height:1.5;border-left:3px solid var(--blue);padding:10px 14px;background:var(--blue-soft);margin:18px 0 0;max-width:950px}.platform-scope strong{color:var(--blue)}
+.controls-panel{display:grid;grid-template-columns:minmax(220px,1.4fr) minmax(220px,1fr) minmax(220px,1fr);gap:24px}.country-control{max-width:none;min-width:0}.metric-control{min-width:0}.metric-switch span{padding-left:12px;padding-right:12px}
+@media(max-width:840px){.controls-panel{grid-template-columns:1fr 1fr;gap:18px}.country-control{grid-column:1/-1}.metric-control{margin-top:0}}
+@media(max-width:580px){.controls-panel{grid-template-columns:minmax(0,1fr)}.country-control{grid-column:auto}}
