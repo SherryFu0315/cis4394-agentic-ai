@@ -27,14 +27,6 @@ Each week of the course ships as an **interactive mini-site** — clickable arch
 
 Downloadable materials (lecture deck, lab starter kits) live in [`materials/`](materials/).
 
-## Model usage explorer
-
-[OpenRouter model usage](https://xinyufu.org/cis4394-agentic-ai/model-usage/) is an English classroom visualization of the November 18, 2026 UTC snapshot. It ranks the top 100 observed model IDs by tokens or requests, supports country/region filtering, and shows each selected model's geographic distribution. Country is the request network location. Suppressed and unknown locations remain separate, and absent observations are not replaced with zero. The Hy4 Flash detail includes its three observed days, November 16–18.
-
-The Group by control switches between individual models and model developers. Developer totals combine observed models under the same OpenRouter author namespace (for example, `openai/*` and `anthropic/*`); separate namespaces are not merged into inferred parent companies or inference hosts. Country filters, measure selection, and geographic breakdowns work in either view. Shares describe OpenRouter platform traffic only, not the overall AI market.
-
-The page is a dated static snapshot, not a live feed. Its data and scripts are in `model-usage/`; it does not call a model API or require a student API key. Data provided by OpenRouter, Inc. Used under license. The dataset is not covered by the course-material reuse terms below; contact the instructor regarding further redistribution.
-
 ## Course design principles
 
 - **Real systems, not toy demos.** Week 2 starts by reading the actual Codex repository; labs use production tools (LangGraph, LangSmith Fleet, Google Opal, Codex CLI, GitHub Copilot).
